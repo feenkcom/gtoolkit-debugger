@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "AndreiChis 8/28/2018 22:48",
+	"super" : "BlElement",
+	"category" : "GToolkit-Debugger",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "GtDebuggerStackWidget",
+	"type" : "normal"
+}
