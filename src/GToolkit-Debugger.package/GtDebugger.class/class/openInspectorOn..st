@@ -6,7 +6,7 @@ openInspectorOn: aDebuggingSession
 	aDebugger constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
-	aDebugger debuggingSession: aDebuggingSession.
+	aDebugger session: aDebuggingSession.
 	
 	anInspector := GtInspector new.
 	anInspector constraintsDo: [ :c |

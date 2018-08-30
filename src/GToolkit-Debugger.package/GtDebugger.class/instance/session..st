@@ -1,4 +1,4 @@
 accessing
-debuggingSession: aDebuggingSession
+session: aDebuggingSession
 	debuggingSession := aDebuggingSession.
 	self stackWidget updateForSession: debuggingSession.

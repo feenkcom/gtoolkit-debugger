@@ -7,7 +7,7 @@ openOn: aDebuggingSession
 		c horizontal matchParent.
 		c vertical matchParent ].
 
-	aDebugger debuggingSession: aDebuggingSession.
+	aDebugger session: aDebuggingSession.
 
 	aSpace := BlSpace new.
 	aSpace withHalos.

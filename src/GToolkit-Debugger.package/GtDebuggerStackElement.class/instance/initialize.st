@@ -6,4 +6,4 @@ initialize
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent].
-	self initializeStackFramesList
+	self initializeStackFramesList.

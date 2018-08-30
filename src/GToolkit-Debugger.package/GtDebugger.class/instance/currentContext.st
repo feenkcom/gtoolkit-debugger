@@ -1,0 +1,3 @@
+accessing
+currentContext
+	^ self interruptedContext 

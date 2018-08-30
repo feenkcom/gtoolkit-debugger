@@ -1,5 +1,5 @@
 initialization
-initializePanesOn: anElement
+initializePanes
 	stackPane := BlElement new
 		layout: BlFrameLayout new;
 		constraintsDo: [ :c |
@@ -20,5 +20,5 @@ initializePanesOn: anElement
 			c vertical matchParent.
 			c linear weight: 1 ];
 		border: (BlBorder paint: (Color lightGray alpha: 0.5)).
-	anElement addChildren: {stackPane . codePane . detailsPane}.
+	self addChildren: {stackPane . codePane . detailsPane}.
 	

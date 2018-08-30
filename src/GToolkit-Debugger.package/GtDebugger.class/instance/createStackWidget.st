@@ -1,3 +1,3 @@
 building widgets
 createStackWidget
-	^ GtDebuggerStackWidget new 
+	^ GtDebuggerStackElement new 

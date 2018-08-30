@@ -9,7 +9,8 @@
 		"debuggingSession",
 		"stackPane",
 		"codePane",
-		"detailsPane"
+		"detailsPane",
+		"stackElement"
 	],
 	"name" : "GtDebugger",
 	"type" : "normal"
