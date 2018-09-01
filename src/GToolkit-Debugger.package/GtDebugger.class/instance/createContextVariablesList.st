@@ -5,7 +5,7 @@ createContextVariablesList
 	contextVariablesList := BrColumnedList new 
 		addEventHandler: (GtInspectorListToSelectHandler new transformation: [:each | each rawValue ]);
 		constraintsDo: [ :c | 
-			c padding: (BlInsets top: 10) ].
+			c padding: (BlInsets all: 10) ].
 			
 	contextVariablesList column
 		title: 'Variable';
@@ -24,7 +24,6 @@ createContextVariablesList
 			textElement := (BrListLabelStencil matchParent: (displayValue 
 				ifNil: [ GTObjectPrinter asTruncatedTextFrom: rawValue ])) asElement.
 			textElement constraintsDo: [ :c | c padding: (BlInsets right: 10) ] ].
-		
 	^ contextVariablesList
 	
 	

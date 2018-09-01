@@ -5,7 +5,6 @@ initializePanes
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent.
-			c padding: (BlInsets bottom: 5).
 			c linear weight: 1 ];
 		border: (BlBorder paint: (Color lightGray alpha: 0.5)).
 	codePane := BlElement new

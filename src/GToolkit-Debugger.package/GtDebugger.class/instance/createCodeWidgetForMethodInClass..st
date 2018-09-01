@@ -16,5 +16,6 @@ createCodeWidgetForMethodInClass: aClass
 	completionStrategy classOrMetaClass: aClass.
 	completionController := GtCompletionController on: editorElement strategy: completionStrategy.
 	completionController install.
+	editorElement padding: (BlInsets all: 10).
 	^ editorElement
 	
