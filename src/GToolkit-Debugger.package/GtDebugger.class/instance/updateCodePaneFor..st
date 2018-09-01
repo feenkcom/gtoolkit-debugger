@@ -9,7 +9,7 @@ updateCodePaneFor: aContext
 			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.	
 	selectionInterval := self session selectedCodeRangeForContext: self selectedContext.
 	(text from: selectionInterval first to: selectionInterval last) attributes: { 
-		BrTextUnderlineAttribute new beNotOverwritableByStyler }.
+		BrTextUnderlineAttribute new paint: (Color fromHexString: 'E57373'); beNotOverwritableByStyler }.
 	editorWidget := self createCodeWidgetForMethodInClass: aContext methodClass.
 	editorWidget editor text: text.
 			

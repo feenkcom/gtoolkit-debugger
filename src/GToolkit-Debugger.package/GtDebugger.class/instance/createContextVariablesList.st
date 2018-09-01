@@ -3,7 +3,7 @@ createContextVariablesList
 	| contextVariablesList |
 	
 	contextVariablesList := BrColumnedList new 
-		addEventHandler: GtInspectorListToSelectHandler new;
+		addEventHandler: (GtInspectorListToSelectHandler new transformation: [:each | each rawValue ]);
 		constraintsDo: [ :c | 
 			c padding: (BlInsets top: 10) ].
 			
