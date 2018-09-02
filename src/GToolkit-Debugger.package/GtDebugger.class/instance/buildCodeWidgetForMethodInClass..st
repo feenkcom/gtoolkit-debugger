@@ -1,5 +1,5 @@
 building widgets
-createCodeWidgetForMethodInClass: aClass
+buildCodeWidgetForMethodInClass: aClass
 	| styler editor editorElement completionStrategy completionController |
 		
 	styler := BrRBTextStyler new.

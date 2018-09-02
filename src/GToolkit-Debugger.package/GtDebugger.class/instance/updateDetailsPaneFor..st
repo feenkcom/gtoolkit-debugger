@@ -1,8 +1,8 @@
-updating
+updating panes
 updateDetailsPaneFor: aContext
 	| contextVariablesList |
 	
-	contextVariablesList := self createContextVariablesList.
+	contextVariablesList := self buildContextVariablesList.
 	contextVariablesList display: aContext gtDebuggerRetrieveVariableValuePairs.
 	
 	self detailsPane 

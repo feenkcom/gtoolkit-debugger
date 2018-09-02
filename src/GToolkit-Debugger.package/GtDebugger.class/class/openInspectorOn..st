@@ -17,7 +17,7 @@ openInspectorOn: aDebuggingSession
 
 	aSpace := BlSpace new.
 	aSpace withHalos.
-	aSpace title: 'Debugger'.
+	aSpace title: aDebuggingSession name.
 	aSpace extent: 1200@600.
 	aSpace addChild: anInspector.
 	aSpace show.

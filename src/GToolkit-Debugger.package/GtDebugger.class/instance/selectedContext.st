@@ -1,5 +1,5 @@
 accessing
 selectedContext
 	| selectionInterval |
-	selectionInterval := self stackWidget stackFramesWidget selection.
-	^ self stackWidget stackFramesWidget items at: selectionInterval from.
+	selectionInterval := self stackElement stackFramesWidget selection.
+	^ self stackElement stackFramesWidget items at: selectionInterval from.

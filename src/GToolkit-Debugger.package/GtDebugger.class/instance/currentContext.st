@@ -1,3 +1,3 @@
 accessing
 currentContext
-	^ self interruptedContext 
+	^ self selectedContext 

@@ -1,4 +1,4 @@
-initialization
+building widgets
 buildStackToolbarActions
 	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
 		| actionButton |

@@ -1,4 +1,4 @@
-updating
+updating panes
 updateCodePaneFor: aContext
 	| editorWidget text selectionInterval |
 	
@@ -10,7 +10,7 @@ updateCodePaneFor: aContext
 	selectionInterval := self session selectedCodeRangeForContext: self selectedContext.
 	(text from: selectionInterval first to: selectionInterval last) attributes: { 
 		BrTextUnderlineAttribute new paint: (Color fromHexString: 'E57373'); beNotOverwritableByStyler }.
-	editorWidget := self createCodeWidgetForMethodInClass: aContext methodClass.
+	editorWidget := self buildCodeWidgetForMethodInClass: aContext methodClass.
 	editorWidget editor text: text.
 			
 	self codePane 

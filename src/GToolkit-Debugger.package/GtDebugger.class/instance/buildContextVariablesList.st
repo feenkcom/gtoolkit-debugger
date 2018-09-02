@@ -1,5 +1,5 @@
 building widgets
-createContextVariablesList
+buildContextVariablesList
 	| contextVariablesList |
 	
 	contextVariablesList := BrColumnedList new 
