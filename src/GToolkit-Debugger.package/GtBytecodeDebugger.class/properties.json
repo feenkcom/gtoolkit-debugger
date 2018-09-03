@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "AndreiChis 9/3/2018 16:09",
+	"super" : "GtDebugger",
+	"category" : "GToolkit-Debugger",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"bytecodesPane",
+		"bytecodesListElement"
+	],
+	"name" : "GtBytecodeDebugger",
+	"type" : "normal"
+}
