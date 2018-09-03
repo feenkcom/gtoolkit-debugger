@@ -1,4 +1,4 @@
 building actions
 stackDebuggingActionsPragmas
 
-	^ #( gtStackDebuggingAction )
+	^ #( gt2StackDebuggingAction )
