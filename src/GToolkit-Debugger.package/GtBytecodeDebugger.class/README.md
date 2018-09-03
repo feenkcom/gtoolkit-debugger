@@ -4,7 +4,9 @@ process := Process
 	forContext: context
 	priority: Processor userInterruptPriority.	
 debuggingSession := GTBytecodeDebuggerSession 
-	named: 'test debugging' on: process startedAt: process suspendedContext.
-20 timesRepeat: [ 
+	named: 'test debugging' 
+	on: process 
+	startedAt: process suspendedContext.
+21 timesRepeat: [ 
 	debuggingSession stepInto ].
 GtBytecodeDebugger openInspectorOn: debuggingSession.
