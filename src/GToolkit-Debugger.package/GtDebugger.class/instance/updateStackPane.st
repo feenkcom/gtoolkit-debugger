@@ -1,7 +1,7 @@
 updating panes
 updateStackPane
-	| tabGroup  |
-	
+	| tabGroup |
+
 	stackElement := self buildStackElement.
 	tabGroup := self buildStackTabGroupForElement: stackElement.
 	

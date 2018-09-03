@@ -10,9 +10,3 @@ formatBytecode: aBytecode
 	formattedCode := aBytecode printString asRopedText.
 	formattedCode attributes: textAttributes.
 	^ formattedCode
-		
-	"text := aContext sourceCode asRopedText.
-	text
-		attributes:
-			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}"

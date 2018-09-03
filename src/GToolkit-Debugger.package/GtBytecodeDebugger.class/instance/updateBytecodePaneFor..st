@@ -6,9 +6,9 @@ updateBytecodePaneFor: aContext
 	self bytecodesPane
 		removeChildren;
 		addChild: bytecodesListElement.
-	self initializeBytecodeTransmissions.
 	
 	bytecodeToSelect := self session symbolicBytecodeForCurrentPCFrom: self currentContext.
 	self bytecodesListElement display: aContext method symbolicBytecodes.
-	self bytecodesListElement selectOne: (self bytecodesListElement items indexOf: bytecodeToSelect)
+	self bytecodesListElement selectOne: (self bytecodesListElement items indexOf: bytecodeToSelect).
+	self initializeBytecodeTransmissions.
 	
