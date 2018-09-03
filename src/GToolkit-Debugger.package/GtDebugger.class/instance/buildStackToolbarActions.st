@@ -3,7 +3,7 @@ buildStackToolbarActions
 	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
 		| actionButton |
 		actionButton := BrButton new 
-			look: BrGlamorousButtonExteriorRectangularLook + BrGlamorousButtonLabelLook + BrGlamorousButtonIconLook;
+			look: BrGlamorousButtonWithIconLook;
 			label: aDebuggingAction label; 
 			action: [ 
 				aDebuggingAction execute.
