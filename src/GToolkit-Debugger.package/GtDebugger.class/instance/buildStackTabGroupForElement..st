@@ -16,7 +16,7 @@ buildStackTabGroupForElement: aStackElement
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup 
-		look: (BrMaterialTabGroupLook new headerBackground: (Color fromHexString: #'E57373'));
+		look: (BrMaterialTabGroupLook new headerBackground: BrGlamorousColors errorBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent. 
