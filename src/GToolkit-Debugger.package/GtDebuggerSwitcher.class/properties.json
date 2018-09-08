@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "BlElement",
+	"category" : "GToolkit-Debugger",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"debuggerContainer",
+		"genericDebugger",
+		"bytecodeDebugger",
+		"genericDebuggerButton",
+		"bytecodeDebuggerButton"
+	],
+	"name" : "GtDebuggerSwitcher",
+	"type" : "normal"
+}
