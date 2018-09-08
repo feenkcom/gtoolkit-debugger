@@ -8,4 +8,4 @@ debuggingSession := (process
 	startedAt: process suspendedContext).
 20 timesRepeat: [ 
 	debuggingSession stepInto ].
-GtDebugger openInspectorOn: debuggingSession.
+GtDebugger openSwitcherInInspectorOn: debuggingSession.
