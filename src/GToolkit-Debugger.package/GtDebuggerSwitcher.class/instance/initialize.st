@@ -18,20 +18,14 @@ initialize
 	genericDebuggerButton := self createSwitchButtonWithLabel: 'Generic'.
 	bytecodeDebuggerButton := self createSwitchButtonWithLabel: 'Bytecode'.
 	genericDebuggerButton action: [ |currentSession|
-		currentSession := bytecodeDebugger session.
-		bytecodeDebugger ifNotNil: [ bytecodeDebugger detachSession ].
-		genericDebugger := GtDebugger new
-			session: (GtDebugger spanNewSessionFrom: currentSession).
+		genericDebugger := self switchFrom: bytecodeDebugger toDebuggerType: GtDebugger.
 			
 		debuggerContainer removeChildren.		
 		debuggerContainer addChild: genericDebugger. 
 		debuggerContainer addChild: bytecodeDebuggerButton 
 	].
 	bytecodeDebuggerButton action: [ |currentSession|
-		currentSession := genericDebugger session.
-		genericDebugger ifNotNil: [ genericDebugger detachSession ].
-		bytecodeDebugger := GtBytecodeDebugger new
-			session: (GtBytecodeDebugger spanNewSessionFrom: currentSession).
+		bytecodeDebugger := self switchFrom: genericDebugger toDebuggerType: GtBytecodeDebugger.
 		
 		debuggerContainer removeChildren.		
 		debuggerContainer addChild: bytecodeDebugger. 

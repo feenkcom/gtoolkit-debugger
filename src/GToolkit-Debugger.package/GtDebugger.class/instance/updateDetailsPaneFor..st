@@ -3,7 +3,7 @@ updateDetailsPaneFor: aContext
 	| contextVariablesList |
 	
 	contextVariablesList := self buildContextVariablesList.
-	contextVariablesList display: aContext gtDebuggerRetrieveVariableValuePairs.
+	contextVariablesList display: (self variablesListForContext: aContext).
 	
 	self detailsPane 
 		removeChildren;

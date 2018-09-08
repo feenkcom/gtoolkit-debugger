@@ -1,0 +1,3 @@
+accessing
+variablesListForContext: aContext
+	^ aContext gtBytecodeDebuggerRetrieveContextValues
