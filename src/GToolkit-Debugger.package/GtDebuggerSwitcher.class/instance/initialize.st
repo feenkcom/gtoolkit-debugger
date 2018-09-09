@@ -4,7 +4,8 @@ initialize
 	self 
 		layout: BlFrameLayout new;
 		constraintsDo: [:c | 
-			c padding: (BlInsets top: 11)].
+			c padding: (BlInsets top: 0)];
+		clipChildren: false.
 	debuggerContainer := BlElement new
 	 	layout: BlFrameLayout new;
 		background: Color white;
