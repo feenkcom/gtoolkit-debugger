@@ -1,3 +1,0 @@
-updating
-updateStackWidget
-	self stackElement updateForSession: debuggingSession.

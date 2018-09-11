@@ -1,3 +1,0 @@
-actions
-detachSession
-	debuggingSession := nil

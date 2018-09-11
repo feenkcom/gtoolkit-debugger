@@ -1,3 +1,0 @@
-accessing - elements
-bytecodesPane
-	^ bytecodesPane

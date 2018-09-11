@@ -1,3 +1,0 @@
-updating
-updateDebugger
-	self updateStackWidget
