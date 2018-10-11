@@ -1,7 +1,16 @@
+"
+!Debugger
+
+The Debugger is a ... debugger. Go figure.
+
+Take a look example with an exception:
+${example:GtDummyExamplesWithExceptions class>>#j|expandedPreview|previewHeight=100}$
+
+"
 Class {
 	#name : #BaselineOfGToolkitDebugger,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfGToolkitDebugger'
+	#category : #BaselineOfGToolkitDebugger
 }
 
 { #category : #baselines }
