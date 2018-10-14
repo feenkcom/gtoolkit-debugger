@@ -384,11 +384,11 @@ GtDebugger >> updateCodePaneFor: aContext [
 	text := aContext sourceCode asRopedText.
 	text
 		attributes:
-			{BrFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-			(BrFontSizeAttribute size: 14) beNotOverwritableByStyler}.	
+			{BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
+			(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.	
 	selectionInterval := self session selectedCodeRangeForContext: self selectedContext.
 	(text from: selectionInterval first to: selectionInterval last) attributes: { 
-		BrTextUnderlineAttribute new 
+		BlTextUnderlineAttribute new 
 			paint: BrGlamorousColors errorBackgroundColor; 
 			beNotOverwritableByStyler }.
 	editorWidget := self buildCodeWidgetForMethodInClass: aContext methodClass.

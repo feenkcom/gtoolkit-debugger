@@ -75,15 +75,17 @@ GtBytecodeDebugger >> bytecodesPane [
 
 { #category : #formatting }
 GtBytecodeDebugger >> formatBytecode: aBytecode [
-	| textAttributes formattedCode |
-	
-	textAttributes := {BrTextForegroundAttribute paint: Smalltalk ui theme textColor}.
-	self selectedContext pc = aBytecode offset ifTrue: [ 
-		textAttributes := {BrTextForegroundAttribute paint: Smalltalk ui theme textColor. BrFontItalicAttribute new} ]. 
-	self selectedContext pc > aBytecode offset ifTrue: [ 
-		textAttributes := {BrTextForegroundAttribute paint: Color gray} ].
+	| formattedCode |
+
 	formattedCode := aBytecode printString asRopedText.
-	formattedCode attributes: textAttributes.
+	formattedCode foreground: Smalltalk ui theme textColor.
+
+	self selectedContext pc = aBytecode offset
+		ifTrue: [ formattedCode italic ]. 
+
+	self selectedContext pc > aBytecode offset
+		ifTrue: [ formattedCode foreground: Color gray ].
+
 	^ formattedCode
 ]
 
