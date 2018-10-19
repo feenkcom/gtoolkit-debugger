@@ -148,6 +148,13 @@ GtDebugger class >> spanNewSessionFrom: anotherSession [
 			yourself
 ]
 
+{ #category : #accessing }
+GtDebugger >> actOnBrowserClosing: ann [
+	self session ifNotNil: [ :aSession | 
+		aSession terminate.
+		debuggingSession := nil ]
+]
+
 { #category : #callbacks }
 GtDebugger >> actOnSelectedContextChangedFor: aContext [
 	self updateCodePaneFor: aContext.
@@ -279,6 +286,11 @@ GtDebugger >> buildStackToolbarActions [
 			actionButton ]
 ]
 
+{ #category : #action }
+GtDebugger >> close [
+	self space close
+]
+
 { #category : #'accessing - elements' }
 GtDebugger >> codePane [
 	^ codePane
@@ -341,6 +353,11 @@ GtDebugger >> initializeStackTransmissions [
 { #category : #accessing }
 GtDebugger >> interruptedContext [
 	^ self session interruptedContext
+]
+
+{ #category : #accessing }
+GtDebugger >> onAddedToSceneGraph [ 
+	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
 ]
 
 { #category : #accessing }
