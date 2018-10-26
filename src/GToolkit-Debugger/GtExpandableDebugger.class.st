@@ -24,7 +24,7 @@ GtExpandableDebugger >> initializePanes [
 			c vertical matchParent.
 			c linear weight: 1 ].
 	detailsPane := self buildPaneElement.	
-	self addChildren: {expandablePane . detailsPane}.
+	self addChildren: {expandablePane . "detailsPane"}.
 ]
 
 { #category : #initialization }
