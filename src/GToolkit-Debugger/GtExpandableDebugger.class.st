@@ -31,5 +31,5 @@ GtExpandableDebugger >> initializePanes [
 GtExpandableDebugger >> updateStackPane [
 	expandablePane 
 		removeChildren;
-		addChild: (GtProcessCoder forProcess: self session process) asElement
+		addChild: (GtProcessCoder forDebugSession: self session) asElement
 ]
