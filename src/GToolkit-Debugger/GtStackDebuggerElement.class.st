@@ -147,30 +147,15 @@ GtStackDebuggerElement class >> spanNewSessionFrom: anotherSession [
 			yourself
 ]
 
-{ #category : #accessing }
-GtStackDebuggerElement >> actOnBrowserClosing: ann [
-	self session ifNotNil: [ :aSession | 
-		aSession terminate.
-		debuggingSession := nil ]
+{ #category : #updating }
+GtStackDebuggerElement >> actOnDebugSessionChanged [
+	self updateStackPane
 ]
 
 { #category : #callbacks }
 GtStackDebuggerElement >> actOnSelectedContextChangedFor: aContext [
 	self updateCodePaneFor: aContext.
 	self updateDetailsPaneFor: aContext
-]
-
-{ #category : #'building actions' }
-GtStackDebuggerElement >> actionsForPragmas: aSymbolsCollection [
-	^ (self session class
-		debuggingActionsForPragmas: aSymbolsCollection 
-		for: self)
-	
-]
-
-{ #category : #announce }
-GtStackDebuggerElement >> announce: something [
-	"Needed by the debugger actions"
 ]
 
 { #category : #'building widgets' }
@@ -279,15 +264,10 @@ GtStackDebuggerElement >> buildStackToolbarActions [
 			action: [ 
 				aDebuggingAction execute.
 				aDebuggingAction needsUpdate ifTrue: [
-					self updateDebugger ] ].
+					self updateStackWidget ] ].
 			aDebuggingAction icon ifNotNil: [ :anIcon | 
 				actionButton icon: aDebuggingAction icon asElement ].
 			actionButton ]
-]
-
-{ #category : #action }
-GtStackDebuggerElement >> close [
-	self space close
 ]
 
 { #category : #'accessing - elements' }
@@ -298,11 +278,6 @@ GtStackDebuggerElement >> codePane [
 { #category : #accessing }
 GtStackDebuggerElement >> currentContext [
 	^ self selectedContext 
-]
-
-{ #category : #actions }
-GtStackDebuggerElement >> detachSession [
-	debuggingSession := nil
 ]
 
 { #category : #'accessing - elements' }
@@ -350,31 +325,10 @@ GtStackDebuggerElement >> initializeStackTransmissions [
 ]
 
 { #category : #accessing }
-GtStackDebuggerElement >> interruptedContext [
-	^ self session interruptedContext
-]
-
-{ #category : #accessing }
-GtStackDebuggerElement >> onAddedToSceneGraph [ 
-	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
-]
-
-{ #category : #accessing }
 GtStackDebuggerElement >> selectedContext [
 	| selectionInterval |
 	selectionInterval := self stackElement stackFramesWidget selection.
 	^ self stackElement stackFramesWidget items at: selectionInterval from.
-]
-
-{ #category : #accessing }
-GtStackDebuggerElement >> session [
-	^ debuggingSession
-]
-
-{ #category : #accessing }
-GtStackDebuggerElement >> session: aDebuggingSession [
-	debuggingSession := aDebuggingSession.
-	self updateStackPane.
 ]
 
 { #category : #'building actions' }
@@ -413,11 +367,6 @@ GtStackDebuggerElement >> updateCodePaneFor: aContext [
 	self codePane 
 		removeChildren;
 		addChild: editorWidget.
-]
-
-{ #category : #updating }
-GtStackDebuggerElement >> updateDebugger [
-	self updateStackWidget
 ]
 
 { #category : #'updating panes' }
