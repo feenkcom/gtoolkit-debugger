@@ -53,7 +53,8 @@ GtExpandableDebugger >> buildDetailsElement [
 				look: BrMaterialTabLabelledLook;
 				viewModel: aTab ].
 	^ BlElement new
-		look: BrMaterialTabGroupLook;
+		background: Color white;
+		look: BrMaterialTabGroupLook + BrShadowLook;
 		viewModel: tabGroup
 ]
 
@@ -75,7 +76,7 @@ GtExpandableDebugger >> buildStackElement [
 GtExpandableDebugger >> buildVariablesListElement [
 	| list |
 	list := BrColumnedList new.
-	list margin: (BlInsets all: 10).
+	list margin: (BlInsets top: 10).
 	list addEventHandler: (GtInspectorListToSelectHandler new transformation: [ :each | each last ]).
 	list column
 		title: 'Icon';
@@ -150,10 +151,10 @@ GtExpandableDebugger >> initialize [
 { #category : #initialization }
 GtExpandableDebugger >> initializePanes [
 	stackPane := self buildPaneElement
-		layout: BlLinearLayout horizontal.	
+		layout: BlLinearLayout horizontal.
 	detailsPane := self buildPaneElement
 		layout: BlFrameLayout new;
-		border: (BlBorder paint: (Color lightGray alpha: 0.5)).
+		padding: (BlInsets all: 20).
 	
 	self addChild: stackPane as: #stackPane.
 	self addChild: detailsPane as: #detailsPane.
