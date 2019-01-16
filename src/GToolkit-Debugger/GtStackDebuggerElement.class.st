@@ -13,9 +13,8 @@ GtDebugger openSwitcherInInspectorOn: debuggingSession.
 "
 Class {
 	#name : #GtStackDebuggerElement,
-	#superclass : #BlElement,
+	#superclass : #GtDebuggerElement,
 	#instVars : [
-		'debuggingSession',
 		'stackPane',
 		'codePane',
 		'detailsPane',
