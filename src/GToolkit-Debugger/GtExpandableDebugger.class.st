@@ -1,6 +1,6 @@
 Class {
 	#name : #GtExpandableDebugger,
-	#superclass : #GtDebugger,
+	#superclass : #GtStackDebuggerElement,
 	#instVars : [
 		'bytecodesPane',
 		'bytecodesListElement',
