@@ -15,12 +15,12 @@ GtBytecodeDebugger openInspectorOn: debuggingSession.
 "
 Class {
 	#name : #GtBytecodeDebugger,
-	#superclass : #GtDebugger,
+	#superclass : #GtStackDebuggerElement,
 	#instVars : [
 		'bytecodesPane',
 		'bytecodesListElement'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #accessing }

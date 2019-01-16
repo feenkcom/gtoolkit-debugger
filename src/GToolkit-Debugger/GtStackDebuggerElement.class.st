@@ -12,20 +12,19 @@ debuggingSession := (process
 GtDebugger openSwitcherInInspectorOn: debuggingSession.
 "
 Class {
-	#name : #GtDebugger,
-	#superclass : #BlElement,
+	#name : #GtStackDebuggerElement,
+	#superclass : #GtDebuggerElement,
 	#instVars : [
-		'debuggingSession',
 		'stackPane',
 		'codePane',
 		'detailsPane',
 		'stackElement'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #'instance creation' }
-GtDebugger class >> openInSwitcherOn: aDebuggingSession [
+GtStackDebuggerElement class >> openInSwitcherOn: aDebuggingSession [
 	| switcher aDebugger aSpace |
 
 	aDebugger := self new.
@@ -51,55 +50,7 @@ GtDebugger class >> openInSwitcherOn: aDebuggingSession [
 ]
 
 { #category : #'instance creation' }
-GtDebugger class >> openInspectorOn: aDebuggingSession [
-	| aDebugger anInspector aSpace |
-
-	aDebugger := self new.
-	aDebugger constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-	aDebugger session: aDebuggingSession.
-	
-	anInspector := GtInspector new.
-	anInspector constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-
-	anInspector addPageWithContent: aDebugger for: aDebuggingSession.
-
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: aDebuggingSession name.
-	aSpace extent: 1200@600.
-	aSpace addChild: anInspector.
-	aSpace show.
-	
-	^ aDebugger
-]
-
-{ #category : #'instance creation' }
-GtDebugger class >> openOn: aDebuggingSession [
-	| aDebugger aSpace |
-
-	aDebugger := self new.
-	aDebugger constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-
-	aDebugger session: aDebuggingSession.
-
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: aDebuggingSession name.
-	aSpace extent: 1200@600.
-	aSpace addChild: aDebugger.
-	aSpace show.
-	
-	^ aDebugger
-]
-
-{ #category : #'instance creation' }
-GtDebugger class >> openSwitcherInInspectorOn: aDebuggingSession [
+GtStackDebuggerElement class >> openSwitcherInInspectorOn: aDebuggingSession [
 	| switcher aDebugger anInspector aSpace |
 
 	aDebugger := self new.
@@ -132,50 +83,24 @@ GtDebugger class >> openSwitcherInInspectorOn: aDebuggingSession [
 ]
 
 { #category : #accessing }
-GtDebugger class >> sessionClass [
+GtStackDebuggerElement class >> sessionClass [
 
 	^ DebugSession 
 ]
 
-{ #category : #accessing }
-GtDebugger class >> spanNewSessionFrom: anotherSession [
-
-	^ (self sessionClass 
-		named: anotherSession name 
-		on: anotherSession interruptedProcess 
-		startedAt: anotherSession interruptedContext)
-			errorWasInUIProcess: anotherSession errorWasInUIProcess;
-			yourself
-]
-
-{ #category : #accessing }
-GtDebugger >> actOnBrowserClosing: ann [
-	self session ifNotNil: [ :aSession | 
-		aSession terminate.
-		debuggingSession := nil ]
+{ #category : #updating }
+GtStackDebuggerElement >> actOnDebugSessionChanged [
+	self updateStackPane
 ]
 
 { #category : #callbacks }
-GtDebugger >> actOnSelectedContextChangedFor: aContext [
+GtStackDebuggerElement >> actOnSelectedContextChangedFor: aContext [
 	self updateCodePaneFor: aContext.
 	self updateDetailsPaneFor: aContext
 ]
 
-{ #category : #'building actions' }
-GtDebugger >> actionsForPragmas: aSymbolsCollection [
-	^ (self session class
-		debuggingActionsForPragmas: aSymbolsCollection 
-		for: self)
-	
-]
-
-{ #category : #announce }
-GtDebugger >> announce: something [
-	"Needed by the debugger actions"
-]
-
 { #category : #'building widgets' }
-GtDebugger >> buildCodeWidgetForMethodInClass: aClass [
+GtStackDebuggerElement >> buildCodeWidgetForMethodInClass: aClass [
 	| styler editor editorElement completionStrategy completionController |
 		
 	styler := BrRBTextStyler new.
@@ -198,7 +123,7 @@ GtDebugger >> buildCodeWidgetForMethodInClass: aClass [
 ]
 
 { #category : #'building widgets' }
-GtDebugger >> buildContextVariablesList [
+GtStackDebuggerElement >> buildContextVariablesList [
 	| contextVariablesList |
 	
 	contextVariablesList := BrColumnedList new 
@@ -229,7 +154,7 @@ GtDebugger >> buildContextVariablesList [
 ]
 
 { #category : #'building widgets' }
-GtDebugger >> buildPaneElement [
+GtStackDebuggerElement >> buildPaneElement [
 	^ BlElement new
 		layout: BlFrameLayout new;
 		constraintsDo: [ :c |
@@ -240,12 +165,12 @@ GtDebugger >> buildPaneElement [
 ]
 
 { #category : #'building widgets' }
-GtDebugger >> buildStackElement [
+GtStackDebuggerElement >> buildStackElement [
 	^ GtDebuggerStackElement new 
 ]
 
 { #category : #'building widgets' }
-GtDebugger >> buildStackTabGroupForElement: aStackElement [
+GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 	| tab tabGroup |
 	tab := BrTab new.
 	tab 
@@ -271,7 +196,7 @@ GtDebugger >> buildStackTabGroupForElement: aStackElement [
 ]
 
 { #category : #'building widgets' }
-GtDebugger >> buildStackToolbarActions [
+GtStackDebuggerElement >> buildStackToolbarActions [
 	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
 		| actionButton |
 		actionButton := BrButton new 
@@ -280,44 +205,34 @@ GtDebugger >> buildStackToolbarActions [
 			action: [ 
 				aDebuggingAction execute.
 				aDebuggingAction needsUpdate ifTrue: [
-					self updateDebugger ] ].
+					self updateStackWidget ] ].
 			aDebuggingAction icon ifNotNil: [ :anIcon | 
 				actionButton icon: aDebuggingAction icon asElement ].
 			actionButton ]
 ]
 
-{ #category : #action }
-GtDebugger >> close [
-	self space close
-]
-
 { #category : #'accessing - elements' }
-GtDebugger >> codePane [
+GtStackDebuggerElement >> codePane [
 	^ codePane
 ]
 
 { #category : #accessing }
-GtDebugger >> currentContext [
+GtStackDebuggerElement >> currentContext [
 	^ self selectedContext 
 ]
 
-{ #category : #actions }
-GtDebugger >> detachSession [
-	debuggingSession := nil
-]
-
 { #category : #'accessing - elements' }
-GtDebugger >> detailsPane [
+GtStackDebuggerElement >> detailsPane [
 	^ detailsPane
 ]
 
 { #category : #'accessing - elements' }
-GtDebugger >> editorElement [
+GtStackDebuggerElement >> editorElement [
  	^ self codePane children first
 ]
 
 { #category : #initialization }
-GtDebugger >> initialize [
+GtStackDebuggerElement >> initialize [
 	super initialize.
 	self
 		layout: BlLinearLayout vertical;
@@ -331,7 +246,7 @@ GtDebugger >> initialize [
 ]
 
 { #category : #initialization }
-GtDebugger >> initializePanes [
+GtStackDebuggerElement >> initializePanes [
 	stackPane := self buildPaneElement.
 	codePane := self buildPaneElement
 		border: (BlBorder paint: (BrGlamorousColors lightBorderColor)).
@@ -340,7 +255,7 @@ GtDebugger >> initializePanes [
 ]
 
 { #category : #initialization }
-GtDebugger >> initializeStackTransmissions [
+GtStackDebuggerElement >> initializeStackTransmissions [
 	self stackElement stackFramesWidget
 		when: BrSelectionChanged
 		do: [ :anEvent | anEvent selectedDo: [ :anInterval |
@@ -351,51 +266,30 @@ GtDebugger >> initializeStackTransmissions [
 ]
 
 { #category : #accessing }
-GtDebugger >> interruptedContext [
-	^ self session interruptedContext
-]
-
-{ #category : #accessing }
-GtDebugger >> onAddedToSceneGraph [ 
-	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
-]
-
-{ #category : #accessing }
-GtDebugger >> selectedContext [
+GtStackDebuggerElement >> selectedContext [
 	| selectionInterval |
 	selectionInterval := self stackElement stackFramesWidget selection.
 	^ self stackElement stackFramesWidget items at: selectionInterval from.
 ]
 
-{ #category : #accessing }
-GtDebugger >> session [
-	^ debuggingSession
-]
-
-{ #category : #accessing }
-GtDebugger >> session: aDebuggingSession [
-	debuggingSession := aDebuggingSession.
-	self updateStackPane.
-]
-
 { #category : #'building actions' }
-GtDebugger >> stackDebuggingActionsPragmas [
+GtStackDebuggerElement >> stackDebuggingActionsPragmas [
 
 	^ #( gt2StackDebuggingAction )
 ]
 
 { #category : #'accessing - elements' }
-GtDebugger >> stackElement [
+GtStackDebuggerElement >> stackElement [
  	^ stackElement
 ]
 
 { #category : #'accessing - elements' }
-GtDebugger >> stackPane [
+GtStackDebuggerElement >> stackPane [
 	^ stackPane
 ]
 
 { #category : #'updating panes' }
-GtDebugger >> updateCodePaneFor: aContext [
+GtStackDebuggerElement >> updateCodePaneFor: aContext [
 	| editorWidget text selectionInterval |
 	
 	text := aContext sourceCode asRopedText.
@@ -416,13 +310,8 @@ GtDebugger >> updateCodePaneFor: aContext [
 		addChild: editorWidget.
 ]
 
-{ #category : #updating }
-GtDebugger >> updateDebugger [
-	self updateStackWidget
-]
-
 { #category : #'updating panes' }
-GtDebugger >> updateDetailsPaneFor: aContext [
+GtStackDebuggerElement >> updateDetailsPaneFor: aContext [
 	| contextVariablesList |
 	
 	contextVariablesList := self buildContextVariablesList.
@@ -435,7 +324,7 @@ GtDebugger >> updateDetailsPaneFor: aContext [
 ]
 
 { #category : #'updating panes' }
-GtDebugger >> updateStackPane [
+GtStackDebuggerElement >> updateStackPane [
 	| tabGroup |
 
 	stackElement := self buildStackElement.
@@ -449,11 +338,11 @@ GtDebugger >> updateStackPane [
 ]
 
 { #category : #updating }
-GtDebugger >> updateStackWidget [
+GtStackDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
 ]
 
 { #category : #accessing }
-GtDebugger >> variablesListForContext: aContext [
+GtStackDebuggerElement >> variablesListForContext: aContext [
 	^ aContext gtDebuggerRetrieveVariableValuePairs
 ]

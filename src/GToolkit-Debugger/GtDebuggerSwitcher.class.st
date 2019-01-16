@@ -50,7 +50,7 @@ GtDebuggerSwitcher >> initialize [
 	genericDebuggerButton := self createSwitchButtonWithLabel: 'Generic'.
 	bytecodeDebuggerButton := self createSwitchButtonWithLabel: 'Bytecode'.
 	genericDebuggerButton action: [ |currentSession|
-		genericDebugger := self switchFrom: bytecodeDebugger toDebuggerType: GtDebugger.
+		genericDebugger := self switchFrom: bytecodeDebugger toDebuggerType: GtStackDebuggerElement.
 			
 		debuggerContainer removeChildren.		
 		debuggerContainer addChild: genericDebugger. 

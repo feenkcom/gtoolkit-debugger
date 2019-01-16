@@ -1,35 +1,47 @@
 Class {
 	#name : #GtExpandableDebugger,
-	#superclass : #GtDebugger,
+	#superclass : #GtDebuggerElement,
 	#instVars : [
-		'bytecodesPane',
-		'bytecodesListElement',
-		'expandablePane'
+		'stackPane',
+		'detailsPane'
 	],
 	#category : #'GToolkit-Debugger'
 }
 
-{ #category : #accessing }
-GtExpandableDebugger class >> sessionClass [
+{ #category : #updating }
+GtExpandableDebugger >> actOnDebugSessionChanged [
+	
+]
 
-	^ GTBytecodeDebuggerSession
+{ #category : #'building widgets' }
+GtExpandableDebugger >> buildPaneElement [
+	^ BlElement new
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent.
+			c linear weight: 1 ]
+]
+
+{ #category : #initialization }
+GtExpandableDebugger >> initialize [
+	super initialize.
+	self
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].		
+	
+	self initializePanes.	
 ]
 
 { #category : #initialization }
 GtExpandableDebugger >> initializePanes [
-	expandablePane := BlElement new
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical matchParent.
-			c linear weight: 1 ].
-	detailsPane := self buildPaneElement.	
-	self addChildren: {expandablePane . "detailsPane"}.
-]
-
-{ #category : #initialization }
-GtExpandableDebugger >> updateStackPane [
-	expandablePane 
-		removeChildren;
-		addChild: (GtProcessCoder forProcess: self session process) asElement
+	stackPane := self buildPaneElement
+		layout: BlLinearLayout horizontal.	
+	detailsPane := self buildPaneElement
+		layout: BlFrameLayout new;
+		border: (BlBorder paint: (Color lightGray alpha: 0.5)).
+	
+	self addChild: stackPane as: #stackPane.
+	self addChild: detailsPane as: #detailsPane.
 ]
