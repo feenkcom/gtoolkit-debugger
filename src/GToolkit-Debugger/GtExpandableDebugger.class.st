@@ -10,7 +10,18 @@ Class {
 
 { #category : #updating }
 GtExpandableDebugger >> actOnDebugSessionChanged [
-	
+	| stackElement |
+	stackElement := self buildStackElement.
+	stackElement display: (self session stack collect: [ :aContext | 
+		GtMethodContextCoder forContext: aContext session: self session ]).
+	self stackPane 
+		removeChildren;
+		addChild: stackElement as: #stackElement
+]
+
+{ #category : #ui }
+GtExpandableDebugger >> buildElementForCoder: aMethodCoder [
+	^ aMethodCoder asElement
 ]
 
 { #category : #'building widgets' }
@@ -20,6 +31,19 @@ GtExpandableDebugger >> buildPaneElement [
 			c horizontal matchParent.
 			c vertical matchParent.
 			c linear weight: 1 ]
+]
+
+{ #category : #'building widgets' }
+GtExpandableDebugger >> buildStackElement [
+	| stackElement |
+	stackElement := BrSimpleList new.
+	stackElement stencil: [ :each | self buildElementForCoder: each ].
+	stackElement padding: (BlInsets all: 10).
+	stackElement
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	^ stackElement
 ]
 
 { #category : #initialization }
@@ -44,4 +68,9 @@ GtExpandableDebugger >> initializePanes [
 	
 	self addChild: stackPane as: #stackPane.
 	self addChild: detailsPane as: #detailsPane.
+]
+
+{ #category : #'accessing - elements' }
+GtExpandableDebugger >> stackPane [
+	^ self childNamed: #stackPane
 ]
