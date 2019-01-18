@@ -49,7 +49,7 @@ GtExpandableDebugger >> buildDetailsElement [
 		with: {tab1. tab2}.
 	tabGroup tabs
 		do: [ :aTab | 
-			BrTab new
+			BlElement new
 				look: BrGlamorousTabLook;
 				viewModel: aTab ].
 	^ BrTabGroup new
