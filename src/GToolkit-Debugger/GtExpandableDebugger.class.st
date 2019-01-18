@@ -100,8 +100,10 @@ GtExpandableDebugger >> buildVariablesListElement [
 		title: 'Value';
 		stencil: [ :each | 
 			BrLabel new
-				look: (BrGlamorousLabelLook new foreground: Color black);
-				text: (each last printStringLimitedTo: 50);
+				look: BrGlamorousLabelLook new;
+				text: ([ each gtDisplayString asRopedText ] 
+						on: Error 
+						do: [ :e | e messageText asRopedText foreground: Color red ]);
 				hMatchParent;
 				vMatchParent;
 				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
