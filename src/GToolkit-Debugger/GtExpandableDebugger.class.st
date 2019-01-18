@@ -49,12 +49,12 @@ GtExpandableDebugger >> buildDetailsElement [
 		with: {tab1. tab2}.
 	tabGroup tabs
 		do: [ :aTab | 
-			BlElement new
-				look: BrMaterialTabLabelledLook;
+			BrTab new
+				look: BrGlamorousTabLook;
 				viewModel: aTab ].
-	^ BlElement new
+	^ BrTabGroup new
 		background: Color white;
-		look: BrMaterialTabGroupLook + BrShadowLook;
+		look: BrGlamorousTabGroupLook + BrShadowLook;
 		viewModel: tabGroup
 ]
 
