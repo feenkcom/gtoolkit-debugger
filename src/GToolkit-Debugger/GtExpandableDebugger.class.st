@@ -101,8 +101,8 @@ GtExpandableDebugger >> buildVariablesListElement [
 		stencil: [ :each | 
 			BrLabel new
 				look: BrGlamorousLabelLook new;
-				text: ([ each gtDisplayString asRopedText ] 
-						on: Error 
+				text: ([ each last gtDisplayString asRopedText ] 
+						on: Error, Halt
 						do: [ :e | e messageText asRopedText foreground: Color red ]);
 				hMatchParent;
 				vMatchParent;
