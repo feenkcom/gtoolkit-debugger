@@ -82,7 +82,7 @@ GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 		collect: [ :aContext | 
 			| coder |
 			coder := GtMethodContextCoder forContext: aContext session: aDebuggingSession.
-			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self.
+			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self debuggerElement .
 			coder ]).
 	"stackElement selectOne: 1"
 ]

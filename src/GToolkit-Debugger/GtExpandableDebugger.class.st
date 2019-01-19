@@ -153,10 +153,11 @@ GtExpandableDebugger >> initialize [
 { #category : #initialization }
 GtExpandableDebugger >> initializePanes [
 	stackPane := self buildPaneElement
+		constraintsDo: [ :c | c linear weight: 2 ];
 		layout: BlLinearLayout horizontal.
 	detailsPane := self buildPaneElement
 		layout: BlFrameLayout new;
-		padding: (BlInsets all: 20).
+		padding: (BlInsets all: 10).
 	
 	self addChild: stackPane as: #stackPane.
 	self addChild: detailsPane as: #detailsPane.
