@@ -1,6 +1,9 @@
 Class {
 	#name : #GtExpandableDebuggerElement,
 	#superclass : #GtDebuggerElement,
+	#instVars : [
+		'stackElement'
+	],
 	#category : #'GToolkit-Debugger'
 }
 
@@ -124,7 +127,8 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 GtExpandableDebuggerElement >> buildStackToolbarActions [
 	<return: #Collection of: #BrButton>	
 		
-	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
+	| buttons toggle |
+	buttons := (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
 		| actionButton |
 		actionButton := BrButton new 
 			look: BrGlamorousButtonWithIconLook;
@@ -135,7 +139,21 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 					self updateStackWidget ] ].
 			aDebuggingAction icon ifNotNil: [ :anIcon | 
 				actionButton icon: aDebuggingAction icon asElement ].
-			actionButton ]
+			actionButton ].
+		
+	toggle := BrToggle new 
+		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
+		icon: BrGlamorousIcons edit asElement;
+		when: BrToggleActivatedEvent do: [ :anEvent | 
+			self stackElement stackFramesList items do: [ :aCoder |
+				aCoder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: aCoder) ].
+			self stackElement updateContent ];
+		when: BrToggleDeactivatedEvent do: [ :anEvent | 
+			self stackElement stackFramesList items do: [ :aCoder |
+				aCoder addOns removeStylerOfType: GtCoderContextVariableValueStyler ].
+			self stackElement updateContent  ].
+	buttons add: toggle.
+	^ buttons
 ]
 
 { #category : #'building widgets' }
