@@ -45,7 +45,7 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 		ifTrue: [ nil ]
 		ifFalse: [ methodCoders first context ].
 	
-	context := aSession process suspendedContext.
+	context := aSession interruptedContext.
 	newCoders := OrderedCollection new.
 	[ context notNil and: [ context ~~ firstContext ] ]
 		whileTrue: [ 
@@ -60,12 +60,6 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 { #category : #'accessing - elements' }
 GtDebuggerExpandableStackElement >> debuggerElement [
 	^ self parent parent parent parent
-]
-
-{ #category : #ui }
-GtDebuggerExpandableStackElement >> focusedCoder: aCoder in: anElement [
-	"activeCoder := aCoder.
-	self updateVariables"
 ]
 
 { #category : #initialization }
