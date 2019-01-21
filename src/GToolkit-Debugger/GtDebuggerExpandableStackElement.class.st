@@ -36,6 +36,27 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 	^ stackFramesList
 ]
 
+{ #category : #updating }
+GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingContexts: currenCoders [
+	| methodCoders context firstContext coder newCoders |
+	
+	methodCoders := currenCoders reject: [ :each | each isDead ].
+	firstContext := methodCoders isEmpty
+		ifTrue: [ nil ]
+		ifFalse: [ methodCoders first context ].
+	
+	context := aSession process suspendedContext.
+	newCoders := OrderedCollection new.
+	[ context notNil and: [ context ~~ firstContext ] ]
+		whileTrue: [ 
+			coder := GtMethodContextCoder forContext: context session: aSession.
+			"coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: aDebugger."
+			newCoders add: coder.
+			context := context sender ].
+	methodCoders addAllFirst: newCoders.
+	^ methodCoders
+]
+
 { #category : #'accessing - elements' }
 GtDebuggerExpandableStackElement >> debuggerElement [
 	^ self parent parent parent parent
@@ -60,6 +81,7 @@ GtDebuggerExpandableStackElement >> initialize [
 GtDebuggerExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
+	stackFramesList display: (OrderedCollection new).
 	self addChild: stackFramesList.
 ]
 
@@ -75,12 +97,12 @@ GtDebuggerExpandableStackElement >> stackFramesList [
 
 { #category : #updating }
 GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
-	self stackFramesList display: (aDebuggingSession stack 
-		collect: [ :aContext | 
-			| coder |
-			coder := GtMethodContextCoder forContext: aContext session: aDebuggingSession.
-			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self debuggerElement .
-			coder ]).
+	self stackFramesList display: (self 
+		codersToDisplayFrom: aDebuggingSession
+		preservingContexts: self stackFramesList items).
 	self stackFramesList items ifNotEmpty: [ :methodCoders |
-			methodCoders first expanded: true ]
+		selectedCoder := methodCoders first.
+		selectedCoder expanded: true.
+		selectedCoder isBuilt ifTrue: [
+			selectedCoder updateSelection ] ]
 ]

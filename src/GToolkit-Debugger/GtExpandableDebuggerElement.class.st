@@ -175,6 +175,11 @@ GtExpandableDebuggerElement >> contextVariables [
 	^ vars
 ]
 
+{ #category : #'accessing context' }
+GtExpandableDebuggerElement >> currentContext [
+	^ self selectedContext 
+]
+
 { #category : #'accessing - elements' }
 GtExpandableDebuggerElement >> detailsPane [
 	^ self childNamed: #detailsPane
