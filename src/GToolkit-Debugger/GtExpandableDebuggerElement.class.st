@@ -1,5 +1,5 @@
 Class {
-	#name : #GtExpandableDebugger,
+	#name : #GtExpandableDebuggerElement,
 	#superclass : #GtDebuggerElement,
 	#instVars : [
 		'stackPane',
@@ -9,12 +9,12 @@ Class {
 }
 
 { #category : #callbacks }
-GtExpandableDebugger >> actOnDebugSessionChanged [
+GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	self updateStackPane.
 ]
 
 { #category : #callbacks }
-GtExpandableDebugger >> actOnSelectedContextChangedFor: aContext [
+GtExpandableDebuggerElement >> actOnSelectedContextChangedFor: aContext [
 	| detailsTabGroupElement |
 	detailsTabGroupElement := self buildDetailsElement.
 	self detailsPane 
@@ -23,7 +23,7 @@ GtExpandableDebugger >> actOnSelectedContextChangedFor: aContext [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildContextVariablesElement [
+GtExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
 	contextVariablesElement display: self contextVariables.
@@ -32,7 +32,7 @@ GtExpandableDebugger >> buildContextVariablesElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildDetailsElement [
+GtExpandableDebuggerElement >> buildDetailsElement [
 	| tab1 tab2 tabGroup |
 	tab1 := BrTabModel new
 		add: (BrLabelModel text: 'Variables');
@@ -54,7 +54,7 @@ GtExpandableDebugger >> buildDetailsElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildPaneElement [
+GtExpandableDebuggerElement >> buildPaneElement [
 	^ BlElement new
 		constraintsDo: [ :c |
 			c horizontal matchParent.
@@ -63,7 +63,7 @@ GtExpandableDebugger >> buildPaneElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildStackElement [
+GtExpandableDebuggerElement >> buildStackElement [
 	| stackElement |
 	stackElement := GtDebuggerExpandableStackElement new.
 	stackElement userData at: #blocContainer put: #stackElement.
@@ -71,7 +71,7 @@ GtExpandableDebugger >> buildStackElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildStackTabGroupForElement: aStackElement [
+GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 	| tab tabGroup |
 	tab := BrTab new.
 	tab 
@@ -97,7 +97,7 @@ GtExpandableDebugger >> buildStackTabGroupForElement: aStackElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildStackToolbarActions [
+GtExpandableDebuggerElement >> buildStackToolbarActions [
 	<return: #Collection of: #BrButton>	
 		
 	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
@@ -115,7 +115,7 @@ GtExpandableDebugger >> buildStackToolbarActions [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildVariablesListElement [
+GtExpandableDebuggerElement >> buildVariablesListElement [
 	| list |
 	list := BrColumnedList new.
 	list margin: (BlInsets top: 10).
@@ -153,7 +153,7 @@ GtExpandableDebugger >> buildVariablesListElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> buildWatchVariablesElement [
+GtExpandableDebuggerElement >> buildWatchVariablesElement [
 	| watchVariablesElement |
 	watchVariablesElement := self buildVariablesListElement.
 	watchVariablesElement display: {}"self watchVariables".
@@ -161,7 +161,7 @@ GtExpandableDebugger >> buildWatchVariablesElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebugger >> contextVariables [
+GtExpandableDebuggerElement >> contextVariables [
 	| vars activeCoder |
 	activeCoder := self selectedCoder.
 	(activeCoder isNil or: [ activeCoder isDead ])
@@ -176,12 +176,12 @@ GtExpandableDebugger >> contextVariables [
 ]
 
 { #category : #'accessing - elements' }
-GtExpandableDebugger >> detailsPane [
+GtExpandableDebuggerElement >> detailsPane [
 	^ self childNamed: #detailsPane
 ]
 
 { #category : #initialization }
-GtExpandableDebugger >> initialize [
+GtExpandableDebuggerElement >> initialize [
 	super initialize.
 	self
 		layout: BlLinearLayout horizontal;
@@ -193,7 +193,7 @@ GtExpandableDebugger >> initialize [
 ]
 
 { #category : #initialization }
-GtExpandableDebugger >> initializePanes [
+GtExpandableDebuggerElement >> initializePanes [
 	stackPane := self buildPaneElement
 		constraintsDo: [ :c | c linear weight: 2 ];
 		layout: BlLinearLayout horizontal.
@@ -206,42 +206,42 @@ GtExpandableDebugger >> initializePanes [
 ]
 
 { #category : #'accessing context' }
-GtExpandableDebugger >> selectedCoder [
+GtExpandableDebuggerElement >> selectedCoder [
 	^ self stackElement selectedCoder
 ]
 
 { #category : #'accessing context' }
-GtExpandableDebugger >> selectedContext [
+GtExpandableDebuggerElement >> selectedContext [
 	^ self selectedCoder context
 ]
 
 { #category : #'building actions' }
-GtExpandableDebugger >> stackDebuggingActionsPragmas [
+GtExpandableDebuggerElement >> stackDebuggingActionsPragmas [
 	^ #( gt2StackDebuggingAction )
 ]
 
 { #category : #'accessing - elements' }
-GtExpandableDebugger >> stackElement [
+GtExpandableDebuggerElement >> stackElement [
 	^ self stackPane childNamed: #stackElement
 ]
 
 { #category : #'accessing - elements' }
-GtExpandableDebugger >> stackPane [
+GtExpandableDebuggerElement >> stackPane [
 	^ self childNamed: #stackPane
 ]
 
 { #category : #updating }
-GtExpandableDebugger >> updateCoders [
+GtExpandableDebuggerElement >> updateCoders [
 	'TODO'
 ]
 
 { #category : #updating }
-GtExpandableDebugger >> updateDebugger [
+GtExpandableDebuggerElement >> updateDebugger [
 	self updateStackWidget
 ]
 
 { #category : #updating }
-GtExpandableDebugger >> updateStackPane [
+GtExpandableDebuggerElement >> updateStackPane [
 	| stackElement tabGroupElement |
 	stackElement := self buildStackElement.
 	tabGroupElement := self buildStackTabGroupForElement: stackElement.
@@ -253,6 +253,6 @@ GtExpandableDebugger >> updateStackPane [
 ]
 
 { #category : #updating }
-GtExpandableDebugger >> updateStackWidget [
+GtExpandableDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
 ]
