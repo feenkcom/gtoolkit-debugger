@@ -1,15 +1,23 @@
 Class {
 	#name : #GtExpandableDebuggerElement,
 	#superclass : #GtDebuggerElement,
-	#instVars : [
-		'stackPane',
-		'detailsPane'
-	],
 	#category : #'GToolkit-Debugger'
 }
 
 { #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
+	| tabGroupElement cotainerElement |
+	cotainerElement := BlElement new
+		layout: BlLinearLayout horizontal;
+		constraintsDo: [ :c |
+			c horizontal matchParent.
+			c vertical matchParent ].
+	self buildPanesStructureIn: cotainerElement.
+	
+	tabGroupElement := self buildStackTabGroupForElement: cotainerElement.
+	self 
+		removeChildren;
+		addChild: tabGroupElement.
 	self updateStackPane.
 ]
 
@@ -60,6 +68,22 @@ GtExpandableDebuggerElement >> buildPaneElement [
 			c horizontal matchParent.
 			c vertical matchParent.
 			c linear weight: 1 ]
+]
+
+{ #category : #'building widgets' }
+GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
+	| stackPane detailsPane |
+	stackPane := self buildPaneElement
+		constraintsDo: [ :c | c linear weight: 2 ];
+		layout: BlLinearLayout horizontal.
+	detailsPane := self buildPaneElement
+		layout: BlFrameLayout new;
+		padding: (BlInsets all: 10).
+	
+	aContainer 
+		removeChildren;
+		addChild: stackPane as: #stackPane;
+		addChild: detailsPane as: #detailsPane.
 ]
 
 { #category : #'building widgets' }
@@ -192,22 +216,8 @@ GtExpandableDebuggerElement >> initialize [
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
-			c vertical matchParent ].		
-	
-	self initializePanes.	
-]
-
-{ #category : #initialization }
-GtExpandableDebuggerElement >> initializePanes [
-	stackPane := self buildPaneElement
-		constraintsDo: [ :c | c linear weight: 2 ];
-		layout: BlLinearLayout horizontal.
-	detailsPane := self buildPaneElement
-		layout: BlFrameLayout new;
-		padding: (BlInsets all: 10).
-	
-	self addChild: stackPane as: #stackPane.
-	self addChild: detailsPane as: #detailsPane.
+			c vertical matchParent ].
+	self userData at: #blocContainer put: #debuggerElement.
 ]
 
 { #category : #'accessing context' }
@@ -247,13 +257,11 @@ GtExpandableDebuggerElement >> updateDebugger [
 
 { #category : #updating }
 GtExpandableDebuggerElement >> updateStackPane [
-	| stackElement tabGroupElement |
+	| stackElement |
 	stackElement := self buildStackElement.
-	tabGroupElement := self buildStackTabGroupForElement: stackElement.
-	
 	self stackPane 
 		removeChildren;
-		addChild: tabGroupElement.
+		addChild: stackElement.
 	self updateStackWidget.
 ]
 

@@ -59,7 +59,15 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 
 { #category : #'accessing - elements' }
 GtDebuggerExpandableStackElement >> debuggerElement [
-	^ self parent parent parent parent
+	| currentElement |
+	currentElement := self.
+	[ currentElement hasParent ] whileTrue: [ 
+		| containerName |
+		currentElement := 	currentElement parent.
+		containerName := currentElement userData at: #blocContainer ifAbsent: [ nil ].
+		containerName = #debuggerElement ifTrue: [ 
+			^ currentElement ] ].
+	^ nil
 ]
 
 { #category : #initialization }
