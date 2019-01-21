@@ -7,9 +7,8 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
-{ #category : #initialization }
+{ #category : #callbacks }
 GtDebuggerExpandableStackElement >> actOnCoderInFocusFor: aCoder [
-	
 	selectedCoder := aCoder.
 	self debuggerElement actOnSelectedContextChangedFor: aCoder context.
 ]
@@ -38,7 +37,7 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 	^ stackFramesList
 ]
 
-{ #category : #updating }
+{ #category : #private }
 GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingContexts: currenCoders [
 	| methodCoders context firstContext coder newCoders |
 	
@@ -52,14 +51,14 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 	[ context notNil and: [ context ~~ firstContext ] ]
 		whileTrue: [ 
 			coder := GtMethodContextCoder forContext: context session: aSession.
-			"coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: aDebugger."
+			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
 			newCoders add: coder.
 			context := context sender ].
 	methodCoders addAllFirst: newCoders.
 	^ methodCoders
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : #'accessing elements' }
 GtDebuggerExpandableStackElement >> debuggerElement [
 	| currentElement |
 	currentElement := self.
@@ -85,7 +84,7 @@ GtDebuggerExpandableStackElement >> initialize [
 GtDebuggerExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
-	stackFramesList display: (OrderedCollection new).
+	stackFramesList display: OrderedCollection new.
 	self addChild: stackFramesList.
 ]
 
@@ -94,9 +93,14 @@ GtDebuggerExpandableStackElement >> selectedCoder [
 	^ selectedCoder
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : #'accessing elements' }
 GtDebuggerExpandableStackElement >> stackFramesList [
 	^ self children first.
+]
+
+{ #category : #updating }
+GtDebuggerExpandableStackElement >> updateContent [
+	self updateForSession: self debuggerElement session
 ]
 
 { #category : #updating }
