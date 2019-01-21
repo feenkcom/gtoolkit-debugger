@@ -23,7 +23,7 @@ GtCoderContextVariableValueStyler >> visitVariableNode: aVariableNode [
 				aContainer addEventHandler: (BlEventDelegator delegate: BrTextEditorRequest to: aTextPieceElement).
 				aValueElement := BlShrinkingTextElement text: ([ 
 						value gtDisplayString asRopedText
-							foreground: Color gray;
+							foreground: (Color fromHexString: #'90CAF9');
 							fontSize: 10 ] 
 					on: Error, Halt
 					do: [ :e | e messageText asRopedText foreground: Color red ]).
