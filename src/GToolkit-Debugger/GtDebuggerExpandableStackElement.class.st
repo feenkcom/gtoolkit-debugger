@@ -81,5 +81,6 @@ GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 			coder := GtMethodContextCoder forContext: aContext session: aDebuggingSession.
 			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateCoders to: self debuggerElement .
 			coder ]).
-	"stackElement selectOne: 1"
+	self stackFramesList items ifNotEmpty: [ :methodCoders |
+			methodCoders first expanded: true ]
 ]
