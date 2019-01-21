@@ -20,6 +20,8 @@ GtDebuggerExpandableStackElement >> buildElementForCoder: aMethodCoder [
 	element := aMethodCoder asElement.
 	element when: BlFocusInEvent do: [ :event | 
 		self actOnCoderInFocusFor: aMethodCoder ].
+	aMethodCoder == selectedCoder ifTrue: [
+		element requestFocus ].
 	^ element
 ]
 
