@@ -8,17 +8,12 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
-{ #category : #updating }
+{ #category : #callbacks }
 GtExpandableDebugger >> actOnDebugSessionChanged [
-	| stackElement  |
-	stackElement := self buildStackElement.
-	self stackPane 
-		removeChildren;
-		addChild: stackElement as: #stackElement.
-	stackElement updateForSession: self session.
+	self updateStackPane.
 ]
 
-{ #category : #updating }
+{ #category : #callbacks }
 GtExpandableDebugger >> actOnSelectedContextChangedFor: aContext [
 	| detailsTabGroupElement |
 	detailsTabGroupElement := self buildDetailsElement.
@@ -69,7 +64,54 @@ GtExpandableDebugger >> buildPaneElement [
 
 { #category : #'building widgets' }
 GtExpandableDebugger >> buildStackElement [
-	^ GtDebuggerExpandableStackElement new 
+	| stackElement |
+	stackElement := GtDebuggerExpandableStackElement new.
+	stackElement userData at: #blocContainer put: #stackElement.
+	^ stackElement
+]
+
+{ #category : #'building widgets' }
+GtExpandableDebugger >> buildStackTabGroupForElement: aStackElement [
+	| tab tabGroup |
+	tab := BrTab new.
+	tab 
+		look: BrGlamorousTabLook new invisibleBar;
+		label: self session name;
+		stencil: (BrValuableStencil from: aStackElement); "aStackElement asStencil"
+		padding: (BlInsets top: 15 right: 0 bottom: 15 left: 10);
+		actionsStencil: [
+			| aToolbar |
+			aToolbar := BrToolbar new.
+			aToolbar look: BrGlamorousToolbarLook new.
+			self buildStackToolbarActions do: [ :anAction |
+				aToolbar addItem: anAction ].
+			aToolbar ].
+	tabGroup := BrTabGroup new.
+	tabGroup 
+		look: (BrMaterialTabGroupLook new headerBackground: BrGlamorousColors errorBackgroundColor);
+		addTab: tab;
+		constraintsDo: [ :c | 
+			c vertical matchParent. 
+			c horizontal matchParent ].
+	^ tabGroup
+]
+
+{ #category : #'building widgets' }
+GtExpandableDebugger >> buildStackToolbarActions [
+	<return: #Collection of: #BrButton>	
+		
+	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
+		| actionButton |
+		actionButton := BrButton new 
+			look: BrGlamorousButtonWithIconLook;
+			label: aDebuggingAction label; 
+			action: [ 
+				aDebuggingAction execute.
+				aDebuggingAction needsUpdate ifTrue: [
+					self updateStackWidget ] ].
+			aDebuggingAction icon ifNotNil: [ :anIcon | 
+				actionButton icon: aDebuggingAction icon asElement ].
+			actionButton ]
 ]
 
 { #category : #'building widgets' }
@@ -173,6 +215,11 @@ GtExpandableDebugger >> selectedContext [
 	^ self selectedCoder context
 ]
 
+{ #category : #'building actions' }
+GtExpandableDebugger >> stackDebuggingActionsPragmas [
+	^ #( gt2StackDebuggingAction )
+]
+
 { #category : #'accessing - elements' }
 GtExpandableDebugger >> stackElement [
 	^ self stackPane childNamed: #stackElement
@@ -191,4 +238,21 @@ GtExpandableDebugger >> updateCoders [
 { #category : #updating }
 GtExpandableDebugger >> updateDebugger [
 	self updateStackWidget
+]
+
+{ #category : #updating }
+GtExpandableDebugger >> updateStackPane [
+	| stackElement tabGroupElement |
+	stackElement := self buildStackElement.
+	tabGroupElement := self buildStackTabGroupForElement: stackElement.
+	
+	self stackPane 
+		removeChildren;
+		addChild: tabGroupElement.
+	self updateStackWidget.
+]
+
+{ #category : #updating }
+GtExpandableDebugger >> updateStackWidget [
+	self stackElement updateForSession: debuggingSession.
 ]

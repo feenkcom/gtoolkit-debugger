@@ -38,7 +38,7 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 
 { #category : #'accessing - elements' }
 GtDebuggerExpandableStackElement >> debuggerElement [
-	^ self parent parent
+	^ self parent parent parent parent
 ]
 
 { #category : #ui }
@@ -60,9 +60,6 @@ GtDebuggerExpandableStackElement >> initialize [
 GtDebuggerExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
-	stackFramesList 
-		when: BrSelectionChanged
-		do: [ :anEvent | self halt. ].
 	self addChild: stackFramesList.
 ]
 

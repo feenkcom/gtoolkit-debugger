@@ -78,7 +78,7 @@ GtDebuggerElement >> actOnBrowserClosing: ann [
 		debuggingSession := nil ]
 ]
 
-{ #category : #updating }
+{ #category : #callbacks }
 GtDebuggerElement >> actOnDebugSessionChanged [
 	self subclassResponsibility
 ]
