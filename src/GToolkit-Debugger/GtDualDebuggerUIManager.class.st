@@ -27,7 +27,7 @@ GtDualDebuggerUIManager >> debugProcess: process context: context label: title f
 	isForBlocUIProcess 
 		ifTrue: [
 			BlUniverse defer: [ 
-				[ GtExpandableDebuggerElement openOn: debugSession ] 
+				[ GtExpandableDebuggerElement openInspectorOn: debugSession ] 
 					on: Error do: [ :ex | debugSession signalDebuggerError: ex ] ] ] 
 		ifFalse: [ 
 			self defer: [ 

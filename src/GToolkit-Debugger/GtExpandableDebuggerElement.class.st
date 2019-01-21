@@ -217,7 +217,7 @@ GtExpandableDebuggerElement >> initialize [
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
-	self userData at: #blocContainer put: #debuggerElement.
+	self userData at: #debuggerContainer put: #debuggerElement.
 ]
 
 { #category : #'accessing context' }

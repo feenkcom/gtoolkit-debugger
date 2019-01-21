@@ -65,7 +65,7 @@ GtDebuggerExpandableStackElement >> debuggerElement [
 	[ currentElement hasParent ] whileTrue: [ 
 		| containerName |
 		currentElement := 	currentElement parent.
-		containerName := currentElement userData at: #blocContainer ifAbsent: [ nil ].
+		containerName := currentElement userData at: #debuggerContainer ifAbsent: [ nil ].
 		containerName = #debuggerElement ifTrue: [ 
 			^ currentElement ] ].
 	^ nil
