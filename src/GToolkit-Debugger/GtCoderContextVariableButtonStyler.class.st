@@ -13,8 +13,8 @@ GtCoderContextVariableButtonStyler >> initializeVariables [
 
 { #category : #accessing }
 GtCoderContextVariableButtonStyler >> visitVariableNode: aVariableNode [
-	variables
-		at: aVariableNode name
+	self
+		valueForVariableNamed: aVariableNode name
 		ifPresent: [ :value | 
 			self
 				styleFrom: aVariableNode start
