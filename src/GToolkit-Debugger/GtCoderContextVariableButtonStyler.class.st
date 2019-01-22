@@ -12,7 +12,7 @@ GtCoderContextVariableButtonStyler >> initializeVariables [
 ]
 
 { #category : #accessing }
-GtCoderContextVariableButtonStyler >> visitVariableNode: aVariableNode [
+GtCoderContextVariableButtonStyler >> styleVariableNode: aVariableNode [
 	self
 		valueForVariableNamed: aVariableNode name
 		ifPresent: [ :value | 
@@ -23,6 +23,5 @@ GtCoderContextVariableButtonStyler >> visitVariableNode: aVariableNode [
 					{(GtPlaygroundEvaluatedCodeButtonAttribute new
 						beNotOverwritableByStyler;
 						result: value;
-						paint: (Color fromHexString: #'90CAF9'))} ].
-	super visitVariableNode: aVariableNode
+						paint: (Color fromHexString: #'90CAF9'))} ]
 ]

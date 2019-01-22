@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #visiting }
-GtCoderContextVariableValueStyler >> visitVariableNode: aVariableNode [
-	aVariableNode name = 'self' ifTrue: [ 
-		^ super visitVariableNode: aVariableNode ].
+GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
+	(self hasValueForVariableNamed: aVariableNode name) ifFalse: [ ^ self ].
+			
 	(text from: aVariableNode start to: aVariableNode stop) replacingAdornment: [ :aText :anEditorElement | 
 		| aContainer aTextPieceElement displayText aValueElement |
 		aContainer := BlElement new
@@ -36,5 +36,4 @@ GtCoderContextVariableValueStyler >> visitVariableNode: aVariableNode [
 			c horizontal matchParent.
 			c vertical fitContent ].
 		aContainer addChildren: { aTextPieceElement . aValueElement } ].
-	super visitVariableNode: aVariableNode
 ]
