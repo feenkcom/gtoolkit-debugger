@@ -2,7 +2,8 @@ Class {
 	#name : #GtDebuggerExpandableStackElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'selectedCoder'
+		'selectedCoder',
+		'annotationsEnabled'
 	],
 	#category : #'GToolkit-Debugger'
 }
@@ -11,6 +12,11 @@ Class {
 GtDebuggerExpandableStackElement >> actOnCoderInFocusFor: aCoder [
 	selectedCoder := aCoder.
 	self debuggerElement actOnSelectedContextChangedFor: aCoder context.
+]
+
+{ #category : #testing }
+GtDebuggerExpandableStackElement >> areAnnotationsEnabled [
+	^ annotationsEnabled ifNil: [ false ]
 ]
 
 { #category : #'building elements' }
@@ -51,6 +57,8 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 	[ context notNil and: [ context ~~ firstContext ] ]
 		whileTrue: [ 
 			coder := GtMethodContextCoder forContext: context session: aSession.
+			self areAnnotationsEnabled ifTrue: [
+				coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
 			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
 			newCoders add: coder.
 			context := context sender ].
@@ -69,6 +77,22 @@ GtDebuggerExpandableStackElement >> debuggerElement [
 		containerName = #debuggerElement ifTrue: [ 
 			^ currentElement ] ].
 	^ nil
+]
+
+{ #category : #actions }
+GtDebuggerExpandableStackElement >> disableVariableAnnotations [
+	annotationsEnabled := false.
+	self stackFramesList items do: [ :aCoder |
+		aCoder addOns removeStylerOfType: GtCoderContextVariableValueStyler ].
+	self updateContent
+]
+
+{ #category : #actions }
+GtDebuggerExpandableStackElement >> enableVariableAnnotations [
+	annotationsEnabled := true.
+	self stackFramesList items do: [ :aCoder |
+		aCoder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: aCoder) ].
+	self updateContent.
 ]
 
 { #category : #initialization }
@@ -112,5 +136,7 @@ GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 		selectedCoder := methodCoders first.
 		selectedCoder expanded: true.
 		selectedCoder isBuilt ifTrue: [
-			selectedCoder updateSelection ] ]
+			"Update the content as some actions (for example save)
+			can change the compiled method stored in the context."
+			selectedCoder updateContent ] ]
 ]

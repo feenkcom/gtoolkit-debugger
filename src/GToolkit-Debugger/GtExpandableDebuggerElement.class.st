@@ -145,13 +145,9 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
 		icon: BrGlamorousIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
-			self stackElement stackFramesList items do: [ :aCoder |
-				aCoder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: aCoder) ].
-			self stackElement updateContent ];
+			self stackElement enableVariableAnnotations ];
 		when: BrToggleDeactivatedEvent do: [ :anEvent | 
-			self stackElement stackFramesList items do: [ :aCoder |
-				aCoder addOns removeStylerOfType: GtCoderContextVariableValueStyler ].
-			self stackElement updateContent  ].
+			self stackElement disableVariableAnnotations ].
 	buttons add: toggle.
 	^ buttons
 ]
