@@ -136,6 +136,7 @@ GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 		selectedCoder := methodCoders first.
 		selectedCoder expanded: true.
 		selectedCoder isBuilt ifTrue: [
-			"Rebuild the top context as both the code and the selection might have changed."
-			selectedCoder buildSource ] ]
+			"Update the content as some actions (for example save)
+			can change the compiled method stored in the context."
+			selectedCoder updateContent ] ]
 ]
