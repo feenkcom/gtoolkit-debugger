@@ -136,5 +136,6 @@ GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 		selectedCoder := methodCoders first.
 		selectedCoder expanded: true.
 		selectedCoder isBuilt ifTrue: [
-			selectedCoder updateSelection ] ]
+			"Rebuild the top context as both the code and the selection might have changed."
+			selectedCoder buildSource ] ]
 ]
