@@ -157,33 +157,39 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 	| list |
 	list := BrColumnedList new.
 	list margin: (BlInsets top: 10).
-	list addEventHandler: (GtInspectorListToSelectHandler new transformation: [ :each | each last ]).
+	list addEventHandler: (GtInspectorListToSelectHandler new 
+		transformation: [ :variableNode | variableNode value ]).
 	list column
 		title: 'Icon';
-		stencil: [ :each | 
-			| icon |
-			icon := [ each last gtInspectorIcon ifNil: [ each last class systemIcon ] ]
-				on: Error
+		stencil: [ :variableNode | 
+			| icon variableValue |
+			icon := [ 
+				variableValue := variableNode rawValue.
+				variableValue gtInspectorIcon ifNil: [ variableValue class systemIcon ] 
+			]	on: Error, Halt
 				do: [ :error | self iconNamed: #smallWarningIcon ].
 			icon asElement
 				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
 	list column
 		title: 'Variable';
-		stencil: [ :each | 
+		stencil: [ :variableNode | 
 			BrLabel new
 				look: (BrGlamorousLabelLook new foreground: Color black);
-				text: each first asString;
+				text: variableNode key;
 				hMatchParent;
 				vMatchParent;
 				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
 	list column
 		title: 'Value';
-		stencil: [ :each | 
+		stencil: [ :variableNode || rawValue displayValue| 
+			[ rawValue := variableNode rawValue ] 
+				on: Error 
+				do: [ :error | displayValue := variableNode errorMessage asRopedText foreground: Color red ].
 			BrLabel new
 				look: BrGlamorousLabelLook new;
-				text: ([ each last gtDisplayString asRopedText ] 
-						on: Error, Halt
-						do: [ :e | e messageText asRopedText foreground: Color red ]);
+				text: ([ displayValue ifNil: [ rawValue gtDisplayString asRopedText ] ] 
+					on: Error, Halt
+					do: [ :error | error messageText asRopedText foreground: Color red ]);
 				hMatchParent;
 				vMatchParent;
 				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
@@ -200,17 +206,12 @@ GtExpandableDebuggerElement >> buildWatchVariablesElement [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> contextVariables [
-	| vars activeCoder |
+	| activeCoder |
 	activeCoder := self selectedCoder.
 	(activeCoder isNil or: [ activeCoder isDead ])
 		ifTrue: [ ^ #() ].
-	vars := OrderedCollection new.
-	activeCoder tempNamesAndValuesDo: [ :name :value | vars add: {name. 'temporary'. value} ].
-	activeCoder instanceVariableNamesAndValuesDo: [ :name :value | vars add: {name. 'instance'. value} ].
-	vars sort: [ :a :b | a first < b first ].
-	vars addFirst: {'self'. 'self'. activeCoder receiver}.
-	activeCoder stackVariableNamesAndValuesDo: [ :name :value | vars add: {name. 'stack'. value} ].
-	^ vars
+	^ activeCoder debuggerVariableNodes
+	
 ]
 
 { #category : #'accessing context' }
