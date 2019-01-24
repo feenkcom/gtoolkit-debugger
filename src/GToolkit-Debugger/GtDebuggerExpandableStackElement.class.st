@@ -45,7 +45,7 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 
 { #category : #private }
 GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingContexts: currenCoders [
-	| methodCoders context firstContext coder newCoders |
+	| methodCoders context firstContext newCoder newCoders |
 	
 	methodCoders := currenCoders reject: [ :each | each isDead ].
 	firstContext := methodCoders isEmpty
@@ -56,14 +56,39 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 	newCoders := OrderedCollection new.
 	[ context notNil and: [ context ~~ firstContext ] ]
 		whileTrue: [ 
-			coder := GtMethodContextCoder forContext: context session: aSession.
-			self areAnnotationsEnabled ifTrue: [
-				coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
-			coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
-			newCoders add: coder.
+			newCoder := self createCoderFor: context in: aSession.
+			newCoders add: newCoder.
 			context := context sender ].
+		
+	"For the moment look only for a new on:do: context that does not have a coder. 
+	Those contexts can be added by a Step Through action. This is mostly a hack.
+	A better solution would be to iterate over the stack and determine if there are
+	new contexts at any point in the stack. "
+	(context notNil and: [ context sender notNil and: [ 
+		 "The next context should be BlockClosure>>#on:do:"
+		(context sender method = (BlockClosure>>#on:do:)) and: [
+			"There should be no coder for the context: either we just have a coder 
+			or the coder after firstContext is for another context "
+			  methodCoders size = 1 or: [ methodCoders second context ~~ context sender ] ] ] ]) ifTrue: [ 
+				
+		"Insert a new coder after the first context for the new context."	
+		newCoder := self createCoderFor: context sender in: aSession.
+		methodCoders 
+			add: newCoder
+			afterIndex: 1 ].
+	
 	methodCoders addAllFirst: newCoders.
 	^ methodCoders
+]
+
+{ #category : #private }
+GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
+	| coder |
+	coder := GtMethodContextCoder forContext: aContext session: aSession.
+	self areAnnotationsEnabled ifTrue: [
+		coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
+	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
+	^ coder
 ]
 
 { #category : #'accessing elements' }
