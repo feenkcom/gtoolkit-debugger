@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #accessing }
+GtDualDebuggerUIManager class >> isActiveManager [
+	^ false
+]
+
 { #category : #debug }
 GtDualDebuggerUIManager >> debugProcess: process context: context label: title fullView: bool notification: notificationString [
 	"I open a debugger and add support for detecting also if the debugged process is the Bloc UI process.
