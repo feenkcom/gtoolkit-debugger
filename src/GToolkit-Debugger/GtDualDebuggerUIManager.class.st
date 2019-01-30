@@ -43,6 +43,53 @@ GtDualDebuggerUIManager >> debugProcess: process context: context label: title f
 	process suspend
 ]
 
+{ #category : #haba }
+GtDualDebuggerUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder forException: exception [
+	| debugSession isForBlocUIProcess |
+
+	debugSession := process newDebugSessionNamed: exception description startedAt: context.
+	debugSession logStackToFileIfNeeded.
+	
+	isForBlocUIProcess := self isForBlockUIProcess: debugSession.
+	isForBlocUIProcess "Handle the case of the Bloc UI process"
+		ifTrue: [ debugSession errorWasInUIProcess: true ].
+	debugSession isAboutUIProcess ifTrue: [
+		DefaultExecutionEnvironment beActiveDuring: [
+			isForBlocUIProcess "Handle the case of the Bloc UI process"
+				ifTrue:[ self spawnNewBlocProcess ]
+				ifFalse: [ self spawnNewMorphicProcess ]
+			] ].
+
+	isForBlocUIProcess 
+		ifTrue: [
+			BlUniverse defer: [ 
+				[ 
+				| selectionInterval |
+				selectionInterval := sourceCoder selectedSourceInterval.
+				sourceCoder sourceEditor text
+					attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new 
+						paint: Color red)}
+					from: selectionInterval first
+					to: selectionInterval last.
+				sourceCoder sourceEditor text
+					attributes: {(GtEmbeddedDebuggerAttribute new 
+						signaledException: exception;
+						debugSession: debugSession)}
+					from: selectionInterval first
+					to: selectionInterval last .
+				sourceCoder sourceEditor
+					invalidateAll;
+					updateAll
+				] on: Error do: [ :ex | debugSession signalDebuggerError: ex ] ] ] 
+		ifFalse: [ 
+			self defer: [ 
+				[ Smalltalk tools debugger 
+					openOn: debugSession withFullView: false andNotification: nil.
+				] on: Error do: [ :ex | 	debugSession signalDebuggerError: ex ] ] ].
+	
+	process suspend
+]
+
 { #category : #'ui process' }
 GtDualDebuggerUIManager >> resumeUIProcess: aProcess [
 	"Adopt aProcess as the project process -- probably because of proceeding from a debugger"
