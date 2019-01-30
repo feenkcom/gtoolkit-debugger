@@ -44,15 +44,18 @@ GtExpandableDebuggerElement >> buildContextVariablesElement [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsElement [
-	| tab1 tab2 tabGroup |
+	| tab1 tab2 tab3 tabGroup |
 	tab1 := BrTabModel new
 		add: (BrLabelModel text: 'Variables');
 		stencil: [ self buildContextVariablesElement ].
 	tab2 := BrTabModel new
+		add: (BrLabelModel text: 'Evaluator');
+		stencil: [ self buildEvaluatorElement ].
+	tab3 := BrTabModel new
 		add: (BrLabelModel text: 'Watches');
 		stencil: [ self buildWatchVariablesElement ].
 	tabGroup := BrTabGroupModel
-		with: {tab1. tab2}.
+		with: {tab1. tab2. tab3}.
 	tabGroup tabs
 		do: [ :aTab | 
 			BlElement new
@@ -62,6 +65,17 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 		background: Color white;
 		look: BrGlamorousTabGroupLook + BrShadowLook;
 		viewModel: tabGroup
+]
+
+{ #category : #'building widgets' }
+GtExpandableDebuggerElement >> buildEvaluatorElement [
+	| snippetCoder |
+	snippetCoder := GtPharoSnippetCoder new
+		source: 'self';
+		context: self selectedContext;
+		variableBindings: (GtSnippetBindings new
+			receiver: self selectedContext receiver).
+	^ snippetCoder asElement
 ]
 
 { #category : #'building widgets' }
