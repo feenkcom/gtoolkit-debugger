@@ -61,7 +61,9 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	debugButton := BrButton new.
 	debugButton look: BrGlamorousButtonExteriorRectangularLook + BrGlamorousButtonLabelLook.
 	debugButton label: 'Debug'.
-	debugButton action: [ self inform: 'it works' ].
+	debugButton action: [ 
+		self switchToDebuggerType: GtExpandableDebuggerElement.
+		self removeFromParent ].
 	self 
 		removeChildren;
 		addChild: textElement;
@@ -71,7 +73,12 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 		c horizontal fitContent ].
 ]
 
-{ #category : #'hooks - children' }
+{ #category : #actions }
+GtEmbeddedDebuggerElement >> detachSession [
+	debuggingSession := nil
+]
+
+{ #category : #callbacks }
 GtEmbeddedDebuggerElement >> onAddedToSceneGraph [ 
 	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
 ]
@@ -95,4 +102,24 @@ GtEmbeddedDebuggerElement >> signaledException [
 { #category : #accessing }
 GtEmbeddedDebuggerElement >> signaledException: anException [
 	signaledException := anException
+]
+
+{ #category : #actions }
+GtEmbeddedDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
+	| currentSession newDebugger |
+	
+	currentSession := currentDebugger session.
+	currentDebugger detachSession.
+	newDebugger := aDebuggerClass openInspectorOn: (aDebuggerClass spanNewSessionFrom: currentSession).	
+	^ newDebugger
+]
+
+{ #category : #actions }
+GtEmbeddedDebuggerElement >> switchToDebuggerType: aDebuggerClass [
+	| currentSession newDebugger |
+	
+	currentSession := self session.
+	self detachSession.
+	newDebugger := aDebuggerClass openInspectorOn: (aDebuggerClass spanNewSessionFrom: currentSession).	
+	^ newDebugger
 ]

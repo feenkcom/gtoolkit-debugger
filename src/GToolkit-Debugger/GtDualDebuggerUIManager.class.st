@@ -43,7 +43,7 @@ GtDualDebuggerUIManager >> debugProcess: process context: context label: title f
 	process suspend
 ]
 
-{ #category : #haba }
+{ #category : #debug }
 GtDualDebuggerUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder forException: exception [
 	| debugSession isForBlocUIProcess |
 

@@ -7,6 +7,11 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #accessing }
+GtExpandableDebuggerElement class >> sessionClass [
+	^ DebugSession 
+]
+
 { #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	| tabGroupElement cotainerElement |
