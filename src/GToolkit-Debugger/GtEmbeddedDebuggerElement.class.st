@@ -8,6 +8,26 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #opening }
+GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
+	| selectionInterval |
+	selectionInterval := sourceCoder selectedSourceInterval.
+	sourceCoder sourceEditor text
+		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new 
+			paint: Color red)}
+		from: selectionInterval first
+		to: selectionInterval last.
+	sourceCoder sourceEditor text
+		attributes: {(GtEmbeddedDebuggerAttribute new 
+			signaledException: exception;
+			debugSession: debugSession)}
+		from: selectionInterval first
+		to: selectionInterval last .
+	sourceCoder sourceEditor
+		invalidateAll;
+		updateAll
+]
+
 { #category : #'tools registry' }
 GtEmbeddedDebuggerElement class >> register [
 	self registerToolsOn: Smalltalk tools.

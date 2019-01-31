@@ -63,23 +63,8 @@ GtDualDebuggerUIManager >> gtDebugProcess: process context: context withEmbedded
 	isForBlocUIProcess 
 		ifTrue: [
 			BlUniverse defer: [ 
-				[ 
-				| selectionInterval |
-				selectionInterval := sourceCoder selectedSourceInterval.
-				sourceCoder sourceEditor text
-					attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new 
-						paint: Color red)}
-					from: selectionInterval first
-					to: selectionInterval last.
-				sourceCoder sourceEditor text
-					attributes: {(GtEmbeddedDebuggerAttribute new 
-						signaledException: exception;
-						debugSession: debugSession)}
-					from: selectionInterval first
-					to: selectionInterval last .
-				sourceCoder sourceEditor
-					invalidateAll;
-					updateAll
+				[ Smalltalk tools gtEmbeddableDebugger  
+					openOn: debugSession dueTo: exception embeddedIn: sourceCoder
 				] on: Error do: [ :ex | debugSession signalDebuggerError: ex ] ] ] 
 		ifFalse: [ 
 			self defer: [ 
