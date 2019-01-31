@@ -8,6 +8,16 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #'tools registry' }
+GtEmbeddedDebuggerElement class >> register [
+	self registerToolsOn: Smalltalk tools.
+]
+
+{ #category : #'tools registry' }
+GtEmbeddedDebuggerElement class >> registerToolsOn: registry [
+	registry register: self as: #gtEmbeddableDebugger.
+]
+
 { #category : #callbacks }
 GtEmbeddedDebuggerElement >> actOnBrowserClosing: ann [
 	self session ifNotNil: [ :aSession | 
