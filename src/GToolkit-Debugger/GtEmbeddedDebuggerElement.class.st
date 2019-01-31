@@ -116,10 +116,11 @@ GtEmbeddedDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebugg
 
 { #category : #actions }
 GtEmbeddedDebuggerElement >> switchToDebuggerType: aDebuggerClass [
-	| currentSession newDebugger |
+	| currentSession newDebugger newSession |
 	
 	currentSession := self session.
 	self detachSession.
-	newDebugger := aDebuggerClass openInspectorOn: (aDebuggerClass spanNewSessionFrom: currentSession).	
+	newSession := aDebuggerClass spanNewSessionFrom: currentSession.
+	newDebugger := aDebuggerClass openInspectorOn: newSession.	
 	^ newDebugger
 ]
