@@ -12,6 +12,10 @@ Class {
 GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
 	| selectionInterval |
 	selectionInterval := sourceCoder selectedSourceInterval.
+	sourceCoder sourceText
+		clearAttributes: [ :each | 
+			{GtPlaygroundEvaluatedCodeHighlightedAttribute.
+			GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
 	sourceCoder sourceEditor text
 		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new 
 			paint: Color red)}
