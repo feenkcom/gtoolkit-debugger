@@ -10,6 +10,9 @@ ${example:GtDummyExamplesWithExceptions class>>#j|expandedPreview|previewHeight=
 Class {
 	#name : #BaselineOfGToolkitDebugger,
 	#superclass : #BaselineOf,
+	#classVars : [
+		'PostLoaded'
+	],
 	#category : #BaselineOfGToolkitDebugger
 }
 
@@ -17,9 +20,20 @@ Class {
 BaselineOfGToolkitDebugger >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
+		spec postLoadDoIt: #'postLoadDebugger:'.
 		spec baseline: 'GToolkitInspector' with: [
 				spec repository: 'github://feenkcom/gtoolkit-inspector/src' ].
 		spec package: 'GToolkit-Debugger' with: [
 				spec requires: #(#GToolkitInspector ). ]. ].
 
+]
+
+{ #category : #'post load' }
+BaselineOfGToolkitDebugger >> postLoadDebugger: spec [
+	(PostLoaded isNotNil and: [ PostLoaded ])
+		ifTrue: [ ^ self ].
+	
+	PostLoaded := true.
+	GtEmbeddedDebuggerElement isRegistered ifFalse: [
+		GtEmbeddedDebuggerElement register ].
 ]

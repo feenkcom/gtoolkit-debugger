@@ -8,6 +8,11 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #'tools registry' }
+GtEmbeddedDebuggerElement class >> isRegistered [
+	^ Smalltalk tools hasToolNamed: #gtEmbeddableDebugger
+]
+
 { #category : #opening }
 GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
 	| selectionInterval |
