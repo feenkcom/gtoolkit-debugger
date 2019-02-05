@@ -22,7 +22,7 @@ BaselineOfGToolkitDebugger >> baseline: spec [
 	spec for: #'common' do: [
 		spec postLoadDoIt: #'postLoadDebugger:'.
 		spec baseline: 'GToolkitInspector' with: [
-				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.4.7/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.4.8/src' ].
 		spec package: 'GToolkit-Debugger' with: [
 				spec requires: #(#GToolkitInspector ). ]. ].
 
