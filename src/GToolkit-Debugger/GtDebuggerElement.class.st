@@ -16,50 +16,18 @@ GtDebuggerElement class >> on: aDebugSession [
 
 { #category : #opening }
 GtDebuggerElement class >> openInspectorOn: aDebuggingSession [
-	| aDebugger anInspector aSpace |
+	| aDebugger |
 
-	aDebugger := self new.
-	aDebugger constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-	aDebugger session: aDebuggingSession.
-	
-	anInspector := GtInspector new.
-	anInspector constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-
-	anInspector addPageWithContent: aDebugger for: aDebuggingSession.
-
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: aDebuggingSession name.
-	aSpace extent: 1200@600.
-	aSpace addChild: anInspector.
-	aSpace show.
-	
-	^ aDebugger
+	aDebugger := self on: aDebuggingSession.
+	^ aDebugger openInInspector
 ]
 
 { #category : #opening }
 GtDebuggerElement class >> openOn: aDebuggingSession [
-	| aDebugger aSpace |
+	| aDebugger |
 
-	aDebugger := self new.
-	aDebugger constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-
-	aDebugger session: aDebuggingSession.
-
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: aDebuggingSession name.
-	aSpace extent: 1200@600.
-	aSpace addChild: aDebugger.
-	aSpace show.
-	
-	^ aDebugger
+	aDebugger := self on: aDebuggingSession.
+	^ aDebugger open.
 ]
 
 { #category : #'opening api' }
@@ -86,6 +54,17 @@ GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotifica
 	"aBool | self alwaysOpenFullDebugger
 		ifTrue: [ debugger openWithFullView ]
 		ifFalse: [ debugger openWithNotification: aString]"
+]
+
+{ #category : #'tools registry' }
+GtDebuggerElement class >> register [
+	self registerToolsOn: Smalltalk tools.
+
+]
+
+{ #category : #'tools registry' }
+GtDebuggerElement class >> registerToolsOn: registry [
+	registry register: self as: #debugger.
 ]
 
 { #category : #accessing }
@@ -147,6 +126,51 @@ GtDebuggerElement >> interruptedContext [
 { #category : #callbacks }
 GtDebuggerElement >> onAddedToSceneGraph [ 
 	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
+]
+
+{ #category : #opening }
+GtDebuggerElement >> open [
+	| aSpace |
+	self constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
+
+	aSpace := BlSpace new.
+	aSpace withHalos.
+	aSpace title: self session name.
+	aSpace extent: 1200@600.
+	aSpace addChild: self.
+	^ aSpace show
+]
+
+{ #category : #opening }
+GtDebuggerElement >> openInInspector [
+	| anInspector aSpace |
+
+	self constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
+	
+	anInspector := GtInspector new.
+	anInspector constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
+
+	anInspector addPageWithContent: self for: self session.
+
+	aSpace := BlSpace new.
+	aSpace withHalos.
+	aSpace title: self session name.
+	aSpace extent: 1200@600.
+	aSpace addChild: anInspector.
+	aSpace show.
+]
+
+{ #category : #opening }
+GtDebuggerElement >> openWithFullView [
+	"Create and open a full debugger. Do not terminate the current active process."
+
+	self openInInspector
 ]
 
 { #category : #accessing }
