@@ -243,6 +243,12 @@ GtExpandableDebuggerElement >> detailsPane [
 	^ self childNamed: #detailsPane
 ]
 
+{ #category : #opening }
+GtExpandableDebuggerElement >> filteredStack [
+	^ (self session stackOfSize: 50 ) select: [ :aContext | 
+		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
+]
+
 { #category : #initialization }
 GtExpandableDebuggerElement >> initialize [
 	super initialize.
@@ -254,6 +260,14 @@ GtExpandableDebuggerElement >> initialize [
 	self userData at: #debuggerContainer put: #debuggerElement.
 ]
 
+{ #category : #opening }
+GtExpandableDebuggerElement >> openWithFullView [
+	"Open the debugger and also select the first non filtered context, this mean that we will ignore some methods like halts or debug method to select the first interesting line in the debugger."
+
+	self setDebuggerToFirstNonFilteredContext.
+	super openWithFullView
+]
+
 { #category : #'accessing context' }
 GtExpandableDebuggerElement >> selectedCoder [
 	^ self stackElement selectedCoder
@@ -262,6 +276,18 @@ GtExpandableDebuggerElement >> selectedCoder [
 { #category : #'accessing context' }
 GtExpandableDebuggerElement >> selectedContext [
 	^ self selectedCoder context
+]
+
+{ #category : #opening }
+GtExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
+	"I set the debugger to the first non filtered stack"
+
+	| selection |
+	selection := self selectedContext.
+	(selection isNil or: [ selection method hasPragmaNamed: #debuggerCompleteToSender ])
+		ifTrue: [ 
+			self selectedCoder expanded: false. "Do not expand the first context as another context is going to be expanded"
+			self stackElement selectContext: self filteredStack first ]
 ]
 
 { #category : #'building actions' }

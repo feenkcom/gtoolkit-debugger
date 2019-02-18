@@ -137,6 +137,24 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 	self addChild: stackFramesList.
 ]
 
+{ #category : #actions }
+GtDebuggerExpandableStackElement >> selectCoder: aContextCoder [
+	selectedCoder := aContextCoder.
+	selectedCoder expanded: true.
+	selectedCoder isBuilt ifTrue: [
+		"Update the content as some actions (for example save)
+		can change the compiled method stored in the context."
+		selectedCoder updateContent ]
+]
+
+{ #category : #actions }
+GtDebuggerExpandableStackElement >> selectContext: aContext [
+	self stackFramesList items 
+		detect:  [ :aCoder | aCoder context = aContext ]
+		ifFound: [ :aCoder | self selectCoder: aCoder ] 
+		ifNone: [  ]
+]
+
 { #category : #accessing }
 GtDebuggerExpandableStackElement >> selectedCoder [
 	^ selectedCoder
@@ -158,10 +176,5 @@ GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 		codersToDisplayFrom: aDebuggingSession
 		preservingContexts: self stackFramesList items).
 	self stackFramesList items ifNotEmpty: [ :methodCoders |
-		selectedCoder := methodCoders first.
-		selectedCoder expanded: true.
-		selectedCoder isBuilt ifTrue: [
-			"Update the content as some actions (for example save)
-			can change the compiled method stored in the context."
-			selectedCoder updateContent ] ]
+		self selectCoder: methodCoders first ]
 ]

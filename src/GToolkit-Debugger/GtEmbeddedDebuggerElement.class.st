@@ -9,6 +9,11 @@ Class {
 }
 
 { #category : #'tools registry' }
+GtEmbeddedDebuggerElement class >> disable [
+	Smalltalk tools remove: #gtEmbeddableDebugger.
+]
+
+{ #category : #'tools registry' }
 GtEmbeddedDebuggerElement class >> isRegistered [
 	^ Smalltalk tools hasToolNamed: #gtEmbeddableDebugger
 ]
