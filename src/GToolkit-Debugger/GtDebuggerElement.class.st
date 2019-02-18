@@ -7,6 +7,13 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #'instance creation' }
+GtDebuggerElement class >> on: aDebugSession [
+
+	^ self new 	
+		session: aDebugSession
+]
+
 { #category : #opening }
 GtDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	| aDebugger anInspector aSpace |
@@ -53,6 +60,32 @@ GtDebuggerElement class >> openOn: aDebuggingSession [
 	aSpace show.
 	
 	^ aDebugger
+]
+
+{ #category : #'opening api' }
+GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
+	| debugger debuggerClass |
+	
+	debuggerClass := Smalltalk tools 
+		debuggerDispatcherFor: aDebugSession interruptedContext
+		matching: [ :aDebuggerClass | 
+			"Only take into account GT debuggers."
+			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
+				aDebuggerClass availableAutomatically ] ].
+	debugger := debuggerClass
+		ifNil: [ 
+			"Use the current debugger"
+			self on: aDebugSession ]
+		ifNotNil: [ :aDebugger | 
+			"Use a custom extension"
+			aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
+	
+	"For now allways open the full debugger"
+	debugger openWithFullView 
+	
+	"aBool | self alwaysOpenFullDebugger
+		ifTrue: [ debugger openWithFullView ]
+		ifFalse: [ debugger openWithNotification: aString]"
 ]
 
 { #category : #accessing }
