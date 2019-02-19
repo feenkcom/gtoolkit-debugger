@@ -7,6 +7,13 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #testing }
+GtDebuggerElement class >> availableAutomatically [
+	"Should this debugger be taken into account when looking for a debugger to handle an exception."
+	
+	^ false
+]
+
 { #category : #'instance creation' }
 GtDebuggerElement class >> on: aDebugSession [
 
