@@ -9,7 +9,7 @@ GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 	(self hasValueForVariableNamed: aVariableNode name) ifFalse: [ ^ self ].
 			
 	(text from: aVariableNode start to: aVariableNode stop) replacingAdornment: [ :aText :anEditorElement | 
-		| aContainer aTextPieceElement displayText aValueElement |
+		| aContainer aTextPieceElement displayText aValueElement theValue |
 		aContainer := BlElement new
 			clipChildren: false;
 			layout: BlLinearLayout vertical;
@@ -23,6 +23,7 @@ GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 		displayText := self 
 			valueForVariableNamed: aVariableNode name
 			ifPresent: [ :aValue |
+				theValue := aValue.
 				([ aValue gtDisplayString asRopedText
 						foreground: (Color fromHexString: #'90CAF9');
 						fontSize: 10 ] 
@@ -31,6 +32,7 @@ GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 			ifAbsent: [ 
 				'<missing>' asRopedText foreground: Color red ].
 		aValueElement := BlShrinkingTextElement text: displayText.
+		aValueElement when: BlClickEvent do: [ :event | aValueElement phlow spawnObject: theValue ].
 		aValueElement clipChildren: true.
 		aValueElement constraintsDo: [ :c |
 			c horizontal matchParent.
