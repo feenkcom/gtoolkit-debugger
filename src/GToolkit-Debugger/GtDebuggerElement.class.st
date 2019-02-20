@@ -4,8 +4,118 @@ Class {
 	#instVars : [
 		'debuggingSession'
 	],
+	#classVars : [
+		'AlwaysOpenFullDebugger',
+		'ErrorRecursion',
+		'FilterCommonMessageSends',
+		'LogDebuggerStackToFile',
+		'LogFileName'
+	],
 	#category : #'GToolkit-Debugger'
 }
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> alwaysOpenFullDebugger [
+	^ AlwaysOpenFullDebugger ifNil: [AlwaysOpenFullDebugger := false]
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> alwaysOpenFullDebugger: aBoolean [
+	AlwaysOpenFullDebugger := aBoolean.
+]
+
+{ #category : #testing }
+GtDebuggerElement class >> availableAutomatically [
+	"Should this debugger be taken into account when looking for a debugger to handle an exception."
+	
+	^ false
+]
+
+{ #category : #'utilities api' }
+GtDebuggerElement class >> closeAllDebuggers [
+	self flag: 'Take the new GT debuggers into account'.
+	(SystemWindow allSubInstances select: [:w | 
+		 w model isKindOf: GTGenericStackDebugger])
+			do: [:w | w delete ].
+	GTSpecPreDebugWindow allInstances do: #delete.
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> defaultLogFileName [
+	^ 'PharoDebug.log'
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> filterCommonMessageSends [
+	self flag: 'horrible hack not to break the setting browser'.
+	^ false
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> filterCommonMessageSends: aBoolean [
+	FilterCommonMessageSends := aBoolean
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> filterDoItSelectors [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtDebuggerElement class >> filterDoItSelectors: aBoolean [
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> filterKernelClasses [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtDebuggerElement class >> filterKernelClasses: aBoolean [
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> filterLinkSelectors [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtDebuggerElement class >> filterLinkSelectors: aBoolean [ 
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> filterNilSelectors [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtDebuggerElement class >> filterNilSelectors: aBoolean [ 
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #testing }
+GtDebuggerElement class >> handlesContext: aContext [
+
+	^ true
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> logDebuggerStackToFile [
+	^ LogDebuggerStackToFile ifNil: [LogDebuggerStackToFile := true]
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> logDebuggerStackToFile: aBoolean [
+	 LogDebuggerStackToFile := aBoolean
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> logFileName [
+	^ LogFileName ifNil: [ self defaultLogFileName ] 
+]
 
 { #category : #'instance creation' }
 GtDebuggerElement class >> on: aDebugSession [
@@ -81,6 +191,17 @@ GtDebuggerElement class >> spanNewSessionFrom: anotherSession [
 		startedAt: anotherSession interruptedContext)
 			errorWasInUIProcess: anotherSession errorWasInUIProcess;
 			yourself
+]
+
+{ #category : #'settings api' }
+GtDebuggerElement class >> stackWidgetClass [
+	self flag: 'horrible hack not to break the setting browser'.
+	^ self
+]
+
+{ #category : #icons }
+GtDebuggerElement class >> taskbarIconName [
+	^ #smallDebugIcon
 ]
 
 { #category : #callbacks }
