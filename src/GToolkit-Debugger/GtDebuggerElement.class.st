@@ -141,6 +141,11 @@ GtDebuggerElement class >> openOn: aDebuggingSession [
 ]
 
 { #category : #'opening api' }
+GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
+	self openOn: aDebugSession withFullView: aBool andNotification: nil
+]
+
+{ #category : #'opening api' }
 GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
 	| debugger debuggerClass |
 	
