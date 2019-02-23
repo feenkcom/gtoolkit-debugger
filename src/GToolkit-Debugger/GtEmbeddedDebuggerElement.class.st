@@ -76,7 +76,7 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	debugButton look: BrGlamorousButtonExteriorRectangularLook + BrGlamorousButtonLabelLook.
 	debugButton label: 'Debug'.
 	debugButton action: [ 
-		self switchToDebuggerType: GtExpandableDebuggerElement.
+		self switchToDebuggerType: Smalltalk tools debugger.
 		self removeFromParent ].
 	self 
 		removeChildren;
@@ -135,6 +135,6 @@ GtEmbeddedDebuggerElement >> switchToDebuggerType: aDebuggerClass [
 	currentSession := self session.
 	self detachSession.
 	newSession := aDebuggerClass spanNewSessionFrom: currentSession.
-	newDebugger := aDebuggerClass openInspectorOn: newSession.	
+	newDebugger := aDebuggerClass openOn: newSession withFullView: true andNotification: nil.
 	^ newDebugger
 ]
