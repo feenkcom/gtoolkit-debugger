@@ -18,7 +18,7 @@ BaselineOfGToolkitDebugger >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec baseline: 'GToolkitInspector' with: [
-				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.5.20/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.5.21/src' ].
 		spec package: 'GToolkit-Debugger' with: [
 				spec requires: #(#GToolkitInspector ). ]. ].
 
