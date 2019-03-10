@@ -135,7 +135,7 @@ GtStackDebuggerElement >> buildContextVariablesList [
 		title: 'Variable';
 		stencil: [ :aNode :index |
 			| textElement |
-			textElement := (BrListLabelStencil matchParent: (GTObjectPrinter asNonTruncatedTextFrom: aNode key)) asElement.
+			textElement := (BrColumnCellLabelStencil matchParent: (GTObjectPrinter asNonTruncatedTextFrom: aNode key)) asElement.
 			textElement constraintsDo: [ :c | c padding: (BlInsets right: 10)] ].
 
 	contextVariablesList column
@@ -145,7 +145,7 @@ GtStackDebuggerElement >> buildContextVariablesList [
 				[ rawValue := aNode rawValue. ] 
 					on: Error 
 					do: [ displayValue := Text string: aNode errorMessage attribute: TextColor red ].
-			textElement := (BrListLabelStencil matchParent: (displayValue 
+			textElement := (BrColumnCellLabelStencil matchParent: (displayValue 
 				ifNil: [ GTObjectPrinter asTruncatedTextFrom: rawValue ])) asElement.
 			textElement constraintsDo: [ :c | c padding: (BlInsets right: 10) ] ].
 	^ contextVariablesList

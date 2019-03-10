@@ -26,21 +26,21 @@ GtDebuggerStackElement >> initializeStackFramesList [
 		title: 'Class';
 		stencil: [ :aContext :index |
 			| textElement |
-			textElement := (BrListLabelStencil matchParent: (self printStackClassColumnForContext: aContext)) asElement.
+			textElement := (BrColumnCellLabelStencil matchParent: (self printStackClassColumnForContext: aContext)) asElement.
 			textElement constraintsDo: [ :c | c padding: (BlInsets left: 10)] ].
 
 	stackFrames column
 		title: 'Selector';
 		stencil: [ :aContext :index | 
 			| textElement |
-			textElement := (BrListLabelStencil matchParent: (self printStackMethodColumnForContext: aContext)) asElement.
+			textElement := (BrColumnCellLabelStencil matchParent: (self printStackMethodColumnForContext: aContext)) asElement.
 			textElement constraintsDo: [ :c | c padding: (BlInsets left: 10) ] ].
 		
 	stackFrames column
 		title: 'Other';
 		stencil: [ :aContext :index | 
 			| textElement |
-			textElement := (BrListLabelStencil matchParent: (self printStackExtraColumnForContext: aContext)) asElement.
+			textElement := (BrColumnCellLabelStencil matchParent: (self printStackExtraColumnForContext: aContext)) asElement.
 			textElement constraintsDo: [ :c | c padding: (BlInsets left: 10) ] ].
 		
 	self addChild: stackFrames.
