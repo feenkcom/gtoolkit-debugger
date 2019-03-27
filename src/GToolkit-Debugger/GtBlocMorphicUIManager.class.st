@@ -49,6 +49,6 @@ GtBlocMorphicUIManager >> resumeMorphicUIProcess: aProcess [
 	UIProcess resume.
 		
 	"The this method in the supperclass for an explanation of this code."
-	currentDebugSession := thisContext sender receiver. 
+	currentDebugSession := thisContext sender sender receiver. 
 	currentDebugSession errorWasInUIProcess: false.
 ]
