@@ -1,3 +1,13 @@
+"
+I provide a solution to open a Bloc debugger on errors that happen in the Bloc UI process, and a Morphic debugger on errors that happen in the Morphic UI process.
+
+My superclass on the other hand allways opens the same debugger on errors in both processes.
+Because I use different debuggers for each UI process, I can resume both the Bloc and the Morphic UI process normally without any hacks.
+
+I use ==Smalltalk tools debugger== to open a Morphic debugger and I hardcode the Bloc based debugger.
+
+See the comment of my superclass for more details.
+"
 Class {
 	#name : #GtDualDebuggerUIManager,
 	#superclass : #BlBlocMorphicUIManager,
@@ -44,15 +54,16 @@ GtDualDebuggerUIManager >> debugProcess: process context: context label: title f
 ]
 
 { #category : #'ui process' }
-GtDualDebuggerUIManager >> resumeUIProcess: aProcess [
-	"Adopt aProcess as the project process -- probably because of proceeding from a debugger"
-	
-	"I explicitly check if the process corresponds to the Bloc UI process or not so I can determine which UI process to resume."
-	aProcess name = BlUniverse default pulseLoop processId
-		ifTrue:  [ 
-			"Resume the Bloc UI process"
-			self resumeBlocUIProcess: aProcess ]
-		ifFalse: [ 
-			"Resume the Moprhic UI process normally as before"
-			self resumeMorphicUIProcess: aProcess ]
+GtDualDebuggerUIManager >> resumeBlocUIProcess: aProcess [
+	"Adopt aProcess as the UI process for Bloc -- probably because of proceeding from a debugger"
+			
+	BlUniverse default pulseLoop forceStartOfUIProcess: aProcess.
+]
+
+{ #category : #'ui process' }
+GtDualDebuggerUIManager >> resumeMorphicUIProcess: aProcess [
+	"Adopt aProcess as the UI process for morphic -- probably because of proceeding from a debugger"
+			
+	UIProcess := aProcess.
+	UIProcess resume
 ]
