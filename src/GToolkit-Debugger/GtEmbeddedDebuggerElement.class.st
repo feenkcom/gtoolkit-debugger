@@ -21,7 +21,8 @@ GtEmbeddedDebuggerElement class >> isRegistered [
 { #category : #opening }
 GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
 	| selectionInterval |
-	selectionInterval := sourceCoder selectedSourceInterval.
+	selectionInterval := sourceCoder selectedSourceInterval
+		ifNil: [ 1 to: sourceCoder sourceEditor text size ].
 	sourceCoder sourceText
 		clearAttributes: [ :each | 
 			{GtPlaygroundEvaluatedCodeHighlightedAttribute.
