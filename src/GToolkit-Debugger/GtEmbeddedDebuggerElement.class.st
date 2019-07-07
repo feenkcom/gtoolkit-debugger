@@ -74,7 +74,7 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 		c padding: (BlInsets all: 3).
 		c margin: (BlInsets all: 3) ].
 	debugButton := BrButton new.
-	debugButton look: BrGlamorousButtonExteriorRectangularLook + BrGlamorousButtonLabelLook.
+	debugButton look: BrGlamorousButtonWithLabelLook.
 	debugButton label: 'Debug'.
 	debugButton action: [ 
 		self switchToDebuggerType: Smalltalk tools debugger.
