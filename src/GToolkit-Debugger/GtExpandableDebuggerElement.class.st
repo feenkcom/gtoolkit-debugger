@@ -120,25 +120,39 @@ GtExpandableDebuggerElement >> buildStackElement [
 GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 	| tab tabGroup |
 	tab := BrTab new.
-	tab 
+	tab
 		look: BrGlamorousTabLook new invisibleBar;
 		label: self session name;
-		stencil: (BrValuableStencil from: aStackElement); "aStackElement asStencil"
-		padding: (BlInsets top: 15 right: 0 bottom: 15 left: 10);
-		actionsStencil: [
-			| aToolbar |
+		stencil: (BrValuableStencil from: aStackElement);
+		padding:
+			(BlInsets
+				top: 15
+				right: 0
+				bottom: 15
+				left: 10);
+		actionsStencil: [ | aToolbar |
 			aToolbar := BrToolbar new.
 			aToolbar look: BrGlamorousToolbarLook new.
-			self buildStackToolbarActions do: [ :anAction |
-				aToolbar addItem: anAction ].
+			self buildStackToolbarActions
+				do: [ :anAction | aToolbar addItem: anAction ].
 			aToolbar ].
 	tabGroup := BrTabGroup new.
-	tabGroup 
-		look: (BrMaterialTabGroupLook new headerBackground: BrGlamorousColors errorBackgroundColor);
+	tabGroup
+		look:
+			(BrMaterialTabGroupLook new
+				headerBackground: BrGlamorousColors defaultButtonBorderColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
-			c vertical matchParent. 
-			c horizontal matchParent ].
+			c vertical matchParent.
+			c horizontal matchParent ];
+		addChild:
+			(BlElement new
+				constraintsDo: [ :c | 
+					c ignoreByLayout.
+					c horizontal matchParent.
+					c vertical exact: 5 ];
+				background: BrGlamorousColors errorBackgroundColor;
+				yourself).
 	^ tabGroup
 ]
 
