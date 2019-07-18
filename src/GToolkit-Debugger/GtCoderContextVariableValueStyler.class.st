@@ -16,9 +16,7 @@ GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 			constraintsDo: [ :c |
 				c horizontal fitContent.
 				c vertical fitContent ].
-		aTextPieceElement := (BrTextWordPieceStencilBuilder new
-			text: aText;
-			editorElement: anEditorElement) asElement.
+		aTextPieceElement := (BrTextWordPieceStencilBuilder new text: aText) asElement.
 		aContainer addEventHandler: (BlEventDelegator delegate: BrTextEditorRequest to: aTextPieceElement).
 		displayText := self 
 			valueForVariableNamed: aVariableNode name
