@@ -23,6 +23,22 @@ GtBlocMorphicUIManager >> defer: aBlock [
 	"BlUniverse defer: aBlock"
 ]
 
+{ #category : #events }
+GtBlocMorphicUIManager >> onPrimitiveError: aString [ 
+	| message |
+	message := String
+				streamContents: [:s | 
+					| context |
+					s nextPutAll: '*** System error handling failed ***'.
+					s cr; nextPutAll: aString.
+					context := thisContext sender sender.
+					20
+						timesRepeat: [context == nil
+								ifFalse: [s cr; print: (context := context sender)]]].
+	GtEmergencyDebugger askForEmergencyEvaluatorOrExitWithText: message.
+
+]
+
 { #category : #'ui process' }
 GtBlocMorphicUIManager >> resumeBlocUIProcess: aProcess [
 	"Adopt aProcess as the UI process for Bloc -- probably because of proceeding from a debugger"
