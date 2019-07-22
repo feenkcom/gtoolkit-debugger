@@ -277,7 +277,6 @@ GtExpandableDebuggerElement >> initialize [
 { #category : #opening }
 GtExpandableDebuggerElement >> openWithFullView [
 	"Open the debugger and also select the first non filtered context, this mean that we will ignore some methods like halts or debug method to select the first interesting line in the debugger."
-	1/0.
 	self setDebuggerToFirstNonFilteredContext.
 	super openWithFullView
 ]
