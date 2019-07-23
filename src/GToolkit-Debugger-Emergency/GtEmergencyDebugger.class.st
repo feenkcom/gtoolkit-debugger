@@ -2,7 +2,7 @@ Class {
 	#name : #GtEmergencyDebugger,
 	#superclass : #Object,
 	#instVars : [
-		'errorMessage'
+		'errorMessageLines'
 	],
 	#category : #'GToolkit-Debugger-Emergency'
 }
@@ -11,24 +11,79 @@ Class {
 GtEmergencyDebugger class >> askForEmergencyEvaluatorOrExitWithText: aText [
 	self new 
 		errorMessage: aText;
-		openInNativeWindow.
+		openInGluitinWindow.
 ]
 
-{ #category : #accessing }
-GtEmergencyDebugger >> errorMessage [
-	^ errorMessage
+{ #category : #drawing }
+GtEmergencyDebugger >> drawOnSpartaCanvas: aCanvas [
+	| font |
+	
+	errorMessageLines ifNil: [ ^ self ].
+	errorMessageLines withIndexDo: [ :aLine :anIndex |	
+		font := aCanvas font
+		size: 28;
+		build.
+		
+		aCanvas text
+			baseline: 5@(anIndex*25+10);
+			string: aLine;
+			font: font;
+			draw ].
 ]
 
 { #category : #accessing }
 GtEmergencyDebugger >> errorMessage: aText [
-	errorMessage := aText
+	errorMessageLines := aText lines
 ]
 
 { #category : #opening }
-GtEmergencyDebugger >> openInNativeWindow [
-	| aSpace |
-	aSpace := BlSpace new.
-	aSpace addChild: (GtEmergencyDebuggerMesssageElement new 
-		messageText: self errorMessage).
-	aSpace show
+GtEmergencyDebugger >> openInGluitinWindow [
+	| eventsLoop windowBuilder windowedContext|
+	eventsLoop := GlutinEventsLoop new.
+
+	windowBuilder := GlutinWindowBuilder new.
+	windowBuilder title: 'Emergency debugger'.
+	windowBuilder extent: 750@650.
+
+	windowedContext := GlutinWindowedContext
+   		create: eventsLoop
+   		windowBuilder: windowBuilder.
+
+	self runProcessInWindowContext: windowedContext
+]
+
+{ #category : #opening }
+GtEmergencyDebugger >> runProcessInWindowContext: windowedContext [
+	| windowProcess |
+	windowProcess := nil.
+	windowProcess := [ 
+		| isRunning aCanvas |
+   		isRunning := true.
+		
+    	windowedContext makeCurrent.
+    	aCanvas := SkiaCanvas
+      		extent: windowedContext innerExtent
+       	renderExtent: windowedContext framebufferExtent.
+    	[
+    		windowedContext makeCurrent.
+   			windowedContext eventsLoop fetchEvents: [ :anEvent |
+        		anEvent mapped class = WinitBaseWindowCloseRequested
+            		ifTrue: [
+               		windowedContext release.
+                	isRunning := false.
+                	windowProcess ifNotNil: [ windowProcess terminate ] ]. ].
+        
+			aCanvas fill
+				paint: Color white;
+				path: (0@0 extent: windowedContext framebufferExtent);
+				draw.
+    		self drawOnSpartaCanvas: aCanvas.
+    		aCanvas flush.
+   
+    		windowedContext swapBuffers.
+ 
+    		16 milliSeconds wait.
+    		isRunning 
+		] whileTrue 
+	] forkAt: Processor userSchedulingPriority
 ]
