@@ -26,6 +26,9 @@ GtBlocMorphicUIManager >> defer: aBlock [
 { #category : #events }
 GtBlocMorphicUIManager >> onPrimitiveError: aString [ 
 	| message |
+	(BlUniverse default host class = BlOSWindowGlutinHost) ifFalse: [ 
+		"If we are not using native windows through glutin use the emergency evaluator from morphic."
+		^ super onPrimitiveError: aString ].
 	message := String
 				streamContents: [:s | 
 					| context |
