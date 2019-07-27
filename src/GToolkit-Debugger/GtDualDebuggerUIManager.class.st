@@ -29,7 +29,7 @@ GtDualDebuggerUIManager >> debugProcess: process context: context label: title f
 	debugSession := process newDebugSessionNamed: title startedAt: context.
 	debugSession logStackToFileIfNeeded.
 	
-	isForBlocUIProcess := self isForBlockUIProcess: debugSession.
+	isForBlocUIProcess := self isForBlocUIProcess: debugSession.
 	isForBlocUIProcess "Handle the case of the Bloc UI process"
 		ifTrue: [ debugSession errorWasInUIProcess: true ]. 
 	debugSession isAboutUIProcess ifTrue: [ 

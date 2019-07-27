@@ -3,7 +3,7 @@ I provide a solution for handling the opening of a Bloc debugger in the Bloc UI 
 
 I do the opposite as my superclass, which assumes a Morphic debugger is opened in the Morphic UI process. 
 
-I should only be used with debuggers that run inside the Bloc UI process. I allways spanw a Bloc debugger on errors that happen either in the Bloc UI process or the Morphic UI process. 
+I should only be used with debuggers that run inside the Bloc UI process. I allways spawn  a Bloc debugger on errors that happen either in the Bloc UI process or the Morphic UI process. 
 I know how to correctly resume the Morphic UI process even if the actual debugger runs in the Bloc UI process.
 
 I use ==Smalltalk tools debugger== to open the actual debugger. For my preconditions to hold this needs to be a Bloc based debugger. 
@@ -18,9 +18,12 @@ Class {
 
 { #category : #'ui process' }
 GtBlocMorphicUIManager >> defer: aBlock [
-	"For now still defer through the morphic UI thread as the Bloc UI thread is not present if there are no bloc windows."
-	super defer: aBlock
-	"BlUniverse defer: aBlock"
+	| aGlutinUniverse |
+
+	aBlock value
+
+	"aGlutinUniverse := BlParallelUniverse forHost: Bloc preferableHostClass.
+	aGlutinUniverse defer: aBlock"
 ]
 
 { #category : #events }
@@ -48,7 +51,11 @@ GtBlocMorphicUIManager >> resumeBlocUIProcess: aProcess [
 			
 	"This UI manager resumes the Bloc UI proces normally. 
 	It assumes the debugger was opened and runs in the Bloc UI process."
-	BlUniverse default pulseLoop forceStartOfUIProcess: aProcess.
+	
+	self
+		universeForProcess: aProcess
+		ifPresent: [ :aUniverse | aUniverse hostClass forceResumeOfUIProcess: aProcess ]
+		ifAbsent: [  ]
 ]
 
 { #category : #'ui process' }
