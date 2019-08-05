@@ -18,9 +18,17 @@ Class {
 
 { #category : #'ui process' }
 GtBlocMorphicUIManager >> defer: aBlock [
-	| aGlutinUniverse |
+	| theUniversesWithUIProcess |
+		
+	theUniversesWithUIProcess := (BlParallelUniverse all select: [ :eachUniverse |
+			eachUniverse hasSpaces
+				and: [ eachUniverse hasUIProcess
+					and: [ eachUniverse hostClass new isRunning ] ] ])
+		sorted: [ :a :b | a hostClass priority < b hostClass priority ].
 
-	aBlock value
+	theUniversesWithUIProcess
+		ifEmpty: [ super defer: aBlock ]
+		ifNotEmpty: [ :theUniverses | theUniverses first defer: aBlock ].
 
 	"aGlutinUniverse := BlParallelUniverse forHost: Bloc preferableHostClass.
 	aGlutinUniverse defer: aBlock"
