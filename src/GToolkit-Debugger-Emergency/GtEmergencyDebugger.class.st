@@ -39,7 +39,7 @@ GtEmergencyDebugger >> errorMessage: aText [
 { #category : #opening }
 GtEmergencyDebugger >> openInGluitinWindow [
 	| eventsLoop windowBuilder windowedContext|
-	eventsLoop := GlutinEventsLoop new.
+	eventsLoop := GlutinEventLoop new.
 
 	windowBuilder := GlutinWindowBuilder new.
 	windowBuilder title: 'Emergency debugger'.
