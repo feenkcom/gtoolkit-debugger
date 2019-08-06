@@ -1,8 +1,12 @@
 Class {
 	#name : #GtEmergencyDebugger,
-	#superclass : #Object,
+	#superclass : #GlutinWindowEventsSensor,
+	#traits : 'TGlutinEventVisitor',
+	#classTraits : 'TGlutinEventVisitor classTrait',
 	#instVars : [
-		'errorMessageLines'
+		'errorMessageLines',
+		'window',
+		'canvas'
 	],
 	#category : #'GToolkit-Debugger-Emergency'
 }
@@ -12,6 +16,11 @@ GtEmergencyDebugger class >> askForEmergencyEvaluatorOrExitWithText: aText [
 	self new 
 		errorMessage: aText;
 		openInGluitinWindow.
+]
+
+{ #category : #example }
+GtEmergencyDebugger class >> example [
+	GtEmergencyDebugger askForEmergencyEvaluatorOrExitWithText: String loremIpsum
 ]
 
 { #category : #drawing }
@@ -36,31 +45,64 @@ GtEmergencyDebugger >> errorMessage: aText [
 	errorMessageLines := aText lines
 ]
 
+{ #category : #drawing }
+GtEmergencyDebugger >> newCanvas [
+	^ SkiaCanvas extent: window framebufferExtent
+]
+
 { #category : #opening }
 GtEmergencyDebugger >> openInGluitinWindow [
-	| eventsLoop windowBuilder windowedContext|
-	eventsLoop := GlutinEventsLoop new.
+	| eventsLoop windowBuilder |
+
+	eventsLoop := GlutinEventsFetcher default eventsLoop.
 
 	windowBuilder := GlutinWindowBuilder new.
 	windowBuilder title: 'Emergency debugger'.
 	windowBuilder extent: 750@650.
 
-	windowedContext := GlutinWindowedContext
-   		create: eventsLoop
-   		windowBuilder: windowBuilder.
-
-	self runProcessInWindowContext: windowedContext
+	self window: (eventsLoop createWindow: windowBuilder).
+	self window requestRedraw.
+	
+	GlutinEventsFetcher default eventHandlers add: self.
+	
+	GlutinEventsFetcher install
 ]
 
-{ #category : #opening }
-GtEmergencyDebugger >> runProcessInWindowContext: windowedContext [
-	| windowProcess |
-	windowProcess := nil.
-	windowProcess := [ 
-		| isRunning aCanvas |
-   		isRunning := true.
+{ #category : #'event - handling' }
+GtEmergencyDebugger >> processGlutinEvent: aGlutinWindowEvent forWindow: aWindow [
+	self window == aWindow
+		ifFalse: [ ^ self ].
 		
-    	windowedContext makeCurrent.
+		
+	aGlutinWindowEvent accept: self
+		
+	"Event::LoopDestroyed => return,
+   
+
+
+Event::WindowEvent { ref event, .. } => match event {
+                WindowEvent::Resized(logical_size) => {
+                    let dpi_factor =
+                        windowed_context.window().hidpi_factor();
+                    windowed_context
+                        .resize(logical_size.to_physical(dpi_factor));
+                }
+                WindowEvent::RedrawRequested => {
+                    gl.draw_frame([1.0, 0.5, 0.7, 1.0]);
+                    windowed_context.swap_buffers().unwrap();
+                }
+                WindowEvent::CloseRequested => {
+                    *control_flow = ControlFlow::Exit
+                }
+                _ => (),
+            },
+            _ => (),"
+	
+	
+		
+	"self makeCurrent.
+	
+
     	aCanvas := SkiaCanvas
       		extent: windowedContext innerExtent
        	renderExtent: windowedContext framebufferExtent.
@@ -80,10 +122,54 @@ GtEmergencyDebugger >> runProcessInWindowContext: windowedContext [
     		self drawOnSpartaCanvas: aCanvas.
     		aCanvas flush.
    
-    		windowedContext swapBuffers.
- 
-    		16 milliSeconds wait.
-    		isRunning 
-		] whileTrue 
-	] forkAt: Processor userSchedulingPriority
+    		windowedContext swapBuffers."
+]
+
+{ #category : #drawing }
+GtEmergencyDebugger >> render [
+	window makeCurrent.
+	
+	canvas ifNil: [ canvas := self newCanvas ].
+
+	canvas fill
+		paint: Color white;
+		path: canvas bounds;
+		draw.
+  	
+	self drawOnSpartaCanvas: canvas.
+  	canvas flush.
+
+	window swapBuffers
+]
+
+{ #category : #visiting }
+GtEmergencyDebugger >> visitWindowCloseRequest: anEvent [
+	GlutinEventsFetcher default eventHandlers remove: self ifAbsent: [  ].
+	window eventsLoop closeWindow: window.
+]
+
+{ #category : #visiting }
+GtEmergencyDebugger >> visitWindowRedrawRequested: anEvent [
+	self render
+]
+
+{ #category : #visiting }
+GtEmergencyDebugger >> visitWindowResizedEvent: anEvent [
+	window resize: anEvent width @ anEvent height.
+	
+	canvas := nil.
+
+	self render
+]
+
+{ #category : #accessing }
+GtEmergencyDebugger >> window [
+	<return: #GlutinWindowedContext>
+	
+	^ window
+]
+
+{ #category : #accessing }
+GtEmergencyDebugger >> window: aGlutinWindowedContext [
+	window := aGlutinWindowedContext
 ]

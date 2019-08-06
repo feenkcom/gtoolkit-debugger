@@ -18,9 +18,17 @@ Class {
 
 { #category : #'ui process' }
 GtBlocMorphicUIManager >> defer: aBlock [
-	| aGlutinUniverse |
+	| theUniversesWithUIProcess |
+		
+	theUniversesWithUIProcess := (BlParallelUniverse all select: [ :eachUniverse |
+			eachUniverse hasSpaces
+				and: [ eachUniverse hasUIProcess
+					and: [ eachUniverse hostClass new isRunning ] ] ])
+		sorted: [ :a :b | a hostClass priority < b hostClass priority ].
 
-	aBlock value
+	theUniversesWithUIProcess
+		ifEmpty: [ super defer: aBlock ]
+		ifNotEmpty: [ :theUniverses | theUniverses first defer: aBlock ].
 
 	"aGlutinUniverse := BlParallelUniverse forHost: Bloc preferableHostClass.
 	aGlutinUniverse defer: aBlock"
@@ -29,9 +37,7 @@ GtBlocMorphicUIManager >> defer: aBlock [
 { #category : #events }
 GtBlocMorphicUIManager >> onPrimitiveError: aString [ 
 	| message |
-	(BlUniverse default host class = BlOSWindowGlutinHost) ifFalse: [ 
-		"If we are not using native windows through glutin use the emergency evaluator from morphic."
-		^ super onPrimitiveError: aString ].
+
 	message := String
 				streamContents: [:s | 
 					| context |
