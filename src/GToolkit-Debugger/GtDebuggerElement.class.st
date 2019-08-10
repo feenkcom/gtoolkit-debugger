@@ -245,6 +245,18 @@ GtDebuggerElement >> detachSession [
 ]
 
 { #category : #accessing }
+GtDebuggerElement >> inInspector [
+	| anInspector |
+	anInspector := GtInspector new.
+	anInspector
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	anInspector addPageWithContent: self for: self session.
+	^ anInspector
+]
+
+{ #category : #accessing }
 GtDebuggerElement >> interruptedContext [
 	^ self session interruptedContext
 ]
@@ -272,24 +284,17 @@ GtDebuggerElement >> open [
 { #category : #opening }
 GtDebuggerElement >> openInInspector [
 	| anInspector aSpace |
-
-	self constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-	
-	anInspector := GtInspector new.
-	anInspector constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-
-	anInspector addPageWithContent: self for: self session.
-
+	self
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	anInspector := self inInspector.
 	aSpace := BlSpace new.
 	aSpace withHalos.
 	aSpace title: self session name.
-	aSpace extent: 1200@600.
+	aSpace extent: 1200 @ 600.
 	aSpace addChild: anInspector.
-	aSpace show.
+	aSpace show
 ]
 
 { #category : #opening }
