@@ -11,11 +11,12 @@ Class {
 
 { #category : #'building widgets' }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
-	(debuggerElement notNil and: [ aDebuggerClass = debuggerElement class]) ifTrue: [
-		"If selected debugger is already active do not switch to it again"
+	| newDebuggerElement |
+	(aDebuggerClass = debuggerElement class) ifTrue: [
+		"If the selected debugger is already active do not switch to it again."
 		^ self ].
-	
-	
+	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
+	self updateDebuggerElement: newDebuggerElement
 	
 ]
 
@@ -65,13 +66,12 @@ GtMoldableDebuggerElement >> initialize [
 	self 
 		layout: BlLinearLayout vertical;
 		constraintsDo: [:c | 
-			"c padding: (BlInsets top: 0)."
+			c padding: (BlInsets top: 0).
 			c horizontal matchParent.
 			c vertical matchParent ];
 		clipChildren: false.
 	debuggerContainer := BlElement new
 	 	layout: BlFrameLayout new;
-		background: Color green;
 		clipChildren: false;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
@@ -101,16 +101,14 @@ GtMoldableDebuggerElement >> initialize [
 { #category : #'adding elements' }
 GtMoldableDebuggerElement >> initializeForSession: aDebugggingSession [
 	| availableDebuggers |
-	availableDebuggers := (Smalltalk tools debuggersForContext: aDebugggingSession interruptedContext) reversed.
-	availableDebuggers 
-		do: [ :aDebuggerClass |
-			| switchButton |
-			switchButton := self createButtonForSwitchingTo: aDebuggerClass.
-		 	buttonsContainer addChild: switchButton ].
+	"availableDebuggers := (Smalltalk tools debuggersForContext: aDebugggingSession interruptedContext) reversed."
+	availableDebuggers := { GtExpandableDebuggerElement . GtBytecodeDebugger }.
+	availableDebuggers do: [ :aDebuggerClass |
+		| switchButton |
+		switchButton := self createButtonForSwitchingTo: aDebuggerClass.
+	 	buttonsContainer addChild: switchButton ].
 	availableDebuggers ifNotEmpty: [ 
-		debuggerElement := availableDebuggers first on: aDebugggingSession.
-		debuggerContainer removeChildren.
-		debuggerContainer addChild: debuggerElement ]
+		self updateDebuggerElement: (availableDebuggers first on: aDebugggingSession) ]
 ]
 
 { #category : #actions }
@@ -119,21 +117,13 @@ GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebugg
 	
 	currentSession := currentDebugger session.
 	currentDebugger detachSession.
-	newDebugger := aDebuggerClass new
-		session: (aDebuggerClass spanNewSessionFrom: currentSession).	
+	newDebugger := aDebuggerClass on: (aDebuggerClass spanNewSessionFrom: currentSession).	
 	^ newDebugger
 ]
 
-{ #category : #actions }
-GtMoldableDebuggerElement >> switchToDebuggerType: aDebuggerClass [
-	| currentSession newDebugger |
-	
-	currentSession := self session.
-	self detachSession.
-	self browser close.
-	currentSession updateContextTo: nil.
-	newDebugger := aDebuggerClass new
-		session: (aDebuggerClass spanNewSessionFrom: currentSession).
-	
-		
+{ #category : #private }
+GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
+	debuggerElement := aNewDebuggerElement.
+	debuggerContainer removeChildren.
+	debuggerContainer addChild: debuggerElement
 ]

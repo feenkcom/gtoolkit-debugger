@@ -23,6 +23,11 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #initialization }
+GtBytecodeDebugger class >> defaultTitle [
+	^ 'Bytecode'
+]
+
 { #category : #accessing }
 GtBytecodeDebugger class >> sessionClass [
 
