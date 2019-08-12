@@ -175,7 +175,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 			actionButton ].
 		
 	toggle := BrToggle new 
-		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
+		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
 		icon: BrGlamorousIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			self stackElement enableVariableAnnotations ];
