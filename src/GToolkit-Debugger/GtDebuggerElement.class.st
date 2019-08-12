@@ -45,6 +45,11 @@ GtDebuggerElement class >> defaultLogFileName [
 	^ 'PharoDebug.log'
 ]
 
+{ #category : #initialization }
+GtDebuggerElement class >> defaultTitle [
+	^ 'GT'
+]
+
 { #category : #'settings api' }
 GtDebuggerElement class >> filterCommonMessageSends [
 	self flag: 'horrible hack not to break the setting browser'.

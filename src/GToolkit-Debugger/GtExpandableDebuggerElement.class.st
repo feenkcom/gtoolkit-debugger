@@ -110,10 +110,10 @@ GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildStackElement [
-	| stackElement |
-	stackElement := GtDebuggerExpandableStackElement new.
-	stackElement userData at: #blocContainer put: #stackElement.
-	^ stackElement
+	| newStackElement |
+	newStackElement := GtDebuggerExpandableStackElement new.
+	newStackElement userData at: #blocContainer put: #stackElement.
+	^ newStackElement
 ]
 
 { #category : #'building widgets' }
