@@ -33,7 +33,7 @@ GtStackDebuggerElement class >> openInSwitcherOn: aDebuggingSession [
 		c vertical matchParent ].
 	aDebugger session: aDebuggingSession.
 	
-	switcher := GtDebuggerSwitcher new.
+	switcher := GtMoldableDebuggerElement new.
 	switcher addGenericDebugger: aDebugger.
 	switcher constraintsDo: [ :c |
 		c horizontal matchParent.
@@ -59,7 +59,7 @@ GtStackDebuggerElement class >> openSwitcherInInspectorOn: aDebuggingSession [
 		c vertical matchParent ].
 	aDebugger session: aDebuggingSession.
 	
-	switcher := GtDebuggerSwitcher new.
+	switcher := GtMoldableDebuggerElement new.
 	switcher addGenericDebugger: aDebugger.
 	switcher constraintsDo: [ :c |
 		c horizontal matchParent.
