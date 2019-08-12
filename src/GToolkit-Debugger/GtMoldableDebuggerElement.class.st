@@ -38,35 +38,19 @@ GtMoldableDebuggerElement >> createButtonsContainer [
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent.
-			c linear horizontal alignCenter.].
-		"constraintsDo: [ :c |
-			c horizontal fitContent.
-			c vertical fitContent.
-			c ignoreByLayout.
 			c margin: (BlInsets top: -15 left: 0 bottom: 0 right: -10).
+			c ignoreByLayout.
 			c ignored horizontal alignCenter.
-			c ignored vertical alignTop ]."
+			c ignored vertical alignTop ].
 	^ container
-]
-
-{ #category : #'building widgets' }
-GtMoldableDebuggerElement >> createSwitchButtonWithLabel: aLabel [
-	^ GtInspectorConnectorSwitchStencil new asElement
-			label: aLabel;
-			constraintsDo: [ :c |
-				c ignoreByLayout.
-				c margin: (BlInsets top: -15 left: 0 bottom: 0 right: -10).
-				c ignored horizontal alignCenter.
-				c ignored vertical alignTop ]
 ]
 
 { #category : #initialization }
 GtMoldableDebuggerElement >> initialize [
 	super initialize.
 	self 
-		layout: BlLinearLayout vertical;
+		layout: BlFrameLayout new;
 		constraintsDo: [:c | 
-			c padding: (BlInsets top: 0).
 			c horizontal matchParent.
 			c vertical matchParent ];
 		clipChildren: false.
@@ -74,28 +58,12 @@ GtMoldableDebuggerElement >> initialize [
 	 	layout: BlFrameLayout new;
 		clipChildren: false;
 		constraintsDo: [ :c |
+			c margin: (BlInsets top: 20).
 			c horizontal matchParent.
 			c vertical matchParent ].
 	buttonsContainer := self createButtonsContainer.
-	self addChild: buttonsContainer.
+	debuggerContainer addChild: buttonsContainer.
 	self addChild: debuggerContainer.
-	
-	"Hardcode the two buttons here for now."
-	"genericDebuggerButton := self createSwitchButtonWithLabel: 'Generic'.
-	bytecodeDebuggerButton := self createSwitchButtonWithLabel: 'Bytecode'.
-	genericDebuggerButton action: [ |currentSession|
-		genericDebugger := self switchFrom: bytecodeDebugger toDebuggerType: GtStackDebuggerElement.
-			
-		debuggerContainer removeChildren.		
-		debuggerContainer addChild: genericDebugger. 
-		debuggerContainer addChild: bytecodeDebuggerButton 
-	].
-	bytecodeDebuggerButton action: [ |currentSession|
-		bytecodeDebugger := self switchFrom: genericDebugger toDebuggerType: GtBytecodeDebugger.
-		
-		debuggerContainer removeChildren.		
-		debuggerContainer addChild: bytecodeDebugger. 
-		debuggerContainer addChild: genericDebuggerButton]."
 ]
 
 { #category : #'adding elements' }
@@ -123,7 +91,11 @@ GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebugg
 
 { #category : #private }
 GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
+	| previousDebuggerElement |
+	previousDebuggerElement := debuggerElement.
 	debuggerElement := aNewDebuggerElement.
-	debuggerContainer removeChildren.
-	debuggerContainer addChild: debuggerElement
+	
+	previousDebuggerElement ifNotNil: [ 
+		debuggerContainer removeChild: previousDebuggerElement ].
+	debuggerContainer addChildFirst: debuggerElement
 ]
