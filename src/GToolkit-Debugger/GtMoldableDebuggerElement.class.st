@@ -11,7 +11,12 @@ Class {
 
 { #category : #'building widgets' }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
-	self halt.
+	(debuggerElement notNil and: [ aDebuggerClass = debuggerElement class]) ifTrue: [
+		"If selected debugger is already active do not switch to it again"
+		^ self ].
+	
+	
+	
 ]
 
 { #category : #'building widgets' }
@@ -32,10 +37,14 @@ GtMoldableDebuggerElement >> createButtonsContainer [
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent.
+			c linear horizontal alignCenter.].
+		"constraintsDo: [ :c |
+			c horizontal fitContent.
+			c vertical fitContent.
 			c ignoreByLayout.
 			c margin: (BlInsets top: -15 left: 0 bottom: 0 right: -10).
 			c ignored horizontal alignCenter.
-			c ignored vertical alignTop ].
+			c ignored vertical alignTop ]."
 	^ container
 ]
 
@@ -54,15 +63,15 @@ GtMoldableDebuggerElement >> createSwitchButtonWithLabel: aLabel [
 GtMoldableDebuggerElement >> initialize [
 	super initialize.
 	self 
-		layout: BlFrameLayout new;
+		layout: BlLinearLayout vertical;
 		constraintsDo: [:c | 
-			c padding: (BlInsets top: 0).
+			"c padding: (BlInsets top: 0)."
 			c horizontal matchParent.
 			c vertical matchParent ];
 		clipChildren: false.
 	debuggerContainer := BlElement new
 	 	layout: BlFrameLayout new;
-		background: Color white;
+		background: Color green;
 		clipChildren: false;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
@@ -92,13 +101,16 @@ GtMoldableDebuggerElement >> initialize [
 { #category : #'adding elements' }
 GtMoldableDebuggerElement >> initializeForSession: aDebugggingSession [
 	| availableDebuggers |
-	availableDebuggers := Smalltalk tools debuggersForContext: aDebugggingSession interruptedContext.
+	availableDebuggers := (Smalltalk tools debuggersForContext: aDebugggingSession interruptedContext) reversed.
 	availableDebuggers 
 		do: [ :aDebuggerClass |
 			| switchButton |
 			switchButton := self createButtonForSwitchingTo: aDebuggerClass.
 		 	buttonsContainer addChild: switchButton ].
-	"Execute first button action"
+	availableDebuggers ifNotEmpty: [ 
+		debuggerElement := availableDebuggers first on: aDebugggingSession.
+		debuggerContainer removeChildren.
+		debuggerContainer addChild: debuggerElement ]
 ]
 
 { #category : #actions }
