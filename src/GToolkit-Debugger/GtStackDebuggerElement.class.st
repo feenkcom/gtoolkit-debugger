@@ -87,6 +87,11 @@ GtStackDebuggerElement class >> openSwitcherInInspectorOn: aDebuggingSession [
 	^ aDebugger
 ]
 
+{ #category : #'tools registry' }
+GtStackDebuggerElement class >> registerToolsOn: registry [
+	registry registerDebugger: self withRank: 1020.
+]
+
 { #category : #accessing }
 GtStackDebuggerElement class >> sessionClass [
 

@@ -34,12 +34,10 @@ GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfTy
 
 { #category : #accessing }
 GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excluding: aDebuggerType [ 
-	^ { GtExpandableDebuggerElement . GtBytecodeDebugger . GtStackDebuggerElement } asOrderedCollection 
+	^ ((Smalltalk tools debuggersForContext: aContext)
+			select: [ :aDebuggerClass | aDebuggerClass inheritsFrom: GtDebuggerElement ]) reverse
 		remove: aDebuggerType ifAbsent: [ ];
-		yourself.
-	"^ (Smalltalk tools debuggersForContext: aContext) reverse
-		remove: aDebuggerType ifAbsent: [ ];
-		yourself"
+		yourself
 ]
 
 { #category : #'building widgets' }
@@ -145,6 +143,7 @@ GtMoldableDebuggerElement >> updateSwitchButtonsFor: newDebuggerElement [
 	availableDebuggerTypes := self 
 		availableDebuggerTypesForContext: newDebuggerElement session interruptedContext 
 		excluding: newDebuggerElement class.
+	
 	buttonsContainer removeChildren.
 	availableDebuggerTypes do: [ :aDebuggerClass |
 		| switchButton |

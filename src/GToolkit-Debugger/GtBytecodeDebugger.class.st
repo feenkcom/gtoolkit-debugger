@@ -28,6 +28,11 @@ GtBytecodeDebugger class >> defaultTitle [
 	^ 'Bytecode'
 ]
 
+{ #category : #'tools registry' }
+GtBytecodeDebugger class >> registerToolsOn: registry [
+	registry registerDebugger: self withRank: 1010.
+]
+
 { #category : #accessing }
 GtBytecodeDebugger class >> sessionClass [
 

@@ -179,12 +179,6 @@ GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotifica
 { #category : #'tools registry' }
 GtDebuggerElement class >> register [
 	self registerToolsOn: Smalltalk tools.
-
-]
-
-{ #category : #'tools registry' }
-GtDebuggerElement class >> registerToolsOn: registry [
-	registry register: self as: #debugger.
 ]
 
 { #category : #accessing }
