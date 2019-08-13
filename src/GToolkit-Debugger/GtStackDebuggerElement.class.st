@@ -23,6 +23,11 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #initialization }
+GtStackDebuggerElement class >> defaultTitle [
+	^ 'Stack'
+]
+
 { #category : #'instance creation' }
 GtStackDebuggerElement class >> openInSwitcherOn: aDebuggingSession [
 	| switcher aDebugger aSpace |
@@ -33,7 +38,7 @@ GtStackDebuggerElement class >> openInSwitcherOn: aDebuggingSession [
 		c vertical matchParent ].
 	aDebugger session: aDebuggingSession.
 	
-	switcher := GtDebuggerSwitcher new.
+	switcher := GtMoldableDebuggerElement new.
 	switcher addGenericDebugger: aDebugger.
 	switcher constraintsDo: [ :c |
 		c horizontal matchParent.
@@ -59,7 +64,7 @@ GtStackDebuggerElement class >> openSwitcherInInspectorOn: aDebuggingSession [
 		c vertical matchParent ].
 	aDebugger session: aDebuggingSession.
 	
-	switcher := GtDebuggerSwitcher new.
+	switcher := GtMoldableDebuggerElement new.
 	switcher addGenericDebugger: aDebugger.
 	switcher constraintsDo: [ :c |
 		c horizontal matchParent.
@@ -80,6 +85,11 @@ GtStackDebuggerElement class >> openSwitcherInInspectorOn: aDebuggingSession [
 	aSpace show.
 	
 	^ aDebugger
+]
+
+{ #category : #'tools registry' }
+GtStackDebuggerElement class >> registerToolsOn: registry [
+	registry registerDebugger: self withRank: 1020.
 ]
 
 { #category : #accessing }
