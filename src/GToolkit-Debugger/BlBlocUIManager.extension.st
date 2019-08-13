@@ -1,7 +1,7 @@
-Extension { #name : #BlBlocMorphicUIManager }
+Extension { #name : #BlBlocUIManager }
 
 { #category : #'*GToolkit-Debugger' }
-BlBlocMorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder forException: exception [
+BlBlocUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder forException: exception [
 	| debugSession isForBlocUIProcess aBlocUniverseIfAny |
 
 	debugSession := process newDebugSessionNamed: exception description startedAt: context.
@@ -22,11 +22,11 @@ BlBlocMorphicUIManager >> gtDebugProcess: process context: context withEmbeddedD
 		DefaultExecutionEnvironment beActiveDuring: [
 		isForBlocUIProcess "Handle the case of the Bloc UI process"
 			ifTrue:[ self spawnNewBlocProcess: aBlocUniverseIfAny ]
-			ifFalse: [ self spawnNewMorphicProcess ] ] ].
+			ifFalse: [ self spawnNewProcess ] ] ].
 
 	isForBlocUIProcess 
 		ifTrue: [
-			self blocDefer: [ 
+			self defer: [ 
 				[ Smalltalk tools gtEmbeddableDebugger  
 					openOn: debugSession dueTo: exception embeddedIn: sourceCoder
 				] on: Error do: [ :ex | debugSession signalDebuggerError: ex ] ] ] 
