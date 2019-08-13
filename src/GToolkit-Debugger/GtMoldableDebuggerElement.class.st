@@ -23,6 +23,14 @@ GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	^ aDebugger openInInspector
 ]
 
+{ #category : #opening }
+GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
+	| aDebugger |
+
+	aDebugger := self on: aDebugSession.
+	^ aDebugger openWithFullView
+]
+
 { #category : #callbacks }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
@@ -114,6 +122,11 @@ GtMoldableDebuggerElement >> openInInspector [
 	aSpace extent: 1200 @ 600.
 	aSpace addChild: anInspector.
 	aSpace show
+]
+
+{ #category : #opening }
+GtMoldableDebuggerElement >> openWithFullView [
+	self openInInspector
 ]
 
 { #category : #actions }
