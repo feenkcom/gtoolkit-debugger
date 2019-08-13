@@ -10,7 +10,7 @@ Class {
 { #category : #'tools registry' }
 GtExpandableDebuggerElement class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
-	"registry register: self as: #debugger."
+	registry register: self as: #debugger.
 	registry registerDebugger: self withRank: 1000.
 ]
 
