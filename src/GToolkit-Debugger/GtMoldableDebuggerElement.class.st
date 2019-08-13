@@ -23,12 +23,23 @@ GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	^ aDebugger openInInspector
 ]
 
-{ #category : #'building widgets' }
+{ #category : #callbacks }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
 	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
-	self updateDebuggerElement: newDebuggerElement
+	self updateSwitchButtonsFor: newDebuggerElement.
+	self updateDebuggerElement: newDebuggerElement.
 	
+]
+
+{ #category : #accessing }
+GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excluding: aDebuggerType [ 
+	^ { GtExpandableDebuggerElement . GtBytecodeDebugger . GtStackDebuggerElement } asOrderedCollection 
+		remove: aDebuggerType ifAbsent: [ ];
+		yourself.
+	"^ (Smalltalk tools debuggersForContext: aContext) reverse
+		remove: aDebuggerType ifAbsent: [ ];
+		yourself"
 ]
 
 { #category : #'building widgets' }
@@ -77,19 +88,12 @@ GtMoldableDebuggerElement >> initialize [
 	self addChild: debuggerContainer.
 ]
 
-{ #category : #'adding elements' }
+{ #category : #initialization }
 GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
-	| availableDebuggerTypes |
-	"availableDebuggers := (Smalltalk tools debuggersForContext: aDebugggingSession interruptedContext) reversed."
-	availableDebuggerTypes := { GtExpandableDebuggerElement . GtBytecodeDebugger . GtStackDebuggerElement }.
-	availableDebuggerTypes ifNotEmpty: [ 
-		self updateDebuggerElement: (availableDebuggerTypes first on: aDebuggingSession) ].
-	(availableDebuggerTypes size >= 2) ifTrue: [ 
-		availableDebuggerTypes copyWithoutFirst do: [ :aDebuggerClass |
-			| switchButton |
-			switchButton := self createButtonForSwitchingTo: aDebuggerClass.
-	 		buttonsContainer addChild: switchButton ] ]
-	
+	| newDebuggerElement |
+	newDebuggerElement := GtExpandableDebuggerElement on: aDebuggingSession.
+	self updateSwitchButtonsFor: newDebuggerElement.
+	self updateDebuggerElement: newDebuggerElement.
 ]
 
 { #category : #opening }
@@ -133,4 +137,17 @@ GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
 	previousDebuggerElement ifNotNil: [ 
 		debuggerContainer removeChild: previousDebuggerElement ].
 	debuggerContainer addChildFirst: debuggerElement
+]
+
+{ #category : #initialization }
+GtMoldableDebuggerElement >> updateSwitchButtonsFor: newDebuggerElement [
+	| availableDebuggerTypes |
+	availableDebuggerTypes := self 
+		availableDebuggerTypesForContext: newDebuggerElement session interruptedContext 
+		excluding: newDebuggerElement class.
+	buttonsContainer removeChildren.
+	availableDebuggerTypes do: [ :aDebuggerClass |
+		| switchButton |
+		switchButton := self createButtonForSwitchingTo: aDebuggerClass.
+		buttonsContainer addChild: switchButton ]
 ]
