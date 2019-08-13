@@ -45,6 +45,11 @@ GtDebuggerElement class >> defaultLogFileName [
 	^ 'PharoDebug.log'
 ]
 
+{ #category : #initialization }
+GtDebuggerElement class >> defaultTitle [
+	^ 'GT'
+]
+
 { #category : #'settings api' }
 GtDebuggerElement class >> filterCommonMessageSends [
 	self flag: 'horrible hack not to break the setting browser'.
@@ -174,12 +179,6 @@ GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotifica
 { #category : #'tools registry' }
 GtDebuggerElement class >> register [
 	self registerToolsOn: Smalltalk tools.
-
-]
-
-{ #category : #'tools registry' }
-GtDebuggerElement class >> registerToolsOn: registry [
-	registry register: self as: #debugger.
 ]
 
 { #category : #accessing }

@@ -7,6 +7,13 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #'tools registry' }
+GtExpandableDebuggerElement class >> registerToolsOn: registry [
+	"Add ourselves to registry. See [Smalltalk tools]" 
+	"registry register: self as: #debugger."
+	registry registerDebugger: self withRank: 1000.
+]
+
 { #category : #accessing }
 GtExpandableDebuggerElement class >> sessionClass [
 	^ DebugSession 
@@ -110,10 +117,10 @@ GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildStackElement [
-	| stackElement |
-	stackElement := GtDebuggerExpandableStackElement new.
-	stackElement userData at: #blocContainer put: #stackElement.
-	^ stackElement
+	| newStackElement |
+	newStackElement := GtDebuggerExpandableStackElement new.
+	newStackElement userData at: #blocContainer put: #stackElement.
+	^ newStackElement
 ]
 
 { #category : #'building widgets' }
@@ -175,7 +182,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 			actionButton ].
 		
 	toggle := BrToggle new 
-		look: BrMaterialToggleBackgroundLook + BrGlamorousButtonWithIconLook;
+		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
 		icon: BrGlamorousIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			self stackElement enableVariableAnnotations ];
