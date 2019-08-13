@@ -9,6 +9,20 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #'instance creation' }
+GtMoldableDebuggerElement class >> on: aDebugSession [
+	^ self new 
+		initializeForSession: aDebugSession
+]
+
+{ #category : #opening }
+GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
+	| aDebugger |
+
+	aDebugger := self on: aDebuggingSession.
+	^ aDebugger openInInspector
+]
+
 { #category : #'building widgets' }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
@@ -76,6 +90,28 @@ GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
 			switchButton := self createButtonForSwitchingTo: aDebuggerClass.
 	 		buttonsContainer addChild: switchButton ] ]
 	
+]
+
+{ #category : #opening }
+GtMoldableDebuggerElement >> openInInspector [
+	| anInspector aSpace |
+	self
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	anInspector := GtInspector new.
+	anInspector
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	anInspector addPageWithContent: self for: debuggerElement session.
+	
+	aSpace := BlSpace new.
+	aSpace withHalos.
+	aSpace title: debuggerElement session name.
+	aSpace extent: 1200 @ 600.
+	aSpace addChild: anInspector.
+	aSpace show
 ]
 
 { #category : #actions }
