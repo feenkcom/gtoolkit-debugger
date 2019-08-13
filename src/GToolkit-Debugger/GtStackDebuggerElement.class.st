@@ -23,6 +23,11 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
+{ #category : #initialization }
+GtStackDebuggerElement class >> defaultTitle [
+	^ 'Stack'
+]
+
 { #category : #'instance creation' }
 GtStackDebuggerElement class >> openInSwitcherOn: aDebuggingSession [
 	| switcher aDebugger aSpace |

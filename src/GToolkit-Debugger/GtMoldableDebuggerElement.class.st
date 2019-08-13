@@ -12,9 +12,6 @@ Class {
 { #category : #'building widgets' }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
-	(aDebuggerClass = debuggerElement class) ifTrue: [
-		"If the selected debugger is already active do not switch to it again."
-		^ self ].
 	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
 	self updateDebuggerElement: newDebuggerElement
 	
@@ -67,16 +64,18 @@ GtMoldableDebuggerElement >> initialize [
 ]
 
 { #category : #'adding elements' }
-GtMoldableDebuggerElement >> initializeForSession: aDebugggingSession [
-	| availableDebuggers |
+GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
+	| availableDebuggerTypes |
 	"availableDebuggers := (Smalltalk tools debuggersForContext: aDebugggingSession interruptedContext) reversed."
-	availableDebuggers := { GtExpandableDebuggerElement . GtBytecodeDebugger }.
-	availableDebuggers do: [ :aDebuggerClass |
-		| switchButton |
-		switchButton := self createButtonForSwitchingTo: aDebuggerClass.
-	 	buttonsContainer addChild: switchButton ].
-	availableDebuggers ifNotEmpty: [ 
-		self updateDebuggerElement: (availableDebuggers first on: aDebugggingSession) ]
+	availableDebuggerTypes := { GtExpandableDebuggerElement . GtBytecodeDebugger . GtStackDebuggerElement }.
+	availableDebuggerTypes ifNotEmpty: [ 
+		self updateDebuggerElement: (availableDebuggerTypes first on: aDebuggingSession) ].
+	(availableDebuggerTypes size >= 2) ifTrue: [ 
+		availableDebuggerTypes copyWithoutFirst do: [ :aDebuggerClass |
+			| switchButton |
+			switchButton := self createButtonForSwitchingTo: aDebuggerClass.
+	 		buttonsContainer addChild: switchButton ] ]
+	
 ]
 
 { #category : #actions }
