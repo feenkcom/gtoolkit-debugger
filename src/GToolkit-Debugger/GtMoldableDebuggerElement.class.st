@@ -222,7 +222,7 @@ GtMoldableDebuggerElement >> initialize [
 { #category : #initialization }
 GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
 	| newDebuggerElement |
-	newDebuggerElement := GtExpandableDebuggerElement on: aDebuggingSession.
+	newDebuggerElement := self selectInitialDebuggerFor: aDebuggingSession.
 	self updateSwitchButtonsFor: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
 ]
@@ -254,6 +254,25 @@ GtMoldableDebuggerElement >> openWithFullView [
 	self openInInspector
 ]
 
+{ #category : #initialization }
+GtMoldableDebuggerElement >> selectInitialDebuggerFor: aDebugSession [ 
+	| debuggerClass initialDebugger |
+	debuggerClass := Smalltalk tools 
+		debuggerDispatcherFor: aDebugSession interruptedContext
+		matching: [ :aDebuggerClass | 
+			"Only take into account GT debuggers."
+			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
+				aDebuggerClass availableAutomatically ] ].
+	initialDebugger := debuggerClass
+		ifNil: [ 
+			"Use the main debugger"
+			GtExpandableDebuggerElement on: aDebugSession ]
+		ifNotNil: [ :aDebugger | 
+			"Use a custom extension"
+			aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
+	^ initialDebugger
+]
+
 { #category : #actions }
 GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
 	| currentSession newDebugger |
@@ -275,7 +294,7 @@ GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
 	debuggerContainer addChildFirst: debuggerElement
 ]
 
-{ #category : #initialization }
+{ #category : #private }
 GtMoldableDebuggerElement >> updateSwitchButtonsFor: newDebuggerElement [
 	| availableDebuggerTypes |
 	availableDebuggerTypes := self 
