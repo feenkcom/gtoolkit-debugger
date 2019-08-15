@@ -48,6 +48,16 @@ GtDebuggerElement class >> openOn: aDebuggingSession [
 	^ aDebugger open.
 ]
 
+{ #category : #opening }
+GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
+	^ self openOn: aDebugSession withFullView: aBool andNotification: nil
+]
+
+{ #category : #opening }
+GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
+	^self openInspectorOn:aDebugSession
+]
+
 { #category : #'tools registry' }
 GtDebuggerElement class >> register [
 	self registerToolsOn: Smalltalk tools.
@@ -67,6 +77,11 @@ GtDebuggerElement class >> spanNewSessionFrom: anotherSession [
 		startedAt: anotherSession interruptedContext)
 			errorWasInUIProcess: anotherSession errorWasInUIProcess;
 			yourself
+]
+
+{ #category : #opening }
+GtDebuggerElement >> aboutToOpen [
+	"Perform any action or update before the debugger is opened in the UI."
 ]
 
 { #category : #callbacks }
@@ -128,40 +143,44 @@ GtDebuggerElement >> onAddedToSceneGraph [
 
 { #category : #opening }
 GtDebuggerElement >> open [
-	| aSpace |
+	self aboutToOpen.
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
+	^ self open: self withTitle: self session name.
+]
 
+{ #category : #opening }
+GtDebuggerElement >> open: anElement withTitle: aTitleString [
+	| aSpace |
 	aSpace := BlSpace new.
 	aSpace withHalos.
-	aSpace title: self session name.
-	aSpace extent: 1200@600.
-	aSpace addChild: self.
+	aSpace title: aTitleString.
+	aSpace extent: 1200 @ 600.
+	aSpace addChild: anElement.
 	^ aSpace show
 ]
 
 { #category : #opening }
 GtDebuggerElement >> openInInspector [
-	| anInspector aSpace |
-	self
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
+	| anInspector |
+	self aboutToOpen.
+	self constraintsDo: [ :c | 
+		c horizontal matchParent.
+		c vertical matchParent ].
 	anInspector := self inInspector.
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: self session name.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: anInspector.
-	aSpace show
+	^ self open: anInspector withTitle: self session name.
 ]
 
 { #category : #opening }
-GtDebuggerElement >> openWithFullView [
-	"Create and open a full debugger. Do not terminate the current active process."
-
-	self openInInspector
+GtDebuggerElement >> openInSpace: anElement titled: aTitleString [
+	| aSpace |
+	aSpace := BlSpace new.
+	aSpace withHalos.
+	aSpace title: aTitleString.
+	aSpace extent: 1200 @ 600.
+	aSpace addChild: anElement.
+	^ aSpace show
 ]
 
 { #category : #accessing }

@@ -18,6 +18,13 @@ GtExpandableDebuggerElement class >> sessionClass [
 	^ DebugSession 
 ]
 
+{ #category : #opening }
+GtExpandableDebuggerElement >> aboutToOpen [
+	"Select the first non filtered context. This mean that we will ignore some methods 
+	like halts or debug method to select the first interesting stack frame in the debugger."
+	self setDebuggerToFirstNonFilteredContext.
+]
+
 { #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	| tabGroupElement cotainerElement |
@@ -278,13 +285,6 @@ GtExpandableDebuggerElement >> initialize [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self userData at: #debuggerContainer put: #debuggerElement.
-]
-
-{ #category : #opening }
-GtExpandableDebuggerElement >> openWithFullView [
-	"Open the debugger and also select the first non filtered context, this mean that we will ignore some methods like halts or debug method to select the first interesting line in the debugger."
-	self setDebuggerToFirstNonFilteredContext.
-	super openWithFullView
 ]
 
 { #category : #'accessing context' }

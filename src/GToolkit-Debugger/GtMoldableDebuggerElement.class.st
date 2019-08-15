@@ -122,7 +122,7 @@ GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
 
 { #category : #'opening api' }
 GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
-	self openOn: aDebugSession withFullView: aBool andNotification: nil
+	^ self openOn: aDebugSession withFullView: aBool andNotification: nil
 ]
 
 { #category : #opening }
@@ -130,7 +130,7 @@ GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool and
 	| aDebugger |
 
 	aDebugger := self on: aDebugSession.
-	^ aDebugger openWithFullView
+	^ aDebugger openInInspector
 ]
 
 { #category : #'tools registry' }
@@ -155,6 +155,11 @@ GtMoldableDebuggerElement class >> taskbarIconName [
 	^ #smallDebugIcon
 ]
 
+{ #category : #opening }
+GtMoldableDebuggerElement >> aboutToOpen [
+	self currentDebugger aboutToOpen
+]
+
 { #category : #callbacks }
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
@@ -176,7 +181,7 @@ GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excludin
 GtMoldableDebuggerElement >> createButtonForSwitchingTo: aDebuggerClass [
 	^ BrButton new
 		background: Color white;
-		look: BrGlamorousButtonWithLabelLook  + BrShadowLook new;
+		look: BrGlamorousButtonWithLabelLook;
 		geometry: (BlRectangle cornerRadius: 10);
 		label: aDebuggerClass defaultTitle;
 		action: [ :buttonElement |
@@ -197,6 +202,23 @@ GtMoldableDebuggerElement >> createButtonsContainer [
 			c ignored horizontal alignCenter.
 			c ignored vertical alignTop ].
 	^ container
+]
+
+{ #category : #accessing }
+GtMoldableDebuggerElement >> currentDebugger [
+	^ debuggerElement
+]
+
+{ #category : #accessing }
+GtMoldableDebuggerElement >> inInspector [
+	| anInspector |
+	anInspector := GtInspector new.
+	anInspector
+		constraintsDo: [ :c | 
+			c horizontal matchParent.
+			c vertical matchParent ].
+	anInspector addPageWithContent: self for: self currentDebugger session.
+	^ anInspector
 ]
 
 { #category : #initialization }
@@ -228,30 +250,22 @@ GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement >> openInInspector [
-	| anInspector aSpace |
-	self
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	anInspector := GtInspector new.
-	anInspector
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	anInspector addPageWithContent: self for: debuggerElement session.
-	
+GtMoldableDebuggerElement >> open: anElement titled: aTitleString [
+	| aSpace |
 	aSpace := BlSpace new.
 	aSpace withHalos.
-	aSpace title: debuggerElement session name.
+	aSpace title: aTitleString.
 	aSpace extent: 1200 @ 600.
-	aSpace addChild: anInspector.
+	aSpace addChild: anElement.
 	aSpace show
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement >> openWithFullView [
-	self openInInspector
+GtMoldableDebuggerElement >> openInInspector [
+	| anInspector |
+	self aboutToOpen.
+	anInspector := self inInspector.
+	self open: anInspector titled: debuggerElement session name.
 ]
 
 { #category : #initialization }
