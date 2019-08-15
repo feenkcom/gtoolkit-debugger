@@ -187,7 +187,7 @@ GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excludin
 GtMoldableDebuggerElement >> createButtonForSwitchingTo: aDebuggerClass [
 	^ BrButton new
 		background: Color white;
-		look: BrGlamorousButtonWithLabelLook;
+		look: BrGlamorousButtonWithLabelLook + BrShadowLook;
 		geometry: (BlRectangle cornerRadius: 10);
 		label: aDebuggerClass defaultTitle;
 		action: [ :buttonElement |
@@ -203,7 +203,7 @@ GtMoldableDebuggerElement >> createButtonsContainer [
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent.
-			c margin: (BlInsets top: -15 left: 0 bottom: 0 right: -10).
+			c margin: (BlInsets top: -10 left: 0 bottom: 0 right: -10).
 			c ignoreByLayout.
 			c ignored horizontal alignCenter.
 			c ignored vertical alignTop ].
