@@ -6,8 +6,105 @@ Class {
 		'debuggerContainer',
 		'buttonsContainer'
 	],
+	#classVars : [
+		'AlwaysOpenFullDebugger',
+		'ErrorRecursion',
+		'FilterCommonMessageSends',
+		'LogDebuggerStackToFile',
+		'LogFileName'
+	],
 	#category : #'GToolkit-Debugger'
 }
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> alwaysOpenFullDebugger [
+	^ AlwaysOpenFullDebugger ifNil: [AlwaysOpenFullDebugger := false]
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> alwaysOpenFullDebugger: aBoolean [
+	AlwaysOpenFullDebugger := aBoolean.
+]
+
+{ #category : #'utilities api' }
+GtMoldableDebuggerElement class >> closeAllDebuggers [
+	self flag: 'Take the new GT debuggers into account'.
+	(SystemWindow allSubInstances select: [:w | 
+		 w model isKindOf: GTGenericStackDebugger])
+			do: [:w | w delete ].
+	GTSpecPreDebugWindow allInstances do: #delete.
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> defaultLogFileName [
+	^ 'PharoDebug.log'
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> filterCommonMessageSends [
+	self flag: 'horrible hack not to break the setting browser'.
+	^ false
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> filterCommonMessageSends: aBoolean [
+	FilterCommonMessageSends := aBoolean
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> filterDoItSelectors [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtMoldableDebuggerElement class >> filterDoItSelectors: aBoolean [
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> filterKernelClasses [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtMoldableDebuggerElement class >> filterKernelClasses: aBoolean [
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> filterLinkSelectors [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtMoldableDebuggerElement class >> filterLinkSelectors: aBoolean [ 
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> filterNilSelectors [
+	^ false
+]
+
+{ #category : #'accessing - ancient preference selectors' }
+GtMoldableDebuggerElement class >> filterNilSelectors: aBoolean [ 
+	self flag: 'just for backward compatibility'
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> logDebuggerStackToFile [
+	^ LogDebuggerStackToFile ifNil: [LogDebuggerStackToFile := true]
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> logDebuggerStackToFile: aBoolean [
+	 LogDebuggerStackToFile := aBoolean
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> logFileName [
+	^ LogFileName ifNil: [ self defaultLogFileName ] 
+]
 
 { #category : #'instance creation' }
 GtMoldableDebuggerElement class >> on: aDebugSession [
@@ -23,12 +120,39 @@ GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	^ aDebugger openInInspector
 ]
 
+{ #category : #'opening api' }
+GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
+	self openOn: aDebugSession withFullView: aBool andNotification: nil
+]
+
 { #category : #opening }
 GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
 	| aDebugger |
 
 	aDebugger := self on: aDebugSession.
 	^ aDebugger openWithFullView
+]
+
+{ #category : #'tools registry' }
+GtMoldableDebuggerElement class >> register [
+	self registerToolsOn: Smalltalk tools.
+]
+
+{ #category : #'tools registry' }
+GtMoldableDebuggerElement class >> registerToolsOn: registry [
+	"Add ourselves to registry. See [Smalltalk tools]" 
+	registry register: self as: #debugger.
+]
+
+{ #category : #'settings api' }
+GtMoldableDebuggerElement class >> stackWidgetClass [
+	self flag: 'horrible hack not to break the setting browser'.
+	^ self
+]
+
+{ #category : #icons }
+GtMoldableDebuggerElement class >> taskbarIconName [
+	^ #smallDebugIcon
 ]
 
 { #category : #callbacks }

@@ -4,25 +4,8 @@ Class {
 	#instVars : [
 		'debuggingSession'
 	],
-	#classVars : [
-		'AlwaysOpenFullDebugger',
-		'ErrorRecursion',
-		'FilterCommonMessageSends',
-		'LogDebuggerStackToFile',
-		'LogFileName'
-	],
 	#category : #'GToolkit-Debugger'
 }
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> alwaysOpenFullDebugger [
-	^ AlwaysOpenFullDebugger ifNil: [AlwaysOpenFullDebugger := false]
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> alwaysOpenFullDebugger: aBoolean [
-	AlwaysOpenFullDebugger := aBoolean.
-]
 
 { #category : #testing }
 GtDebuggerElement class >> availableAutomatically [
@@ -31,95 +14,15 @@ GtDebuggerElement class >> availableAutomatically [
 	^ false
 ]
 
-{ #category : #'utilities api' }
-GtDebuggerElement class >> closeAllDebuggers [
-	self flag: 'Take the new GT debuggers into account'.
-	(SystemWindow allSubInstances select: [:w | 
-		 w model isKindOf: GTGenericStackDebugger])
-			do: [:w | w delete ].
-	GTSpecPreDebugWindow allInstances do: #delete.
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> defaultLogFileName [
-	^ 'PharoDebug.log'
-]
-
 { #category : #initialization }
 GtDebuggerElement class >> defaultTitle [
 	^ 'GT'
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> filterCommonMessageSends [
-	self flag: 'horrible hack not to break the setting browser'.
-	^ false
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> filterCommonMessageSends: aBoolean [
-	FilterCommonMessageSends := aBoolean
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> filterDoItSelectors [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtDebuggerElement class >> filterDoItSelectors: aBoolean [
-	self flag: 'just for backward compatibility'
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> filterKernelClasses [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtDebuggerElement class >> filterKernelClasses: aBoolean [
-	self flag: 'just for backward compatibility'
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> filterLinkSelectors [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtDebuggerElement class >> filterLinkSelectors: aBoolean [ 
-	self flag: 'just for backward compatibility'
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> filterNilSelectors [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtDebuggerElement class >> filterNilSelectors: aBoolean [ 
-	self flag: 'just for backward compatibility'
 ]
 
 { #category : #testing }
 GtDebuggerElement class >> handlesContext: aContext [
 
 	^ true
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> logDebuggerStackToFile [
-	^ LogDebuggerStackToFile ifNil: [LogDebuggerStackToFile := true]
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> logDebuggerStackToFile: aBoolean [
-	 LogDebuggerStackToFile := aBoolean
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> logFileName [
-	^ LogFileName ifNil: [ self defaultLogFileName ] 
 ]
 
 { #category : #'instance creation' }
@@ -145,37 +48,6 @@ GtDebuggerElement class >> openOn: aDebuggingSession [
 	^ aDebugger open.
 ]
 
-{ #category : #'opening api' }
-GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
-	self openOn: aDebugSession withFullView: aBool andNotification: nil
-]
-
-{ #category : #'opening api' }
-GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
-	| debugger debuggerClass |
-	
-	debuggerClass := Smalltalk tools 
-		debuggerDispatcherFor: aDebugSession interruptedContext
-		matching: [ :aDebuggerClass | 
-			"Only take into account GT debuggers."
-			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
-				aDebuggerClass availableAutomatically ] ].
-	debugger := debuggerClass
-		ifNil: [ 
-			"Use the current debugger"
-			self on: aDebugSession ]
-		ifNotNil: [ :aDebugger | 
-			"Use a custom extension"
-			aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
-	
-	"For now allways open the full debugger"
-	debugger openWithFullView 
-	
-	"aBool | self alwaysOpenFullDebugger
-		ifTrue: [ debugger openWithFullView ]
-		ifFalse: [ debugger openWithNotification: aString]"
-]
-
 { #category : #'tools registry' }
 GtDebuggerElement class >> register [
 	self registerToolsOn: Smalltalk tools.
@@ -195,17 +67,6 @@ GtDebuggerElement class >> spanNewSessionFrom: anotherSession [
 		startedAt: anotherSession interruptedContext)
 			errorWasInUIProcess: anotherSession errorWasInUIProcess;
 			yourself
-]
-
-{ #category : #'settings api' }
-GtDebuggerElement class >> stackWidgetClass [
-	self flag: 'horrible hack not to break the setting browser'.
-	^ self
-]
-
-{ #category : #icons }
-GtDebuggerElement class >> taskbarIconName [
-	^ #smallDebugIcon
 ]
 
 { #category : #callbacks }
