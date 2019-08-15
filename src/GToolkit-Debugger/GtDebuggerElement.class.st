@@ -2,7 +2,8 @@ Class {
 	#name : #GtDebuggerElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'debuggingSession'
+		'debuggingSession',
+		'announcer'
 	],
 	#category : #'GToolkit-Debugger'
 }
@@ -105,8 +106,13 @@ GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
 ]
 
 { #category : #announce }
-GtDebuggerElement >> announce: something [
-	"Needed by the debugger actions"
+GtDebuggerElement >> announce: anAnnouncement [
+	self announcer announce: anAnnouncement
+]
+
+{ #category : #accessing }
+GtDebuggerElement >> announcer [
+	^ announcer
 ]
 
 { #category : #actions }
@@ -129,6 +135,12 @@ GtDebuggerElement >> inInspector [
 			c vertical matchParent ].
 	anInspector addPageWithContent: self for: self session.
 	^ anInspector
+]
+
+{ #category : #initialization }
+GtDebuggerElement >> initialize [
+	super initialize.
+	announcer := Announcer new.
 ]
 
 { #category : #accessing }

@@ -164,9 +164,15 @@ GtMoldableDebuggerElement >> aboutToOpen [
 GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
 	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
-	self updateSwitchButtonsFor: newDebuggerElement.
+	self updateSwitchButtonsExcluding: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
 	
+]
+
+{ #category : #callbacks }
+GtMoldableDebuggerElement >> actOnDebugActionExecuted [
+	self inform: 'action executed'.
+	self updateSwitchButtonsExcluding: self currentDebugger
 ]
 
 { #category : #accessing }
@@ -245,7 +251,7 @@ GtMoldableDebuggerElement >> initialize [
 GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
 	| newDebuggerElement |
 	newDebuggerElement := self selectInitialDebuggerFor: aDebuggingSession.
-	self updateSwitchButtonsFor: newDebuggerElement.
+	self updateSwitchButtonsExcluding: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
 ]
 
@@ -287,6 +293,14 @@ GtMoldableDebuggerElement >> selectInitialDebuggerFor: aDebugSession [
 	^ initialDebugger
 ]
 
+{ #category : #private }
+GtMoldableDebuggerElement >> subscribeToDebuggingEventsFor: aDebuggerElement [
+	aDebuggerElement announcer 
+		when: DebugActionExecuted 
+		send: #actOnDebugActionExecuted 
+		to: self
+]
+
 { #category : #actions }
 GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
 	| currentSession newDebugger |
@@ -298,22 +312,29 @@ GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebugg
 ]
 
 { #category : #private }
+GtMoldableDebuggerElement >> unsubscribeFromDebuggingEventsFor: aDebuggerElement [
+	aDebuggerElement announcer unsubscribe: self.
+]
+
+{ #category : #private }
 GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
 	| previousDebuggerElement |
 	previousDebuggerElement := debuggerElement.
 	debuggerElement := aNewDebuggerElement.
 	
 	previousDebuggerElement ifNotNil: [ 
-		debuggerContainer removeChild: previousDebuggerElement ].
-	debuggerContainer addChildFirst: debuggerElement
+		debuggerContainer removeChild: previousDebuggerElement.
+		self unsubscribeFromDebuggingEventsFor: previousDebuggerElement ].
+	debuggerContainer addChildFirst: debuggerElement.
+	self subscribeToDebuggingEventsFor: debuggerElement.
 ]
 
 { #category : #private }
-GtMoldableDebuggerElement >> updateSwitchButtonsFor: newDebuggerElement [
+GtMoldableDebuggerElement >> updateSwitchButtonsExcluding: aDebuggerElement [
 	| availableDebuggerTypes |
 	availableDebuggerTypes := self 
-		availableDebuggerTypesForContext: newDebuggerElement session interruptedContext 
-		excluding: newDebuggerElement class.
+		availableDebuggerTypesForContext: aDebuggerElement session interruptedContext 
+		excluding: aDebuggerElement class.
 	
 	buttonsContainer removeChildren.
 	availableDebuggerTypes do: [ :aDebuggerClass |
