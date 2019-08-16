@@ -8,16 +8,6 @@ Class {
 	#category : #'GToolkit-Debugger'
 }
 
-{ #category : #'tools registry' }
-GtEmbeddedDebuggerElement class >> disable [
-	Smalltalk tools remove: #gtEmbeddableDebugger.
-]
-
-{ #category : #'tools registry' }
-GtEmbeddedDebuggerElement class >> isRegistered [
-	^ Smalltalk tools hasToolNamed: #gtEmbeddableDebugger
-]
-
 { #category : #opening }
 GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
 	| selectionInterval |
@@ -41,16 +31,6 @@ GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embedde
 	sourceCoder sourceEditor
 		invalidateAll;
 		updateAll
-]
-
-{ #category : #'tools registry' }
-GtEmbeddedDebuggerElement class >> register [
-	self registerToolsOn: Smalltalk tools.
-]
-
-{ #category : #'tools registry' }
-GtEmbeddedDebuggerElement class >> registerToolsOn: registry [
-	registry register: self as: #gtEmbeddableDebugger.
 ]
 
 { #category : #callbacks }
@@ -77,7 +57,7 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	debugButton look: BrGlamorousButtonWithLabelLook.
 	debugButton label: 'Debug'.
 	debugButton action: [ 
-		self switchToDebuggerType: Smalltalk tools debugger.
+		self switchToSystemDebugger.
 		self removeFromParent ].
 	self 
 		removeChildren;
@@ -120,16 +100,6 @@ GtEmbeddedDebuggerElement >> signaledException: anException [
 ]
 
 { #category : #actions }
-GtEmbeddedDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
-	| currentSession newDebugger |
-	
-	currentSession := currentDebugger session.
-	currentDebugger detachSession.
-	newDebugger := aDebuggerClass openInspectorOn: (aDebuggerClass spanNewSessionFrom: currentSession).	
-	^ newDebugger
-]
-
-{ #category : #actions }
 GtEmbeddedDebuggerElement >> switchToDebuggerType: aDebuggerClass [
 	| currentSession newDebugger newSession |
 	
@@ -137,5 +107,17 @@ GtEmbeddedDebuggerElement >> switchToDebuggerType: aDebuggerClass [
 	self detachSession.
 	newSession := aDebuggerClass spanNewSessionFrom: currentSession.
 	newDebugger := aDebuggerClass openOn: newSession withFullView: true andNotification: nil.
+	^ newDebugger
+]
+
+{ #category : #actions }
+GtEmbeddedDebuggerElement >> switchToSystemDebugger [
+	"Directly open the registered debugger on the given session."
+	| currentSession newDebugger |
+	
+	currentSession := self session.
+	self detachSession.
+	newDebugger:= Smalltalk tools debugger 
+		openOn: currentSession withFullView: true andNotification: nil.
 	^ newDebugger
 ]

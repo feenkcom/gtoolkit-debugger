@@ -10,13 +10,19 @@ Class {
 { #category : #'tools registry' }
 GtExpandableDebuggerElement class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
-	registry register: self as: #debugger.
 	registry registerDebugger: self withRank: 1000.
 ]
 
 { #category : #accessing }
 GtExpandableDebuggerElement class >> sessionClass [
 	^ DebugSession 
+]
+
+{ #category : #opening }
+GtExpandableDebuggerElement >> aboutToOpen [
+	"Select the first non filtered context. This mean that we will ignore some methods 
+	like halts or debug method to select the first interesting stack frame in the debugger."
+	self setDebuggerToFirstNonFilteredContext.
 ]
 
 { #category : #callbacks }
@@ -279,13 +285,6 @@ GtExpandableDebuggerElement >> initialize [
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self userData at: #debuggerContainer put: #debuggerElement.
-]
-
-{ #category : #opening }
-GtExpandableDebuggerElement >> openWithFullView [
-	"Open the debugger and also select the first non filtered context, this mean that we will ignore some methods like halts or debug method to select the first interesting line in the debugger."
-	self setDebuggerToFirstNonFilteredContext.
-	super openWithFullView
 ]
 
 { #category : #'accessing context' }
