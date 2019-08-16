@@ -62,6 +62,21 @@ GtExpandableDebuggerElement >> buildContextVariablesElement [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsElement [
+	| detailsTabGroupElement |
+	
+	detailsTabGroupElement := self buildDetailsTabElement.
+	detailsTabGroupElement viewModel 
+		when: BrTabSelectedEvent 
+		do: [ :event | self selectedDetailesTabName: event tab labelText asString ].
+
+	detailsTabGroupElement viewModel tabs 
+		detect: [ :aTabModel | aTabModel labelText asString = self selectedDetailesTabName ]
+		ifFound: [ :aTabModel | aTabModel select ].
+	^ detailsTabGroupElement
+]
+
+{ #category : #'building widgets' }
+GtExpandableDebuggerElement >> buildDetailsTabElement [
 	| tab1 tab2 tab3 tabGroup |
 	tab1 := BrTabModel new
 		add: (BrLabelModel text: 'Variables');

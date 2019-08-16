@@ -195,6 +195,20 @@ GtDebuggerElement >> openInSpace: anElement titled: aTitleString [
 	^ aSpace show
 ]
 
+{ #category : #'accessing - settings' }
+GtDebuggerElement >> selectedDetailesTabName [
+	^ self settings 
+		at: #selectedDetailedTabName 
+		ifAbsent: [ nil ]
+]
+
+{ #category : #'accessing - settings' }
+GtDebuggerElement >> selectedDetailesTabName: aString [
+	self settings 
+		at: #selectedDetailedTabName 
+		put: aString
+]
+
 { #category : #accessing }
 GtDebuggerElement >> session [
 	^ debuggingSession
@@ -204,4 +218,11 @@ GtDebuggerElement >> session [
 GtDebuggerElement >> session: aDebuggingSession [
 	debuggingSession := aDebuggingSession.
 	self actOnDebugSessionChanged.
+]
+
+{ #category : #'accessing - settings' }
+GtDebuggerElement >> settings [
+	^ self userData 
+		at: #settingsCache
+		ifAbsentPut: [ SmallDictionary new ]
 ]
