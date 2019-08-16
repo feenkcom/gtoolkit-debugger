@@ -171,7 +171,6 @@ GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfTy
 
 { #category : #callbacks }
 GtMoldableDebuggerElement >> actOnDebugActionExecuted [
-	self inform: 'action executed'.
 	self updateSwitchButtonsExcluding: self currentDebugger
 ]
 
