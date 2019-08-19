@@ -199,6 +199,7 @@ GtMoldableDebuggerElement >> createButtonsContainer [
 	| container |
 	container := BlElement new
 		layout: BlLinearLayout horizontal;
+		clipChildren: false;
 		constraintsDo: [ :c |
 			c horizontal fitContent.
 			c vertical fitContent.
