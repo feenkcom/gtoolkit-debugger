@@ -7,6 +7,7 @@ Class {
 { #category : #examples }
 GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 	<gtExample>
+	<noTest>
 	| sourceCode coder debuggerAttributes |
 	sourceCode := '1/0'.
 	coder := GtPharoSnippetCoder new
@@ -21,6 +22,7 @@ GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 { #category : #examples }
 GtEmbeddedDebuggerExamples >> debuggerAttributeDivideByZero [
 	<gtExample>
+	<noTest>
 	| debuggerAttribute coder  |
 	coder := self coderWithDivideByZeroError.
 	debuggerAttribute := (self debuggerAttributesIn: coder at: 3) first.
