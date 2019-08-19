@@ -77,27 +77,20 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsTabElement [
-	| tab1 tab2 tab3 tabGroup |
-	tab1 := BrTabModel new
-		add: (BrLabelModel text: 'Variables');
-		stencil: [ self buildContextVariablesElement ].
-	tab2 := BrTabModel new
-		add: (BrLabelModel text: 'Evaluator');
-		stencil: [ self buildEvaluatorElement ].
-	tab3 := BrTabModel new
-		add: (BrLabelModel text: 'Watches');
-		stencil: [ self buildWatchVariablesElement ].
-	tabGroup := BrTabGroupModel
-		with: {tab1. tab2. tab3}.
-	tabGroup tabs
-		do: [ :aTab | 
-			BlElement new
-				look: BrGlamorousTabLook;
-				viewModel: aTab ].
 	^ BrTabGroup new
-		background: Color white;
 		look: BrGlamorousTabGroupLook + BrShadowLook;
-		viewModel: tabGroup
+		addTab: (BrTab new
+			look: BrGlamorousTabLook new;
+			label: 'Variables';
+			stencil: [ self buildContextVariablesElement ]);
+		addTab: (BrTab new
+			look: BrGlamorousTabLook new;
+			label: 'Evaluator';
+			stencil: [ self buildEvaluatorElement ]);
+		addTab: (BrTab new
+			look: BrGlamorousTabLook new;
+			label: 'Watches';
+			stencil: [ self buildWatchVariablesElement ])
 ]
 
 { #category : #'building widgets' }
