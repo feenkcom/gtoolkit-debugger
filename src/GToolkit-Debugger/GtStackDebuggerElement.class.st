@@ -143,7 +143,7 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 	tabGroup := BrTabGroup new.
 	tabGroup
 		look:
-			(BrMaterialTabGroupLook new
+			(BrGlamorousTabGroupLook new
 				headerBackground: BrGlamorousColors defaultButtonBorderColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
