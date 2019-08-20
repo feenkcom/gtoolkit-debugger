@@ -79,6 +79,7 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
+		background: Color white;
 		look: BrGlamorousTabGroupLook + BrShadowLook;
 		addTab: (BrTab new
 			look: BrGlamorousTabLook new;
