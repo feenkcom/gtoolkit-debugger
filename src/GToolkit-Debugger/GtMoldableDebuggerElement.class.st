@@ -185,14 +185,16 @@ GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excludin
 { #category : #'building widgets' }
 GtMoldableDebuggerElement >> createButtonForSwitchingTo: aDebuggerClass [
 	^ BrButton new
+		beSmall;
 		background: Color white;
-		look: (BrGlamorousButtonExteriorLook new borderWidth: 0) +
-			BrGlamorousButtonRectangularLook new +
+		look: BrGlamorousButtonRectangularLook new +
 			BrGlamorousButtonLabelLook new + 
 			BrShadowLook;
 		geometry: (BlRectangle cornerRadius: 10);
 		margin: (BlInsets left: 5);
 		label: aDebuggerClass defaultTitle;
+		when: BlMouseEnterEvent do: [ :anEvent | anEvent currentTarget background: Color veryVeryLightGray lighter ];
+		when: BlMouseLeaveEvent do: [ :anEvent | anEvent currentTarget background: Color white ];
 		action: [ :buttonElement |
 			self actOnButtonSelected: buttonElement forDebuggerOfType: aDebuggerClass ]
 		
