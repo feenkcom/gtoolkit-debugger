@@ -67,11 +67,12 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 	detailsTabGroupElement := self buildDetailsTabElement.
 	detailsTabGroupElement viewModel 
 		when: BrTabSelectedEvent 
-		do: [ :event | self selectedDetailesTabName: event tab labelText asString ].
+		do: [ :event | event tab widgetDo: [ :aTab | self selectedDetailesTabName: aTab label asString ] ].
 
-	detailsTabGroupElement viewModel tabs 
-		detect: [ :aTabModel | aTabModel labelText asString = self selectedDetailesTabName ]
-		ifFound: [ :aTabModel | aTabModel select ].
+	(detailsTabGroupElement viewModel tabs 
+		select: [ :aTabModel | aTabModel isAttachedToWidget ])
+			detect: [ :aTabModel | aTabModel widget label asString = self selectedDetailesTabName ]
+			ifFound: [ :aTabModel | aTabModel select ].
 	^ detailsTabGroupElement
 ]
 
