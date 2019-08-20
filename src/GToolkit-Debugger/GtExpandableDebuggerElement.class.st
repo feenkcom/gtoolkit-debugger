@@ -151,7 +151,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 				right: 0
 				bottom: 15
 				left: 10);
-		actionsStencil: [ | aToolbar |
+		toolbarStencil: [ | aToolbar |
 			aToolbar := BrToolbar new.
 			aToolbar look: BrGlamorousToolbarLook new.
 			self buildStackToolbarActions
