@@ -67,17 +67,19 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 	detailsTabGroupElement := self buildDetailsTabElement.
 	detailsTabGroupElement viewModel 
 		when: BrTabSelectedEvent 
-		do: [ :event | self selectedDetailesTabName: event tab labelText asString ].
+		do: [ :event | event tab widgetDo: [ :aTab | self selectedDetailesTabName: aTab label asString ] ].
 
-	detailsTabGroupElement viewModel tabs 
-		detect: [ :aTabModel | aTabModel labelText asString = self selectedDetailesTabName ]
-		ifFound: [ :aTabModel | aTabModel select ].
+	(detailsTabGroupElement viewModel tabs 
+		select: [ :aTabModel | aTabModel isAttachedToWidget ])
+			detect: [ :aTabModel | aTabModel widget label asString = self selectedDetailesTabName ]
+			ifFound: [ :aTabModel | aTabModel select ].
 	^ detailsTabGroupElement
 ]
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
+		background: Color white;
 		look: BrGlamorousTabGroupLook + BrShadowLook;
 		addTab: (BrTab new
 			look: BrGlamorousTabLook new;
@@ -151,7 +153,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 				right: 0
 				bottom: 15
 				left: 10);
-		actionsStencil: [ | aToolbar |
+		toolbarStencil: [ | aToolbar |
 			aToolbar := BrToolbar new.
 			aToolbar look: BrGlamorousToolbarLook new.
 			self buildStackToolbarActions
@@ -159,9 +161,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup
-		look:
-			(BrMaterialTabGroupLook new
-				headerBackground: BrGlamorousColors defaultButtonBorderColor);
+		look: (BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.

@@ -134,7 +134,7 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 				right: 0
 				bottom: 15
 				left: 10);
-		actionsStencil: [ | aToolbar |
+		toolbarStencil: [ | aToolbar |
 			aToolbar := BrToolbar new.
 			aToolbar look: BrGlamorousToolbarLook new.
 			self buildStackToolbarActions
@@ -142,9 +142,7 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup
-		look:
-			(BrMaterialTabGroupLook new
-				headerBackground: BrGlamorousColors defaultButtonBorderColor);
+		look: (BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
