@@ -11,6 +11,7 @@ Class {
 GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 	<gtExample>
 	<after: #terminateCoderProcess>
+	<noTest>
 	| sourceCode coder debuggerAttributes debuggerAttribute |
 	sourceCode := '1/0'.
 	coderProcess := [
