@@ -87,9 +87,9 @@ GtDebuggerElement >> aboutToOpen [
 
 { #category : #callbacks }
 GtDebuggerElement >> actOnBrowserClosing: ann [
-	self session ifNotNil: [ :aSession | 
-		aSession terminate.
-		debuggingSession := nil ]
+	"Terminate the session when the debugger is closed. This can be called when 
+	manually closing the debugger or when resuming."
+	self terminateSession
 ]
 
 { #category : #callbacks }
@@ -117,7 +117,13 @@ GtDebuggerElement >> announcer [
 
 { #category : #actions }
 GtDebuggerElement >> close [
-	self space close
+	self space close.
+	
+	"Closing a window is an asyncronous operation in Bloc. It will not actually close the debugger imediately, 
+	but add a defer action for doing that. Because of this terminate the debugging session imediately, without
+	waiting for the debugger to do this when the close action is executed. This close operation needs to run
+	in the UI process."
+	self terminateSession.
 ]
 
 { #category : #actions }
@@ -150,7 +156,8 @@ GtDebuggerElement >> interruptedContext [
 
 { #category : #callbacks }
 GtDebuggerElement >> onAddedToSceneGraph [ 
-	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
+	self space when: BlSpaceDestroyedEvent do: [ :event | 
+		self actOnBrowserClosing: event ]
 ]
 
 { #category : #opening }
@@ -225,4 +232,13 @@ GtDebuggerElement >> settings [
 	^ self userData 
 		at: #settingsCache
 		ifAbsentPut: [ SmallDictionary new ]
+]
+
+{ #category : #actions }
+GtDebuggerElement >> terminateSession [
+	self session ifNotNil: [ :aSession | 
+		"This method can be called more times from the UI process when closing the debugger.
+		Set the debugging session to nil so that only the first call terminates the session."
+		self detachSession.
+		aSession terminate ]
 ]
