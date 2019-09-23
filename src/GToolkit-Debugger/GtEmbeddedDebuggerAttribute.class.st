@@ -3,19 +3,11 @@ Class {
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'debugSession',
-		'signaledException'
+		'signaledException',
+		'debuggerElement'
 	],
 	#category : #'GToolkit-Debugger'
 }
-
-{ #category : #initialization }
-GtEmbeddedDebuggerAttribute >> affect: aBrText in: anEditorElement [
-	| debuggerElement |
-	debuggerElement := GtEmbeddedDebuggerElement new
-		signaledException: self signaledException;
-		session: self debugSession. 
-	^ debuggerElement
-]
 
 { #category : #accessing }
 GtEmbeddedDebuggerAttribute >> debugSession [
