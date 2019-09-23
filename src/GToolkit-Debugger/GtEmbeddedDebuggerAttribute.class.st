@@ -20,6 +20,16 @@ GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
 ]
 
 { #category : #initialization }
+GtEmbeddedDebuggerAttribute >> doAffect: aBrText in: anEditorElement [
+	ContextStackSignal emit.
+	debuggerElement ifNotNil: [ 
+		debuggerElement disableTermination ]. 
+	^ debuggerElement := GtEmbeddedDebuggerElement new
+		signaledException: self signaledException;
+		session: self debugSession
+]
+
+{ #category : #initialization }
 GtEmbeddedDebuggerAttribute >> initialize [
 	super initialize.
 	
