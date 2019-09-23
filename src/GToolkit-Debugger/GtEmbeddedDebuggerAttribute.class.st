@@ -21,7 +21,6 @@ GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
 
 { #category : #initialization }
 GtEmbeddedDebuggerAttribute >> doAffect: aBrText in: anEditorElement [
-	ContextStackSignal emit.
 	debuggerElement ifNotNil: [ 
 		debuggerElement disableTermination ]. 
 	^ debuggerElement := GtEmbeddedDebuggerElement new
