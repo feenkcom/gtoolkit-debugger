@@ -3,7 +3,8 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'debuggingSession',
-		'signaledException'
+		'signaledException',
+		'isTerminationDisabled'
 	],
 	#category : #'GToolkit-Debugger'
 }
@@ -31,13 +32,6 @@ GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embedde
 	sourceCoder sourceEditor
 		invalidateAll;
 		updateAll
-]
-
-{ #category : #callbacks }
-GtEmbeddedDebuggerElement >> actOnBrowserClosing: ann [
-	self session ifNotNil: [ :aSession | 
-		aSession terminate.
-		debuggingSession := nil ]
 ]
 
 { #category : #accessing }
@@ -70,12 +64,29 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 
 { #category : #actions }
 GtEmbeddedDebuggerElement >> detachSession [
-	debuggingSession := nil
+	debuggingSession := nil 
 ]
 
-{ #category : #callbacks }
-GtEmbeddedDebuggerElement >> onAddedToSceneGraph [ 
-	self space when: BlSpaceClosedEvent do: [ :event | self actOnBrowserClosing: event ]
+{ #category : #accessing }
+GtEmbeddedDebuggerElement >> disableTermination [
+	isTerminationDisabled := true
+]
+
+{ #category : #accessing }
+GtEmbeddedDebuggerElement >> enableTermination [
+	isTerminationDisabled := false
+]
+
+{ #category : #initialize }
+GtEmbeddedDebuggerElement >> initialize [
+	super initialize.
+	self enableTermination
+]
+
+{ #category : #'hooks - children' }
+GtEmbeddedDebuggerElement >> onRemovedFromSceneGraph [
+	super onRemovedFromSceneGraph.
+	self terminateSession
 ]
 
 { #category : #accessing }
@@ -100,17 +111,6 @@ GtEmbeddedDebuggerElement >> signaledException: anException [
 ]
 
 { #category : #actions }
-GtEmbeddedDebuggerElement >> switchToDebuggerType: aDebuggerClass [
-	| currentSession newDebugger newSession |
-	
-	currentSession := self session.
-	self detachSession.
-	newSession := aDebuggerClass spanNewSessionFrom: currentSession.
-	newDebugger := aDebuggerClass openOn: newSession withFullView: true andNotification: nil.
-	^ newDebugger
-]
-
-{ #category : #actions }
 GtEmbeddedDebuggerElement >> switchToSystemDebugger [
 	"Directly open the registered debugger on the given session."
 	| currentSession newDebugger |
@@ -120,4 +120,12 @@ GtEmbeddedDebuggerElement >> switchToSystemDebugger [
 	newDebugger:= Smalltalk tools debugger 
 		openOn: currentSession withFullView: true andNotification: nil.
 	^ newDebugger
+]
+
+{ #category : #callbacks }
+GtEmbeddedDebuggerElement >> terminateSession [ 
+	isTerminationDisabled ifFalse: [ 
+		self session ifNotNil: [ :aSession | 
+			self detachSession.
+			aSession terminate ]]
 ]
