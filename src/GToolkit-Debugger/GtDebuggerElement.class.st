@@ -3,7 +3,8 @@ Class {
 	#superclass : #BlElement,
 	#instVars : [
 		'debuggingSession',
-		'announcer'
+		'announcer',
+		'browserClosingHandler'
 	],
 	#category : #'GToolkit-Debugger'
 }
@@ -117,6 +118,9 @@ GtDebuggerElement >> announcer [
 
 { #category : #actions }
 GtDebuggerElement >> close [
+	browserClosingHandler ifNotNil: [ 
+		"Remove the event handler so that closing the space will not terminate the session one more time"
+		self space removeEventHandler: browserClosingHandler ].
 	self space close.
 	
 	"Closing a window is an asyncronous operation in Bloc. It will not actually close the debugger imediately, 
@@ -156,8 +160,13 @@ GtDebuggerElement >> interruptedContext [
 
 { #category : #callbacks }
 GtDebuggerElement >> onAddedToSceneGraph [ 
-	self space when: BlSpaceDestroyedEvent do: [ :event | 
-		self actOnBrowserClosing: event ]
+	browserClosingHandler ifNotNil: [ self space removeEventHandler: browserClosingHandler ].
+	browserClosingHandler := BlEventHandler 
+		on: BlSpaceDestroyedEvent 
+		do: [ :event | self actOnBrowserClosing: event ].
+	
+	self space addEventHandler: browserClosingHandler
+	
 ]
 
 { #category : #opening }

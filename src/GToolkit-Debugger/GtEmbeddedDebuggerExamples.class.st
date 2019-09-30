@@ -49,7 +49,7 @@ GtEmbeddedDebuggerExamples >> terminateCoderProcess [
 ]
 
 { #category : #private }
-GtEmbeddedDebuggerExamples >> waitUntilSuspendedFor: aProcess [.
+GtEmbeddedDebuggerExamples >> waitUntilSuspendedFor: aProcess. [
 	"Wait at most a second for the given process to become suspended."
 	10 timesRepeat: [ 
 		100 milliSeconds wait.
