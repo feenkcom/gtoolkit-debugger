@@ -171,8 +171,9 @@ GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfTy
 
 { #category : #callbacks }
 GtMoldableDebuggerElement >> actOnDebugActionExecuted [
-	self currentDebugger session interruptedContext ifNotNil: [ 
-		self updateSwitchButtonsExcluding: self currentDebugger ]
+	self currentDebugger session ifNotNil: [ :aDebuggingSession | 
+		aDebuggingSession interruptedContext ifNotNil: [ 
+			self updateSwitchButtonsExcluding: self currentDebugger ] ]
 ]
 
 { #category : #accessing }
