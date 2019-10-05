@@ -127,19 +127,20 @@ Event::WindowEvent { ref event, .. } => match event {
 
 { #category : #drawing }
 GtEmergencyDebugger >> render [
-	window makeCurrent.
-	
-	canvas ifNil: [ canvas := self newCanvas ].
+	Glutin critical: [
+		window makeCurrent.
 
-	canvas fill
-		paint: Color white;
-		path: canvas bounds;
-		draw.
-  	
-	self drawOnSpartaCanvas: canvas.
-  	canvas flush.
+		canvas ifNil: [ canvas := self newCanvas ].
 
-	window swapBuffers
+		canvas fill
+			paint: Color white;
+			path: canvas bounds;
+			draw.
+	  	
+		self drawOnSpartaCanvas: canvas.
+	  	canvas flush.
+
+		window swapBuffers ]
 ]
 
 { #category : #visiting }
