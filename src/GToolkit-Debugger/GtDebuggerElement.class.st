@@ -108,6 +108,7 @@ GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
 
 { #category : #announce }
 GtDebuggerElement >> announce: anAnnouncement [
+
 	self announcer announce: anAnnouncement
 ]
 
