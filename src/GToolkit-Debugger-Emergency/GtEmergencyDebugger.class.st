@@ -47,7 +47,7 @@ GtEmergencyDebugger >> errorMessage: aText [
 
 { #category : #drawing }
 GtEmergencyDebugger >> newCanvas [
-	^ SkiaCanvas extent: window framebufferExtent
+	^ MozSkiaCanvas extent: window framebufferExtent
 ]
 
 { #category : #opening }
