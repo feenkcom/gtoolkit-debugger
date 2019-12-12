@@ -20,7 +20,7 @@ GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
 ]
 
 { #category : #initialization }
-GtEmbeddedDebuggerAttribute >> doAffect: aBrText in: anEditorElement [
+GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	debuggerElement ifNotNil: [ 
 		debuggerElement disableTermination ]. 
 	^ debuggerElement := GtEmbeddedDebuggerElement new
