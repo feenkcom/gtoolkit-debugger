@@ -8,7 +8,7 @@ Class {
 GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 	(self hasValueForVariableNamed: aVariableNode name) ifFalse: [ ^ self ].
 			
-	(text from: aVariableNode start to: aVariableNode stop) replacingAdornment: [ :aText :anEditorElement | 
+	(text from: aVariableNode start to: aVariableNode stop) replacingAdornment: [ :aTBrTextEditorTextualPiece :anEditorElement | 
 		| aContainer aTextPieceElement displayText aValueElement theValue |
 		aContainer := BlElement new
 			clipChildren: false;
@@ -16,10 +16,7 @@ GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 			constraintsDo: [ :c |
 				c horizontal fitContent.
 				c vertical fitContent ].
-		aTextPieceElement := (BrTextWordPieceStencilBuilder new
-			text: aText
-			start: (aText start - 1 max: 0)
-			end: (aText start - 1 max: 0) + aText size) asElement.
+		aTextPieceElement := (BrTextWordPieceStencilBuilder new segmentPiece: aTBrTextEditorTextualPiece) asElement.
 		aContainer addEventHandler: (BlEventDelegator delegate: BrTextEditorRequest to: aTextPieceElement).
 		displayText := self 
 			valueForVariableNamed: aVariableNode name
