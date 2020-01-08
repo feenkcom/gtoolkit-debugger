@@ -69,7 +69,7 @@ GtEmergencyDebugger >> openInGluitinWindow [
 ]
 
 { #category : #'event - handling' }
-GtEmergencyDebugger >> processGlutinEvent: aGlutinWindowEvent forWindow: aWindow [
+GtEmergencyDebugger >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow [
 	self window == aWindow
 		ifFalse: [ ^ self ].
 		
@@ -143,18 +143,18 @@ GtEmergencyDebugger >> render [
 		window swapBuffers ]
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GtEmergencyDebugger >> visitWindowCloseRequest: anEvent [
 	GlutinEventsFetcher default eventHandlers remove: self ifAbsent: [  ].
 	window eventsLoop closeWindow: window.
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GtEmergencyDebugger >> visitWindowRedrawRequested: anEvent [
 	self render
 ]
 
-{ #category : #visiting }
+{ #category : #'event - visiting' }
 GtEmergencyDebugger >> visitWindowResizedEvent: anEvent [
 	window resize: anEvent width @ anEvent height.
 	
