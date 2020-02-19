@@ -13,9 +13,12 @@ Class {
 
 { #category : #launching }
 GtEmergencyDebugger class >> askForEmergencyEvaluatorOrExitWithText: aText [
-	self new 
+	Stdio stdout nextPutAll: aText asString; lf.
+	Smalltalk snapshot: false andQuit: true. 
+	
+	"self new 
 		errorMessage: aText;
-		openInGluitinWindow.
+		openInGluitinWindow."
 ]
 
 { #category : #example }
