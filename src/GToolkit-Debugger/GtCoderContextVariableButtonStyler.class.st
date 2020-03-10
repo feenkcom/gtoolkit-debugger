@@ -22,6 +22,5 @@ GtCoderContextVariableButtonStyler >> styleVariableNode: aVariableNode [
 				with:
 					{(GtPlaygroundEvaluatedCodeButtonAttribute new
 						beNotOverwritableByStyler;
-						result: value;
-						paint: (Color fromHexString: #'90CAF9'))} ]
+						result: value)} ]
 ]
