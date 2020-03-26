@@ -230,9 +230,9 @@ GtStackDebuggerElement >> initializeStackTransmissions [
 
 { #category : #accessing }
 GtStackDebuggerElement >> selectedContext [
-	| selectionInterval |
-	selectionInterval := self stackElement stackFramesWidget selection.
-	^ self stackElement stackFramesWidget items at: selectionInterval from.
+	^ self stackElement stackFramesWidget selectedIndices
+		ifEmpty: [ nil ]
+		ifNotEmpty: [ :theIndices | self stackElement stackFramesWidget items at: theIndices first ]
 ]
 
 { #category : #'building actions' }
