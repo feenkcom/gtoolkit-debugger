@@ -5,5 +5,5 @@ ResumeDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	<gt2StackDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons play
+			icon: BrGlamorousVectorIcons play
 ]
