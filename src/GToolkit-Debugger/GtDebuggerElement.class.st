@@ -138,14 +138,7 @@ GtDebuggerElement >> detachSession [
 
 { #category : #accessing }
 GtDebuggerElement >> inInspector [
-	| anInspector |
-	anInspector := GtInspector new.
-	anInspector
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	anInspector addPageWithContent: self for: self session.
-	^ anInspector
+	^ GtPager createWrappedOn: self
 ]
 
 { #category : #initialization }
