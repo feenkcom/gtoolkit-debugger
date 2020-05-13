@@ -225,7 +225,7 @@ GtMoldableDebuggerElement >> currentDebugger [
 
 { #category : #accessing }
 GtMoldableDebuggerElement >> inInspector [
-	^ GtPager createWrappedOn: self
+	^ (GtPager createWrappedOn: self) maximized
 ]
 
 { #category : #initialization }

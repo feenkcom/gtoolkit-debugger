@@ -138,7 +138,7 @@ GtDebuggerElement >> detachSession [
 
 { #category : #accessing }
 GtDebuggerElement >> inInspector [
-	^ GtPager createWrappedOn: self
+	^ (GtPager createWrappedOn: self) maximized
 ]
 
 { #category : #initialization }
