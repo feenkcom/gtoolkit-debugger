@@ -117,7 +117,7 @@ GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	| aDebugger |
 
 	aDebugger := self on: aDebuggingSession.
-	^ aDebugger openInInspector
+	^ aDebugger openInPager
 ]
 
 { #category : #'opening api' }
@@ -130,7 +130,7 @@ GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool and
 	| aDebugger |
 
 	aDebugger := self on: aDebugSession.
-	^ aDebugger openInInspector
+	^ aDebugger openInPager
 ]
 
 { #category : #'tools registry' }
@@ -224,7 +224,7 @@ GtMoldableDebuggerElement >> currentDebugger [
 ]
 
 { #category : #accessing }
-GtMoldableDebuggerElement >> inInspector [
+GtMoldableDebuggerElement >> inPager [
 	^ (GtPager createWrappedOn: self) maximized
 ]
 
@@ -268,11 +268,11 @@ GtMoldableDebuggerElement >> open: anElement titled: aTitleString [
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement >> openInInspector [
-	| anInspector |
+GtMoldableDebuggerElement >> openInPager [
+	| aPager |
 	self aboutToOpen.
-	anInspector := self inInspector.
-	self open: anInspector titled: debuggerElement session name.
+	aPager := self inPager.
+	self open: aPager titled: debuggerElement session name.
 ]
 
 { #category : #initialization }
