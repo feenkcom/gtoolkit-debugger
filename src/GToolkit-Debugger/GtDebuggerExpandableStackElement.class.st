@@ -133,8 +133,8 @@ GtDebuggerExpandableStackElement >> initialize [
 GtDebuggerExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
-	stackFramesList display: OrderedCollection new.
-	self addChild: stackFramesList.
+	stackFramesList items: OrderedCollection new.
+	self addChild: stackFramesList
 ]
 
 { #category : #actions }
@@ -172,9 +172,11 @@ GtDebuggerExpandableStackElement >> updateContent [
 
 { #category : #updating }
 GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
-	self stackFramesList display: (self 
-		codersToDisplayFrom: aDebuggingSession
-		preservingContexts: self stackFramesList items).
-	self stackFramesList items ifNotEmpty: [ :methodCoders |
-		self selectCoder: methodCoders first ]
+	self stackFramesList
+		items:
+			(self
+				codersToDisplayFrom: aDebuggingSession
+				preservingContexts: self stackFramesList items).
+	self stackFramesList items
+		ifNotEmpty: [ :methodCoders | self selectCoder: methodCoders first ]
 ]

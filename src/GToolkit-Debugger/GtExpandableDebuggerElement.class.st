@@ -55,8 +55,10 @@ GtExpandableDebuggerElement >> actOnSelectedContextChangedFor: aContext [
 GtExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
-	contextVariablesElement display: self contextVariables.
-	contextVariablesElement userData at: #blocContainer put: #contextVariablesElement.
+	contextVariablesElement items: self contextVariables.
+	contextVariablesElement userData
+		at: #blocContainer
+		put: #contextVariablesElement.
 	^ contextVariablesElement
 ]
 
