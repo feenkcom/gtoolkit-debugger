@@ -39,7 +39,7 @@ GtDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	| aDebugger |
 
 	aDebugger := self on: aDebuggingSession.
-	^ aDebugger openInInspector
+	^ aDebugger openInPager
 ]
 
 { #category : #opening }
@@ -137,15 +137,8 @@ GtDebuggerElement >> detachSession [
 ]
 
 { #category : #accessing }
-GtDebuggerElement >> inInspector [
-	| anInspector |
-	anInspector := GtInspector new.
-	anInspector
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
-	anInspector addPageWithContent: self for: self session.
-	^ anInspector
+GtDebuggerElement >> inPager [
+	^ (GtPager createWrappedOn: self) maximized
 ]
 
 { #category : #initialization }
@@ -191,25 +184,14 @@ GtDebuggerElement >> open: anElement withTitle: aTitleString [
 ]
 
 { #category : #opening }
-GtDebuggerElement >> openInInspector [
-	| anInspector |
+GtDebuggerElement >> openInPager [
+	| aPager |
 	self aboutToOpen.
 	self constraintsDo: [ :c | 
 		c horizontal matchParent.
 		c vertical matchParent ].
-	anInspector := self inInspector.
-	^ self open: anInspector withTitle: self session name.
-]
-
-{ #category : #opening }
-GtDebuggerElement >> openInSpace: anElement titled: aTitleString [
-	| aSpace |
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: aTitleString.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: anElement.
-	^ aSpace show
+	aPager := self inPager.
+	^ self open: aPager withTitle: self session name.
 ]
 
 { #category : #'accessing - settings' }
