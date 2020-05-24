@@ -1,2 +1,2 @@
-# gtoolkit-debugger
+# GT debugger
 GT Debugger is a ... debugger. A moldable debugger.
