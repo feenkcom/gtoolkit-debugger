@@ -256,7 +256,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 GtExpandableDebuggerElement >> buildWatchVariablesElement [
 	| watchVariablesElement |
 	watchVariablesElement := self buildVariablesListElement.
-	watchVariablesElement display: {}"self watchVariables".
+	watchVariablesElement items: {}.	"self watchVariables"
 	^ watchVariablesElement
 ]
 
