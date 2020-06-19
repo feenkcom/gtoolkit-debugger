@@ -28,8 +28,7 @@ GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embedde
 			signaledException: exception;
 			debugSession: debugSession)}
 		from: selectionInterval first
-		to: selectionInterval last .
-	sourceCoder sourceEditor updater all update
+		to: selectionInterval last
 ]
 
 { #category : #accessing }
