@@ -6,7 +6,9 @@ Class {
 	#instVars : [
 		'errorMessageLines',
 		'window',
-		'canvas'
+		'canvas',
+		'renderer',
+		'buffer'
 	],
 	#category : #'GToolkit-Debugger-Emergency'
 }
@@ -21,6 +23,30 @@ GtEmergencyDebugger class >> askForEmergencyEvaluatorOrExitWithText: aText [
 { #category : #example }
 GtEmergencyDebugger class >> example [
 	GtEmergencyDebugger askForEmergencyEvaluatorOrExitWithText: String loremIpsum
+]
+
+{ #category : #accessing }
+GtEmergencyDebugger >> buffer [
+	^ buffer ifNil: [ buffer := self createBufferForExtent: self window innerExtent ]
+]
+
+{ #category : #private }
+GtEmergencyDebugger >> createBufferForExtent: anExtent [
+	| thePixels aForm |
+
+	self
+		assert: [ anExtent isIntegerPoint ]
+		description: [ 'Must be an integer point' ].
+
+	aForm := Form extent: anExtent depth: 32.
+
+	thePixels := FFIExternalArray externalNewType: FFIUInt32 size: (anExtent x * anExtent y).
+	thePixels autoRelease.
+
+	^ BlHostRendererBufferSurface new
+		extent: anExtent;
+		stride: aForm stride;
+		buffer: thePixels getHandle
 ]
 
 { #category : #drawing }
@@ -47,8 +73,7 @@ GtEmergencyDebugger >> errorMessage: aText [
 
 { #category : #drawing }
 GtEmergencyDebugger >> newCanvas [
-	^ SkiaCanvas extent: window innerExtent
-	"^ BlSpartaSkiaCanvasBuilder extent: window innerExtent "
+	^ Bloc preferableSpartaCanvas new forBufferOn: self buffer
 ]
 
 { #category : #opening }
@@ -62,6 +87,7 @@ GtEmergencyDebugger >> openInGluitinWindow [
 	windowBuilder extent: 750@650.
 
 	self window: (eventsLoop createWindow: windowBuilder).
+	renderer := GlutinGLBufferRenderer new window: self window.
 	self window requestRedraw.
 	
 	GlutinEventsFetcher default eventHandlers add: self.
@@ -73,64 +99,13 @@ GtEmergencyDebugger >> openInGluitinWindow [
 GtEmergencyDebugger >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow [
 	self window == aWindow
 		ifFalse: [ ^ self ].
-		
-		
+
 	aGlutinWindowEvent accept: self
-		
-	"Event::LoopDestroyed => return,
-   
-
-
-Event::WindowEvent { ref event, .. } => match event {
-                WindowEvent::Resized(logical_size) => {
-                    let dpi_factor =
-                        windowed_context.window().hidpi_factor();
-                    windowed_context
-                        .resize(logical_size.to_physical(dpi_factor));
-                }
-                WindowEvent::RedrawRequested => {
-                    gl.draw_frame([1.0, 0.5, 0.7, 1.0]);
-                    windowed_context.swap_buffers().unwrap();
-                }
-                WindowEvent::CloseRequested => {
-                    *control_flow = ControlFlow::Exit
-                }
-                _ => (),
-            },
-            _ => (),"
-	
-	
-		
-	"self makeCurrent.
-	
-
-    	aCanvas := SkiaCanvas
-      		extent: windowedContext innerExtent
-       	renderExtent: windowedContext framebufferExtent.
-    	[
-    		windowedContext makeCurrent.
-   			windowedContext eventsLoop fetchEvents: [ :anEvent |
-        		anEvent mapped class = WinitBaseWindowCloseRequested
-            		ifTrue: [
-               		windowedContext release.
-                	isRunning := false.
-                	windowProcess ifNotNil: [ windowProcess terminate ] ]. ].
-        
-			aCanvas fill
-				paint: Color white;
-				path: (0@0 extent: windowedContext framebufferExtent);
-				draw.
-    		self drawOnSpartaCanvas: aCanvas.
-    		aCanvas flush.
-   
-    		windowedContext swapBuffers."
 ]
 
 { #category : #drawing }
 GtEmergencyDebugger >> render [
 	Glutin critical: [
-		window makeCurrent.
-
 		canvas ifNil: [ canvas := self newCanvas ].
 
 		canvas fill
@@ -140,8 +115,11 @@ GtEmergencyDebugger >> render [
 	  	
 		self drawOnSpartaCanvas: canvas.
 	  	canvas flush.
-
-		window swapBuffers ]
+		
+		renderer presentBuffer: (GlutinGLBuffer new
+			extent: self buffer extent;
+			stride: self buffer stride;
+			pixels: self buffer buffer) areas: { canvas bounds } ]
 ]
 
 { #category : #'event - visiting' }
@@ -159,6 +137,7 @@ GtEmergencyDebugger >> visitWindowRedrawRequested: anEvent [
 GtEmergencyDebugger >> visitWindowResizedEvent: anEvent [
 	window resize: anEvent width @ anEvent height.
 	
+	buffer := nil.
 	canvas := nil.
 
 	self render
