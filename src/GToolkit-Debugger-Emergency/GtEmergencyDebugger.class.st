@@ -13,12 +13,9 @@ Class {
 
 { #category : #launching }
 GtEmergencyDebugger class >> askForEmergencyEvaluatorOrExitWithText: aText [
-	Stdio stdout nextPutAll: aText asString; lf.
-	Smalltalk snapshot: false andQuit: true. 
-	
-	"self new 
+	self new 
 		errorMessage: aText;
-		openInGluitinWindow."
+		openInGluitinWindow.
 ]
 
 { #category : #example }
@@ -50,7 +47,8 @@ GtEmergencyDebugger >> errorMessage: aText [
 
 { #category : #drawing }
 GtEmergencyDebugger >> newCanvas [
-	^ MozSkiaCanvas extent: window framebufferExtent
+	^ SkiaCanvas extent: window innerExtent
+	"^ BlSpartaSkiaCanvasBuilder extent: window innerExtent "
 ]
 
 { #category : #opening }
