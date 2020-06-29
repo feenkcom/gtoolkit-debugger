@@ -263,7 +263,8 @@ GtStackDebuggerElement >> updateCodePaneFor: aContext [
 	selectionInterval := self session selectedCodeRangeForContext: self selectedContext.
 	(text from: selectionInterval first to: selectionInterval last) attributes: { 
 		BlTextUnderlineAttribute new 
-			paint: BrGlamorousColors errorBackgroundColor; 
+			paint: BrGlamorousColors errorBackgroundColor;
+			width: 3; 
 			beNotOverwritableByStyler }.
 	editorWidget := self buildCodeWidgetForMethodInClass: aContext methodClass.
 	editorWidget editor text: text.
