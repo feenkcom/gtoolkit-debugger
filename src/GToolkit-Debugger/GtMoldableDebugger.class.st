@@ -1,5 +1,5 @@
 Class {
-	#name : #GtMoldableDebuggerElement,
+	#name : #GtMoldableDebugger,
 	#superclass : #BlElement,
 	#instVars : [
 		'debuggerElement',
@@ -17,17 +17,17 @@ Class {
 }
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> alwaysOpenFullDebugger [
+GtMoldableDebugger class >> alwaysOpenFullDebugger [
 	^ AlwaysOpenFullDebugger ifNil: [AlwaysOpenFullDebugger := false]
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> alwaysOpenFullDebugger: aBoolean [
+GtMoldableDebugger class >> alwaysOpenFullDebugger: aBoolean [
 	AlwaysOpenFullDebugger := aBoolean.
 ]
 
 { #category : #'utilities api' }
-GtMoldableDebuggerElement class >> closeAllDebuggers [
+GtMoldableDebugger class >> closeAllDebuggers [
 	self flag: 'Take the new GT debuggers into account'.
 	(SystemWindow allSubInstances select: [:w | 
 		 w model isKindOf: GTGenericStackDebugger])
@@ -36,84 +36,84 @@ GtMoldableDebuggerElement class >> closeAllDebuggers [
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> defaultLogFileName [
+GtMoldableDebugger class >> defaultLogFileName [
 	^ 'PharoDebug.log'
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> filterCommonMessageSends [
+GtMoldableDebugger class >> filterCommonMessageSends [
 	self flag: 'horrible hack not to break the setting browser'.
 	^ false
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> filterCommonMessageSends: aBoolean [
+GtMoldableDebugger class >> filterCommonMessageSends: aBoolean [
 	FilterCommonMessageSends := aBoolean
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> filterDoItSelectors [
+GtMoldableDebugger class >> filterDoItSelectors [
 	^ false
 ]
 
 { #category : #'accessing - ancient preference selectors' }
-GtMoldableDebuggerElement class >> filterDoItSelectors: aBoolean [
+GtMoldableDebugger class >> filterDoItSelectors: aBoolean [
 	self flag: 'just for backward compatibility'
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> filterKernelClasses [
+GtMoldableDebugger class >> filterKernelClasses [
 	^ false
 ]
 
 { #category : #'accessing - ancient preference selectors' }
-GtMoldableDebuggerElement class >> filterKernelClasses: aBoolean [
+GtMoldableDebugger class >> filterKernelClasses: aBoolean [
 	self flag: 'just for backward compatibility'
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> filterLinkSelectors [
+GtMoldableDebugger class >> filterLinkSelectors [
 	^ false
 ]
 
 { #category : #'accessing - ancient preference selectors' }
-GtMoldableDebuggerElement class >> filterLinkSelectors: aBoolean [ 
+GtMoldableDebugger class >> filterLinkSelectors: aBoolean [ 
 	self flag: 'just for backward compatibility'
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> filterNilSelectors [
+GtMoldableDebugger class >> filterNilSelectors [
 	^ false
 ]
 
 { #category : #'accessing - ancient preference selectors' }
-GtMoldableDebuggerElement class >> filterNilSelectors: aBoolean [ 
+GtMoldableDebugger class >> filterNilSelectors: aBoolean [ 
 	self flag: 'just for backward compatibility'
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> logDebuggerStackToFile [
+GtMoldableDebugger class >> logDebuggerStackToFile [
 	^ LogDebuggerStackToFile ifNil: [LogDebuggerStackToFile := true]
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> logDebuggerStackToFile: aBoolean [
+GtMoldableDebugger class >> logDebuggerStackToFile: aBoolean [
 	 LogDebuggerStackToFile := aBoolean
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> logFileName [
+GtMoldableDebugger class >> logFileName [
 	^ LogFileName ifNil: [ self defaultLogFileName ] 
 ]
 
 { #category : #'instance creation' }
-GtMoldableDebuggerElement class >> on: aDebugSession [
+GtMoldableDebugger class >> on: aDebugSession [
 	^ self new 
 		initializeForSession: aDebugSession
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
+GtMoldableDebugger class >> openInspectorOn: aDebuggingSession [
 	| aDebugger |
 
 	aDebugger := self on: aDebuggingSession.
@@ -121,12 +121,12 @@ GtMoldableDebuggerElement class >> openInspectorOn: aDebuggingSession [
 ]
 
 { #category : #'opening api' }
-GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
+GtMoldableDebugger class >> openOn: aDebugSession withFullView: aBool [
 	^ self openOn: aDebugSession withFullView: aBool andNotification: nil
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
+GtMoldableDebugger class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
 	| aDebugger |
 
 	aDebugger := self on: aDebugSession.
@@ -134,34 +134,34 @@ GtMoldableDebuggerElement class >> openOn: aDebugSession withFullView: aBool and
 ]
 
 { #category : #'tools registry' }
-GtMoldableDebuggerElement class >> register [
+GtMoldableDebugger class >> register [
 	self registerToolsOn: Smalltalk tools.
 ]
 
 { #category : #'tools registry' }
-GtMoldableDebuggerElement class >> registerToolsOn: registry [
+GtMoldableDebugger class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
 	registry register: self as: #debugger.
 ]
 
 { #category : #'settings api' }
-GtMoldableDebuggerElement class >> stackWidgetClass [
+GtMoldableDebugger class >> stackWidgetClass [
 	self flag: 'horrible hack not to break the setting browser'.
 	^ self
 ]
 
 { #category : #icons }
-GtMoldableDebuggerElement class >> taskbarIconName [
+GtMoldableDebugger class >> taskbarIconName [
 	^ #smallDebugIcon
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement >> aboutToOpen [
+GtMoldableDebugger >> aboutToOpen [
 	self currentDebugger aboutToOpen
 ]
 
 { #category : #callbacks }
-GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
+GtMoldableDebugger >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
 	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
 	self updateSwitchButtonsExcluding: newDebuggerElement.
@@ -170,14 +170,14 @@ GtMoldableDebuggerElement >> actOnButtonSelected: aButtonElement forDebuggerOfTy
 ]
 
 { #category : #callbacks }
-GtMoldableDebuggerElement >> actOnDebugActionExecuted [
+GtMoldableDebugger >> actOnDebugActionExecuted [
 	self currentDebugger session ifNotNil: [ :aDebuggingSession | 
 		aDebuggingSession interruptedContext ifNotNil: [ 
 			self updateSwitchButtonsExcluding: self currentDebugger ] ]
 ]
 
 { #category : #accessing }
-GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excluding: aDebuggerType [ 
+GtMoldableDebugger >> availableDebuggerTypesForContext: aContext excluding: aDebuggerType [ 
 	^ ((Smalltalk tools debuggersForContext: aContext)
 			select: [ :aDebuggerClass | aDebuggerClass inheritsFrom: GtDebuggerElement ]) reverse
 		remove: aDebuggerType ifAbsent: [ ];
@@ -185,7 +185,7 @@ GtMoldableDebuggerElement >> availableDebuggerTypesForContext: aContext excludin
 ]
 
 { #category : #'building widgets' }
-GtMoldableDebuggerElement >> createButtonForSwitchingTo: aDebuggerClass [
+GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
 	^ BrButton new
 		beSmall;
 		background: Color white;
@@ -203,7 +203,7 @@ GtMoldableDebuggerElement >> createButtonForSwitchingTo: aDebuggerClass [
 ]
 
 { #category : #'building widgets' }
-GtMoldableDebuggerElement >> createButtonsContainer [
+GtMoldableDebugger >> createButtonsContainer [
 	| container |
 	container := BlElement new
 		layout: BlLinearLayout horizontal;
@@ -219,17 +219,17 @@ GtMoldableDebuggerElement >> createButtonsContainer [
 ]
 
 { #category : #accessing }
-GtMoldableDebuggerElement >> currentDebugger [
+GtMoldableDebugger >> currentDebugger [
 	^ debuggerElement
 ]
 
 { #category : #accessing }
-GtMoldableDebuggerElement >> inPager [
+GtMoldableDebugger >> inPager [
 	^ (GtPager createWrappedOn: self) maximized
 ]
 
 { #category : #initialization }
-GtMoldableDebuggerElement >> initialize [
+GtMoldableDebugger >> initialize [
 	super initialize.
 	self 
 		layout: BlFrameLayout new;
@@ -249,7 +249,7 @@ GtMoldableDebuggerElement >> initialize [
 ]
 
 { #category : #initialization }
-GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
+GtMoldableDebugger >> initializeForSession: aDebuggingSession [
 	| newDebuggerElement |
 	newDebuggerElement := self selectInitialDebuggerFor: aDebuggingSession.
 	self updateSwitchButtonsExcluding: newDebuggerElement.
@@ -257,7 +257,7 @@ GtMoldableDebuggerElement >> initializeForSession: aDebuggingSession [
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement >> open: anElement titled: aTitleString [
+GtMoldableDebugger >> open: anElement titled: aTitleString [
 	| aSpace |
 	aSpace := BlSpace new.
 	aSpace withHalos.
@@ -268,7 +268,7 @@ GtMoldableDebuggerElement >> open: anElement titled: aTitleString [
 ]
 
 { #category : #opening }
-GtMoldableDebuggerElement >> openInPager [
+GtMoldableDebugger >> openInPager [
 	| aPager |
 	self aboutToOpen.
 	aPager := self inPager.
@@ -276,7 +276,7 @@ GtMoldableDebuggerElement >> openInPager [
 ]
 
 { #category : #initialization }
-GtMoldableDebuggerElement >> selectInitialDebuggerFor: aDebugSession [ 
+GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
 	| debuggerClass initialDebugger |
 	debuggerClass := Smalltalk tools 
 		debuggerDispatcherFor: aDebugSession interruptedContext
@@ -295,7 +295,7 @@ GtMoldableDebuggerElement >> selectInitialDebuggerFor: aDebugSession [
 ]
 
 { #category : #private }
-GtMoldableDebuggerElement >> subscribeToDebuggingEventsFor: aDebuggerElement [
+GtMoldableDebugger >> subscribeToDebuggingEventsFor: aDebuggerElement [
 	aDebuggerElement announcer 
 		when: DebugActionExecuted 
 		send: #actOnDebugActionExecuted 
@@ -303,7 +303,7 @@ GtMoldableDebuggerElement >> subscribeToDebuggingEventsFor: aDebuggerElement [
 ]
 
 { #category : #actions }
-GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
+GtMoldableDebugger >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
 	| currentSession newDebugger |
 	
 	currentSession := currentDebugger session.
@@ -313,12 +313,12 @@ GtMoldableDebuggerElement >> switchFrom: currentDebugger toDebuggerType: aDebugg
 ]
 
 { #category : #private }
-GtMoldableDebuggerElement >> unsubscribeFromDebuggingEventsFor: aDebuggerElement [
+GtMoldableDebugger >> unsubscribeFromDebuggingEventsFor: aDebuggerElement [
 	aDebuggerElement announcer unsubscribe: self.
 ]
 
 { #category : #private }
-GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
+GtMoldableDebugger >> updateDebuggerElement: aNewDebuggerElement [
 	| previousDebuggerElement |
 	previousDebuggerElement := debuggerElement.
 	debuggerElement := aNewDebuggerElement.
@@ -331,7 +331,7 @@ GtMoldableDebuggerElement >> updateDebuggerElement: aNewDebuggerElement [
 ]
 
 { #category : #private }
-GtMoldableDebuggerElement >> updateSwitchButtonsExcluding: aDebuggerElement [
+GtMoldableDebugger >> updateSwitchButtonsExcluding: aDebuggerElement [
 	| availableDebuggerTypes |
 	availableDebuggerTypes := self 
 		availableDebuggerTypesForContext: aDebuggerElement session interruptedContext 
