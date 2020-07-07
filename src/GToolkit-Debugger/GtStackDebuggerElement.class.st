@@ -78,7 +78,7 @@ GtStackDebuggerElement >> buildContextVariablesList [
 	| contextVariablesList |
 	
 	contextVariablesList := BrColumnedList new 
-		addEventHandler: (GtInspectorListToSelectHandler new transformation: [:each | each rawValue ]);
+		addEventHandler: (GtPhlowListToSelectHandler new transformation: [:each | each rawValue ]);
 		constraintsDo: [ :c | 
 			c padding: (BlInsets all: 10) ].
 			
