@@ -61,7 +61,7 @@ GtBytecodeDebugger >> buildBytecodesListElement [
 	| bytecodesList |
 	bytecodesList := BrSimpleList new.
 	bytecodesList
-		addEventHandler: GtInspectorListToSelectHandler new;
+		addEventHandler: GtPhlowListToSelectHandler new;
 		stencil: [ :each :index |
 			BlTextElement new
 				text: (self formatBytecode: each);

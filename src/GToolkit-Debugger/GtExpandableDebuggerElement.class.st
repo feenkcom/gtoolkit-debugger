@@ -213,7 +213,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 	| list |
 	list := BrColumnedList new.
 	list margin: (BlInsets top: 10).
-	list addEventHandler: (GtInspectorListToSelectHandler new 
+	list addEventHandler: (GtPhlowListToSelectHandler new 
 		transformation: [ :variableNode | variableNode value ]).
 	list column
 		title: 'Icon';
