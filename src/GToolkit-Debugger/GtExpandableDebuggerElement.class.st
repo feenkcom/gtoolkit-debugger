@@ -217,38 +217,49 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 		transformation: [ :variableNode | variableNode value ]).
 	list column
 		title: 'Icon';
-		stencil: [ :variableNode | 
-			| icon variableValue |
-			icon := [ 
-				variableValue := variableNode rawValue.
-				variableValue gtInspectorIcon ifNil: [ variableValue class systemIcon ] 
+		width: 26;
+		cellStencil: [ BlElement new 
+			size: 26@22;
+			layout: BlLinearLayout horizontal alignCenterLeft;
+			labeled: 'Icon Container';
+			padding: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
+		dataBinder: [ :aCellElement :aVariableNode |
+			| anIconForm aVariableValue |
+			anIconForm := [ 
+				aVariableValue := aVariableNode rawValue.
+				aVariableValue gtInspectorIcon ifNil: [ aVariableValue class systemIcon ]
 			]	on: Error, Halt
 				do: [ :error | self iconNamed: #smallWarningIcon ].
-			icon asElement
-				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
+			aCellElement
+				removeChildren;
+				addChild: anIconForm asElement ].
 	list column
 		title: 'Variable';
-		stencil: [ :variableNode | 
+		cellStencil: [ 
 			BrLabel new
 				look: (BrGlamorousLabelLook new foreground: Color black);
-				text: variableNode key;
 				hMatchParent;
-				vMatchParent;
-				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
+				vFitContent;
+				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
+		dataBinder: [ :aCellElement :aVariableNode |
+			aCellElement text: aVariableNode key asRopedText ].
 	list column
 		title: 'Value';
-		stencil: [ :variableNode || rawValue displayValue| 
-			[ rawValue := variableNode rawValue ] 
-				on: Error 
-				do: [ :error | displayValue := variableNode errorMessage asRopedText foreground: Color red ].
+		cellStencil: [
 			BrLabel new
 				look: BrGlamorousLabelLook new;
-				text: ([ displayValue ifNil: [ rawValue gtDisplayString asRopedText ] ] 
-					on: Error, Halt
-					do: [ :error | error messageText asRopedText foreground: Color red ]);
 				hMatchParent;
-				vMatchParent;
-				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ].
+				vFitContent;
+				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
+		dataBinder: [ :aCellElement :aVariableNode |
+			| aRawValue anErrorText|
+			[ aRawValue := aVariableNode rawValue ] 
+				on: Error 
+				do: [ :error | anErrorText := aVariableNode errorMessage asRopedText foreground: Color red ].
+			
+			aCellElement text: ([ anErrorText ifNil: [ aRawValue gtDisplayString asRopedText ] ] 
+					on: Error, Halt
+					do: [ :error | error messageText asRopedText foreground: Color red ]) ].
 	^ list
 ]
 
