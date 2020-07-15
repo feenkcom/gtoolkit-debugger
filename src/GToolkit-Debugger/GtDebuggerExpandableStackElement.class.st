@@ -141,10 +141,10 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 GtDebuggerExpandableStackElement >> selectCoder: aContextCoder [
 	selectedCoder := aContextCoder.
 	selectedCoder expanded: true.
-	selectedCoder isBuilt ifTrue: [
-		"Update the content as some actions (for example save)
-		can change the compiled method stored in the context."
-		selectedCoder updateContent ]
+	
+	"Update the content as some actions (for example save)
+	can change the compiled method stored in the context."
+	selectedCoder updateContent
 ]
 
 { #category : #actions }
