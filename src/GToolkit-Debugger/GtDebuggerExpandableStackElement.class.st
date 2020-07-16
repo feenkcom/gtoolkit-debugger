@@ -85,6 +85,7 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
 	| coder |
 	coder := GtMethodContextCoder forContext: aContext session: aSession.
+	coder coderLook: GtSourceCoderHeaderLook" + GtMethodCoderCategoryLook".
 	self areAnnotationsEnabled ifTrue: [
 		coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
 	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
