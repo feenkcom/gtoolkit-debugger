@@ -101,7 +101,7 @@ GtExpandableDebuggerElement >> buildDetailsTabElement [
 GtExpandableDebuggerElement >> buildEvaluatorElement [
 	| snippetCoder |
 	snippetCoder := GtPharoSnippetCoder new
-		source: 'self';
+		forSource: 'self';
 		context: self selectedContext;
 		variableBindings: (GtSnippetBindings new
 			receiver: self selectedContext receiver).
