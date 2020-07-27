@@ -192,7 +192,7 @@ GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
 		look: BrGlamorousButtonRectangularLook new +
 			BrGlamorousButtonLabelLook new + 
 			BrShadowLook;
-		geometry: (BlRectangle cornerRadius: 10);
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 10);
 		margin: (BlInsets left: 5);
 		label: aDebuggerClass defaultTitle;
 		when: BlMouseEnterEvent do: [ :anEvent | anEvent currentTarget background: Color veryVeryLightGray lighter ];
