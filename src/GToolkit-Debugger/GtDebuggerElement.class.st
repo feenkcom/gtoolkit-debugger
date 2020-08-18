@@ -153,7 +153,9 @@ GtDebuggerElement >> interruptedContext [
 ]
 
 { #category : #callbacks }
-GtDebuggerElement >> onAddedToSceneGraph [ 
+GtDebuggerElement >> onAddedToSceneGraph [
+	super onAddedToSceneGraph.
+
 	browserClosingHandler ifNotNil: [ self space removeEventHandler: browserClosingHandler ].
 	browserClosingHandler := BlEventHandler 
 		on: BlSpaceDestroyedEvent 
