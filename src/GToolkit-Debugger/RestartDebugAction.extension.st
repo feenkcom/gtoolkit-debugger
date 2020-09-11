@@ -1,7 +1,7 @@
 Extension { #name : #RestartDebugAction }
 
 { #category : #'*GToolkit-Debugger' }
-RestartDebugAction class >> gt2ContetDebuggingActionFor: aDebugger [
+RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
