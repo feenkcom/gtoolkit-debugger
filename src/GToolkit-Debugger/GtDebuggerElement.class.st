@@ -100,9 +100,9 @@ GtDebuggerElement >> actOnDebugSessionChanged [
 
 { #category : #'building actions' }
 GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
-	^ (self session class
+	^ self session class
 		debuggingActionsForPragmas: aSymbolsCollection 
-		for: self)
+		for: self
 	
 ]
 
