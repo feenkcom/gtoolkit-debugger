@@ -24,15 +24,30 @@ GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 { #category : #testing }
 GtDoesNotUnderstandDebugAction >> appliesToContext: aContext [
 	^ aContext isContextDoesNotUnderstand or: [ 
-		"Select the second context if the interupted context is a does not understand context."
-		(self session interruptedContext sender = aContext  and: [ 
-			self session interruptedContext  isContextDoesNotUnderstand ]) ]
+		
+		"Select the second  or third contextes if the interupted context is a does not understand context."
+		"Less then ideal implementation for handling ""|x| x unknown"" "
+		(self session interruptedContext isContextDoesNotUnderstand and: [ 
+			self session interruptedContext sender = aContext ]) or: [ 
+		self session interruptedContext sender notNil and: [ 
+			self session interruptedContext sender isContextDoesNotUnderstand and: [ 
+					self session interruptedContext sender sender = aContext ] ] ] ]
 ]
 
 { #category : #testing }
 GtDoesNotUnderstandDebugAction >> appliesToDebugger: aDebugger [
-
-	^ aDebugger session isInterruptedContextDoesNotUnderstand 
+	| exception |
+	
+	aDebugger session isInterruptedContextDoesNotUnderstand ifFalse: [ ^ false ].
+	
+	"The create method action should not appear in case the message 
+	is sent to an undeclared  variable."
+	exception := aDebugger session interruptedContext tempAt: 2.
+	exception class == VariableNotDeclared ifTrue: [ ^ false ].
+	
+	"Do not show the create method button when an message is sent to an
+	obsolete class."
+	^ aDebugger interruptedContext receiver class isObsolete not
 ]
 
 { #category : #accessing }
