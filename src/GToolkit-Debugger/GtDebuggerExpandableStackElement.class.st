@@ -54,7 +54,8 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 	
 	context := aSession interruptedContext.
 	newCoders := OrderedCollection new.
-	[ context notNil and: [ context ~~ firstContext ] ]
+	[ context notNil and: [ 
+			context ~~ firstContext  ] ]
 		whileTrue: [ 
 			newCoder := self createCoderFor: context in: aSession.
 			newCoders add: newCoder.

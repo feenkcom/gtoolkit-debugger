@@ -1,9 +1,6 @@
 Class {
 	#name : #GtExpandableDebuggerElement,
 	#superclass : #GtDebuggerElement,
-	#instVars : [
-		'stackElement'
-	],
 	#category : #'GToolkit-Debugger'
 }
 
@@ -350,11 +347,6 @@ GtExpandableDebuggerElement >> stackPane [
 { #category : #updating }
 GtExpandableDebuggerElement >> updateCoders [
 	'TODO'
-]
-
-{ #category : #updating }
-GtExpandableDebuggerElement >> updateDebugger [
-	self updateStackWidget
 ]
 
 { #category : #updating }
