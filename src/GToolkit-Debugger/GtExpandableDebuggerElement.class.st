@@ -1,9 +1,6 @@
 Class {
 	#name : #GtExpandableDebuggerElement,
 	#superclass : #GtDebuggerElement,
-	#instVars : [
-		'stackElement'
-	],
 	#category : #'GToolkit-Debugger'
 }
 
