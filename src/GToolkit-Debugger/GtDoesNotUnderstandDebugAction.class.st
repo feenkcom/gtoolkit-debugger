@@ -4,13 +4,29 @@ Class {
 	#category : #'GToolkit-Debugger-Actions'
 }
 
-{ #category : #'as yet unclassified' }
-GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
-	<gt2StackDebuggingAction>
+{ #category : #registration }
+GtDoesNotUnderstandDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
+	<gt2ContextDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: GLMUIThemeExtraIcons glamorousAdd;
+			icon: BrGlamorousIcons add
+]
+
+{ #category : #registration }
+GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
+	"<gt2StackDebuggingAction>"
+	
+	^ (self forDebugger: aDebugger)
+			icon: BrGlamorousIcons add;
 			order: 4
+]
+
+{ #category : #testing }
+GtDoesNotUnderstandDebugAction >> appliesToContext: aContext [
+	^ aContext isContextDoesNotUnderstand or: [ 
+		"Select the second context if the interupted context is a does not understand context."
+		(self session interruptedContext sender = aContext  and: [ 
+			self session interruptedContext  isContextDoesNotUnderstand ]) ]
 ]
 
 { #category : #testing }
