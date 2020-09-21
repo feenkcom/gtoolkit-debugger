@@ -350,11 +350,6 @@ GtExpandableDebuggerElement >> updateCoders [
 ]
 
 { #category : #updating }
-GtExpandableDebuggerElement >> updateDebugger [
-	self updateStackWidget
-]
-
-{ #category : #updating }
 GtExpandableDebuggerElement >> updateStackPane [
 	| stackElement |
 	stackElement := self buildStackElement.
