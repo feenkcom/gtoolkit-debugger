@@ -27,18 +27,18 @@ GtExpandableDebuggerElement >> aboutToOpen [
 
 { #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
-	| tabGroupElement cotainerElement |
-	cotainerElement := BlElement new
+	| panesContainerElement panesTabGroupElement |
+	panesContainerElement := BlElement new
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c |
 			c horizontal matchParent.
 			c vertical matchParent ].
-	self buildPanesStructureIn: cotainerElement.
+	self buildPanesStructureIn: panesContainerElement.
 	
-	tabGroupElement := self buildStackTabGroupForElement: cotainerElement.
+	panesTabGroupElement := self buildStackTabGroupForElement: panesContainerElement.
 	self 
 		removeChildren;
-		addChild: tabGroupElement.
+		addChild: panesTabGroupElement.
 	self updateStackPane.
 ]
 
@@ -142,13 +142,13 @@ GtExpandableDebuggerElement >> buildStackElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackElement [
+GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElement [
 	| tab tabGroup |
 	tab := BrTab new.
 	tab
 		look: BrGlamorousTabWithoutBarLook;
 		label: self session name;
-		stencil: (BrValuableStencil from: aStackElement);
+		stencil: (BrValuableStencil from: aStackContainerElement);
 		padding:
 			(BlInsets
 				top: 15
