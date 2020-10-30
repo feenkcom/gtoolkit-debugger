@@ -324,9 +324,7 @@ GtExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 	(selection isNil or: [ selection method hasPragmaNamed: #debuggerCompleteToSender ]) ifFalse: [ ^ self ].
 	
 	 self filteredStack ifNotEmpty: [ :filteredStack |
-		self selectedCoder expanded: false. "Do not expand the first context as another context is going to be expanded"
 		self stackElement selectContext: filteredStack first ]
-	
 ]
 
 { #category : #'building actions' }
