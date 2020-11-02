@@ -53,9 +53,7 @@ GtExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
 	contextVariablesElement items: self contextVariables.
-	contextVariablesElement userData
-		at: #blocContainer
-		put: #contextVariablesElement.
+	contextVariablesElement containerName: #contextVariablesElement.
 	^ contextVariablesElement
 ]
 
@@ -134,7 +132,7 @@ GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 GtExpandableDebuggerElement >> buildStackElement [
 	| newStackElement |
 	newStackElement := GtDebuggerExpandableStackElement new.
-	newStackElement userData at: #blocContainer put: #stackElement.
+	newStackElement containerName: #stackElement.
 	^ newStackElement
 ]
 
