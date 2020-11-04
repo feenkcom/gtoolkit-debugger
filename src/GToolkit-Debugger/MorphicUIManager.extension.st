@@ -39,7 +39,7 @@ MorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebugge
 	
 	self defer:	[ 
 			"Opened the embeddeable debugger instead of the default one."
-		[ GtEmbeddedDebuggerElement   
+		[ GtCoderEmbeddedDebuggerElement   
 				openOn: debugSession dueTo: exception embeddedIn: sourceCoder
 		] on: Error do: [ :ex | 	debugSession signalDebuggerError: ex] 
 	].
