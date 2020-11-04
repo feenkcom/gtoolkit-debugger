@@ -26,7 +26,7 @@ MorphicUIManager >> gtDebugProcess: process context: context label: title fullVi
 ]
 
 { #category : #'*GToolkit-Debugger' }
-MorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder forException: exception [
+MorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder  withSelection: aSelection forException: exception [
 	"This is a copy of the standard method for opening the debugger with the difference that
 	the embedeable debugger is opened instead of the standard one."
 	| debugSession |
