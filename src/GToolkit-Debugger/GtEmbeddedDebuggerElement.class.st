@@ -10,20 +10,23 @@ Class {
 }
 
 { #category : #opening }
-GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
-	| selectionInterval |
-	selectionInterval := sourceCoder selectedSourceInterval
-		ifNil: [ 1 to: sourceCoder sourceEditor text size ].
-	sourceCoder sourceText
+GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder withSelection: aSelection [
+	| selectionInterval sourceText |
+	sourceText := sourceCoder sourceCode sourceText.
+	selectionInterval := aSelection isEmpty
+		ifFalse: [ aSelection from + 1 to: aSelection to ] 
+		ifTrue: [ 1 to: sourceText size ].
+	
+	sourceText
 		clearAttributes: [ :each | 
 			{GtPlaygroundEvaluatedCodeHighlightedAttribute.
 			GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
-	sourceCoder sourceEditor text
+	sourceText
 		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new 
 			paint: Color red)}
 		from: selectionInterval first
 		to: selectionInterval last.
-	sourceCoder sourceEditor text
+	sourceText
 		attributes: {(GtEmbeddedDebuggerAttribute new 
 			signaledException: exception;
 			debugSession: debugSession)}
