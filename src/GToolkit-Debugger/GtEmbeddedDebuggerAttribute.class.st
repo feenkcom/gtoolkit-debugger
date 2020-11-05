@@ -26,8 +26,8 @@ GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 	debuggerElement := GtCoderEmbeddedDebuggerElement new
 		signaledException: self signaledException;
 		session: self debugSession.
-	anEditorElement showNotification: (GtNotificationMessageEvent new 
-		message: self debugSession name).
+	anEditorElement showNotification: (GtNotificationDebugSessionEvent new 
+		debugSession: self debugSession).
 	^ debuggerElement
 ]
 
