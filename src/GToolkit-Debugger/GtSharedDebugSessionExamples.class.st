@@ -1,8 +1,16 @@
 Class {
 	#name : #GtSharedDebugSessionExamples,
 	#superclass : #Object,
+	#instVars : [
+		'sessions'
+	],
 	#category : #'GToolkit-Debugger-Session'
 }
+
+{ #category : #'private - adding / removing' }
+GtSharedDebugSessionExamples >> addSession: aSession [
+	self sessions add: aSession.
+]
 
 { #category : #'private - asserting' }
 GtSharedDebugSessionExamples >> assertTerminatedSession: aSession [
@@ -22,6 +30,7 @@ GtSharedDebugSessionExamples >> basicSharedDebugSession [
 { #category : #'examples - session' }
 GtSharedDebugSessionExamples >> debugSession [
 	<gtExample>
+	<after: #terminateSessions>
 	| aContext aProcess aSession |
 	aContext := [ 1 + 1 ] asContext.
 	aProcess := Process 
@@ -30,6 +39,8 @@ GtSharedDebugSessionExamples >> debugSession [
 	aSession := aProcess 
 		newDebugSessionNamed: 'Example session' 
 		startedAt: aContext.
+		
+	self addSession: aSession.
 
 	self assert: aSession interruptedContext isNotNil.
 	self assert: aSession interruptedProcess isNotNil.
@@ -66,6 +77,11 @@ GtSharedDebugSessionExamples >> debugSharedSession [
 	^ aSession
 ]
 
+{ #category : #'private - accessing' }
+GtSharedDebugSessionExamples >> sessions [
+	^ sessions ifNil: [ sessions := OrderedCollection new ]
+]
+
 { #category : #'examples - shared session' }
 GtSharedDebugSessionExamples >> sharedDebugSession [
 	<gtExample>
@@ -75,6 +91,12 @@ GtSharedDebugSessionExamples >> sharedDebugSession [
 	aSession session: aPharoSession.
 	self assert: aSession session equals: aPharoSession.
 	^ aSession
+]
+
+{ #category : #accessing }
+GtSharedDebugSessionExamples >> terminateSessions [
+	self sessions do: [ :eachSession | 
+		eachSession terminate ]
 ]
 
 { #category : #'examples - shared session' }
