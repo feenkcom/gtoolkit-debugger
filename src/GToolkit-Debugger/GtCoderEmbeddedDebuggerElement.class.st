@@ -11,7 +11,8 @@ Class {
 
 { #category : #opening }
 GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder withSelection: aSelection [
-	| selectionInterval sourceText |
+	| selectionInterval sourceText sharedDebugSession |
+	sharedDebugSession := GtSharedDebugSession new session: debugSession.
 	sourceText := sourceCoder sourceCode sourceText.
 	selectionInterval := aSelection isEmpty
 		ifFalse: [ aSelection from + 1 to: aSelection to ] 
@@ -29,7 +30,7 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception em
 	sourceText
 		attributes: {(GtEmbeddedDebuggerAttribute new 
 			signaledException: exception;
-			debugSession: debugSession)}
+			debugSession: sharedDebugSession)}
 		from: selectionInterval first
 		to: selectionInterval last
 ]
@@ -51,8 +52,7 @@ GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	debugButton look: BrGlamorousButtonWithLabelLook.
 	debugButton label: 'Debug'.
 	debugButton action: [ 
-		self switchToSystemDebugger.
-		self removeFromParent ].
+		self debug ].
 	self 
 		removeChildren;
 		addChild: textElement;
@@ -60,6 +60,12 @@ GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	self constraintsDo: [ :c | 
 		c vertical fitContent.
 		c horizontal fitContent ].
+]
+
+{ #category : #actions }
+GtCoderEmbeddedDebuggerElement >> debug [
+	self switchToSystemDebugger.
+	self removeFromParent.
 ]
 
 { #category : #actions }
@@ -86,7 +92,7 @@ GtCoderEmbeddedDebuggerElement >> initialize [
 { #category : #'hooks - children' }
 GtCoderEmbeddedDebuggerElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
-	self terminateSession
+	"self terminateSession"
 ]
 
 { #category : #accessing }
@@ -97,7 +103,9 @@ GtCoderEmbeddedDebuggerElement >> session [
 { #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> session: aDebugSession [
 	debuggingSession := aDebugSession.
+	self subscribeToSession.
 	self actOnDebugSessionChanged.
+
 ]
 
 { #category : #accessing }
@@ -110,16 +118,31 @@ GtCoderEmbeddedDebuggerElement >> signaledException: anException [
 	signaledException := anException
 ]
 
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerElement >> subscribeToSession [
+	self session
+			when: GtSharedDebugSessionDebuggedAnnouncement
+			send: #removeFromParent
+			to: self; 
+			when: GtSharedDebugSessionTerminatedAnnouncement
+			send: #removeFromParent
+			to: self
+]
+
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> switchToSystemDebugger [
 	"Directly open the registered debugger on the given session."
-	| currentSession newDebugger |
+	| currentSession |
 	
 	currentSession := self session.
 	self detachSession.
-	newDebugger:= Smalltalk tools debugger 
-		openOn: currentSession withFullView: true andNotification: nil.
-	^ newDebugger
+	^ currentSession debug
+]
+
+{ #category : #actions }
+GtCoderEmbeddedDebuggerElement >> terminate [
+	self terminateSession.
+	self removeFromParent.
 ]
 
 { #category : #callbacks }
