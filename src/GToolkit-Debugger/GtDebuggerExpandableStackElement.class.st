@@ -33,24 +33,26 @@ GtDebuggerExpandableStackElement >> buildElementForCoder: aMethodCoder [
 { #category : #'building elements' }
 GtDebuggerExpandableStackElement >> buildStackFramesList [
 	| stackFramesList |
-	stackFramesList := BrSimpleList new.
-	stackFramesList stencil: [ :each | self buildElementForCoder: each ].
-	stackFramesList padding: (BlInsets all: 10).
-	stackFramesList
-		constraintsDo: [ :c | 
-			c horizontal matchParent.
-			c vertical matchParent ].
+	stackFramesList := BrSimpleList new
+		matchParent;
+		padding: (BlInsets all: 10);
+		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
+		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
+		itemStencil: [ :anElementClass | anElementClass new ];
+		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
+		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ].
+
 	^ stackFramesList
 ]
 
 { #category : #private }
-GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingContexts: currenCoders [
+GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingContexts: currenCodersUIModels [
 	| methodCoders context firstContext newCoder newCoders |
 	
-	methodCoders := currenCoders reject: [ :each | each isDead ].
+	methodCoders := currenCodersUIModels reject: [ :eachUIModel | eachUIModel coder isDead ].
 	firstContext := methodCoders isEmpty
 		ifTrue: [ nil ]
-		ifFalse: [ methodCoders first context ].
+		ifFalse: [ methodCoders first coder context ].
 	
 	context := aSession interruptedContext.
 	newCoders := OrderedCollection new.
@@ -58,7 +60,7 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 			context ~~ firstContext  ] ]
 		whileTrue: [ 
 			newCoder := self createCoderFor: context in: aSession.
-			newCoders add: newCoder.
+			newCoders add: newCoder asCoderUIModel.
 			context := context sender ].
 		
 	"For the moment look only for a new on:do: context that does not have a coder. 
@@ -70,12 +72,12 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 		(context sender method = (BlockClosure>>#on:do:)) and: [
 			"There should be no coder for the context: either we just have a coder 
 			or the coder after firstContext is for another context "
-			  methodCoders size = 1 or: [ methodCoders second context ~~ context sender ] ] ] ]) ifTrue: [ 
+			  methodCoders size = 1 or: [ methodCoders second coder context ~~ context sender ] ] ] ]) ifTrue: [ 
 				
 		"Insert a new coder after the first context for the new context."	
 		newCoder := self createCoderFor: context sender in: aSession.
 		methodCoders 
-			add: newCoder
+			add: newCoder asCoderUIModel
 			afterIndex: 1 ].
 	
 	methodCoders addAllFirst: newCoders.
@@ -139,25 +141,25 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 ]
 
 { #category : #actions }
-GtDebuggerExpandableStackElement >> selectCoder: aContextCoder [
-	selectedCoder := aContextCoder.
+GtDebuggerExpandableStackElement >> selectCoder: aContextCoderUIModel [
+	selectedCoder := aContextCoderUIModel.
 	
 	"Update the content as some actions (for example save)
 	can change the compiled method stored in the context."
-	selectedCoder updateContent
+	selectedCoder coder updateContent
 ]
 
 { #category : #actions }
 GtDebuggerExpandableStackElement >> selectContext: aContext [
 	self stackFramesList items 
-		detect:  [ :aCoder | aCoder context = aContext ]
-		ifFound: [ :aCoder | self selectCoder: aCoder ] 
+		detect:  [ :eachCoderUIModel | eachCoderUIModel coder context = aContext ]
+		ifFound: [ :eachCoderUIModel | self selectCoder: eachCoderUIModel ] 
 		ifNone: [  ]
 ]
 
 { #category : #accessing }
 GtDebuggerExpandableStackElement >> selectedCoder [
-	^ selectedCoder
+	^ selectedCoder coder
 ]
 
 { #category : #'accessing elements' }
@@ -172,6 +174,8 @@ GtDebuggerExpandableStackElement >> updateContent [
 
 { #category : #updating }
 GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
+	NonInteractiveTranscript stdout nextPutAll: aDebuggingSession asString; cr.
+
 	self stackFramesList
 		items:
 			(self
