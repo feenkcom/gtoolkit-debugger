@@ -1,5 +1,5 @@
 Class {
-	#name : #GtEmbeddedDebuggerElement,
+	#name : #GtCoderEmbeddedDebuggerElement,
 	#superclass : #BlElement,
 	#instVars : [
 		'debuggingSession',
@@ -10,29 +10,33 @@ Class {
 }
 
 { #category : #opening }
-GtEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder [
-	| selectionInterval |
-	selectionInterval := sourceCoder selectedSourceInterval
-		ifNil: [ 1 to: sourceCoder sourceEditor text size ].
-	sourceCoder sourceText
+GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: exception embeddedIn: sourceCoder withSelection: aSelection [
+	| selectionInterval sourceText sharedDebugSession |
+	sharedDebugSession := GtSharedDebugSession new session: debugSession.
+	sourceText := sourceCoder sourceCode sourceText.
+	selectionInterval := aSelection isEmpty
+		ifFalse: [ aSelection from + 1 to: aSelection to ] 
+		ifTrue: [ 1 to: sourceText size ].
+	
+	sourceText
 		clearAttributes: [ :each | 
 			{GtPlaygroundEvaluatedCodeHighlightedAttribute.
 			GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
-	sourceCoder sourceEditor text
+	sourceText
 		attributes: {(GtPlaygroundEvaluatedCodeHighlightedAttribute new 
 			paint: Color red)}
 		from: selectionInterval first
 		to: selectionInterval last.
-	sourceCoder sourceEditor text
+	sourceText
 		attributes: {(GtEmbeddedDebuggerAttribute new 
 			signaledException: exception;
-			debugSession: debugSession)}
+			debugSession: sharedDebugSession)}
 		from: selectionInterval first
 		to: selectionInterval last
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
+GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	| textElement text debugButton |
 	self layout: (BlGridLayout horizontal cellSpacing: 3).
 	
@@ -48,8 +52,7 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	debugButton look: BrGlamorousButtonWithLabelLook.
 	debugButton label: 'Debug'.
 	debugButton action: [ 
-		self switchToSystemDebugger.
-		self removeFromParent ].
+		self debug ].
 	self 
 		removeChildren;
 		addChild: textElement;
@@ -60,67 +63,90 @@ GtEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 ]
 
 { #category : #actions }
-GtEmbeddedDebuggerElement >> detachSession [
+GtCoderEmbeddedDebuggerElement >> debug [
+	self switchToSystemDebugger.
+	self removeFromParent.
+]
+
+{ #category : #actions }
+GtCoderEmbeddedDebuggerElement >> detachSession [
 	debuggingSession := nil 
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> disableTermination [
+GtCoderEmbeddedDebuggerElement >> disableTermination [
 	isTerminationDisabled := true
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> enableTermination [
+GtCoderEmbeddedDebuggerElement >> enableTermination [
 	isTerminationDisabled := false
 ]
 
 { #category : #initialize }
-GtEmbeddedDebuggerElement >> initialize [
+GtCoderEmbeddedDebuggerElement >> initialize [
 	super initialize.
 	self enableTermination
 ]
 
 { #category : #'hooks - children' }
-GtEmbeddedDebuggerElement >> onRemovedFromSceneGraph [
+GtCoderEmbeddedDebuggerElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
-	self terminateSession
+	"self terminateSession"
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> session [
+GtCoderEmbeddedDebuggerElement >> session [
 	^ debuggingSession
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> session: aDebugSession [
+GtCoderEmbeddedDebuggerElement >> session: aDebugSession [
 	debuggingSession := aDebugSession.
+	self subscribeToSession.
 	self actOnDebugSessionChanged.
+
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> signaledException [
+GtCoderEmbeddedDebuggerElement >> signaledException [
 	^ signaledException
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerElement >> signaledException: anException [
+GtCoderEmbeddedDebuggerElement >> signaledException: anException [
 	signaledException := anException
 ]
 
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerElement >> subscribeToSession [
+	self session
+			when: GtSharedDebugSessionDebuggedAnnouncement
+			send: #removeFromParent
+			to: self; 
+			when: GtSharedDebugSessionTerminatedAnnouncement
+			send: #removeFromParent
+			to: self
+]
+
 { #category : #actions }
-GtEmbeddedDebuggerElement >> switchToSystemDebugger [
+GtCoderEmbeddedDebuggerElement >> switchToSystemDebugger [
 	"Directly open the registered debugger on the given session."
-	| currentSession newDebugger |
+	| currentSession |
 	
 	currentSession := self session.
 	self detachSession.
-	newDebugger:= Smalltalk tools debugger 
-		openOn: currentSession withFullView: true andNotification: nil.
-	^ newDebugger
+	^ currentSession debug
+]
+
+{ #category : #actions }
+GtCoderEmbeddedDebuggerElement >> terminate [
+	self terminateSession.
+	self removeFromParent.
 ]
 
 { #category : #callbacks }
-GtEmbeddedDebuggerElement >> terminateSession [ 
+GtCoderEmbeddedDebuggerElement >> terminateSession [ 
 	isTerminationDisabled ifFalse: [ 
 		self session ifNotNil: [ :aSession | 
 			self detachSession.
