@@ -2,32 +2,21 @@ Class {
 	#name : #GtDebuggerExpandableStackElement,
 	#superclass : #BlElement,
 	#instVars : [
-		'selectedCoder',
+		'selectedCoderUIModel',
 		'annotationsEnabled'
 	],
 	#category : #'GToolkit-Debugger'
 }
 
 { #category : #callbacks }
-GtDebuggerExpandableStackElement >> actOnCoderInFocusFor: aCoder [
-	selectedCoder := aCoder.
-	self debuggerElement actOnSelectedContextChangedFor: aCoder context.
+GtDebuggerExpandableStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
+	selectedCoderUIModel := aContextCoderUIModel.
+	self debuggerElement actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
 ]
 
 { #category : #testing }
 GtDebuggerExpandableStackElement >> areAnnotationsEnabled [
 	^ annotationsEnabled ifNil: [ false ]
-]
-
-{ #category : #'building elements' }
-GtDebuggerExpandableStackElement >> buildElementForCoder: aMethodCoder [
-	| element |
-	element := aMethodCoder asElement.
-	element when: BlFocusInEvent do: [ :event | 
-		self actOnCoderInFocusFor: aMethodCoder ].
-	aMethodCoder == selectedCoder ifTrue: [
-		element requestFocus ].
-	^ element
 ]
 
 { #category : #'building elements' }
@@ -38,7 +27,13 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 		padding: (BlInsets all: 10);
 		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
 		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
-		itemStencil: [ :anElementClass | anElementClass new ];
+		itemStencil: [ :anElementClass | 
+			| coderElement |
+			coderElement := anElementClass new.
+			coderElement when: BlFocusInEvent do: [ :anEvent | 
+				anEvent currentTarget coderUIModel ifNotNil: [
+					self actOnCoderInFocusFor: anEvent currentTarget coderUIModel ] ].
+			coderElement ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
 		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ].
 
@@ -46,21 +41,22 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 ]
 
 { #category : #private }
-GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingContexts: currenCodersUIModels [
-	| methodCoders context firstContext newCoder newCoders |
+GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preservingContexts: currenCodersUIModels [
+	| methodCoderUIModels context firstContext newCoderUIModels |
 	
-	methodCoders := currenCodersUIModels reject: [ :eachUIModel | eachUIModel coder isDead ].
-	firstContext := methodCoders isEmpty
+	methodCoderUIModels := currenCodersUIModels reject: [ :eachUIModel | eachUIModel coder isDead ].
+	firstContext := methodCoderUIModels isEmpty
 		ifTrue: [ nil ]
-		ifFalse: [ methodCoders first coder context ].
+		ifFalse: [ methodCoderUIModels first coder context ].
 	
 	context := aSession interruptedContext.
-	newCoders := OrderedCollection new.
+	newCoderUIModels := OrderedCollection new.
 	[ context notNil and: [ 
 			context ~~ firstContext  ] ]
 		whileTrue: [ 
+			| newCoder |
 			newCoder := self createCoderFor: context in: aSession.
-			newCoders add: newCoder asCoderUIModel.
+			newCoderUIModels add: newCoder asCoderUIModel.
 			context := context sender ].
 		
 	"For the moment look only for a new on:do: context that does not have a coder. 
@@ -72,16 +68,17 @@ GtDebuggerExpandableStackElement >> codersToDisplayFrom: aSession preservingCont
 		(context sender method = (BlockClosure>>#on:do:)) and: [
 			"There should be no coder for the context: either we just have a coder 
 			or the coder after firstContext is for another context "
-			  methodCoders size = 1 or: [ methodCoders second coder context ~~ context sender ] ] ] ]) ifTrue: [ 
-				
+			  methodCoderUIModels size = 1 or: [ methodCoderUIModels second coder context ~~ context sender ] ] ] ]) ifTrue: [ 
+		
+		| newCoder |
 		"Insert a new coder after the first context for the new context."	
 		newCoder := self createCoderFor: context sender in: aSession.
-		methodCoders 
+		methodCoderUIModels 
 			add: newCoder asCoderUIModel
 			afterIndex: 1 ].
 	
-	methodCoders addAllFirst: newCoders.
-	^ methodCoders
+	methodCoderUIModels addAllFirst: newCoderUIModels.
+	^ methodCoderUIModels
 ]
 
 { #category : #private }
@@ -141,25 +138,26 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 ]
 
 { #category : #actions }
-GtDebuggerExpandableStackElement >> selectCoder: aContextCoderUIModel [
-	selectedCoder := aContextCoderUIModel.
+GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
+	selectedCoderUIModel := aContextCoderUIModel.
+	selectedCoderUIModel focused: true.
 	
 	"Update the content as some actions (for example save)
 	can change the compiled method stored in the context."
-	selectedCoder coder updateContent
+	selectedCoderUIModel coder updateContent
 ]
 
 { #category : #actions }
 GtDebuggerExpandableStackElement >> selectContext: aContext [
 	self stackFramesList items 
 		detect:  [ :eachCoderUIModel | eachCoderUIModel coder context = aContext ]
-		ifFound: [ :eachCoderUIModel | self selectCoder: eachCoderUIModel ] 
+		ifFound: [ :eachCoderUIModel | self selectCoderUIModel: eachCoderUIModel ] 
 		ifNone: [  ]
 ]
 
 { #category : #accessing }
 GtDebuggerExpandableStackElement >> selectedCoder [
-	^ selectedCoder coder
+	^ selectedCoderUIModel coder
 ]
 
 { #category : #'accessing elements' }
@@ -174,13 +172,12 @@ GtDebuggerExpandableStackElement >> updateContent [
 
 { #category : #updating }
 GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
-	NonInteractiveTranscript stdout nextPutAll: aDebuggingSession asString; cr.
-
 	self stackFramesList
 		items:
 			(self
-				codersToDisplayFrom: aDebuggingSession
+				coderUIModelsToDisplayFrom: aDebuggingSession
 				preservingContexts: self stackFramesList items).
 	self stackFramesList items
-		ifNotEmpty: [ :methodCoders | self selectCoder: methodCoders first ]
+		ifNotEmpty: [ :methodCoderUIModels | 
+			self selectCoderUIModel: methodCoderUIModels first ]
 ]
