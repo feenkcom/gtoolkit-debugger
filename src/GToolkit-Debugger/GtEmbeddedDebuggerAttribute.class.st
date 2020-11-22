@@ -22,12 +22,12 @@ GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
 { #category : #initialization }
 GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	debuggerElement ifNotNil: [ 
-		debuggerElement disableTermination ]. 
+		debuggerElement disableTermination ].
+
 	debuggerElement := GtCoderEmbeddedDebuggerElement new
 		signaledException: self signaledException;
 		session: self debugSession.
-	anEditorElement showNotification: (GtNotificationDebugSessionEvent new 
-		debugSession: self debugSession).
+
 	^ debuggerElement
 ]
 

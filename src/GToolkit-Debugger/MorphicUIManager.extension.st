@@ -26,27 +26,27 @@ MorphicUIManager >> gtDebugProcess: process context: context label: title fullVi
 ]
 
 { #category : #'*GToolkit-Debugger' }
-MorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder withSelection: aSelection forException: exception [
+MorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder withSourceString: aSourceString withSourceInterval: aSourceInterval forException: exception [
 	"This is a copy of the standard method for opening the debugger with the difference that
 	the embedeable debugger is opened instead of the standard one."
+
 	| debugSession |
-
-	debugSession := process newDebugSessionNamed: exception description startedAt: context.
-	
+	debugSession := process
+		newDebugSessionNamed: exception description
+		startedAt: context.
 	debugSession logStackToFileIfNeeded.
-	debugSession isAboutUIProcess ifTrue: [ 
-		DefaultExecutionEnvironment beActiveDuring: [self spawnNewProcess]].
-	
-	self defer:	[ 
-			"Opened the embeddeable debugger instead of the default one."
-		[ GtCoderEmbeddedDebuggerElement   
-				openOn: debugSession 
-				dueTo: exception 
-				embeddedIn: sourceCoder 
-				withSelection: aSelection
-		] on: Error do: [ :ex | 	debugSession signalDebuggerError: ex] 
-	].
-	
-	process suspend.
-
+	debugSession isAboutUIProcess
+		ifTrue:
+			[ DefaultExecutionEnvironment beActiveDuring: [ self spawnNewProcess ] ].
+	self
+		defer: [ "Opened the embeddeable debugger instead of the default one."
+			[ GtCoderEmbeddedDebuggerElement
+				openOn: debugSession
+				dueTo: exception
+				embeddedIn: sourceCoder
+				withSourceString: aSourceString
+				withSourceInterval: aSourceInterval ]
+				on: Error
+				do: [ :ex | debugSession signalDebuggerError: ex ] ].
+	process suspend
 ]
