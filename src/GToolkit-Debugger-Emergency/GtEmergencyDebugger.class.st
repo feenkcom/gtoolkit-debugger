@@ -80,7 +80,7 @@ GtEmergencyDebugger >> newCanvas [
 GtEmergencyDebugger >> openInGluitinWindow [
 	| eventsLoop windowBuilder |
 
-	eventsLoop := GlutinEventsFetcher default eventLoop.
+	eventsLoop := GlutinEventFetcher default eventLoop.
 
 	windowBuilder := GlutinWindowBuilder new.
 	windowBuilder title: 'Emergency debugger'.
@@ -90,9 +90,9 @@ GtEmergencyDebugger >> openInGluitinWindow [
 	renderer := GlutinGLBufferRenderer new window: self window.
 	self window requestRedraw.
 	
-	GlutinEventsFetcher default eventHandlers add: self.
+	GlutinEventFetcher default eventHandlers add: self.
 	
-	GlutinEventsFetcher install
+	GlutinEventFetcher install
 ]
 
 { #category : #'event - handling' }
@@ -124,7 +124,7 @@ GtEmergencyDebugger >> render [
 
 { #category : #'event - visiting' }
 GtEmergencyDebugger >> visitWindowCloseRequest: anEvent [
-	GlutinEventsFetcher default eventHandlers remove: self ifAbsent: [  ].
+	GlutinEventFetcher default eventHandlers remove: self ifAbsent: [  ].
 	window eventLoop closeWindow: window.
 ]
 
