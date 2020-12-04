@@ -24,7 +24,7 @@ BrDebugglableElementStencil >> create [
 		look: BrGlamorousButtonWithIconLook new;
 		icon: BrGlamorousVectorIcons debug;
 		label: 'Open debugger';
-		beTiny;
+		beTinySize;
 		constraintsDo: [ :c | 
 			c linear vertical alignCenter ];
 		action: self newDebugAction.
