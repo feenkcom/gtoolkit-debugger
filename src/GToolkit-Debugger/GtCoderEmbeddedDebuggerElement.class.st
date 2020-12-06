@@ -26,7 +26,7 @@ GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	text := self signaledException printString asRopedText.
 	label := BrButton new
 		look: BrGlamorousLabelLook new;
-		beSmall;
+		beSmallSize;
 		label: text;
 		background: BrGlamorousColors errorBackgroundColor;
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
