@@ -187,7 +187,7 @@ GtMoldableDebugger >> availableDebuggerTypesForContext: aContext excluding: aDeb
 { #category : #'building widgets' }
 GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
 	^ BrButton new
-		beSmall;
+		beSmallSize;
 		background: Color white;
 		look: BrGlamorousButtonRectangularLook new +
 			BrGlamorousButtonLabelLook new + 
