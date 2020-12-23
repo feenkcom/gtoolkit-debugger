@@ -25,6 +25,17 @@ GtEmergencyDebugger class >> example [
 	GtEmergencyDebugger askForEmergencyEvaluatorOrExitWithText: String loremIpsum
 ]
 
+{ #category : #'tools registry' }
+GtEmergencyDebugger class >> register [
+	self registerToolsOn: Smalltalk tools
+]
+
+{ #category : #'tools registry' }
+GtEmergencyDebugger class >> registerToolsOn: registry [
+	"Add ourselves to registry. See [Smalltalk tools]" 
+	registry register: self as: #emergencyDebugger
+]
+
 { #category : #accessing }
 GtEmergencyDebugger >> buffer [
 	^ buffer ifNil: [ buffer := self createBufferForExtent: self window innerExtent ]
