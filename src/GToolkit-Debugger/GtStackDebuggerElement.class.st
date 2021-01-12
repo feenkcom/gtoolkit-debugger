@@ -256,10 +256,7 @@ GtStackDebuggerElement >> updateCodePaneFor: aContext [
 	| editorWidget text selectionInterval |
 	
 	text := aContext sourceCode asRopedText.
-	text
-		attributes:
-			{BlFontGenericFamilyAttribute monospace beNotOverwritableByStyler.
-			(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.	
+	text attributes: { (BlFontSizeAttribute size: 14) beNotOverwritableByStyler }.
 	selectionInterval := self session selectedCodeRangeForContext: self selectedContext.
 	(text from: selectionInterval first to: selectionInterval last) attributes: { 
 		BlTextUnderlineAttribute new 
