@@ -94,6 +94,11 @@ GtDebuggerElement >> actOnBrowserClosing: ann [
 ]
 
 { #category : #callbacks }
+GtDebuggerElement >> actOnDebugActionExecuted [
+	
+]
+
+{ #category : #callbacks }
 GtDebuggerElement >> actOnDebugSessionChanged [
 	self subclassResponsibility
 ]

@@ -23,6 +23,11 @@ GtExpandableDebuggerElement >> aboutToOpen [
 ]
 
 { #category : #callbacks }
+GtExpandableDebuggerElement >> actOnDebugActionExecuted [
+	self updateContents
+]
+
+{ #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	| panesContainerElement panesTabGroupElement |
 	panesContainerElement := BlElement new
@@ -185,9 +190,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 			look: BrGlamorousButtonWithIconLook;
 			label: aDebuggingAction label; 
 			action: [ 
-				aDebuggingAction execute.
-				aDebuggingAction needsUpdate ifTrue: [
-					self updateStackWidget ] ].
+				aDebuggingAction execute ].
 			aDebuggingAction icon ifNotNil: [ :anIcon | 
 				actionButton icon: aDebuggingAction icon asElement ].
 			actionButton ].
@@ -277,6 +280,11 @@ GtExpandableDebuggerElement >> contextVariables [
 	
 ]
 
+{ #category : #'accessing - elements' }
+GtExpandableDebuggerElement >> contextVariablesElement [
+	^ self detailsPane childNamed: #contextVariablesElement
+]
+
 { #category : #'accessing context' }
 GtExpandableDebuggerElement >> currentContext [
 	^ self selectedContext 
@@ -347,6 +355,12 @@ GtExpandableDebuggerElement >> updateCoders [
 ]
 
 { #category : #updating }
+GtExpandableDebuggerElement >> updateContents [
+	self updateStackWidget.
+	self updateVariablesList
+]
+
+{ #category : #updating }
 GtExpandableDebuggerElement >> updateStackPane [
 	| stackElement |
 	stackElement := self buildStackElement.
@@ -359,4 +373,9 @@ GtExpandableDebuggerElement >> updateStackPane [
 { #category : #updating }
 GtExpandableDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
+]
+
+{ #category : #updating }
+GtExpandableDebuggerElement >> updateVariablesList [
+	self contextVariablesElement items: self contextVariables
 ]
