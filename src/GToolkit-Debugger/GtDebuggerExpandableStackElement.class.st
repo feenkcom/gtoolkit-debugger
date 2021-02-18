@@ -108,16 +108,16 @@ GtDebuggerExpandableStackElement >> debuggerElement [
 { #category : #actions }
 GtDebuggerExpandableStackElement >> disableVariableAnnotations [
 	annotationsEnabled := false.
-	self stackFramesList items do: [ :aCoder |
-		aCoder addOns removeStylerOfType: GtCoderContextVariableValueStyler ].
+	self stackFramesList items do: [ :aCoderUIModel |
+		aCoderUIModel coder addOns removeStylerOfType: GtCoderContextVariableValueStyler ].
 	self updateContent
 ]
 
 { #category : #actions }
 GtDebuggerExpandableStackElement >> enableVariableAnnotations [
 	annotationsEnabled := true.
-	self stackFramesList items do: [ :aCoder |
-		aCoder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: aCoder) ].
+	self stackFramesList items do: [ :aCoderUIModel |
+		aCoderUIModel coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: aCoderUIModel coder) ].
 	self updateContent.
 ]
 
@@ -142,10 +142,14 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
 	selectedCoderUIModel focused: true.
+	selectedCoderUIModel coder requestFocus.
 	
 	"Update the content as some actions (for example save)
 	can change the compiled method stored in the context."
-	selectedCoderUIModel coder updateContent
+	selectedCoderUIModel coder updateSourceFromContext.
+	
+	"Update the selection based on the new PC"
+	selectedCoderUIModel updateProgramCounterRange
 ]
 
 { #category : #actions }
