@@ -141,7 +141,7 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 { #category : #actions }
 GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
-	selectedCoderUIModel focused: true.
+	selectedCoderUIModel coder requestFocus.
 	
 	"Update the content as some actions (for example save)
 	can change the compiled method stored in the context."
