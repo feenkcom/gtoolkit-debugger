@@ -87,7 +87,8 @@ GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
 	coder := GtMethodContextCoder forContext: aContext session: aSession.
 	self areAnnotationsEnabled ifTrue: [
 		coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
-	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
+	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateDebugger to: self.
+	coder announcer weak when: DebugActionExecuted send: #updateDebugger to: self.
 	^ coder
 ]
 
@@ -168,6 +169,11 @@ GtDebuggerExpandableStackElement >> stackFramesList [
 { #category : #updating }
 GtDebuggerExpandableStackElement >> updateContent [
 	self updateForSession: self debuggerElement session
+]
+
+{ #category : #updating }
+GtDebuggerExpandableStackElement >> updateDebugger [
+	self debuggerElement updateContents
 ]
 
 { #category : #updating }

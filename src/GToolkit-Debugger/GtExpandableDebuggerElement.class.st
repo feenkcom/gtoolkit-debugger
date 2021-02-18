@@ -23,6 +23,11 @@ GtExpandableDebuggerElement >> aboutToOpen [
 ]
 
 { #category : #callbacks }
+GtExpandableDebuggerElement >> actOnDebugActionExecuted [
+	self updateContents
+]
+
+{ #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	| panesContainerElement panesTabGroupElement |
 	panesContainerElement := BlElement new
@@ -185,9 +190,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 			look: BrGlamorousButtonWithIconLook;
 			label: aDebuggingAction label; 
 			action: [ 
-				aDebuggingAction execute.
-				aDebuggingAction needsUpdate ifTrue: [
-					self updateStackWidget ] ].
+				aDebuggingAction execute ].
 			aDebuggingAction icon ifNotNil: [ :anIcon | 
 				actionButton icon: aDebuggingAction icon asElement ].
 			actionButton ].
@@ -210,6 +213,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 	list margin: (BlInsets top: 10).
 	list addEventHandler: (GtPhlowListToSelectHandler new 
 		transformation: [ :variableNode | variableNode value ]).
+	list rowStencil: (BrGlamorousColumnedListSelectableRowElementStencilBuilder new).
 	list column
 		title: 'Icon';
 		width: 26;
@@ -274,6 +278,11 @@ GtExpandableDebuggerElement >> contextVariables [
 		ifTrue: [ ^ #() ].
 	^ activeCoder debuggerVariableNodes
 	
+]
+
+{ #category : #'accessing - elements' }
+GtExpandableDebuggerElement >> contextVariablesElement [
+	^ self detailsPane childNamed: #contextVariablesElement
 ]
 
 { #category : #'accessing context' }
@@ -346,6 +355,12 @@ GtExpandableDebuggerElement >> updateCoders [
 ]
 
 { #category : #updating }
+GtExpandableDebuggerElement >> updateContents [
+	self updateStackWidget.
+	self updateVariablesList
+]
+
+{ #category : #updating }
 GtExpandableDebuggerElement >> updateStackPane [
 	| stackElement |
 	stackElement := self buildStackElement.
@@ -358,4 +373,9 @@ GtExpandableDebuggerElement >> updateStackPane [
 { #category : #updating }
 GtExpandableDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
+]
+
+{ #category : #updating }
+GtExpandableDebuggerElement >> updateVariablesList [
+	self contextVariablesElement items: self contextVariables
 ]

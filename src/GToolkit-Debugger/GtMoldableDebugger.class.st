@@ -173,7 +173,8 @@ GtMoldableDebugger >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDe
 GtMoldableDebugger >> actOnDebugActionExecuted [
 	self currentDebugger session ifNotNil: [ :aDebuggingSession | 
 		aDebuggingSession interruptedContext ifNotNil: [ 
-			self updateSwitchButtonsExcluding: self currentDebugger ] ]
+			self updateSwitchButtonsExcluding: self currentDebugger ].
+		self currentDebugger actOnDebugActionExecuted. ]
 ]
 
 { #category : #accessing }
