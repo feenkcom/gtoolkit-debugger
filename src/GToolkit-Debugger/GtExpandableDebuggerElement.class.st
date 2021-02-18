@@ -210,6 +210,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 	list margin: (BlInsets top: 10).
 	list addEventHandler: (GtPhlowListToSelectHandler new 
 		transformation: [ :variableNode | variableNode value ]).
+	list rowStencil: (BrGlamorousColumnedListSelectableRowElementStencilBuilder new).
 	list column
 		title: 'Icon';
 		width: 26;
