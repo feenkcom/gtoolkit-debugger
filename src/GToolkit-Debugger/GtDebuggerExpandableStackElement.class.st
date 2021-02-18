@@ -146,7 +146,10 @@ GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	
 	"Update the content as some actions (for example save)
 	can change the compiled method stored in the context."
-	selectedCoderUIModel coder updateContent
+	selectedCoderUIModel coder updateSourceFromContext.
+	
+	"Update the selection based on the new PC"
+	selectedCoderUIModel updateProgramCounterRange
 ]
 
 { #category : #actions }
