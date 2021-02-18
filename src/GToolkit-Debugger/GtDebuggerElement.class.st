@@ -18,7 +18,7 @@ GtDebuggerElement class >> availableAutomatically [
 
 { #category : #initialization }
 GtDebuggerElement class >> defaultTitle [
-	^ 'GT'
+	^ 'Gt'
 ]
 
 { #category : #testing }
