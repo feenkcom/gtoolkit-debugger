@@ -262,6 +262,7 @@ GtMoldableDebugger >> open: anElement titled: aTitleString [
 	| aSpace |
 	aSpace := BlSpace new.
 	aSpace withHalos.
+	aSpace withSceneDriller.
 	aSpace title: aTitleString.
 	aSpace extent: 1200 @ 600.
 	aSpace addChild: anElement.
