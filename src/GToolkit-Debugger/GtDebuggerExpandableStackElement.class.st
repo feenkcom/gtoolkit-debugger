@@ -142,6 +142,7 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
 	selectedCoderUIModel focused: true.
+	selectedCoderUIModel expanded: true.
 	selectedCoderUIModel coder requestFocus.
 	
 	"Update the content as some actions (for example save)
@@ -149,7 +150,9 @@ GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel coder updateSourceFromContext.
 	
 	"Update the selection based on the new PC"
-	selectedCoderUIModel updateProgramCounterRange
+	selectedCoderUIModel updateProgramCounterRange.
+	
+	self stackFramesList scrollToItem: aContextCoderUIModel
 ]
 
 { #category : #actions }

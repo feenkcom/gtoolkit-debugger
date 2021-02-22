@@ -328,7 +328,9 @@ GtExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 
 	| selection |
 	selection := self selectedContext.
-	(selection isNil or: [ selection method hasPragmaNamed: #debuggerCompleteToSender ]) ifFalse: [ ^ self ].
+	(selection isNil or: [ 
+		selection method hasPragmaNamed: #debuggerCompleteToSender ]) 
+			ifFalse: [ ^ self ].
 	
 	 self filteredStack ifNotEmpty: [ :filteredStack |
 		self stackElement selectContext: filteredStack first ]
