@@ -188,11 +188,12 @@ GtDebuggerExpandableStackElement >> updateDebugger [
 { #category : #updating }
 GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 	self stackFramesList
-		items:
-			(self
-				coderUIModelsToDisplayFrom: aDebuggingSession
-				preservingContexts: self stackFramesList items).
+		items: (self
+			coderUIModelsToDisplayFrom: aDebuggingSession
+			preservingContexts: self stackFramesList items).
+	
 	self stackFramesList items
 		ifNotEmpty: [ :methodCoderUIModels | 
-			self selectCoderUIModel: methodCoderUIModels first ]
+			self selectCoderUIModel: methodCoderUIModels first.
+			self stackFramesList scrollToItem: methodCoderUIModels first ]
 ]
