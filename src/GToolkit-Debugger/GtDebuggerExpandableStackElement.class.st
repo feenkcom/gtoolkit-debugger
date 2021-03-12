@@ -84,7 +84,7 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 { #category : #private }
 GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
 	| coder |
-	coder := GtMethodContextCoder forContext: aContext session: aSession.
+	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
 	self areAnnotationsEnabled ifTrue: [
 		coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
 	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateDebugger to: self.
