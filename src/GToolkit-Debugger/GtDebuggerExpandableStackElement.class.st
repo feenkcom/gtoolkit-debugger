@@ -34,8 +34,7 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 				anEvent currentTarget coderUIModel ifNotNil: [
 					self actOnCoderInFocusFor: anEvent currentTarget coderUIModel ] ].
 			coderElement ];
-		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ];
-		itemDataUnbinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement saveCoderUIModel: eachCoderUIModel ].
+		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ].
 
 	^ stackFramesList
 ]
@@ -109,7 +108,8 @@ GtDebuggerExpandableStackElement >> debuggerElement [
 GtDebuggerExpandableStackElement >> disableVariableAnnotations [
 	annotationsEnabled := false.
 	self stackFramesList items do: [ :aCoderUIModel |
-		aCoderUIModel coder addOns removeStylerOfType: GtCoderContextVariableValueStyler.
+		self todo: #FIXME.
+		"aCoderUIModel coder addOns removeStylerOfType: GtCoderContextVariableValueStyler."
 		aCoderUIModel coder requestUpdateAddOns ].
 	self updateContent
 ]
