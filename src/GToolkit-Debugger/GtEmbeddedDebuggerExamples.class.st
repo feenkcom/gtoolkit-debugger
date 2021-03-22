@@ -15,8 +15,7 @@ GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 	| sourceCode coder debuggerAttributes debuggerAttribute |
 	sourceCode := '1/0'.
 	coderProcess := [
-		coder := GtPharoSnippetCoder new
-	 		source: sourceCode.
+		coder := GtPharoSnippetCoder forSource: sourceCode.
 		coder doItAll ] newProcess.
 	coderProcess resume.
 	
@@ -43,8 +42,7 @@ GtEmbeddedDebuggerExamples >> debuggerAttributesIn: aCoder at: anIndex [
 { #category : #private }
 GtEmbeddedDebuggerExamples >> terminateCoderProcess [
 	(coderProcess isNotNil and: [ coderProcess isTerminated not ])
-		ifTrue: [ 
-			('terminate ', coderProcess asString) logCr.
+		ifTrue: [ ('terminate ' , coderProcess asString) traceCr.
 			coderProcess terminate ]
 ]
 
