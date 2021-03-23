@@ -99,13 +99,15 @@ GtExpandableDebuggerElement >> buildDetailsTabElement [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildEvaluatorElement [
-	| snippetCoder |
-	snippetCoder := GtPharoSnippetCoder new
-		forSource: 'self';
-		context: self selectedContext;
-		variableBindings: (GtSnippetBindings new
-			receiver: self selectedContext receiver).
-	^ snippetCoder asElement
+	| snippetCoder snippetViewModel |
+
+	snippetCoder := GtPharoSnippetCoder new forSource: 'self'.
+
+	snippetViewModel := snippetCoder asCoderViewModel.
+	snippetViewModel selfObject: self selectedContext receiver.
+	snippetViewModel context: self selectedContext.
+
+	^ snippetViewModel asElement
 ]
 
 { #category : #'building widgets' }
