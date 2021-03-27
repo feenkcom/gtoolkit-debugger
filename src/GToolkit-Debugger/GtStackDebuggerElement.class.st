@@ -125,7 +125,7 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 	| tab tabGroup |
 	tab := BrTab new.
 	tab
-		look: BrGlamorousTabWithoutBarLook;
+		aptitude: BrGlamorousTabWithoutBarAptitude;
 		label: self session name;
 		stencil: (BrValuableStencil from: aStackElement);
 		padding:
@@ -136,13 +136,13 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 				left: 10);
 		toolbarStencil: [ | aToolbar |
 			aToolbar := BrToolbar new.
-			aToolbar look: BrGlamorousToolbarLook new.
+			aToolbar aptitude: BrGlamorousToolbarAptitude new.
 			self buildStackToolbarActions
 				do: [ :anAction | aToolbar addItem: anAction ].
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup
-		look: (BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
+		aptitude: (BrGlamorousTabGroupAptitude new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -163,7 +163,7 @@ GtStackDebuggerElement >> buildStackToolbarActions [
 	^ (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
 		| actionButton |
 		actionButton := BrButton new 
-			look: BrGlamorousButtonWithIconLook;
+			aptitude: BrGlamorousButtonWithIconAptitude;
 			label: aDebuggingAction label; 
 			action: [ 
 				aDebuggingAction execute.
