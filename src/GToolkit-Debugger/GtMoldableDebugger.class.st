@@ -190,9 +190,9 @@ GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
 	^ BrButton new
 		beSmallSize;
 		background: Color white;
-		look: BrGlamorousButtonRectangularLook new +
-			BrGlamorousButtonLabelLook new + 
-			BrShadowLook;
+		aptitude: BrGlamorousButtonRectangularAptitude new +
+			BrGlamorousButtonLabelAptitude new + 
+			BrShadowAptitude;
 		geometry: (BlRoundedRectangleGeometry cornerRadius: 10);
 		margin: (BlInsets left: 5);
 		label: aDebuggerClass defaultTitle;

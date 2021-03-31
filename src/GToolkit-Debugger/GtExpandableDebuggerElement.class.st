@@ -82,17 +82,17 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 GtExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
 		background: Color white;
-		look: BrGlamorousTabGroupLook + BrShadowLook;
+		aptitude: BrGlamorousTabGroupAptitude + BrShadowAptitude;
 		addTab: (BrTab new
-			look: BrGlamorousTabLook new;
+			aptitude: BrGlamorousTabAptitude new;
 			label: 'Variables';
 			stencil: [ self buildContextVariablesElement ]);
 		addTab: (BrTab new
-			look: BrGlamorousTabLook new;
+			aptitude: BrGlamorousTabAptitude new;
 			label: 'Evaluator';
 			stencil: [ self buildEvaluatorElement ]);
 		addTab: (BrTab new
-			look: BrGlamorousTabLook new;
+			aptitude: BrGlamorousTabAptitude new;
 			label: 'Watches';
 			stencil: [ self buildWatchVariablesElement ])
 ]
@@ -148,7 +148,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElem
 	| tab tabGroup |
 	tab := BrTab new.
 	tab
-		look: BrGlamorousTabWithoutBarLook;
+		aptitude: BrGlamorousTabWithoutBarAptitude;
 		label: self session name;
 		stencil: (BrValuableStencil from: aStackContainerElement);
 		padding:
@@ -159,13 +159,13 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElem
 				left: 10);
 		toolbarStencil: [ | aToolbar |
 			aToolbar := BrToolbar new.
-			aToolbar look: BrGlamorousToolbarLook new.
+			aToolbar aptitude: BrGlamorousToolbarAptitude new.
 			self buildStackToolbarActions
 				do: [ :anAction | aToolbar addItem: anAction ].
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup
-		look: (BrGlamorousTabGroupLook new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
+		aptitude: (BrGlamorousTabGroupAptitude new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -189,7 +189,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 	buttons := (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
 		| actionButton |
 		actionButton := BrButton new 
-			look: BrGlamorousButtonWithIconLook;
+			aptitude: BrGlamorousButtonWithIconAptitude;
 			label: aDebuggingAction label; 
 			action: [ 
 				aDebuggingAction execute ].
@@ -198,7 +198,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 			actionButton ].
 		
 	toggle := BrToggle new 
-		look: BrGlamorousButtonWithIconLook + BrGlamorousToggleBackgroundLook;
+		aptitude: BrGlamorousButtonWithIconAptitude + BrGlamorousToggleBackgroundAptitude;
 		icon: BrGlamorousIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			self stackElement enableVariableAnnotations ];
@@ -238,7 +238,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 		title: 'Variable';
 		cellStencil: [ 
 			BrLabel new
-				look: (BrGlamorousLabelLook new foreground: Color black);
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
 				hMatchParent;
 				vFitContent;
 				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
@@ -248,7 +248,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 		title: 'Value';
 		cellStencil: [
 			BrLabel new
-				look: BrGlamorousLabelLook new;
+				aptitude: BrGlamorousLabelAptitude new;
 				hMatchParent;
 				vFitContent;
 				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
