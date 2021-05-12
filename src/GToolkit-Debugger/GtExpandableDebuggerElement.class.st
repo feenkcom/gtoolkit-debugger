@@ -165,7 +165,9 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElem
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup
-		aptitude: (BrGlamorousTabGroupAptitude new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
+		aptitude:
+			(BrGlamorousTabGroupAptitude new
+				headerBackground: self theme header defaultBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -176,7 +178,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElem
 					c ignoreByLayout.
 					c horizontal matchParent.
 					c vertical exact: 5 ];
-				background: BrGlamorousColors errorBackgroundColor;
+				background: self theme status errorBackgroundColor;
 				yourself).
 	^ tabGroup
 ]

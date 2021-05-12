@@ -142,7 +142,9 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 			aToolbar ].
 	tabGroup := BrTabGroup new.
 	tabGroup
-		aptitude: (BrGlamorousTabGroupAptitude new headerBackground: BrGlamorousColors defaultHeaderBackgroundColor);
+		aptitude:
+			(BrGlamorousTabGroupAptitude new
+				headerBackground: self theme header defaultBackgroundColor);
 		addTab: tab;
 		constraintsDo: [ :c | 
 			c vertical matchParent.
@@ -153,7 +155,7 @@ GtStackDebuggerElement >> buildStackTabGroupForElement: aStackElement [
 					c ignoreByLayout.
 					c horizontal matchParent.
 					c vertical exact: 5 ];
-				background: BrGlamorousColors errorBackgroundColor;
+				background: self theme status errorBackgroundColor;
 				yourself).
 	^ tabGroup
 ]
@@ -212,9 +214,13 @@ GtStackDebuggerElement >> initialize [
 GtStackDebuggerElement >> initializePanes [
 	stackPane := self buildPaneElement.
 	codePane := self buildPaneElement
-		border: (BlBorder paint: (BrGlamorousColors lightBorderColor)).
+		border: (BlBorder paint: self theme default lightBorderColor).
 	detailsPane := self buildPaneElement.
-	self addChildren: {stackPane . codePane . detailsPane}.
+	self
+		addChildren:
+			{stackPane.
+			codePane.
+			detailsPane}
 ]
 
 { #category : #initialization }
@@ -254,21 +260,23 @@ GtStackDebuggerElement >> stackPane [
 { #category : #'updating panes' }
 GtStackDebuggerElement >> updateCodePaneFor: aContext [
 	| editorWidget text selectionInterval |
-	
 	text := aContext sourceCode asRopedText.
-	text attributes: { (BlFontSizeAttribute size: 14) beNotOverwritableByStyler }.
-	selectionInterval := self session selectedCodeRangeForContext: self selectedContext.
-	(text from: selectionInterval first to: selectionInterval last) attributes: { 
-		BlTextUnderlineAttribute new 
-			paint: BrGlamorousColors errorBackgroundColor;
-			width: 3; 
-			beNotOverwritableByStyler }.
-	editorWidget := self buildCodeWidgetForMethodInClass: aContext methodClass.
+	text
+		attributes: {(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.
+	selectionInterval := self session
+		selectedCodeRangeForContext: self selectedContext.
+	(text from: selectionInterval first to: selectionInterval last)
+		attributes:
+			{(BlTextUnderlineAttribute new
+				paint: self theme status errorBackgroundColor;
+				width: 3;
+				beNotOverwritableByStyler)}.
+	editorWidget := self
+		buildCodeWidgetForMethodInClass: aContext methodClass.
 	editorWidget editor text: text.
-	
-	self codePane 
+	self codePane
 		removeChildren;
-		addChild: editorWidget.
+		addChild: editorWidget
 ]
 
 { #category : #'updating panes' }
