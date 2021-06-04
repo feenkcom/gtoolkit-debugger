@@ -1,10 +1,11 @@
 "
-!Debugger
+1. Debugger
 
 The Debugger is a ... debugger. Go figure.
 
 Take a look example with an exception:
-${example:GtDummyExamplesWithExceptions class>>#j|expandedPreview|previewHeight=100}$
+{{gtExample:GtDummyExamplesWithExceptions class>>#j|previewExpanded|previewHeight=100}}
+
 
 "
 Class {

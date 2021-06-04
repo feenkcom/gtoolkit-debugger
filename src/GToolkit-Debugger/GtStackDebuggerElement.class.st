@@ -10,6 +10,8 @@ debuggingSession := (process
 20 timesRepeat: [ 
 	debuggingSession stepInto ].
 GtDebugger openSwitcherInInspectorOn: debuggingSession.
+
+
 "
 Class {
 	#name : #GtStackDebuggerElement,
