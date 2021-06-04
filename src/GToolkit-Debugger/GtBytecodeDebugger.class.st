@@ -12,6 +12,7 @@ debuggingSession := GTBytecodeDebuggerSession
 	debuggingSession stepInto ].
 GtBytecodeDebugger openInspectorOn: debuggingSession.
 
+
 "
 Class {
 	#name : #GtBytecodeDebugger,
