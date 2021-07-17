@@ -1,7 +1,7 @@
 Extension { #name : #PharoCommonTools }
 
 { #category : #'*GToolkit-Debugger' }
-PharoCommonTools >> debuggerTool: aTool [
+PharoCommonTools >> gtDebuggerTool: aTool [
 	^ self register: aTool as: #debugger
 ]
 
