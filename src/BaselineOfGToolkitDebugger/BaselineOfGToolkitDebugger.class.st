@@ -14,15 +14,16 @@ Class {
 	#category : #BaselineOfGToolkitDebugger
 }
 
-{ #category : #baselines }
+{ #category : #baseline }
 BaselineOfGToolkitDebugger >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec baseline: 'GToolkitInspector' with: [
-				spec repository: 'github://feenkcom/gtoolkit-inspector/src' ].
-		spec package: 'GToolkit-Debugger' with: [
-				spec requires: #(#GToolkitInspector ). ].
-		spec package: 'GToolkit-Debugger-Emergency' with: [
-				spec requires: #(#'GToolkit-Debugger' ). ]. ].
+				spec repository: 'github://feenkcom/gtoolkit-inspector:main/src' ].
+		spec 
+			package: 'GToolkit-Debugger' with: [
+				spec requires: #('GToolkitInspector' ). ];
+			package: 'GToolkit-Debugger-Emergency' with: [
+				spec requires: #('GToolkit-Debugger' ). ]. ].
 
 ]
