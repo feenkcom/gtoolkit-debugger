@@ -1,6 +1,6 @@
-Extension { #name : #Context }
+Extension { #name : 'Context' }
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : '*GToolkit-Debugger' }
 Context >> isContextDoesNotUnderstand [
 	^ self selector == #doesNotUnderstand:
 ]

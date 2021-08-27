@@ -1,13 +1,13 @@
 Class {
-	#name : #BrDebugglableElementStencil,
-	#superclass : #BrStencil,
+	#name : 'BrDebugglableElementStencil',
+	#superclass : 'BrStencil',
 	#instVars : [
 		'exception'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #'api - instantiation' }
+{ #category : 'api - instantiation' }
 BrDebugglableElementStencil >> create [
 	<return: #BlElement>
 	| aLabel aButton aContainer |
@@ -41,23 +41,23 @@ BrDebugglableElementStencil >> create [
 		addChild: aContainer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BrDebugglableElementStencil >> exception [
 	^ exception
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BrDebugglableElementStencil >> exception: anException [
 	exception := anException
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 BrDebugglableElementStencil >> freeze: anException [
 	anException freeze.
 	self exception: anException
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BrDebugglableElementStencil >> newDebugAction [
 	^ [ 
 		[
@@ -70,7 +70,7 @@ BrDebugglableElementStencil >> newDebugAction [
 		] forkNamed: 'Debug' ].
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 BrDebugglableElementStencil >> newTextLabel [
 	^ self exception printString asRopedText 
 		glamorousCodeFontAndSmallSize;

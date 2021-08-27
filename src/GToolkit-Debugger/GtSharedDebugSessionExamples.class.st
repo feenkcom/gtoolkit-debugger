@@ -1,24 +1,24 @@
 Class {
-	#name : #GtSharedDebugSessionExamples,
-	#superclass : #Object,
+	#name : 'GtSharedDebugSessionExamples',
+	#superclass : 'Object',
 	#instVars : [
 		'sessions'
 	],
-	#category : #'GToolkit-Debugger-Session'
+	#category : 'GToolkit-Debugger-Session'
 }
 
-{ #category : #'private - adding / removing' }
+{ #category : 'private - adding / removing' }
 GtSharedDebugSessionExamples >> addSession: aSession [
 	self sessions add: aSession.
 ]
 
-{ #category : #'private - asserting' }
+{ #category : 'private - asserting' }
 GtSharedDebugSessionExamples >> assertTerminatedSession: aSession [
 	self assert: aSession interruptedContext isNil.
 	self assert: aSession interruptedProcess isNil
 ]
 
-{ #category : #'examples - shared session' }
+{ #category : 'examples - shared session' }
 GtSharedDebugSessionExamples >> basicSharedDebugSession [
 	<gtExample>
 	| aSession |
@@ -27,7 +27,7 @@ GtSharedDebugSessionExamples >> basicSharedDebugSession [
 	^ aSession
 ]
 
-{ #category : #'examples - session' }
+{ #category : 'examples - session' }
 GtSharedDebugSessionExamples >> debugSession [
 	<gtExample>
 	<after: #terminateSessions>
@@ -48,7 +48,7 @@ GtSharedDebugSessionExamples >> debugSession [
 	^ aSession 
 ]
 
-{ #category : #'examples - shared session' }
+{ #category : 'examples - shared session' }
 GtSharedDebugSessionExamples >> debugSharedSession [
 	<gtExample>
 	| aSession aCollection aDebugger |
@@ -77,12 +77,12 @@ GtSharedDebugSessionExamples >> debugSharedSession [
 	^ aSession
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSharedDebugSessionExamples >> sessions [
 	^ sessions ifNil: [ sessions := OrderedCollection new ]
 ]
 
-{ #category : #'examples - shared session' }
+{ #category : 'examples - shared session' }
 GtSharedDebugSessionExamples >> sharedDebugSession [
 	<gtExample>
 	| aSession aPharoSession |
@@ -93,13 +93,13 @@ GtSharedDebugSessionExamples >> sharedDebugSession [
 	^ aSession
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtSharedDebugSessionExamples >> terminateSessions [
 	self sessions do: [ :eachSession | 
 		eachSession terminate ]
 ]
 
-{ #category : #'examples - shared session' }
+{ #category : 'examples - shared session' }
 GtSharedDebugSessionExamples >> terminateSharedSession [
 	<gtExample>
 	| aSession aCollection |

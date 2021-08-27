@@ -1,33 +1,33 @@
 Class {
-	#name : #GtExpandableDebuggerElement,
-	#superclass : #GtDebuggerElement,
-	#category : #'GToolkit-Debugger'
+	#name : 'GtExpandableDebuggerElement',
+	#superclass : 'GtDebuggerElement',
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #'tools registry' }
+{ #category : 'tools registry' }
 GtExpandableDebuggerElement class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
 	registry registerDebugger: self withRank: 1000.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtExpandableDebuggerElement class >> sessionClass [
 	^ DebugSession 
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtExpandableDebuggerElement >> aboutToOpen [
 	"Select the first non filtered context. This mean that we will ignore some methods 
 	like halts or debug method to select the first interesting stack frame in the debugger."
 	self setDebuggerToFirstNonFilteredContext.
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtExpandableDebuggerElement >> actOnDebugActionExecuted [
 	self updateContents
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	| panesContainerElement panesTabGroupElement |
 	panesContainerElement := BlElement new
@@ -44,7 +44,7 @@ GtExpandableDebuggerElement >> actOnDebugSessionChanged [
 	self updateStackPane.
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtExpandableDebuggerElement >> actOnSelectedContextChangedFor: aContext [
 	| detailsTabGroupElement |
 	detailsTabGroupElement := self buildDetailsElement.
@@ -53,7 +53,7 @@ GtExpandableDebuggerElement >> actOnSelectedContextChangedFor: aContext [
 		addChild: detailsTabGroupElement as: #detailsElement
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
@@ -62,7 +62,7 @@ GtExpandableDebuggerElement >> buildContextVariablesElement [
 	^ contextVariablesElement
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsElement [
 	| detailsTabGroupElement |
 	
@@ -78,7 +78,7 @@ GtExpandableDebuggerElement >> buildDetailsElement [
 	^ detailsTabGroupElement
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
 		background: Color white;
@@ -97,7 +97,7 @@ GtExpandableDebuggerElement >> buildDetailsTabElement [
 			stencil: [ self buildWatchVariablesElement ])
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildEvaluatorElement [
 	| snippetCoder snippetViewModel |
 
@@ -110,7 +110,7 @@ GtExpandableDebuggerElement >> buildEvaluatorElement [
 	^ snippetViewModel asElement
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildPaneElement [
 	^ BlElement new
 		constraintsDo: [ :c |
@@ -119,7 +119,7 @@ GtExpandableDebuggerElement >> buildPaneElement [
 			c linear weight: 1 ]
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 	| stackPane detailsPane |
 	stackPane := self buildPaneElement
@@ -135,7 +135,7 @@ GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 		addChild: detailsPane as: #detailsPane.
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildStackElement [
 	| newStackElement |
 	newStackElement := GtDebuggerExpandableStackElement new.
@@ -143,7 +143,7 @@ GtExpandableDebuggerElement >> buildStackElement [
 	^ newStackElement
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElement [
 	| tab tabGroup |
 	tab := BrTab new.
@@ -183,7 +183,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElem
 	^ tabGroup
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildStackToolbarActions [
 	<return: #Collection of: #BrButton>	
 		
@@ -210,7 +210,7 @@ GtExpandableDebuggerElement >> buildStackToolbarActions [
 	^ buttons
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildVariablesListElement [
 	| list |
 	list := BrColumnedList new.
@@ -266,7 +266,7 @@ GtExpandableDebuggerElement >> buildVariablesListElement [
 	^ list
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> buildWatchVariablesElement [
 	| watchVariablesElement |
 	watchVariablesElement := self buildVariablesListElement.
@@ -274,7 +274,7 @@ GtExpandableDebuggerElement >> buildWatchVariablesElement [
 	^ watchVariablesElement
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtExpandableDebuggerElement >> contextVariables [
 	| activeCoder |
 	activeCoder := self selectedCoder.
@@ -284,28 +284,28 @@ GtExpandableDebuggerElement >> contextVariables [
 	
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : 'accessing - elements' }
 GtExpandableDebuggerElement >> contextVariablesElement [
 	^ self detailsPane childNamed: #contextVariablesElement
 ]
 
-{ #category : #'accessing context' }
+{ #category : 'accessing context' }
 GtExpandableDebuggerElement >> currentContext [
 	^ self selectedContext 
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : 'accessing - elements' }
 GtExpandableDebuggerElement >> detailsPane [
 	^ self childNamed: #detailsPane
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtExpandableDebuggerElement >> filteredStack [
 	^ (self session stackOfSize: 50 ) select: [ :aContext | 
 		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtExpandableDebuggerElement >> initialize [
 	super initialize.
 	self
@@ -316,17 +316,17 @@ GtExpandableDebuggerElement >> initialize [
 	self userData at: #debuggerContainer put: #debuggerElement.
 ]
 
-{ #category : #'accessing context' }
+{ #category : 'accessing context' }
 GtExpandableDebuggerElement >> selectedCoder [
 	^ self stackElement selectedCoder
 ]
 
-{ #category : #'accessing context' }
+{ #category : 'accessing context' }
 GtExpandableDebuggerElement >> selectedContext [
 	^ self selectedCoder context
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 	"I set the debugger to the first non filtered stack"
 
@@ -340,33 +340,33 @@ GtExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 		self stackElement selectContext: filteredStack first ]
 ]
 
-{ #category : #'building actions' }
+{ #category : 'building actions' }
 GtExpandableDebuggerElement >> stackDebuggingActionsPragmas [
 	^ #( gt2StackDebuggingAction )
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : 'accessing - elements' }
 GtExpandableDebuggerElement >> stackElement [
 	^ self stackPane childNamed: #stackElement
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : 'accessing - elements' }
 GtExpandableDebuggerElement >> stackPane [
 	^ self childNamed: #stackPane
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtExpandableDebuggerElement >> updateCoders [
 	'TODO'
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtExpandableDebuggerElement >> updateContents [
 	self updateStackWidget.
 	self updateVariablesList
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtExpandableDebuggerElement >> updateStackPane [
 	| stackElement |
 	stackElement := self buildStackElement.
@@ -376,12 +376,12 @@ GtExpandableDebuggerElement >> updateStackPane [
 	self updateStackWidget.
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtExpandableDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtExpandableDebuggerElement >> updateVariablesList [
 	self contextVariablesElement items: self contextVariables
 ]

@@ -1,6 +1,6 @@
-Extension { #name : #RestartDebugAction }
+Extension { #name : 'RestartDebugAction' }
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : '*GToolkit-Debugger' }
 RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	
@@ -8,7 +8,7 @@ RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 			icon: BrGlamorousIcons restart
 ]
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : '*GToolkit-Debugger' }
 RestartDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	<gt2StackDebuggingAction>
 	
