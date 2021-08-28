@@ -1,14 +1,14 @@
 Class {
-	#name : #GtSharedDebugSession,
-	#superclass : #GtAnnouncingDebugSession,
+	#name : 'GtSharedDebugSession',
+	#superclass : 'GtAnnouncingDebugSession',
 	#instVars : [
 		'mutex',
 		'session'
 	],
-	#category : #'GToolkit-Debugger-Session'
+	#category : 'GToolkit-Debugger-Session'
 }
 
-{ #category : #'private - asserting' }
+{ #category : 'private - asserting' }
 GtSharedDebugSession >> assertSession: aDebugSession [
 	self
 		assert: [ aDebugSession isNotNil ] 
@@ -18,7 +18,7 @@ GtSharedDebugSession >> assertSession: aDebugSession [
 		description: [ 'Debug session can be initialized only once' ]
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSharedDebugSession >> debug [
 	<return: #GtMoldableDebugger>
 	self releasedSessionDo: [ :aSession |
@@ -32,7 +32,7 @@ GtSharedDebugSession >> debug [
 	^ nil
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtSharedDebugSession >> gtViewInterruptedContextFor: aView [
 	<gtView>
 	self session ifNil: [ ^ aView empty ].
@@ -40,7 +40,7 @@ GtSharedDebugSession >> gtViewInterruptedContextFor: aView [
 		priority: 10
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtSharedDebugSession >> gtViewInterruptedStackFor: aView [
 	<gtView>
 	self session ifNil: [ ^ aView empty ].
@@ -48,7 +48,7 @@ GtSharedDebugSession >> gtViewInterruptedStackFor: aView [
 		priority: 12
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtSharedDebugSession >> gtViewLiveDebuggerFor: aView [
 	<gtView>
 	self session ifNil: [ ^ aView empty ].
@@ -56,7 +56,7 @@ GtSharedDebugSession >> gtViewLiveDebuggerFor: aView [
 		priority: 21
 ]
 
-{ #category : #'gt-extensions' }
+{ #category : 'gt-extensions' }
 GtSharedDebugSession >> gtViewSuspendedStackFor: aView [
 	<gtView>
 	self session ifNil: [ ^ aView empty ].
@@ -64,51 +64,51 @@ GtSharedDebugSession >> gtViewSuspendedStackFor: aView [
 		priority: 14
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtSharedDebugSession >> initialize [
 	super initialize.
 	mutex := Mutex new.
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtSharedDebugSession >> interruptedContext [
 	self sessionDo: [ :aSession | 
 		^ aSession interruptedContext ].
 	^ nil
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtSharedDebugSession >> interruptedProcess [
 	self sessionDo: [ :aSession | 
 		^ aSession interruptedProcess ].
 	^ nil
 ]
 
-{ #category : #'api - accessing' }
+{ #category : 'api - accessing' }
 GtSharedDebugSession >> name [
 	self sessionDo: [ :aSession | 
 		^ aSession name ].
 	^ '<detached>'
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSharedDebugSession >> notifyDebugged [
 	self announce: (GtSharedDebugSessionDebuggedAnnouncement new session: self)
 ]
 
-{ #category : #'private - notifying' }
+{ #category : 'private - notifying' }
 GtSharedDebugSession >> notifyTerminated [
 	self announce: (GtSharedDebugSessionTerminatedAnnouncement new session: self)
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtSharedDebugSession >> printOn: aStream [
 	aStream
 		nextPutAll: 'Shared Debug Session: ';
 		print: self name
 ]
 
-{ #category : #'private - actions' }
+{ #category : 'private - actions' }
 GtSharedDebugSession >> releasedSessionDo: aBlock [
 	| aSession |
 	mutex critical: [ 
@@ -117,24 +117,24 @@ GtSharedDebugSession >> releasedSessionDo: aBlock [
 	aSession ifNotNil: aBlock.
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSharedDebugSession >> session [
 	<return: #DebugSession>
 	^ session
 ]
 
-{ #category : #'api - initialization' }
+{ #category : 'api - initialization' }
 GtSharedDebugSession >> session: aDebugSession [
 	self assertSession: aDebugSession.
 	session := aDebugSession
 ]
 
-{ #category : #'private - accessing' }
+{ #category : 'private - accessing' }
 GtSharedDebugSession >> sessionDo: aBlock [
 	self session ifNotNil: aBlock
 ]
 
-{ #category : #'api - actions' }
+{ #category : 'api - actions' }
 GtSharedDebugSession >> terminate [
 	self releasedSessionDo: [ :aSession |
 		aSession terminate.

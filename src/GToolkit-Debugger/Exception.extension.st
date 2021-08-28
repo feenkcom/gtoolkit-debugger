@@ -1,6 +1,6 @@
-Extension { #name : #Exception }
+Extension { #name : 'Exception' }
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : '*GToolkit-Debugger' }
 Exception >> asDebuggableElement [
 	^ BrDebugglableElementStencil new
 		freeze: self;

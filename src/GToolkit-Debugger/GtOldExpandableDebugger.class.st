@@ -1,21 +1,21 @@
 Class {
-	#name : #GtOldExpandableDebugger,
-	#superclass : #GtStackDebuggerElement,
+	#name : 'GtOldExpandableDebugger',
+	#superclass : 'GtStackDebuggerElement',
 	#instVars : [
 		'bytecodesPane',
 		'bytecodesListElement',
 		'expandablePane'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtOldExpandableDebugger class >> sessionClass [
 
 	^ GTBytecodeDebuggerSession
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtOldExpandableDebugger >> initializePanes [
 	expandablePane := BlElement new
 		layout: BlLinearLayout horizontal;
@@ -27,7 +27,7 @@ GtOldExpandableDebugger >> initializePanes [
 	self addChildren: {expandablePane . "detailsPane"}.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtOldExpandableDebugger >> updateStackPane [
 	expandablePane 
 		removeChildren;

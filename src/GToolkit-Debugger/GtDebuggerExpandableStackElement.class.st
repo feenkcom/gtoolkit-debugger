@@ -1,25 +1,25 @@
 Class {
-	#name : #GtDebuggerExpandableStackElement,
-	#superclass : #BlElement,
+	#name : 'GtDebuggerExpandableStackElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'selectedCoderUIModel',
 		'annotationsEnabled'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtDebuggerExpandableStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
 	self debuggerElement actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtDebuggerExpandableStackElement >> areAnnotationsEnabled [
 	^ annotationsEnabled ifNil: [ false ]
 ]
 
-{ #category : #'building elements' }
+{ #category : 'building elements' }
 GtDebuggerExpandableStackElement >> buildStackFramesList [
 	| stackFramesList |
 	stackFramesList := BrSimpleList new
@@ -39,7 +39,7 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 	^ stackFramesList
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preservingContexts: currenCodersUIModels [
 	| methodCoderUIModels context firstContext newCoderUIModels |
 	
@@ -80,7 +80,7 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 	^ methodCoderUIModels
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
 	| coder |
 	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
@@ -91,7 +91,7 @@ GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
 	^ coder
 ]
 
-{ #category : #'accessing elements' }
+{ #category : 'accessing elements' }
 GtDebuggerExpandableStackElement >> debuggerElement [
 	| currentElement |
 	currentElement := self.
@@ -104,7 +104,7 @@ GtDebuggerExpandableStackElement >> debuggerElement [
 	^ nil
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerExpandableStackElement >> disableVariableAnnotations [
 	annotationsEnabled := false.
 	self stackFramesList items do: [ :aCoderUIModel |
@@ -114,7 +114,7 @@ GtDebuggerExpandableStackElement >> disableVariableAnnotations [
 	self updateContent
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerExpandableStackElement >> enableVariableAnnotations [
 	annotationsEnabled := true.
 	self stackFramesList items do: [ :aCoderUIModel |
@@ -123,7 +123,7 @@ GtDebuggerExpandableStackElement >> enableVariableAnnotations [
 	self updateContent.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDebuggerExpandableStackElement >> initialize [
 	super initialize.
 	self constraintsDo: [ :c |
@@ -132,7 +132,7 @@ GtDebuggerExpandableStackElement >> initialize [
 	self initializeStackList.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDebuggerExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
@@ -140,7 +140,7 @@ GtDebuggerExpandableStackElement >> initializeStackList [
 	self addChild: stackFramesList
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel ifNotNil: [ :aPreviousSelectedCoderUIModel |
 		aPreviousSelectedCoderUIModel focused: false ].
@@ -157,7 +157,7 @@ GtDebuggerExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel updateProgramCounterRange.
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerExpandableStackElement >> selectContext: aContext [
 	self stackFramesList items 
 		detect:  [ :eachCoderUIModel | eachCoderUIModel coder context = aContext ]
@@ -165,32 +165,32 @@ GtDebuggerExpandableStackElement >> selectContext: aContext [
 		ifNone: [  ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerExpandableStackElement >> selectedCoder [
 	^ selectedCoderUIModel coder
 ]
 
-{ #category : #'accessing elements' }
+{ #category : 'accessing elements' }
 GtDebuggerExpandableStackElement >> stackFramesList [
 	^ self children first.
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtDebuggerExpandableStackElement >> updateContent [
 	self updateForSession: self debuggerElement session
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtDebuggerExpandableStackElement >> updateDebugger [
 	self debuggerElement updateContents
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtDebuggerExpandableStackElement >> updateForSession: aDebuggingSession [
 	self stackFramesList
 		items: (self
 			coderUIModelsToDisplayFrom: aDebuggingSession
-			preservingContexts: self stackFramesList items).
+			preservingContexts: self stackFramesList items asOrderedCollection).
 	
 	self stackFramesList items
 		ifNotEmpty: [ :methodCoderUIModels | 

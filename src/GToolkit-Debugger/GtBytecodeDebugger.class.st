@@ -15,32 +15,32 @@ GtBytecodeDebugger openInspectorOn: debuggingSession.
 
 "
 Class {
-	#name : #GtBytecodeDebugger,
-	#superclass : #GtStackDebuggerElement,
+	#name : 'GtBytecodeDebugger',
+	#superclass : 'GtStackDebuggerElement',
 	#instVars : [
 		'bytecodesPane',
 		'bytecodesListElement'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtBytecodeDebugger class >> defaultTitle [
 	^ 'Bytecode'
 ]
 
-{ #category : #'tools registry' }
+{ #category : 'tools registry' }
 GtBytecodeDebugger class >> registerToolsOn: registry [
 	registry registerDebugger: self withRank: 1010.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBytecodeDebugger class >> sessionClass [
 
 	^ GTBytecodeDebuggerSession
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtBytecodeDebugger >> actOnSelectedBytecodeChangedFor: aSymbolicBytecode [
 	| selectionForBytecode |
 	selectionForBytecode := aSymbolicBytecode sourceInterval.
@@ -51,13 +51,13 @@ GtBytecodeDebugger >> actOnSelectedBytecodeChangedFor: aSymbolicBytecode [
 		select
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtBytecodeDebugger >> actOnSelectedContextChangedFor: aContext [
 	super actOnSelectedContextChangedFor: aContext.
 	self updateBytecodePaneFor: aContext.
 ]
 
-{ #category : #'building widgets' }
+{ #category : 'building widgets' }
 GtBytecodeDebugger >> buildBytecodesListElement [
 	| bytecodesList |
 	bytecodesList := BrSimpleList new.
@@ -74,17 +74,17 @@ GtBytecodeDebugger >> buildBytecodesListElement [
 	^ bytecodesList
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : 'accessing - elements' }
 GtBytecodeDebugger >> bytecodesListElement [
 	^ bytecodesListElement
 ]
 
-{ #category : #'accessing - elements' }
+{ #category : 'accessing - elements' }
 GtBytecodeDebugger >> bytecodesPane [
 	^ bytecodesPane
 ]
 
-{ #category : #formatting }
+{ #category : 'formatting' }
 GtBytecodeDebugger >> formatBytecode: aBytecode [
 	| formattedCode |
 
@@ -100,7 +100,7 @@ GtBytecodeDebugger >> formatBytecode: aBytecode [
 	^ formattedCode
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtBytecodeDebugger >> initializeBytecodeTransmissions [
 	self bytecodesListElement
 		when: BrSelectionChanged
@@ -111,7 +111,7 @@ GtBytecodeDebugger >> initializeBytecodeTransmissions [
 			self actOnSelectedBytecodeChangedFor: anItemValue ] ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtBytecodeDebugger >> initializePanes [
 	| secondPane |
 	stackPane := self buildPaneElement.
@@ -130,7 +130,7 @@ GtBytecodeDebugger >> initializePanes [
 	self addChildren: {stackPane . secondPane . detailsPane}.
 ]
 
-{ #category : #'updating panes' }
+{ #category : 'updating panes' }
 GtBytecodeDebugger >> updateBytecodePaneFor: aContext [
 	| bytecodeToSelect |
 	bytecodesListElement := self buildBytecodesListElement.
@@ -146,7 +146,7 @@ GtBytecodeDebugger >> updateBytecodePaneFor: aContext [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtBytecodeDebugger >> variablesListForContext: aContext [
 	^ aContext gtBytecodeDebuggerRetrieveContextValues
 ]

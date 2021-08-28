@@ -1,6 +1,6 @@
-Extension { #name : #BlBlocUIManager }
+Extension { #name : 'BlBlocUIManager' }
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : '*GToolkit-Debugger' }
 BlBlocUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder withSourceString: aSourceString withSourceInterval: aSourceInterval forException: exception [
 	"Open a dedicated debugger as a result of an error that happened when executing code 
 	in an editor. The debugger can decide if and how to embed itself within the editor."

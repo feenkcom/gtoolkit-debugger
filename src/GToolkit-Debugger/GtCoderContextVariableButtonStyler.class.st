@@ -1,17 +1,17 @@
 Class {
-	#name : #GtCoderContextVariableButtonStyler,
-	#superclass : #GtCoderContextVariableStyler,
-	#category : #'GToolkit-Debugger'
+	#name : 'GtCoderContextVariableButtonStyler',
+	#superclass : 'GtCoderContextVariableStyler',
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderContextVariableButtonStyler >> initializeVariables [
 	super initializeVariables.
 	variables at: 'self' put: methodCoder receiver.
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtCoderContextVariableButtonStyler >> styleVariableNode: aVariableNode [
 	self
 		valueForVariableNamed: aVariableNode name

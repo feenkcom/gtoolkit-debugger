@@ -1,6 +1,6 @@
-Extension { #name : #CopyToClipboardDebugAction }
+Extension { #name : 'CopyToClipboardDebugAction' }
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : '*GToolkit-Debugger' }
 CopyToClipboardDebugAction class >> gt2ActionFor: aDebugger [
 	<gt2StackDebuggingAction>
 	

@@ -1,10 +1,10 @@
 Class {
-	#name : #GtDebuggerStackElement,
-	#superclass : #BlElement,
+	#name : 'GtDebuggerStackElement',
+	#superclass : 'BlElement',
 	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDebuggerStackElement >> initialize [
 	super initialize.
 	
@@ -15,7 +15,7 @@ GtDebuggerStackElement >> initialize [
 	self initializeStackFramesList.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDebuggerStackElement >> initializeStackFramesList [
 	| stackFrames |
 	stackFrames := BrColumnedList new 
@@ -46,7 +46,7 @@ GtDebuggerStackElement >> initializeStackFramesList [
 	self addChild: stackFrames.
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtDebuggerStackElement >> printStackClassColumnForContext: aContext [
 	| outer class methodClass |
 	
@@ -63,7 +63,7 @@ GtDebuggerStackElement >> printStackClassColumnForContext: aContext [
 						nextPut: $) ] ]  
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtDebuggerStackElement >> printStackExtraColumnForContext: aContext [ 
 
 	| selector |
@@ -79,7 +79,7 @@ GtDebuggerStackElement >> printStackExtraColumnForContext: aContext [
 		ifNotNil: [ aContext closure printString  ]
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 GtDebuggerStackElement >> printStackMethodColumnForContext: aContext [ 
 	| outer selector |
 	
@@ -89,17 +89,17 @@ GtDebuggerStackElement >> printStackMethodColumnForContext: aContext [
 		aStream nextPutAll: selector ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerStackElement >> retrieveStackFrom: aSession [
 	^ aSession stack
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerStackElement >> stackFramesWidget [
 	^ self children first
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 GtDebuggerStackElement >> updateForSession: aDebuggingSession [
 	self stackFramesWidget display: (self retrieveStackFrom: aDebuggingSession).
 	self stackFramesWidget selectOne: 1.

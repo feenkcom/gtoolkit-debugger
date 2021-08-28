@@ -1,10 +1,10 @@
 Class {
-	#name : #GtDoesNotUnderstandDebugAction,
-	#superclass : #DebugAction,
-	#category : #'GToolkit-Debugger-Actions'
+	#name : 'GtDoesNotUnderstandDebugAction',
+	#superclass : 'DebugAction',
+	#category : 'GToolkit-Debugger-Actions'
 }
 
-{ #category : #registration }
+{ #category : 'registration' }
 GtDoesNotUnderstandDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	
@@ -12,7 +12,7 @@ GtDoesNotUnderstandDebugAction class >> gt2ContextDebuggingActionFor: aDebugger 
 			icon: BrGlamorousIcons add
 ]
 
-{ #category : #registration }
+{ #category : 'registration' }
 GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	"<gt2StackDebuggingAction>"
 	
@@ -21,7 +21,7 @@ GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 			order: 4
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtDoesNotUnderstandDebugAction >> appliesToContext: aContext [
 	^ aContext isContextDoesNotUnderstand or: [ 
 		
@@ -34,7 +34,7 @@ GtDoesNotUnderstandDebugAction >> appliesToContext: aContext [
 					self session interruptedContext sender sender = aContext ] ] ] ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtDoesNotUnderstandDebugAction >> appliesToDebugger: aDebugger [
 	| exception |
 	
@@ -50,19 +50,19 @@ GtDoesNotUnderstandDebugAction >> appliesToDebugger: aDebugger [
 	^ aDebugger interruptedContext receiver class isObsolete not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDoesNotUnderstandDebugAction >> defaultLabel [
 
 	^  'Create'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDoesNotUnderstandDebugAction >> defaultOrder [
 
 	^ 1
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDoesNotUnderstandDebugAction >> executeAction [
 	"Should only be called when the debugger was created in response to a
 	MessageNotUnderstood exception. Create a stub for the method that was
@@ -84,12 +84,12 @@ GtDoesNotUnderstandDebugAction >> executeAction [
 	self session stepInto: self interruptedContext.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDoesNotUnderstandDebugAction >> help [
     ^ 'Create the missing class or method in the user prompted class, and restart the debugger at the location where it can be edited.'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDoesNotUnderstandDebugAction >> id [
 
 	^ #doesNotUnderstand

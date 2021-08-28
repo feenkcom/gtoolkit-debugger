@@ -1,40 +1,40 @@
 Class {
-	#name : #GtDebuggerElement,
-	#superclass : #BlElement,
+	#name : 'GtDebuggerElement',
+	#superclass : 'BlElement',
 	#instVars : [
 		'debuggingSession',
 		'announcer',
 		'browserClosingHandler'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : 'GToolkit-Debugger'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtDebuggerElement class >> availableAutomatically [
 	"Should this debugger be taken into account when looking for a debugger to handle an exception."
 	
 	^ false
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDebuggerElement class >> defaultTitle [
 	^ 'Gt'
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 GtDebuggerElement class >> handlesContext: aContext [
 
 	^ true
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 GtDebuggerElement class >> on: aDebugSession [
 
 	^ self new 	
 		session: aDebugSession
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	| aDebugger |
 
@@ -42,7 +42,7 @@ GtDebuggerElement class >> openInspectorOn: aDebuggingSession [
 	^ aDebugger openInPager
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement class >> openOn: aDebuggingSession [
 	| aDebugger |
 
@@ -50,27 +50,27 @@ GtDebuggerElement class >> openOn: aDebuggingSession [
 	^ aDebugger open.
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
 	^ self openOn: aDebugSession withFullView: aBool andNotification: nil
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
 	^self openInspectorOn:aDebugSession
 ]
 
-{ #category : #'tools registry' }
+{ #category : 'tools registry' }
 GtDebuggerElement class >> register [
 	self registerToolsOn: Smalltalk tools.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement class >> sessionClass [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement class >> spanNewSessionFrom: anotherSession [
 
 	^ (self sessionClass 
@@ -81,29 +81,29 @@ GtDebuggerElement class >> spanNewSessionFrom: anotherSession [
 			yourself
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement >> aboutToOpen [
 	"Perform any action or update before the debugger is opened in the UI."
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtDebuggerElement >> actOnBrowserClosing: ann [
 	"Terminate the session when the debugger is closed. This can be called when 
 	manually closing the debugger or when resuming."
 	self terminateSession
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtDebuggerElement >> actOnDebugActionExecuted [
 	
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtDebuggerElement >> actOnDebugSessionChanged [
 	self subclassResponsibility
 ]
 
-{ #category : #'building actions' }
+{ #category : 'building actions' }
 GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
 	^ self session class
 		debuggingActionsForPragmas: aSymbolsCollection 
@@ -111,18 +111,18 @@ GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
 	
 ]
 
-{ #category : #announce }
+{ #category : 'announce' }
 GtDebuggerElement >> announce: anAnnouncement [
 
 	self announcer announce: anAnnouncement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement >> announcer [
 	^ announcer
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerElement >> close [
 	browserClosingHandler ifNotNil: [ 
 		"Remove the event handler so that closing the space will not terminate the session one more time"
@@ -136,28 +136,28 @@ GtDebuggerElement >> close [
 	self terminateSession.
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerElement >> detachSession [
 	debuggingSession := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement >> inPager [
 	^ (GtPager createWrappedOn: self) maximized
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 GtDebuggerElement >> initialize [
 	super initialize.
 	announcer := Announcer new.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement >> interruptedContext [
 	^ self session interruptedContext
 ]
 
-{ #category : #callbacks }
+{ #category : 'callbacks' }
 GtDebuggerElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
 
@@ -170,7 +170,7 @@ GtDebuggerElement >> onAddedToSceneGraph [
 	
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement >> open [
 	self aboutToOpen.
 	self constraintsDo: [ :c |
@@ -179,7 +179,7 @@ GtDebuggerElement >> open [
 	^ self open: self withTitle: self session name.
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement >> open: anElement withTitle: aTitleString [
 	| aSpace |
 	aSpace := BlSpace new.
@@ -190,7 +190,7 @@ GtDebuggerElement >> open: anElement withTitle: aTitleString [
 	^ aSpace show
 ]
 
-{ #category : #opening }
+{ #category : 'opening' }
 GtDebuggerElement >> openInPager [
 	| aPager |
 	self aboutToOpen.
@@ -201,39 +201,39 @@ GtDebuggerElement >> openInPager [
 	^ self open: aPager withTitle: self session name.
 ]
 
-{ #category : #'accessing - settings' }
+{ #category : 'accessing - settings' }
 GtDebuggerElement >> selectedDetailesTabName [
 	^ self settings 
 		at: #selectedDetailedTabName 
 		ifAbsent: [ nil ]
 ]
 
-{ #category : #'accessing - settings' }
+{ #category : 'accessing - settings' }
 GtDebuggerElement >> selectedDetailesTabName: aString [
 	self settings 
 		at: #selectedDetailedTabName 
 		put: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement >> session [
 	^ debuggingSession
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 GtDebuggerElement >> session: aDebuggingSession [
 	debuggingSession := aDebuggingSession.
 	self actOnDebugSessionChanged.
 ]
 
-{ #category : #'accessing - settings' }
+{ #category : 'accessing - settings' }
 GtDebuggerElement >> settings [
 	^ self userData 
 		at: #settingsCache
 		ifAbsentPut: [ SmallDictionary new ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 GtDebuggerElement >> terminateSession [
 	self session ifNotNil: [ :aSession | 
 		"This method can be called more times from the UI process when closing the debugger.
