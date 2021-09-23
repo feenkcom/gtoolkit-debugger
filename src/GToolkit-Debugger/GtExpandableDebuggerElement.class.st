@@ -89,25 +89,8 @@ GtExpandableDebuggerElement >> buildDetailsTabElement [
 			stencil: [ self buildContextVariablesElement ]);
 		addTab: (BrTab new
 			aptitude: BrGlamorousTabAptitude new;
-			label: 'Evaluator';
-			stencil: [ self buildEvaluatorElement ]);
-		addTab: (BrTab new
-			aptitude: BrGlamorousTabAptitude new;
 			label: 'Watches';
 			stencil: [ self buildWatchVariablesElement ])
-]
-
-{ #category : 'building widgets' }
-GtExpandableDebuggerElement >> buildEvaluatorElement [
-	| snippetCoder snippetViewModel |
-
-	snippetCoder := GtPharoSnippetCoder new forSource: 'self'.
-
-	snippetViewModel := snippetCoder asCoderViewModel.
-	snippetViewModel selfObject: self selectedContext receiver.
-	snippetViewModel context: self selectedContext.
-
-	^ snippetViewModel asElement
 ]
 
 { #category : 'building widgets' }
