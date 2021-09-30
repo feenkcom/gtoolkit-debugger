@@ -9,18 +9,18 @@ Take a look example with an exception:
 
 "
 Class {
-	#name : 'BaselineOfGToolkitDebugger',
-	#superclass : 'BaselineOf',
-	#category : 'BaselineOfGToolkitDebugger'
+	#name : #BaselineOfGToolkitDebugger,
+	#superclass : #BaselineOf,
+	#category : #BaselineOfGToolkitDebugger
 }
 
-{ #category : 'baseline' }
+{ #category : #baseline }
 BaselineOfGToolkitDebugger >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
 		spec
 			baseline: 'GToolkitInspector' with: [
-				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.8.542/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.8.543/src' ].
 
 		spec package: 'GToolkit-Debugger' with: [
 			spec requires: #('GToolkitInspector') ].
