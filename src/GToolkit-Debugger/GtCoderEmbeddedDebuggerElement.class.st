@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtCoderEmbeddedDebuggerElement',
-	#superclass : 'BlElement',
+	#name : #GtCoderEmbeddedDebuggerElement,
+	#superclass : #BlElement,
 	#instVars : [
 		'debuggingSession',
 		'signaledException',
@@ -9,7 +9,7 @@ Class {
 	#category : 'GToolkit-Debugger'
 }
 
-{ #category : 'opening' }
+{ #category : #opening }
 GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException embeddedIn: sourceCoder withSourceString: aSourceString withSourceInterval: aSourceInterval [
 	sourceCoder
 		notifyShowDebuggerRequest: debugSession
@@ -18,7 +18,7 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException 
 		sourceInterval: aSourceInterval
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	| label text |
 	self layout: (BlGridLayout horizontal cellSpacing: 3).
@@ -53,45 +53,45 @@ GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 			c horizontal fitContent ]
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtCoderEmbeddedDebuggerElement >> debug [
 	self switchToSystemDebugger.
 	self removeFromParent.
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtCoderEmbeddedDebuggerElement >> detachSession [
 	debuggingSession := nil 
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> disableTermination [
 	isTerminationDisabled := true
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> enableTermination [
 	isTerminationDisabled := false
 ]
 
-{ #category : 'initialize' }
+{ #category : #initialize }
 GtCoderEmbeddedDebuggerElement >> initialize [
 	super initialize.
 	self enableTermination
 ]
 
-{ #category : 'hooks - children' }
+{ #category : #'hooks - children' }
 GtCoderEmbeddedDebuggerElement >> onRemovedFromSceneGraph [
 	super onRemovedFromSceneGraph.
 	"self terminateSession"
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> session [
 	^ debuggingSession
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> session: aDebugSession [
 	debuggingSession := aDebugSession.
 	self subscribeToSession.
@@ -99,17 +99,17 @@ GtCoderEmbeddedDebuggerElement >> session: aDebugSession [
 
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> signaledException [
 	^ signaledException
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> signaledException: anException [
 	signaledException := anException
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> subscribeToSession [
 	self session
 			when: GtSharedDebugSessionDebuggedAnnouncement
@@ -120,7 +120,7 @@ GtCoderEmbeddedDebuggerElement >> subscribeToSession [
 			to: self
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtCoderEmbeddedDebuggerElement >> switchToSystemDebugger [
 	"Directly open the registered debugger on the given session."
 	| currentSession |
@@ -130,13 +130,13 @@ GtCoderEmbeddedDebuggerElement >> switchToSystemDebugger [
 	^ currentSession debug
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 GtCoderEmbeddedDebuggerElement >> terminate [
 	self terminateSession.
 	self removeFromParent.
 ]
 
-{ #category : 'callbacks' }
+{ #category : #callbacks }
 GtCoderEmbeddedDebuggerElement >> terminateSession [ 
 	isTerminationDisabled ifFalse: [ 
 		self session ifNotNil: [ :aSession | 

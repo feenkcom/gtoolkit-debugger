@@ -1,10 +1,10 @@
 Class {
-	#name : 'GtCoderContextVariableValueStyler',
-	#superclass : 'GtCoderContextVariableStyler',
+	#name : #GtCoderContextVariableValueStyler,
+	#superclass : #GtCoderContextVariableStyler,
 	#category : 'GToolkit-Debugger'
 }
 
-{ #category : 'visiting' }
+{ #category : #visiting }
 GtCoderContextVariableValueStyler >> styleVariableNode: aVariableNode [
 	(self hasValueForVariableNamed: aVariableNode name) ifFalse: [ ^ self ].
 			

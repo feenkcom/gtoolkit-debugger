@@ -1,5 +1,5 @@
 Class {
-	#name : 'GtSharedDebugSessionDebuggedAnnouncement',
-	#superclass : 'GtSharedDebugSessionAnnouncement',
+	#name : #GtSharedDebugSessionDebuggedAnnouncement,
+	#superclass : #GtSharedDebugSessionAnnouncement,
 	#category : 'GToolkit-Debugger-Session'
 }
