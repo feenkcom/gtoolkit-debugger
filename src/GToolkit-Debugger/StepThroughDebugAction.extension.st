@@ -1,6 +1,6 @@
-Extension { #name : 'StepThroughDebugAction' }
+Extension { #name : #StepThroughDebugAction }
 
-{ #category : '*GToolkit-Debugger' }
+{ #category : #'*GToolkit-Debugger' }
 StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	
@@ -8,7 +8,7 @@ StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 			icon: BrGlamorousIcons through
 ]
 
-{ #category : '*GToolkit-Debugger' }
+{ #category : #'*GToolkit-Debugger' }
 StepThroughDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	<gt2StackDebuggingAction>
 	

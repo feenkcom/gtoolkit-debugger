@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtBeaconMethodSignal',
-	#superclass : 'BeaconSignal',
+	#name : #GtBeaconMethodSignal,
+	#superclass : #BeaconSignal,
 	#instVars : [
 		'methodSelector',
 		'methodClassName',
@@ -11,7 +11,7 @@ Class {
 	#category : 'GToolkit-Debugger-Logging'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 GtBeaconMethodSignal class >> createForMethod: aMethod labeled: aString [
 	^ self new 
 		label: aString;
@@ -19,29 +19,29 @@ GtBeaconMethodSignal class >> createForMethod: aMethod labeled: aString [
 		methodSelector: aMethod selector
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 GtBeaconMethodSignal class >> emitForMethod: aMethod [
 	^ self 
 		emitForMethod: aMethod 
 		labeled: nil
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 GtBeaconMethodSignal class >> emitForMethod: aMethod labeled: aString [
 	^ (self createForMethod: aMethod labeled: aString) emit
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> currentProcessId [
 	^ currentProcessId
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> currentProcessId: anInteger [
 	currentProcessId := anInteger
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : #'as yet unclassified' }
 GtBeaconMethodSignal >> gtViewMethodSourceFor: aView [
 	<gtView>
 	| aMethodClassName methodClass |
@@ -56,7 +56,7 @@ GtBeaconMethodSignal >> gtViewMethodSourceFor: aView [
 	^ (methodClass >> self methodSelector) gtSourceFor: aView
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtBeaconMethodSignal >> initialize [
 	super initialize.
 	currentProcessId := Processor activeProcess identityHash.
@@ -65,37 +65,37 @@ GtBeaconMethodSignal >> initialize [
 	
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> label [
 	^ label
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> label: aString [
 	label := aString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> methodClassName [
 	^ methodClassName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> methodClassName: aString [
 	methodClassName := aString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> methodSelector [
 	^ methodSelector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtBeaconMethodSignal >> methodSelector: aSelector [
 	methodSelector := aSelector
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 GtBeaconMethodSignal >> printOneLineContentsOn: stream [
 	stream 
 		nextPutAll: self methodClassName;

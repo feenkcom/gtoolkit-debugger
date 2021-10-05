@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtAnnouncingDebugSession',
-	#superclass : 'Object',
+	#name : #GtAnnouncingDebugSession,
+	#superclass : #Object,
 	#traits : 'TBlDebug + TGtAnnouncer',
 	#classTraits : 'TBlDebug classTrait + TGtAnnouncer classTrait',
 	#instVars : [
@@ -9,13 +9,13 @@ Class {
 	#category : 'GToolkit-Debugger-Session'
 }
 
-{ #category : 'announcer' }
+{ #category : #announcer }
 GtAnnouncingDebugSession >> announcer [
 	<return: #Announcer>
 	^ announcer
 ]
 
-{ #category : 'gt-extensions' }
+{ #category : #'gt-extensions' }
 GtAnnouncingDebugSession >> gtSubscriptionsFor: aView [
 	<gtView>
 	self announcer ifNil: [ ^ aView empty ].
@@ -23,7 +23,7 @@ GtAnnouncingDebugSession >> gtSubscriptionsFor: aView [
 		priority: 42
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtAnnouncingDebugSession >> initialize [
 	super initialize.
 	announcer := Announcer new.

@@ -1,13 +1,13 @@
 Class {
-	#name : 'GtEmbeddedDebuggerExamples',
-	#superclass : 'Object',
+	#name : #GtEmbeddedDebuggerExamples,
+	#superclass : #Object,
 	#instVars : [
 		'coderProcess'
 	],
 	#category : 'GToolkit-Debugger-Examples'
 }
 
-{ #category : 'examples' }
+{ #category : #examples }
 GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 	<gtExample>
 	<after: #terminateCoderProcess>
@@ -33,20 +33,20 @@ GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 	^ coder
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtEmbeddedDebuggerExamples >> debuggerAttributesIn: aCoder at: anIndex [
 	^ ((aCoder sourceText attributesAt: anIndex) select: [ :each | 
 		each isKindOf: GtEmbeddedDebuggerAttribute ])
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtEmbeddedDebuggerExamples >> terminateCoderProcess [
 	(coderProcess isNotNil and: [ coderProcess isTerminated not ])
 		ifTrue: [ ('terminate ' , coderProcess asString) traceCr.
 			coderProcess terminate ]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 GtEmbeddedDebuggerExamples >> waitUntilSuspendedFor: aProcess [.
 	"Wait at most a second for the given process to become suspended."
 	10 timesRepeat: [ 

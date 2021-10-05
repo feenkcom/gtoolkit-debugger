@@ -1,6 +1,6 @@
-Extension { #name : 'ResumeDebugAction' }
+Extension { #name : #ResumeDebugAction }
 
-{ #category : '*GToolkit-Debugger' }
+{ #category : #'*GToolkit-Debugger' }
 ResumeDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	<gt2StackDebuggingAction>
 	

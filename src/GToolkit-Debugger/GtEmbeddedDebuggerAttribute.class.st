@@ -1,6 +1,6 @@
 Class {
-	#name : 'GtEmbeddedDebuggerAttribute',
-	#superclass : 'BrTextAdornmentAttribute',
+	#name : #GtEmbeddedDebuggerAttribute,
+	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
 		'debugSession',
 		'signaledException',
@@ -9,17 +9,17 @@ Class {
 	#category : 'GToolkit-Debugger'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtEmbeddedDebuggerAttribute >> debugSession [
 	^ debugSession
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
 	debugSession := aDebugSession
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
 	debuggerElement ifNotNil: [ 
 		debuggerElement disableTermination ].
@@ -31,19 +31,19 @@ GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditor
 	^ debuggerElement
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 GtEmbeddedDebuggerAttribute >> initialize [
 	super initialize.
 	
 	self beAppend
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtEmbeddedDebuggerAttribute >> signaledException [
 	^ signaledException
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 GtEmbeddedDebuggerAttribute >> signaledException: anException [
 	signaledException := anException
 ]
