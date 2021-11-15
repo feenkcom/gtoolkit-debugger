@@ -19,15 +19,7 @@ BrDebugglableElementStencil >> create [
 		constraintsDo: [ :c | 
 			c linear vertical alignCenter ];
 		action: self newDebugAction.
-	aButton := BrButton new
-		hFitContent;
-		aptitude: BrGlamorousButtonWithIconAptitude new;
-		icon: BrGlamorousVectorIcons debug;
-		label: 'Open debugger';
-		beTinySize;
-		constraintsDo: [ :c | 
-			c linear vertical alignCenter ];
-		action: self newDebugAction.
+	aButton := self createDebugButton.
 	aContainer := BlElement new
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c | 
@@ -39,6 +31,19 @@ BrDebugglableElementStencil >> create [
 	^ BrFrame new
 		matchParent;
 		addChild: aContainer
+]
+
+{ #category : #'api - instantiation' }
+BrDebugglableElementStencil >> createDebugButton [
+	^ BrButton new
+		hFitContent;
+		aptitude: BrGlamorousButtonWithIconAptitude new;
+		icon: BrGlamorousVectorIcons debug;
+		label: 'Open debugger';
+		beTinySize;
+		constraintsDo: [ :c | 
+			c linear vertical alignCenter ];
+		action: self newDebugAction
 ]
 
 { #category : #accessing }
