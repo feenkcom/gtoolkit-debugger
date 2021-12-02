@@ -5,7 +5,7 @@ Class {
 		'selectedCoderUIModel',
 		'annotationsEnabled'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #callbacks }
@@ -84,8 +84,6 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 GtDebuggerExpandableStackElement >> createCoderFor: aContext in: aSession [
 	| coder |
 	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
-	self areAnnotationsEnabled ifTrue: [
-		coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: coder) ].
 	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateDebugger to: self.
 	coder announcer weak when: DebugActionExecuted send: #updateDebugger to: self.
 	^ coder
@@ -118,7 +116,6 @@ GtDebuggerExpandableStackElement >> disableVariableAnnotations [
 GtDebuggerExpandableStackElement >> enableVariableAnnotations [
 	annotationsEnabled := true.
 	self stackFramesList items do: [ :aCoderUIModel |
-		aCoderUIModel coder addOns addStyler: (GtCoderContextVariableValueStyler new methodCoder: aCoderUIModel coder).
 		aCoderUIModel coder requestUpdateAddOns ].
 	self updateContent.
 ]
