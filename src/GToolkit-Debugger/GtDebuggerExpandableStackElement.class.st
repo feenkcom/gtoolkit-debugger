@@ -31,10 +31,10 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 			| coderElement |
 			coderElement := anElementClass new.
 			coderElement when: BlFocusInEvent do: [ :anEvent | 
-				anEvent currentTarget coderUIModel ifNotNil: [
-					self actOnCoderInFocusFor: anEvent currentTarget coderUIModel ] ].
+				anEvent currentTarget coderViewModel ifNotNil: [
+					self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
 			coderElement ];
-		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ].
+		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderViewModel: eachCoderUIModel ].
 
 	^ stackFramesList
 ]
