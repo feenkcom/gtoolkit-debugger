@@ -55,7 +55,7 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 		whileTrue: [ 
 			| newCoder |
 			newCoder := self createCoderFor: context in: aSession.
-			newCoderUIModels add: newCoder asCoderUIModel.
+			newCoderUIModels add: newCoder asCoderViewModel.
 			context := context sender ].
 		
 	"For the moment look only for a new on:do: context that does not have a coder. 
@@ -73,7 +73,7 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 		"Insert a new coder after the first context for the new context."	
 		newCoder := self createCoderFor: context sender in: aSession.
 		methodCoderUIModels 
-			add: newCoder asCoderUIModel
+			add: newCoder asCoderViewModel
 			afterIndex: 1 ].
 	
 	methodCoderUIModels addAllFirst: newCoderUIModels.
