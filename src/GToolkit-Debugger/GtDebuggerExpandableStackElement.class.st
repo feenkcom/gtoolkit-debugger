@@ -31,10 +31,10 @@ GtDebuggerExpandableStackElement >> buildStackFramesList [
 			| coderElement |
 			coderElement := anElementClass new.
 			coderElement when: BlFocusInEvent do: [ :anEvent | 
-				anEvent currentTarget coderUIModel ifNotNil: [
-					self actOnCoderInFocusFor: anEvent currentTarget coderUIModel ] ].
+				anEvent currentTarget coderViewModel ifNotNil: [
+					self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
 			coderElement ];
-		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderUIModel: eachCoderUIModel ].
+		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderViewModel: eachCoderUIModel ].
 
 	^ stackFramesList
 ]
@@ -55,7 +55,7 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 		whileTrue: [ 
 			| newCoder |
 			newCoder := self createCoderFor: context in: aSession.
-			newCoderUIModels add: newCoder asCoderUIModel.
+			newCoderUIModels add: newCoder asCoderViewModel.
 			context := context sender ].
 		
 	"For the moment look only for a new on:do: context that does not have a coder. 
@@ -73,7 +73,7 @@ GtDebuggerExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preserv
 		"Insert a new coder after the first context for the new context."	
 		newCoder := self createCoderFor: context sender in: aSession.
 		methodCoderUIModels 
-			add: newCoder asCoderUIModel
+			add: newCoder asCoderViewModel
 			afterIndex: 1 ].
 	
 	methodCoderUIModels addAllFirst: newCoderUIModels.
