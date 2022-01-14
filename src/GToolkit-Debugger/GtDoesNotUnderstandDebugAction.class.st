@@ -14,7 +14,7 @@ GtDoesNotUnderstandDebugAction class >> gt2ContextDebuggingActionFor: aDebugger 
 
 { #category : #registration }
 GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
-	"<gt2StackDebuggingAction>"
+	<gt2StackDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
 			icon: BrGlamorousIcons add;
