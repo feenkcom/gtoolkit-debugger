@@ -1,7 +1,10 @@
 Class {
 	#name : #GtExpandableDebuggerElement,
 	#superclass : #GtDebuggerElement,
-	#category : 'GToolkit-Debugger'
+	#instVars : [
+		'toolbar'
+	],
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #'tools registry' }
@@ -29,19 +32,24 @@ GtExpandableDebuggerElement >> actOnDebugActionExecuted [
 
 { #category : #callbacks }
 GtExpandableDebuggerElement >> actOnDebugSessionChanged [
+
 	| panesContainerElement panesTabGroupElement |
 	panesContainerElement := BlElement new
-		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c |
-			c horizontal matchParent.
-			c vertical matchParent ].
+		                         layout: BlLinearLayout horizontal;
+		                         constraintsDo: [ :c | 
+			                         c horizontal matchParent.
+			                         c vertical matchParent ].
 	self buildPanesStructureIn: panesContainerElement.
-	
-	panesTabGroupElement := self buildStackTabGroupForElement: panesContainerElement.
-	self 
+
+
+	panesTabGroupElement := self
+		                        buildStackTabGroupForElement:
+		                        panesContainerElement
+		                        withToolbar: self createToolbar.
+	self
 		removeChildren;
 		addChild: panesTabGroupElement.
-	self updateStackPane.
+	self updateStackPane
 ]
 
 { #category : #callbacks }
@@ -127,7 +135,7 @@ GtExpandableDebuggerElement >> buildStackElement [
 ]
 
 { #category : #'building widgets' }
-GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElement [
+GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElement withToolbar: anObject [
 	| tab tabGroup |
 	tab := BrTab new.
 	tab
@@ -140,12 +148,7 @@ GtExpandableDebuggerElement >> buildStackTabGroupForElement: aStackContainerElem
 				right: 0
 				bottom: 15
 				left: 10);
-		toolbarStencil: [ | aToolbar |
-			aToolbar := BrToolbar new.
-			aToolbar aptitude: BrGlamorousToolbarAptitude new.
-			self buildStackToolbarActions
-				do: [ :anAction | aToolbar addItem: anAction ].
-			aToolbar ].
+		toolbarStencil: [ anObject ].
 	tabGroup := BrTabGroup new.
 	tabGroup
 		aptitude:
@@ -272,6 +275,15 @@ GtExpandableDebuggerElement >> contextVariablesElement [
 	^ self detailsPane childNamed: #contextVariablesElement
 ]
 
+{ #category : #callbacks }
+GtExpandableDebuggerElement >> createToolbar [
+
+	toolbar := BrToolbar new.
+	toolbar aptitude: BrGlamorousToolbarAptitude new.
+	self updateToolbarActions.
+	^ toolbar
+]
+
 { #category : #'accessing context' }
 GtExpandableDebuggerElement >> currentContext [
 	^ self selectedContext 
@@ -346,7 +358,8 @@ GtExpandableDebuggerElement >> updateCoders [
 { #category : #updating }
 GtExpandableDebuggerElement >> updateContents [
 	self updateStackWidget.
-	self updateVariablesList
+	self updateVariablesList.
+	self updateToolbarActions
 ]
 
 { #category : #updating }
@@ -362,6 +375,13 @@ GtExpandableDebuggerElement >> updateStackPane [
 { #category : #updating }
 GtExpandableDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
+]
+
+{ #category : #callbacks }
+GtExpandableDebuggerElement >> updateToolbarActions [
+	toolbar removeAllItems.
+	self buildStackToolbarActions do: [ :anAction | 
+		toolbar addItem: anAction ]
 ]
 
 { #category : #updating }
