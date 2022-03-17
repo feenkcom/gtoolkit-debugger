@@ -65,15 +65,17 @@ BrDebugglableElementStencil >> freeze: anException [
 
 { #category : #'instance creation' }
 BrDebugglableElementStencil >> newDebugAction [
+
 	^ [ 
-		[
-			UIManager default
-				gtDebugProcess: Processor activeProcess   
-				context: self exception signalerContext 
-				label: self exception description  
-				fullView: true
-				notification: nil
-		] forkNamed: 'Debug' ].
+	  [ 
+	  UIManager default
+		  gtDebugProcess: Processor activeProcess
+		  context:
+		  (self exception signalerContext ifNil: [ 
+			   self exception signalContext ])
+		  label: self exception description
+		  fullView: true
+		  notification: nil ] forkNamed: 'Debug' ]
 ]
 
 { #category : #'instance creation' }
