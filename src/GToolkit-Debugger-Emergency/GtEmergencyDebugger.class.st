@@ -92,8 +92,7 @@ GtEmergencyDebugger >> openInGluitinWindow [
 	| eventsLoop windowBuilder |
 
 	eventsLoop := GlutinEventFetcher default eventLoop.
-
-	windowBuilder := GlutinWindowBuilder new.
+	windowBuilder := eventsLoop windowBuilder.
 	windowBuilder title: 'Emergency debugger'.
 	windowBuilder extent: 750@650.
 
