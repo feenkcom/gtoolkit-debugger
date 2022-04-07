@@ -13,7 +13,7 @@ Class {
 		'LogDebuggerStackToFile',
 		'LogFileName'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #'settings api' }
@@ -178,8 +178,8 @@ GtMoldableDebugger >> actOnDebugActionExecuted [
 ]
 
 { #category : #accessing }
-GtMoldableDebugger >> availableDebuggerTypesForContext: aContext excluding: aDebuggerType [ 
-	^ ((Smalltalk tools debuggersForContext: aContext)
+GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession excluding: aDebuggerType [ 
+	^ ((Smalltalk tools debuggersForDebugSession: aDebugSession)
 			select: [ :aDebuggerClass | aDebuggerClass inheritsFrom: GtDebuggerElement ]) reverse
 		remove: aDebuggerType ifAbsent: [ ];
 		yourself
@@ -281,7 +281,7 @@ GtMoldableDebugger >> openInPager [
 GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
 	| debuggerClass initialDebugger |
 	debuggerClass := Smalltalk tools 
-		debuggerDispatcherFor: aDebugSession interruptedContext
+		debuggerDispatcherForDebugSession: aDebugSession
 		matching: [ :aDebuggerClass | 
 			"Only take into account GT debuggers."
 			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
@@ -336,7 +336,7 @@ GtMoldableDebugger >> updateDebuggerElement: aNewDebuggerElement [
 GtMoldableDebugger >> updateSwitchButtonsExcluding: aDebuggerElement [
 	| availableDebuggerTypes |
 	availableDebuggerTypes := self 
-		availableDebuggerTypesForContext: aDebuggerElement session interruptedContext 
+		availableDebuggerTypesForDebugSession: aDebuggerElement session 
 		excluding: aDebuggerElement class.
 	
 	buttonsContainer removeChildren.
