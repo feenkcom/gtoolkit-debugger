@@ -9,6 +9,7 @@ BlBlocUIManager >> gtDebugProcess: process context: context withEmbeddedDebugger
 		debugProcess: process
 		context: context
 		label: exception description
+		exception: exception
 		spawningDebuggingUsing: [ :debugSession | 
 			GtCoderEmbeddedDebuggerElement
 				openOn: debugSession

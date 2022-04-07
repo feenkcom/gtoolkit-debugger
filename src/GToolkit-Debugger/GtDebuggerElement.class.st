@@ -27,6 +27,11 @@ GtDebuggerElement class >> handlesContext: aContext [
 	^ true
 ]
 
+{ #category : #testing }
+GtDebuggerElement class >> handlesDebugSession: aDebugSession [
+	^ self handlesContext: aDebugSession interruptedContext
+]
+
 { #category : #'instance creation' }
 GtDebuggerElement class >> on: aDebugSession [
 
@@ -77,6 +82,7 @@ GtDebuggerElement class >> spanNewSessionFrom: anotherSession [
 		named: anotherSession name 
 		on: anotherSession interruptedProcess 
 		startedAt: anotherSession interruptedContext)
+			exception: anotherSession exception;
 			errorWasInUIProcess: anotherSession errorWasInUIProcess;
 			yourself
 ]
