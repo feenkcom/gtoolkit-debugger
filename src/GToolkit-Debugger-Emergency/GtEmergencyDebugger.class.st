@@ -91,18 +91,18 @@ GtEmergencyDebugger >> newCanvas [
 GtEmergencyDebugger >> openInGluitinWindow [
 	| eventsLoop windowBuilder |
 
-	eventsLoop := GlutinEventFetcher default eventLoop.
+	eventsLoop := RustWindowingEventFetcher default eventLoop.
 	windowBuilder := eventsLoop windowBuilder.
 	windowBuilder title: 'Emergency debugger'.
 	windowBuilder extent: 750@650.
 
 	self window: (eventsLoop createWindow: windowBuilder).
-	renderer := GlutinGLBufferRenderer new window: self window.
+	renderer := (PixelsWorld size: window innerExtent windowHandle: window rawWindowHandle)
+		resizeBuffer: window innerExtent.
+
 	self window requestRedraw.
 	
-	GlutinEventFetcher default eventHandlers add: self.
-	
-	GlutinEventFetcher install
+	RustWindowingEventFetcher default eventHandlers add: self.
 ]
 
 { #category : #'event - handling' }
@@ -115,7 +115,7 @@ GtEmergencyDebugger >> processWindowEvent: aGlutinWindowEvent forWindow: aWindow
 
 { #category : #drawing }
 GtEmergencyDebugger >> render [
-	Glutin critical: [
+	"Glutin critical: [
 		canvas ifNil: [ canvas := self newCanvas ].
 
 		canvas fill
@@ -129,12 +129,12 @@ GtEmergencyDebugger >> render [
 		renderer presentBuffer: (GlutinGLBuffer new
 			extent: self buffer extent;
 			stride: self buffer stride;
-			pixels: self buffer buffer) areas: { canvas bounds } ]
+			pixels: self buffer buffer) areas: { canvas bounds } ]"
 ]
 
 { #category : #'event - visiting' }
 GtEmergencyDebugger >> visitWindowCloseRequest: anEvent [
-	GlutinEventFetcher default eventHandlers remove: self ifAbsent: [  ].
+	RustWindowingEventFetcher default eventHandlers remove: self ifAbsent: [  ].
 	window eventLoop closeWindow: window.
 ]
 
