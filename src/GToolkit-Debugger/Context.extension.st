@@ -86,3 +86,10 @@ Context >> gtDebuggerRetrieveVariableValuePairs [
 Context >> isContextDoesNotUnderstand [
 	^ self selector == #doesNotUnderstand:
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Context >> shortDebugStackOn: aStream [
+	"print the top 100 contexts on my sender chain."
+
+	^ self debugStack: 100 on: aStream
+]
