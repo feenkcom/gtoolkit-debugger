@@ -112,18 +112,19 @@ GtExpandableDebuggerElement >> buildPaneElement [
 
 { #category : #'building widgets' }
 GtExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
-	| stackPane detailsPane |
+	| stackPane detailsPane resizableDetailsPane |
 	stackPane := self buildPaneElement
 		constraintsDo: [ :c | c linear weight: 2 ];
 		layout: BlLinearLayout horizontal.
 	detailsPane := self buildPaneElement
 		layout: BlFrameLayout new;
 		padding: (BlInsets all: 10).
-	
+	resizableDetailsPane := BrVerticalPane new matchParent addAptitude: (BrGlamorousWithHorizontalResizerAptitude new beLeft).
+	resizableDetailsPane addChild: detailsPane as: #detailsPane.
 	aContainer 
 		removeChildren;
 		addChild: stackPane as: #stackPane;
-		addChild: detailsPane as: #detailsPane.
+		addChild: resizableDetailsPane
 ]
 
 { #category : #'building widgets' }
