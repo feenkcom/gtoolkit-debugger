@@ -22,7 +22,7 @@ Class {
 		'detailsPane',
 		'stackElement'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #initialization }
@@ -58,7 +58,7 @@ GtStackDebuggerElement >> buildCodeWidgetForMethodInClass: aClass [
 		
 	styler := BrRBTextStyler new.
 	styler classOrMetaClass: aClass.
-	editor := BrTextEditor new.
+	editor := BrTextEditorModel new.
 	editor styler: styler.
 	editorElement := BrEditorElement new.
 	editorElement
