@@ -29,10 +29,6 @@ GtMoldableDebugger class >> alwaysOpenFullDebugger: aBoolean [
 { #category : #'utilities api' }
 GtMoldableDebugger class >> closeAllDebuggers [
 	self flag: 'Take the new GT debuggers into account'.
-	(SystemWindow allSubInstances select: [:w | 
-		 w model isKindOf: GTGenericStackDebugger])
-			do: [:w | w delete ].
-	GTSpecPreDebugPresenter allInstances do: #delete.
 ]
 
 { #category : #'settings api' }
