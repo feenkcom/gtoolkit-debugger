@@ -13,39 +13,39 @@ Context >> gtBytecodeDebuggerRetrieveContextValues [
 			(tempIndex <= tempNames size
 				ifTrue: [ 
 					displayedTemp add: (tempNames at: tempIndex).
-					tempNode := GTInspectorContextNamedTempNode 
+					tempNode := GtInspectorContextNamedTempNode 
 						hostObject: self 
 						tempName: (tempNames at: tempIndex) 
 						tempIndex: tempIndex.
-					GTInspectorWrapperNode 
+					GtInspectorWrapperNode 
 						hostObject: tempNode
 						label: (tempIndex - 1) asString, ' [', (tempNames at: tempIndex), ']'  ]
 				ifFalse: [
-					 tempNode := GTInspectorContextIndexedTempNode hostObject: self tempIndex: tempIndex.
-					 GTInspectorWrapperNode 
+					 tempNode := GtInspectorContextIndexedTempNode hostObject: self tempIndex: tempIndex.
+					 GtInspectorWrapperNode 
 					 	hostObject: tempNode
 						label: (tempIndex - 1) asString ]) ].
 	
 	(tempNames copy asOrderedCollection removeAll: displayedTemp; yourself) ifNotEmpty: [ :uninitializedTemps |
 		uninitializedTemps do: [ :each |
-			GTInspectorDynamicNode hostObject: self label: ('- [', each, ']') value: nil ] ].
+			GtInspectorDynamicNode hostObject: self label: ('- [', each, ']') value: nil ] ].
 	
 	fieldList addAll: (self gtDebuggerDoItBindings collect: [:aBinding |
-		(GTInspectorDynamicNode hostObject: self label: aBinding key value: aBinding value)
+		(GtInspectorDynamicNode hostObject: self label: aBinding key value: aBinding value)
 			variableTag: 'temp';
 			yourself ]).
 	
 	slotsSize := self receiver class allSlots size.
 	fieldList 
 		addAll: ((self receiver class allSlots reverse) collect: [:slot ||slotNode|
-			slotNode :=  GTInspectorSlotNode hostObject: self receiver slot: slot.
-			GTInspectorWrapperNode 
+			slotNode :=  GtInspectorSlotNode hostObject: self receiver slot: slot.
+			GtInspectorWrapperNode 
 				hostObject: slotNode
 				label: ('rcv', (slotsSize := slotsSize - 1) asString, ' [', slot name , ']')  ]).
 	
 	^ fieldList asOrderedCollection 
-		addFirst: (GTInspectorSelfNode hostObject: self receiver);
-		addLast: (GTInspectorDynamicNode hostObject: self label: 'thisContext' value: self);
+		addFirst: (GtInspectorSelfNode hostObject: self receiver);
+		addLast: (GtInspectorDynamicNode hostObject: self label: 'thisContext' value: self);
 		yourself
 ]
 
@@ -66,18 +66,18 @@ Context >> gtDebuggerRetrieveVariableValuePairs [
 							variablePair1 key < variablePair2 key].
 	fieldList
 		addAll: ((self receiver class allSlots collect: [ :slot | 
-			GTInspectorSlotNode hostObject: self receiver slot: slot ])).
+			GtInspectorSlotNode hostObject: self receiver slot: slot ])).
 		
 	fieldList addAll: self gtInspectorTempNodes.
 	fieldList addAll: (self gtDebuggerDoItBindings collect: [:aBinding |
-		(GTInspectorDynamicNode hostObject: self label: aBinding key value: aBinding value)
+		(GtInspectorDynamicNode hostObject: self label: aBinding key value: aBinding value)
 			variableTag: 'temp';
 			yourself ]).
 	
 	^ fieldList asOrderedCollection 
-		addFirst: (GTInspectorSelfNode hostObject: self receiver);
-		addLast: (GTInspectorDynamicNode hostObject: self label: 'thisContext' value: self);
-		addLast: (GTInspectorDynamicNode hostObject: self label: 'stack top' value: ( self stackPtr > 0 ifTrue: [ self top]));
+		addFirst: (GtInspectorSelfNode hostObject: self receiver);
+		addLast: (GtInspectorDynamicNode hostObject: self label: 'thisContext' value: self);
+		addLast: (GtInspectorDynamicNode hostObject: self label: 'stack top' value: ( self stackPtr > 0 ifTrue: [ self top]));
 		yourself
 
 ]
