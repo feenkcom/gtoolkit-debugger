@@ -37,7 +37,7 @@ GtBytecodeDebugger class >> registerToolsOn: registry [
 { #category : #accessing }
 GtBytecodeDebugger class >> sessionClass [
 
-	^ GTBytecodeDebuggerSession
+	^ GtBytecodeDebuggerSession
 ]
 
 { #category : #callbacks }

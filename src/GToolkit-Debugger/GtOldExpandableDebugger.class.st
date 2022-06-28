@@ -12,7 +12,7 @@ Class {
 { #category : #accessing }
 GtOldExpandableDebugger class >> sessionClass [
 
-	^ GTBytecodeDebuggerSession
+	^ GtBytecodeDebuggerSession
 ]
 
 { #category : #initialization }
