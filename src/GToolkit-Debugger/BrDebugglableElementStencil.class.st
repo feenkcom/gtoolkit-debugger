@@ -14,7 +14,6 @@ BrDebugglableElementStencil >> create [
 	aLabel := BrButton new
 		hMatchParent;
 		label: self newTextLabel;
-		aptitude: BrGlamorousLabelAptitude new;
 		margin: (BlInsets right: 6);
 		constraintsDo: [ :c | 
 			c linear vertical alignCenter ];
