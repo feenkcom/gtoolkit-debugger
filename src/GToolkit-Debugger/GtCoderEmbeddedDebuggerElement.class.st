@@ -6,7 +6,7 @@ Class {
 		'signaledException',
 		'isTerminationDisabled'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #opening }
@@ -24,27 +24,24 @@ GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 	self layout: (BlGridLayout horizontal cellSpacing: 3).
 	text := self signaledException printString asRopedText.
 	label := BrButton new
-		aptitude: BrGlamorousLabelAptitude new;
-		beSmallSize;
-		label: text;
-		background: self theme status errorBackgroundColor;
-		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-		padding:
-			(BlInsets
-				top: 0
-				right: 3
-				bottom: 0
-				left: 3);
-		margin: (BlInsets all: 0);
-		action: [ self debug ];
-		fitContent.
+			beSmallSize;
+			label: text;
+			background: self theme status errorBackgroundColor;
+			geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+			padding: (BlInsets
+					top: 0
+					right: 3
+					bottom: 0
+					left: 3);
+			margin: (BlInsets all: 0);
+			action: [ self debug ];
+			fitContent.
 	self
 		removeChildren;
 		addChild: label;
 		constraintsDo: [ :c | 
 			c
-				padding:
-					(BlInsets
+				padding: (BlInsets
 						top: -3
 						right: 3
 						bottom: 0
