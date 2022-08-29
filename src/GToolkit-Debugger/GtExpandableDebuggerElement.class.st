@@ -306,10 +306,31 @@ GtExpandableDebuggerElement >> initialize [
 	super initialize.
 	self
 		layout: BlLinearLayout horizontal;
-		constraintsDo: [ :c |
+		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self userData at: #debuggerContainer put: #debuggerElement.
+	self
+		addShortcut: (BlShortcutWithAction new
+				combination: (BlKeyCombination builder
+						key: BlKeyboardKey F10;
+						build);
+				action: [ :anEvent :aShortcut | (StepOverDebugAction forDebugger: self) execute ]);
+		addShortcut: (BlShortcutWithAction new
+				combination: (BlKeyCombination builder
+						key: BlKeyboardKey F11;
+						build);
+				action: [ :anEvent :aShortcut | (StepIntoDebugAction forDebugger: self) execute ]);
+		addShortcut: (BlShortcutWithAction new
+				combination: (BlKeyCombination builder
+						key: BlKeyboardKey F12;
+						build);
+				action: [ :anEvent :aShortcut | (StepThroughDebugAction forDebugger: self) execute ]);
+		addShortcut: (BlShortcutWithAction new
+				combination: (BlKeyCombination builder
+						key: BlKeyboardKey F5;
+						build);
+				action: [ :anEvent :aShortcut | (ResumeDebugAction forDebugger: self) execute ])
 ]
 
 { #category : #'accessing context' }
