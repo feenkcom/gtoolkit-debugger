@@ -45,10 +45,18 @@ GtPharoStackElement >> buildStackIndex [
 									focused: [ :aStyle | aStyle border: (BlBorder paint: self theme item focusedBorderColor width: 1) ]) ];
 			itemDataBinder: [ :elem :item | 
 				| str |
-				str := WriteStream on: String new.
-				item printDebugOn: str.
-				elem text: str contents ].
+				str := item isBlockContext
+						ifTrue: [ '[] in ' , item outerContext method printString ]
+						ifFalse: [ item method printString ].
+				elem text: str ].
 	^ indexList
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> coderUIModelsToDisplayFrom: aDebuggingSession preservingContexts: anObject [ 
+	| model |
+	model := GtPharoStackModel onSession: aDebuggingSession.
+	^model coderViewModelStream toArray wait
 ]
 
 { #category : #accessing }
@@ -76,6 +84,11 @@ GtPharoStackElement >> stackIndexList [
 GtPharoStackElement >> updateForSession: aDebuggingSession [
 	self stackIndexList
 		stream: (GtPharoStackStream onContext: aDebuggingSession context).
+
+	self stackFramesList
+		items: (self
+				coderUIModelsToDisplayFrom: aDebuggingSession
+				preservingContexts: self stackFramesList items asOrderedCollection).
 
 	"self stackFramesList items
 		ifNotEmpty: [ :methodCoderUIModels | 
