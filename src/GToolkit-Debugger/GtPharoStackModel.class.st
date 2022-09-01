@@ -1,13 +1,17 @@
 Class {
 	#name : #GtPharoStackModel,
 	#superclass : #Object,
+	#traits : 'TGtAnnouncer',
+	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'contextStream',
 		'currentCoderViewModels',
 		'futureCoderViewModels',
 		'coderViewModelStream',
 		'session',
-		'lock'
+		'lock',
+		'announcer',
+		'context'
 	],
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
@@ -17,6 +21,11 @@ GtPharoStackModel class >> onSession: debuggingSession [
 	^self new session: debuggingSession
 ]
 
+{ #category : #announcer }
+GtPharoStackModel >> announcer [
+	^ announcer ifNil: [ announcer := Announcer new ]
+]
+
 { #category : #accessing }
 GtPharoStackModel >> coderViewModelStream [
 	^ coderViewModelStream asyncSimilarCopy
@@ -24,15 +33,17 @@ GtPharoStackModel >> coderViewModelStream [
 
 { #category : #accessing }
 GtPharoStackModel >> context: aContext [
-	contextStream := GtPharoStackStream onContext: aContext.
-	self resetCoderViewModelCache.
-	coderViewModelStream := (self contextStream
-			collect: [ :each | self getCoderViewModelForContext: each ]) cached
+	context ~~ aContext
+		ifTrue: [ context := aContext.
+			self resetCoderViewModelCache.
+			coderViewModelStream := (self contextStream
+					collect: [ :each | self getCoderViewModelForContext: each ]) cached.
+			self announce: GtDebuggerStackChanged new ]
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> contextStream [
-	^ contextStream asyncSimilarCopy
+	^ GtPharoStackStream onContext: context
 ]
 
 { #category : #accessing }
