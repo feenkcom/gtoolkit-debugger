@@ -1,10 +1,23 @@
 Class {
 	#name : #GtPharoDebuggerElement,
-	#superclass : #GtExpandableDebuggerElement,
+	#superclass : #GtAbstractExpandableDebuggerElement,
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
 
+{ #category : #'tools registry' }
+GtPharoDebuggerElement class >> registerToolsOn: registry [
+	"Add ourselves to registry. See [Smalltalk tools]" 
+	registry registerDebugger: self withRank: 1000.
+]
+
 { #category : #accessing }
+GtPharoDebuggerElement >> aboutToOpen [
+	"Select the first non filtered context. This mean that we will ignore some methods 
+	like halts or debug method to select the first interesting stack frame in the debugger."
+	self setDebuggerToFirstNonFilteredContext.
+]
+
+{ #category : #'building widgets' }
 GtPharoDebuggerElement >> buildStackElement [
 	| newStackElement |
 	newStackElement := GtPharoStackElement new.

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtExpandableDebuggerElement2,
-	#superclass : #GtExpandableDebuggerElement,
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#superclass : #GtAbstractExpandableDebuggerElement,
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #accessing }
@@ -20,11 +20,6 @@ GtExpandableDebuggerElement2 class >> defaultTitle [
 GtExpandableDebuggerElement2 class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
 	registry registerDebugger: self withRank: 1010.
-]
-
-{ #category : #accessing }
-GtExpandableDebuggerElement2 >> aboutToOpen [
-	
 ]
 
 { #category : #accessing }
