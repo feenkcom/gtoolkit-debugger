@@ -1,7 +1,7 @@
 Class {
 	#name : #GtExpandableDebuggerElement2,
-	#superclass : #GtExpandableDebuggerElement,
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#superclass : #GtAbstractExpandableDebuggerElement,
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #accessing }
