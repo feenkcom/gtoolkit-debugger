@@ -23,11 +23,6 @@ GtExpandableDebuggerElement2 class >> registerToolsOn: registry [
 ]
 
 { #category : #accessing }
-GtExpandableDebuggerElement2 >> aboutToOpen [
-	
-]
-
-{ #category : #accessing }
 GtExpandableDebuggerElement2 >> buildStackElement [
 	| newStackElement |
 	newStackElement := GtDebuggerExpandableStackElement2 new.
