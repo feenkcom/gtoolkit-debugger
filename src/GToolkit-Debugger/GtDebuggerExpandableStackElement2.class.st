@@ -1,10 +1,10 @@
 Class {
 	#name : #GtDebuggerExpandableStackElement2,
-	#superclass : #GtDebuggerExpandableStackElement,
+	#superclass : #GtAbstractExpandableStackElement,
 	#instVars : [
 		'stackModel'
 	],
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #accessing }
