@@ -12,8 +12,12 @@ GtDebuggerExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
 	stackModel := GtPharoStackModel onSession: aDebuggingSession.
 	stackModel announcer weak
 		when: GtDebuggerStackChanged
-		send: #onStackChanged
-		to: self.
+			send: #onStackChanged
+			to: self;
+		when: GtCoderRefreshStackAnnouncement
+			send: #updateDebugger
+			to: self.
+
 	self onStackChanged
 ]
 
