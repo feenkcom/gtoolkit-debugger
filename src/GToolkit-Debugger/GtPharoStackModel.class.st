@@ -50,8 +50,8 @@ GtPharoStackModel >> contextStream [
 GtPharoStackModel >> createCoderFor: aContext in: aSession [
 	| coder |
 	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
-	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateDebugger to: self.
-	coder announcer weak when: DebugActionExecuted send: #updateDebugger to: self.
+	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateContent to: self.
+	coder announcer weak when: DebugActionExecuted send: #updateContent to: self.
 	^ coder
 ]
 
