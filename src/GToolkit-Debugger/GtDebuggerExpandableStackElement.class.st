@@ -23,8 +23,9 @@ GtDebuggerExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
 
 { #category : #accessing }
 GtDebuggerExpandableStackElement >> onStackChanged [
-	self stackFramesList stream: stackModel coderViewModelStream.
-	self stackFramesList scrollToIndex: 1 
+	self
+		enqueueTask: [ self stackFramesList stream: stackModel coderViewModelStream.
+			self stackFramesList scrollToIndex: 1 ] asBlTask
 ]
 
 { #category : #accessing }
