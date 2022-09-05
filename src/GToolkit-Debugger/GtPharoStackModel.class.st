@@ -50,9 +50,18 @@ GtPharoStackModel >> contextStream [
 GtPharoStackModel >> createCoderFor: aContext in: aSession [
 	| coder |
 	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
-	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateDebugger to: self.
-	coder announcer weak when: DebugActionExecuted send: #updateDebugger to: self.
+	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #forceRefreshStack to: self.
+	coder announcer weak when: DebugActionExecuted send: #forceRefreshStack to: self.
 	^ coder
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> forceRefreshStack [
+	| aContext |
+	aContext := context.
+	context := nil.
+	self context: aContext.
+	self announce: GtCoderRefreshStackAnnouncement new
 ]
 
 { #category : #accessing }
@@ -106,6 +115,11 @@ GtPharoStackModel >> session [
 GtPharoStackModel >> session: debuggingSession [
 	session := debuggingSession.
 	self updateContent
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> stackChanged [
+	self announce: GtDebuggerStackChanged new
 ]
 
 { #category : #accessing }
