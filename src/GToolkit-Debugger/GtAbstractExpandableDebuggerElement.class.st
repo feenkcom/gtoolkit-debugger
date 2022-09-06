@@ -314,7 +314,12 @@ GtAbstractExpandableDebuggerElement >> initialize [
 				combination: (BlKeyCombination builder
 						key: BlKeyboardKey F5;
 						build);
-				action: [ :anEvent :aShortcut | (ResumeDebugAction forDebugger: self) execute ])
+				action: [ :anEvent :aShortcut | (ResumeDebugAction forDebugger: self) execute ]);
+		addShortcut: (BlShortcutWithAction new
+				combination: (BlKeyCombination builder
+						key: BlKeyboardKey F7;
+						build);
+				action: [ :anEvent :aShortcut | (RestartDebugAction forDebugger: self) execute ])
 ]
 
 { #category : #'accessing context' }
@@ -339,11 +344,6 @@ GtAbstractExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 	
 	 self filteredStack ifNotEmpty: [ :filteredStack |
 		self stackElement selectContext: filteredStack first ]
-]
-
-{ #category : #'building actions' }
-GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
-	^ #( gt2StackDebuggingAction )
 ]
 
 { #category : #'accessing - elements' }

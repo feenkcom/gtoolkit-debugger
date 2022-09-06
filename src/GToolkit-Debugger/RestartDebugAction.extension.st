@@ -5,7 +5,10 @@ RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons restart
+			icon: BrGlamorousIcons restart;
+		keymap: (BlKeyCombination builder
+				key: BlKeyboardKey F7;
+				build) userPrintString
 ]
 
 { #category : #'*GToolkit-Debugger' }
