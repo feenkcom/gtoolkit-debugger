@@ -244,12 +244,6 @@ GtStackDebuggerElement >> selectedContext [
 		ifNotEmpty: [ :theIndices | self stackElement stackFramesWidget items at: theIndices first ]
 ]
 
-{ #category : #'building actions' }
-GtStackDebuggerElement >> stackDebuggingActionsPragmas [
-
-	^ #( gt2StackDebuggingAction )
-]
-
 { #category : #'accessing - elements' }
 GtStackDebuggerElement >> stackElement [
  	^ stackElement

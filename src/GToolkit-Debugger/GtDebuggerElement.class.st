@@ -6,7 +6,7 @@ Class {
 		'announcer',
 		'browserClosingHandler'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #testing }
@@ -237,6 +237,11 @@ GtDebuggerElement >> settings [
 	^ self userData 
 		at: #settingsCache
 		ifAbsentPut: [ SmallDictionary new ]
+]
+
+{ #category : #'building actions' }
+GtDebuggerElement >> stackDebuggingActionsPragmas [
+	^ #( gt2StackDebuggingAction )
 ]
 
 { #category : #actions }

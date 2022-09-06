@@ -3,9 +3,11 @@ Extension { #name : #StepOverDebugAction }
 { #category : #'*GToolkit-Debugger' }
 StepOverDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
-	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons over
+		icon: BrGlamorousIcons over;
+		keymap: (BlKeyCombination builder
+				key: BlKeyboardKey F10;
+				build) userPrintString
 ]
 
 { #category : #'*GToolkit-Debugger' }
