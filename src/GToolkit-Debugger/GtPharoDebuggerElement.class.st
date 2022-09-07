@@ -4,11 +4,6 @@ Class {
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
 
-{ #category : #accessing }
-GtPharoDebuggerElement class >> defaultTitle [
-	^ 'New Gt'
-]
-
 { #category : #'tools registry' }
 GtPharoDebuggerElement class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
