@@ -1,6 +1,6 @@
 Class {
 	#name : #GtPharoStackElement,
-	#superclass : #BrHorizontalPane,
+	#superclass : #GtAbstractExpandableStackElement,
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
 
@@ -59,15 +59,24 @@ GtPharoStackElement >> coderUIModelsToDisplayFrom: aDebuggingSession preservingC
 	^model coderViewModelStream toArray wait
 ]
 
-{ #category : #accessing }
-GtPharoStackElement >> initialize [
-	| stackFramesList |
-	super initialize.
-	self matchParent.
+{ #category : #initialization }
+GtPharoStackElement >> initializeStackList [
+	| stackFramesList sidebarElement |
+	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
+	self
+		addAptitude: (GtPhlowToolDetailAptitude new
+				normal: [ :theInstance | sidebarElement hide ];
+				detailed: [ :theInstance | sidebarElement show ]).
 	stackFramesList := self buildStackFramesList.
 	stackFramesList items: OrderedCollection new.
-	self addChild: self buildStackIndex as: #frameIndex.
+	self addChild: sidebarElement as: #sidebar.
+	sidebarElement addChild: self buildStackIndex as: #frameIndex.
 	self addChild: stackFramesList as: #expandableFrames
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> selectedCoder [
+	self halt
 ]
 
 { #category : #accessing }
@@ -88,10 +97,5 @@ GtPharoStackElement >> updateForSession: aDebuggingSession [
 	self stackFramesList
 		items: (self
 				coderUIModelsToDisplayFrom: aDebuggingSession
-				preservingContexts: self stackFramesList items asOrderedCollection).
-
-	"self stackFramesList items
-		ifNotEmpty: [ :methodCoderUIModels | 
-			self selectCoderUIModel: methodCoderUIModels first.
-			self stackFramesList scrollToItem: methodCoderUIModels first ]"
+				preservingContexts: self stackFramesList items asOrderedCollection)
 ]
