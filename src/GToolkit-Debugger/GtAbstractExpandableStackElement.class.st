@@ -1,12 +1,9 @@
 Class {
 	#name : #GtAbstractExpandableStackElement,
 	#superclass : #BlElement,
-	#traits : 'TBrLayoutResizable',
-	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
 		'selectedCoderUIModel',
-		'annotationsEnabled',
-		'stackModel'
+		'annotationsEnabled'
 	],
 	#category : #'GToolkit-Debugger'
 }
@@ -126,45 +123,18 @@ GtAbstractExpandableStackElement >> enableVariableAnnotations [
 { #category : #initialization }
 GtAbstractExpandableStackElement >> initialize [
 	super initialize.
-	self matchParent.
-	self initializeStackList
+	self constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
+	self initializeStackList.
 ]
 
 { #category : #initialization }
 GtAbstractExpandableStackElement >> initializeStackList [
-	self subclassResponsibility
-]
-
-{ #category : #accessing }
-GtAbstractExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
-	stackModel := GtPharoStackModel onSession: aDebuggingSession.
-	stackModel announcer weak
-		when: GtDebuggerStackChanged
-			send: #onStackChanged
-			to: self;
-		when: GtCoderRefreshStackAnnouncement
-			send: #updateDebugger
-			to: self.
-
-	self onStackChanged
-]
-
-{ #category : #accessing }
-GtAbstractExpandableStackElement >> onStackChanged [
-	self
-		enqueueTask: [ self stackFramesList stream: stackModel coderViewModelStream.
-			self stackFramesList scrollToIndex: 1 ] asBlTask
-]
-
-{ #category : #accessing }
-GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: stream [
-	(stream next
-		then: [ :item | 
-			item isSome
-				ifTrue: [ (item value coder context method hasPragmaNamed: #debuggerCompleteToSender)
-						ifTrue: [ self openFirstNonFilteredContextFrom: stream ]
-						ifFalse: [ self enqueueTask: [ self selectCoderUIModel: item value ] asBlTask ] ] ])
-		await
+	| stackFramesList |
+	stackFramesList := self buildStackFramesList.
+	stackFramesList items: OrderedCollection new.
+	self addChild: stackFramesList
 ]
 
 { #category : #actions }
@@ -212,10 +182,7 @@ GtAbstractExpandableStackElement >> updateDebugger [
 	self debuggerElement updateContents
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
-	stackModel
-		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
-		ifNotNil: [ stackModel updateContent ].
-	self openFirstNonFilteredContextFrom: stackModel coderViewModelStream
+	self subclassResponsibility
 ]
