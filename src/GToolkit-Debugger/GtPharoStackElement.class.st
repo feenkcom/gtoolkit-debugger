@@ -1,32 +1,8 @@
 Class {
 	#name : #GtPharoStackElement,
-	#superclass : #BrHorizontalPane,
+	#superclass : #GtAbstractExpandableStackElement,
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
-
-{ #category : #accessing }
-GtPharoStackElement >> actOnCoderInFocusFor: anObject [ 
-]
-
-{ #category : #accessing }
-GtPharoStackElement >> buildStackFramesList [
-	| stackFramesList |
-	stackFramesList := BrSimpleList new
-		matchParent;
-		padding: (BlInsets all: 10);
-		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
-		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
-		itemStencil: [ :anElementClass | 
-			| coderElement |
-			coderElement := anElementClass new.
-			coderElement when: BlFocusInEvent do: [ :anEvent | 
-				anEvent currentTarget coderViewModel ifNotNil: [
-					self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
-			coderElement ];
-		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderViewModel: eachCoderUIModel ].
-
-	^ stackFramesList
-]
 
 { #category : #accessing }
 GtPharoStackElement >> buildStackIndex [
@@ -53,21 +29,47 @@ GtPharoStackElement >> buildStackIndex [
 ]
 
 { #category : #accessing }
-GtPharoStackElement >> coderUIModelsToDisplayFrom: aDebuggingSession preservingContexts: anObject [ 
-	| model |
-	model := GtPharoStackModel onSession: aDebuggingSession.
-	^model coderViewModelStream toArray wait
+GtPharoStackElement >> initialize [
+	super initialize.
+	self layout: BlLinearLayout horizontal.
 ]
 
 { #category : #accessing }
-GtPharoStackElement >> initialize [
-	| stackFramesList |
-	super initialize.
-	self matchParent.
+GtPharoStackElement >> initializeStackList [
+	| stackFramesList sidebarElement |
+	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
+	self
+		addAptitude: (GtPhlowToolDetailAptitude new
+				normal: [ :theInstance | sidebarElement hide ];
+				detailed: [ :theInstance | sidebarElement show ]).
 	stackFramesList := self buildStackFramesList.
 	stackFramesList items: OrderedCollection new.
-	self addChild: self buildStackIndex as: #frameIndex.
-	self addChild: stackFramesList as: #expandableFrames
+	self addChild: sidebarElement.
+	sidebarElement addChild: self buildStackIndex as: #frameIndex.
+	self addChild: stackFramesList as: #expandableFrames.
+	
+		
+	self stackIndexList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onStackIndexSelectionChanged ].
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> onStackChanged [
+	self
+		enqueueTask: [ self stackIndexList stream: stackModel contextStream.
+			self stackIndexList scrollToIndex: 1.
+			self stackFramesList stream: stackModel coderViewModelStream.
+			self stackFramesList scrollToIndex: 1 ] asBlTask
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> onStackIndexSelectionChanged [
+	self
+		enqueueTask: [ self stackIndexList
+				selectedItemDo: [ :context :index | 
+					self selectContext: context.
+					self stackFramesList scrollToIndex: index ] ] asBlTask
 ]
 
 { #category : #accessing }
@@ -78,20 +80,4 @@ GtPharoStackElement >> stackFramesList [
 { #category : #accessing }
 GtPharoStackElement >> stackIndexList [
 	^ self childNamed: #frameIndex
-]
-
-{ #category : #accessing }
-GtPharoStackElement >> updateForSession: aDebuggingSession [
-	self stackIndexList
-		stream: (GtPharoStackStream onContext: aDebuggingSession context).
-
-	self stackFramesList
-		items: (self
-				coderUIModelsToDisplayFrom: aDebuggingSession
-				preservingContexts: self stackFramesList items asOrderedCollection).
-
-	"self stackFramesList items
-		ifNotEmpty: [ :methodCoderUIModels | 
-			self selectCoderUIModel: methodCoderUIModels first.
-			self stackFramesList scrollToItem: methodCoderUIModels first ]"
 ]
