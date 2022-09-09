@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #accessing }
+GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
+	| aContext |
+	self stackIndexList selectedItemDo: [ :context | aContext := context ].
+	aContext ~~ aContextCoderUIModel context
+		ifTrue: [ self stackIndexList
+				selectOne: (self stackIndexList items indexOf: aContextCoderUIModel context) ]
+]
+
+{ #category : #accessing }
 GtPharoStackElement >> buildStackIndex [
 	| indexList |
 	indexList := BrSimpleList new
@@ -70,6 +79,15 @@ GtPharoStackElement >> onStackIndexSelectionChanged [
 				selectedItemDo: [ :context :index | 
 					self selectContext: context.
 					self stackFramesList scrollToIndex: index ] ] asBlTask
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> selectContext: aContext [
+	super selectContext: aContext.
+	self stackIndexList
+		selectedItemDo: [ :context |
+			context ~~ aContext
+				ifTrue: [ self stackIndexList selectOne: (self stackIndexList items indexOf: aContext) ] ]
 ]
 
 { #category : #accessing }
