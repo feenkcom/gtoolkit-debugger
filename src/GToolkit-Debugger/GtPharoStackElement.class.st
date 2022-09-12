@@ -16,26 +16,53 @@ GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 
 { #category : #accessing }
 GtPharoStackElement >> buildStackIndex [
-	| indexList |
-	indexList := BrSimpleList new
+	| indexList labelBlock |
+	indexList := BrColumnedList new
 			addAptitude: BrGlamorousWithHorizontalResizerAptitude new beRight;
 			background: BrGlamorousColors neutralBackgroundColor;
-			matchParent;
-			itemStencil: [ BrLabel new hMatchParent beSmallSize
-					aptitude: BrGlamorousLabelAptitude
-							+ (BrStyleCommonAptitude new
-									default: [ :aStyle | aStyle background: self theme item deselectedColor ];
-									hovered: [ :aStyle | aStyle background: self theme item hoveredColor ];
-									selected: [ :aStyle | aStyle background: self theme item selectedColor ];
-									pressed: [ :aStyle | aStyle background: self theme item pressedColor ];
-									focused: [ :aStyle | aStyle border: (BlBorder paint: self theme item focusedBorderColor width: 1) ]) ];
-			itemDataBinder: [ :elem :item | 
-				| str |
-				str := item isBlockContext
-						ifTrue: [ '[] in ' , item outerContext method printString ]
-						ifFalse: [ item method printString ].
-				elem text: str ].
+			rowStencil: BrGlamorousColumnedListSelectableRowElementStencilBuilder new;
+			matchParent.
+	labelBlock := [ BrLabel new
+			margin: (BlInsets right: 10);
+			aptitude: BrGlamorousLabelAptitude;
+			beSmallSize;
+			hMatchParent;
+			vFitContent ].
+	indexList column
+		title: 'Class';
+		matchParent;
+		cellStencil: labelBlock;
+		dataBinder: [ :element :context | element text: (self contextClassText: context) ].
+	indexList column
+		title: 'Method';
+		matchParent;
+		cellStencil: labelBlock;
+		dataBinder: [ :element :context | element text: (self contextMethodText: context) ].
+	indexList column
+		title: 'Package';
+		cellStencil: labelBlock;
+		width: 100;
+		dataBinder: [ :element :context | 
+			element
+				text: (context method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ]) ].
+	indexList addAptitude: BrColumnedListHeaderAptitude .
 	^ indexList
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> contextClassText: aContext [
+	| result |
+	result := aContext receiver class printString.
+	aContext receiver class == aContext methodClass
+		ifFalse: [ result := result , '(' , aContext methodClass printString , ')' ].
+	^ result 
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> contextMethodText: aContext [
+	^ aContext isBlockContext
+		ifTrue: [ '[] in ' , aContext outerContext method selector ]
+		ifFalse: [ aContext method selector ]
 ]
 
 { #category : #accessing }
@@ -57,29 +84,28 @@ GtPharoStackElement >> initializeStackList [
 	self addChild: sidebarElement.
 	sidebarElement addChild: self buildStackIndex as: #frameIndex.
 	self addChild: stackFramesList as: #expandableFrames.
-	
-		
+
 	self stackIndexList
 		when: BrSelectionChanged
-		do: [ :anEvent | self onStackIndexSelectionChanged ].
+		do: [ :anEvent | self onStackIndexSelectionChanged ]
 ]
 
 { #category : #accessing }
 GtPharoStackElement >> onStackChanged [
 	self
-		enqueueTask: [ self stackIndexList stream: stackModel contextStream.
+		inUIProcessDo: [ self stackIndexList stream: stackModel contextStream.
 			self stackIndexList scrollToIndex: 1.
 			self stackFramesList stream: stackModel coderViewModelStream.
-			self stackFramesList scrollToIndex: 1 ] asBlTask
+			self stackFramesList scrollToIndex: 1 ]
 ]
 
 { #category : #accessing }
 GtPharoStackElement >> onStackIndexSelectionChanged [
 	self
-		enqueueTask: [ self stackIndexList
+		inUIProcessDo: [ self stackIndexList
 				selectedItemDo: [ :context :index | 
 					self selectContext: context.
-					self stackFramesList scrollToIndex: index ] ] asBlTask
+					self stackFramesList scrollToIndex: index ] ]
 ]
 
 { #category : #accessing }
