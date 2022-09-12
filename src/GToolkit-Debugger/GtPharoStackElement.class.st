@@ -7,6 +7,7 @@ Class {
 { #category : #accessing }
 GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	| aContext |
+	super actOnCoderInFocusFor: aContextCoderUIModel.
 	self stackIndexList selectedItemDo: [ :context | aContext := context ].
 	aContext ~~ aContextCoderUIModel context
 		ifTrue: [ self stackIndexList
