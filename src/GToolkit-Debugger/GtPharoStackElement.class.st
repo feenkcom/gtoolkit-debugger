@@ -45,7 +45,19 @@ GtPharoStackElement >> buildStackIndex [
 		dataBinder: [ :element :context | 
 			element
 				text: (context method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ]) ].
-	indexList addAptitude: BrColumnedListHeaderAptitude .
+	indexList
+		addAptitude: (BrColumnedListHeaderAptitude new
+				labelStencil: [ :column | 
+					| label |
+					label := BrLabel new
+							aptitude: BrLabelAptitude;
+							margin: (BlInsets right: 8);
+							text: (column title asRopedText
+									glamorousRegularFont;
+									fontSize: 12;
+									foreground: Color gray).
+					column width applyOn: label.
+					label ]).
 	^ indexList
 ]
 
