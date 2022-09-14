@@ -1,6 +1,10 @@
 Class {
 	#name : #GtPharoStackElement,
 	#superclass : #GtAbstractExpandableStackElement,
+	#instVars : [
+		'stackIndex',
+		'treeIndex'
+	],
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
 
@@ -58,7 +62,36 @@ GtPharoStackElement >> buildStackIndex [
 									foreground: Color gray).
 					column width applyOn: label.
 					label ]).
+	indexList
+		when: BrSelectionChanged
+		do: [ :anEvent | self onStackIndexSelectionChanged ].
 	^ indexList
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> buildTreeIndex [
+	| indexTree |
+	indexTree := BrSimpleTree new
+			nodeStencil: [ BrLabel new aptitude: BrGlamorousLabelAptitude ];
+			nodeDataBinder: [ :aNodeElement :each | 
+				aNodeElement
+					text: (each isAssociation
+							ifTrue: [ self contextClassText: each value first ]
+							ifFalse: [ self contextMethodText: each ]) ].
+	indexTree
+		when: BrSelectionChanged
+		do: [ :anEvent | self onStackIndexSelectionChanged ].
+	^ indexTree
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> computeStackTree: aContextList [
+	^(aContextList
+		groupByRuns: [ :each | 
+			each isBlockContext
+				ifTrue: [ each outerContext receiver ]
+				ifFalse: [ each receiver ] ])
+		collect: [ :each | each first receiver -> each ]
 ]
 
 { #category : #accessing }
@@ -85,27 +118,42 @@ GtPharoStackElement >> initialize [
 
 { #category : #accessing }
 GtPharoStackElement >> initializeStackList [
-	| stackFramesList sidebarElement |
+	| stackFramesList sidebarElement tabGroup |
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self
 		addAptitude: (GtPhlowToolDetailAptitude new
 				normal: [ :theInstance | sidebarElement hide ];
 				detailed: [ :theInstance | sidebarElement show ]).
-	stackFramesList := self buildStackFramesList.
-	stackFramesList items: OrderedCollection new.
-	self addChild: sidebarElement.
-	sidebarElement addChild: self buildStackIndex as: #frameIndex.
-	self addChild: stackFramesList as: #expandableFrames.
+	stackIndex := self buildStackIndex.
+	treeIndex := self buildTreeIndex.
 
-	self stackIndexList
-		when: BrSelectionChanged
-		do: [ :anEvent | self onStackIndexSelectionChanged ]
+	tabGroup := BrTabGroup new aptitude: BrGlamorousTabGroupAptitude new.
+	tabGroup
+		addTab: (BrTab new
+				aptitude: BrGlamorousTabAptitude new;
+				label: 'Stack';
+				stencil: [ stackIndex ]);
+		addTab: (BrTab new
+				aptitude: BrGlamorousTabAptitude new;
+				label: 'Tree';
+				stencil: [ treeIndex ]).
+
+	sidebarElement addChild: tabGroup.
+	stackFramesList := self buildStackFramesList.
+	self addChild: sidebarElement.
+	self addChild: stackFramesList as: #expandableFrames
 ]
 
 { #category : #accessing }
 GtPharoStackElement >> onStackChanged [
+	| tree |
 	self
-		inUIProcessDo: [ self stackIndexList stream: stackModel contextStream.
+		inUIProcessDo: [ tree := self computeStackTree: stackModel contextStream toArray wait.
+			treeIndex
+				items: tree
+				immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
+
+			self stackIndexList stream: stackModel contextStream.
 			self stackIndexList scrollToIndex: 1.
 			self stackFramesList stream: stackModel coderViewModelStream.
 			self stackFramesList scrollToIndex: 1 ]
@@ -136,5 +184,5 @@ GtPharoStackElement >> stackFramesList [
 
 { #category : #accessing }
 GtPharoStackElement >> stackIndexList [
-	^ self childNamed: #frameIndex
+	^ stackIndex
 ]

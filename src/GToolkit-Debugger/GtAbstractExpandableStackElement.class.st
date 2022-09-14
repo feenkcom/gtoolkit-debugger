@@ -24,8 +24,7 @@ GtAbstractExpandableStackElement >> areAnnotationsEnabled [
 
 { #category : #'building elements' }
 GtAbstractExpandableStackElement >> buildStackFramesList [
-	| stackFramesList |
-	stackFramesList := BrSimpleList new
+	^ BrSimpleList new
 		matchParent;
 		padding: (BlInsets all: 10);
 		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
@@ -33,13 +32,14 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 		itemStencil: [ :anElementClass | 
 			| coderElement |
 			coderElement := anElementClass new.
-			coderElement when: BlFocusInEvent do: [ :anEvent | 
-				anEvent currentTarget coderViewModel ifNotNil: [
-					self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
+			coderElement
+				when: BlFocusInEvent
+				do: [ :anEvent | 
+					anEvent currentTarget coderViewModel
+						ifNotNil: [ self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
 			coderElement ];
-		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderViewModel: eachCoderUIModel ].
-
-	^ stackFramesList
+		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderViewModel: eachCoderUIModel ];
+		items: OrderedCollection new
 ]
 
 { #category : #private }
