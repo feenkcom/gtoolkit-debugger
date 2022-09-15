@@ -14,8 +14,9 @@ GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	super actOnCoderInFocusFor: aContextCoderUIModel.
 	self stackIndexList selectedItemDo: [ :context | aContext := context ].
 	aContext ~~ aContextCoderUIModel context
-		ifTrue: [ self stackIndexList
-				selectOne: (self stackIndexList items indexOf: aContextCoderUIModel context) ]
+		ifTrue: [ | index |
+			index := self stackIndexList items indexOf: aContextCoderUIModel context.
+			index isZero ifFalse: [self stackIndexList selectOne: index ]]
 ]
 
 { #category : #accessing }
@@ -183,7 +184,7 @@ GtPharoStackElement >> onStackChanged [
 			treeIndex
 				items: tree
 				immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
-
+			treeIndex expandAll.
 			self stackIndexList stream: stackModel contextStream.
 			self stackIndexList scrollToIndex: 1.
 			self stackFramesList stream: stackModel coderViewModelStream.
@@ -207,11 +208,22 @@ GtPharoStackElement >> receiverClassStringFor: recClass [
 
 { #category : #accessing }
 GtPharoStackElement >> selectContext: aContext [
+	| selectionIndex |
 	super selectContext: aContext.
+
 	self stackIndexList
-		selectedItemDo: [ :context |
+		selectedItemDo: [ :context | 
 			context ~~ aContext
-				ifTrue: [ self stackIndexList selectOne: (self stackIndexList items indexOf: aContext) ] ]
+				ifTrue: [ self stackIndexList selectOne: (self stackIndexList items indexOf: aContext) ] ].
+							
+	selectionIndex := (1 to: treeIndex maxSelectionIndex)
+			detect: [ :i | aContext == (treeIndex nodeAt: i) value ]
+			ifNone: [ 0 ].
+
+	selectionIndex isZero
+		ifFalse: [ treeIndex 
+				selectOne: selectionIndex ]
+				
 ]
 
 { #category : #accessing }
