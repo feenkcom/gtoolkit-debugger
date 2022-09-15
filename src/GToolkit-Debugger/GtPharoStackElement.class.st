@@ -70,14 +70,45 @@ GtPharoStackElement >> buildStackIndex [
 
 { #category : #accessing }
 GtPharoStackElement >> buildTreeIndex [
-	| indexTree |
-	indexTree := BrSimpleTree new
-			nodeStencil: [ BrLabel new aptitude: BrGlamorousLabelAptitude ];
-			nodeDataBinder: [ :aNodeElement :each | 
-				aNodeElement
-					text: (each isAssociation
-							ifTrue: [ self contextClassText: each value first ]
-							ifFalse: [ self contextMethodText: each ]) ].
+	| indexTree stencil |
+	stencil := [ BrLabel new
+			aptitude: BrGlamorousLabelAptitude;
+			margin: (BlInsets right: 10);
+			beSmallSize;
+			hMatchParent;
+			vFitContent ].
+
+	indexTree := BrColumnedTree new
+			rowStencil: BrGlamorousColumnedTreeSelectableRowElementStencilBuilder new.
+	indexTree column
+		title: 'Receiver';
+		cellStencil: stencil;
+		weight: 5;
+		dataBinder: [ :element :each | 
+			element
+				text: (each isAssociation
+						ifTrue: [ (self receiverClassStringFor: each value first receiver class) asRopedText
+								, ((' (' , each value first receiver printString , ')') asRopedText
+										foreground: Color gray) ]
+						ifFalse: [ self contextMethodText: each ]) ].
+	indexTree column
+		title: 'Class';
+		cellStencil: stencil;
+		weight: 3;
+		dataBinder: [ :element :each | 
+			element
+				text: (each isAssociation
+						ifTrue: [ '' ]
+						ifFalse: [ each value methodClass printString ]) ].
+	indexTree column
+		title: 'Package';
+		cellStencil: stencil;
+		weight: 1;
+		dataBinder: [ :element :each | 
+			element
+				text: (each isAssociation
+						ifTrue: [ '' ]
+						ifFalse: [ each method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ] ]) ].
 	indexTree
 		when: BrSelectionChanged
 		do: [ :anEvent | self onStackIndexSelectionChanged ].
@@ -166,6 +197,12 @@ GtPharoStackElement >> onStackIndexSelectionChanged [
 				selectedItemDo: [ :context :index | 
 					self selectContext: context.
 					self stackFramesList scrollToIndex: index ] ]
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> receiverClassStringFor: recClass [
+	^ (recClass name first isVowel ifTrue: [ 'an ' ] ifFalse: [ 'a ' ])
+		, recClass name
 ]
 
 { #category : #accessing }
