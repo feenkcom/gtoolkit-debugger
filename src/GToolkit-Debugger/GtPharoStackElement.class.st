@@ -112,7 +112,7 @@ GtPharoStackElement >> buildTreeIndex [
 						ifFalse: [ each method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ] ]) ].
 	indexTree
 		when: BrSelectionChanged
-		do: [ :anEvent | self onStackIndexSelectionChanged ].
+		do: [ :anEvent | self onStackTreeSelectionChanged ].
 	^ indexTree
 ]
 
@@ -198,6 +198,16 @@ GtPharoStackElement >> onStackIndexSelectionChanged [
 				selectedItemDo: [ :context :index | 
 					self selectContext: context.
 					self stackFramesList scrollToIndex: index ] ]
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> onStackTreeSelectionChanged [
+	self
+		inUIProcessDo: [ treeIndex
+				selectedNodeDo: [ :node | 
+					node value isAssociation
+						ifFalse: [ self selectContext: node value.
+							self stackFramesList scrollToItem: node value ] ] ]
 ]
 
 { #category : #accessing }
