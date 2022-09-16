@@ -118,12 +118,16 @@ GtPharoStackElement >> buildTreeIndex [
 
 { #category : #accessing }
 GtPharoStackElement >> computeStackTree: aContextList [
-	^(aContextList
-		groupByRuns: [ :each | 
-			each isBlockContext
-				ifTrue: [ each outerContext receiver ]
-				ifFalse: [ each receiver ] ])
-		collect: [ :each | each first receiver -> each ]
+	| result |
+	result := OrderedDictionary new.
+	aContextList
+		do: [ :each | 
+			| receiver |
+			receiver := each isBlockContext
+					ifTrue: [ each outerContext receiver ]
+					ifFalse: [ each receiver ].
+			(result at: receiver ifAbsentPut: [ OrderedCollection new ]) add: each ].
+	^ result associations
 ]
 
 { #category : #accessing }
@@ -167,7 +171,7 @@ GtPharoStackElement >> initializeStackList [
 				stencil: [ stackIndex ]);
 		addTab: (BrTab new
 				aptitude: BrGlamorousTabAptitude new;
-				label: 'Tree';
+				label: 'Receivers';
 				stencil: [ treeIndex ]).
 
 	sidebarElement addChild: tabGroup.
