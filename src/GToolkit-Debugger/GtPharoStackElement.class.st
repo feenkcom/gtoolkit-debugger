@@ -89,7 +89,7 @@ GtPharoStackElement >> buildTreeIndex [
 			element
 				text: (each isAssociation
 						ifTrue: [ (self receiverClassStringFor: each value first receiver class) asRopedText
-								, ((' (' , each value first receiver printString , ')') asRopedText
+								, ((' (' , (self safePrintStringFor: each value first receiver) , ')') asRopedText
 										foreground: Color gray) ]
 						ifFalse: [ self contextMethodText: each ]) ].
 	indexTree column
@@ -119,7 +119,7 @@ GtPharoStackElement >> buildTreeIndex [
 { #category : #accessing }
 GtPharoStackElement >> computeStackTree: aContextList [
 	| result |
-	result := OrderedDictionary new.
+	result := OrderedIdentityDictionary new.
 	aContextList
 		do: [ :each | 
 			| receiver |
@@ -218,6 +218,11 @@ GtPharoStackElement >> onStackTreeSelectionChanged [
 GtPharoStackElement >> receiverClassStringFor: recClass [
 	^ (recClass name first isVowel ifTrue: [ 'an ' ] ifFalse: [ 'a ' ])
 		, recClass name
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> safePrintStringFor: anObject [
+	^ [anObject printString] onErrorDo: [:ex | 'Error computing printString!' ]
 ]
 
 { #category : #accessing }
