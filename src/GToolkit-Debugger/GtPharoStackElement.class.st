@@ -88,9 +88,7 @@ GtPharoStackElement >> buildTreeIndex [
 		dataBinder: [ :element :each | 
 			element
 				text: (each isAssociation
-						ifTrue: [ (self receiverClassStringFor: each value first receiver class) asRopedText
-								, ((' (' , (self safePrintStringFor: each value first receiver) , ')') asRopedText
-										foreground: Color gray) ]
+						ifTrue: [ self receiverTextFor: each value first receiver ]
 						ifFalse: [ self contextMethodText: each ]) ].
 	indexTree column
 		title: 'Class';
@@ -218,6 +216,17 @@ GtPharoStackElement >> onStackTreeSelectionChanged [
 GtPharoStackElement >> receiverClassStringFor: recClass [
 	^ (recClass name first isVowel ifTrue: [ 'an ' ] ifFalse: [ 'a ' ])
 		, recClass name
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> receiverTextFor: receiver [
+	| classString objectString |
+	classString := self receiverClassStringFor: receiver class.
+	objectString := self safePrintStringFor: receiver.
+	^ classString = objectString
+		ifTrue: [ classString asRopedText ]
+		ifFalse: [ classString asRopedText
+				, ((' (' , objectString , ')') asRopedText foreground: Color gray) ]
 ]
 
 { #category : #accessing }
