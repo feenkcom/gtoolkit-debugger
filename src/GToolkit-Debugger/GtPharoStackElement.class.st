@@ -10,13 +10,11 @@ Class {
 
 { #category : #accessing }
 GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
-	| aContext |
+	| context |
 	super actOnCoderInFocusFor: aContextCoderUIModel.
-	self stackIndexList selectedItemDo: [ :context | aContext := context ].
-	aContext ~~ aContextCoderUIModel context
-		ifTrue: [ | index |
-			index := self stackIndexList items indexOf: aContextCoderUIModel context.
-			index isZero ifFalse: [self stackIndexList selectOne: index ]]
+	context := aContextCoderUIModel context.
+	self updateStackIndexListTo: context.
+	self updateTreeIndexTo: context
 ]
 
 { #category : #accessing }
@@ -202,12 +200,8 @@ GtPharoStackElement >> onStackIndexSelectionChanged [
 
 { #category : #accessing }
 GtPharoStackElement >> onStackTreeSelectionChanged [
-	self
-		inUIProcessDo: [ treeIndex
-				selectedNodeDo: [ :node | 
-					node value isAssociation
-						ifFalse: [ self selectContext: node value.
-							self stackFramesList scrollToItem: node value ] ] ]
+	treeIndex
+		selectedNodeDo: [ :node | node value isAssociation ifFalse: [ self selectContext: node value ] ]
 ]
 
 { #category : #accessing }
@@ -234,22 +228,9 @@ GtPharoStackElement >> safePrintStringFor: anObject [
 
 { #category : #accessing }
 GtPharoStackElement >> selectContext: aContext [
-	| selectionIndex |
 	super selectContext: aContext.
-
-	self stackIndexList
-		selectedItemDo: [ :context | 
-			context ~~ aContext
-				ifTrue: [ self stackIndexList selectOne: (self stackIndexList items indexOf: aContext) ] ].
-							
-	selectionIndex := (1 to: treeIndex maxSelectionIndex)
-			detect: [ :i | aContext == (treeIndex nodeAt: i) value ]
-			ifNone: [ 0 ].
-
-	selectionIndex isZero
-		ifFalse: [ treeIndex 
-				selectOne: selectionIndex ]
-				
+	self updateStackIndexListTo: aContext.
+	self updateTreeIndexTo: aContext
 ]
 
 { #category : #accessing }
@@ -260,4 +241,20 @@ GtPharoStackElement >> stackFramesList [
 { #category : #accessing }
 GtPharoStackElement >> stackIndexList [
 	^ stackIndex
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> updateStackIndexListTo: aContext [
+	| selected |
+	self stackIndexList selectedItemDo: [ :context | selected := context ].
+	selected ~~ aContext
+		ifTrue: [ self stackIndexList scrollToItemSuchThat: [ :each | each == selected ] ]
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> updateTreeIndexTo: aContext [
+	| selected |
+	treeIndex
+		inUIProcessDo: [ treeIndex selectedNodeDo: [ :each | selected := each value ].
+			selected ~~ aContext ifTrue: [ treeIndex selectAndScrollTo: aContext ] ]
 ]
