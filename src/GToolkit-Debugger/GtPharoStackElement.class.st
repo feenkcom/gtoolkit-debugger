@@ -197,9 +197,7 @@ GtPharoStackElement >> onStackChanged [
 GtPharoStackElement >> onStackIndexSelectionChanged [
 	self
 		inUIProcessDo: [ self stackIndexList
-				selectedItemDo: [ :context :index | 
-					self selectContext: context.
-					self stackFramesList scrollToIndex: index ] ]
+				selectedItemDo: [ :context :index | self selectContext: context ] ]
 ]
 
 { #category : #accessing }

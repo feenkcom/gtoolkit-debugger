@@ -179,10 +179,12 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectContext: aContext [
-	self stackFramesList items 
-		detect:  [ :eachCoderUIModel | eachCoderUIModel coder context = aContext ]
-		ifFound: [ :eachCoderUIModel | self selectCoderUIModel: eachCoderUIModel ] 
-		ifNone: [  ]
+	self stackFramesList
+		scrollToItemSuchThat: [ :each | 
+			each coder context = aContext
+				ifTrue: [ self selectCoderUIModel: each.
+					true ]
+				ifFalse: [ false ] ]
 ]
 
 { #category : #accessing }
