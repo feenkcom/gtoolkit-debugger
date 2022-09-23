@@ -3,7 +3,9 @@ Class {
 	#superclass : #GtAbstractExpandableStackElement,
 	#instVars : [
 		'stackIndex',
-		'treeIndex'
+		'treeIndex',
+		'stackTab',
+		'receiversTab'
 	],
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
@@ -150,7 +152,7 @@ GtPharoStackElement >> initialize [
 
 { #category : #accessing }
 GtPharoStackElement >> initializeStackList [
-	| stackFramesList sidebarElement tabGroup |
+	| sidebarElement tabGroup |
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self
 		addAptitude: (GtPhlowToolDetailAptitude new
@@ -158,37 +160,31 @@ GtPharoStackElement >> initializeStackList [
 				detailed: [ :theInstance | sidebarElement show ]).
 	stackIndex := self buildStackIndex.
 	treeIndex := self buildTreeIndex.
-
 	tabGroup := BrTabGroup new aptitude: BrGlamorousTabGroupAptitude new.
+	stackTab := BrTab new
+			aptitude: BrGlamorousTabAptitude new;
+			label: 'Stack';
+			stencil: [ stackIndex ].
+	receiversTab := BrTab new
+			aptitude: BrGlamorousTabAptitude new;
+			label: 'Receivers';
+			stencil: [ treeIndex ].
+	tabGroup addTab: stackTab.
+	tabGroup addTab: receiversTab.
 	tabGroup
-		addTab: (BrTab new
-				aptitude: BrGlamorousTabAptitude new;
-				label: 'Stack';
-				stencil: [ stackIndex ]);
-		addTab: (BrTab new
-				aptitude: BrGlamorousTabAptitude new;
-				label: 'Receivers';
-				stencil: [ treeIndex ]).
-
+		when: BrTabSelectedEvent
+		do: [ :event | 
+			self updateIndexes.
+			self updateIndexesSelection ].
 	sidebarElement addChild: tabGroup.
-	stackFramesList := self buildStackFramesList.
 	self addChild: sidebarElement.
-	self addChild: stackFramesList as: #expandableFrames
+	super initializeStackList
 ]
 
 { #category : #accessing }
 GtPharoStackElement >> onStackChanged [
-	| tree |
-	self
-		inUIProcessDo: [ tree := self computeStackTree: stackModel contextStream toArray wait.
-			treeIndex
-				items: tree
-				immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
-			treeIndex expandAll.
-			self stackIndexList stream: stackModel contextStream.
-			self stackIndexList scrollToIndex: 1.
-			self stackFramesList stream: stackModel coderViewModelStream.
-			self stackFramesList scrollToIndex: 1 ]
+	super onStackChanged.
+	self updateIndexes
 ]
 
 { #category : #accessing }
@@ -234,26 +230,53 @@ GtPharoStackElement >> selectContext: aContext [
 ]
 
 { #category : #accessing }
-GtPharoStackElement >> stackFramesList [
-	^ self childNamed: #expandableFrames
-]
-
-{ #category : #accessing }
 GtPharoStackElement >> stackIndexList [
 	^ stackIndex
 ]
 
 { #category : #accessing }
+GtPharoStackElement >> updateIndexes [
+	| tree |
+	self
+		inUIProcessDo: [ receiversTab viewModel isSelected
+				ifTrue: [ tree := self computeStackTree: stackModel contextStream toArray wait.
+					treeIndex
+						items: tree
+						immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
+					treeIndex expandAll ].
+			stackTab viewModel isSelected
+				ifTrue: [ self stackIndexList stream: stackModel contextStream.
+					self stackIndexList scrollToIndex: 1 ] ]
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> updateIndexesSelection [
+	| context |
+	selectedCoderUIModel isNil ifTrue: [ ^ self ].
+	context := selectedCoderUIModel coder context.
+	self
+		inUIProcessDo: [ self updateStackIndexListTo: context.
+			self updateTreeIndexTo: context ]
+]
+
+{ #category : #accessing }
 GtPharoStackElement >> updateStackIndexListTo: aContext [
 	| selected |
+	stackTab viewModel isSelected ifFalse: [ ^ self ].
 	self stackIndexList selectedItemDo: [ :context | selected := context ].
 	selected ~~ aContext
-		ifTrue: [ self stackIndexList scrollToItemSuchThat: [ :each | each == selected ] ]
+		ifTrue: [ (self stackIndexList scrollToItemSuchThat: [ :each | each == aContext ])
+				then: [ :v | 
+					self stackIndexList
+						inUIProcessDo: [ | index |
+							index := self stackIndexList items indexOf: aContext.
+							index > 0 ifTrue: [ self stackIndexList selectOne: index ] ] ] ]
 ]
 
 { #category : #accessing }
 GtPharoStackElement >> updateTreeIndexTo: aContext [
 	| selected |
+	receiversTab viewModel isSelected ifFalse: [ ^ self ].
 	treeIndex
 		inUIProcessDo: [ treeIndex selectedNodeDo: [ :each | selected := each value ].
 			selected ~~ aContext ifTrue: [ treeIndex selectAndScrollTo: aContext ] ]

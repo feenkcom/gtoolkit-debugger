@@ -132,7 +132,10 @@ GtAbstractExpandableStackElement >> initialize [
 
 { #category : #initialization }
 GtAbstractExpandableStackElement >> initializeStackList [
-	self subclassResponsibility
+	| stackFramesList |
+	stackFramesList := self buildStackFramesList.
+	stackFramesList items: OrderedCollection new.
+	self addChild: stackFramesList as: #expandableFrames
 ]
 
 { #category : #accessing }
@@ -150,6 +153,13 @@ GtAbstractExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
 ]
 
 { #category : #accessing }
+GtAbstractExpandableStackElement >> onStackChanged [
+	self
+		inUIProcessDo: [ self stackFramesList stream: stackModel coderViewModelStream.
+			self stackFramesList scrollToIndex: 1 ]
+]
+
+{ #category : #accessing }
 GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: stream [
 	(stream next
 		then: [ :item | 
@@ -162,11 +172,12 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: stream [
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
-	selectedCoderUIModel ifNotNil: [ :aPreviousSelectedCoderUIModel |
-		aPreviousSelectedCoderUIModel focused: false ].
+	selectedCoderUIModel
+		ifNotNil: [ :aPreviousSelectedCoderUIModel | aPreviousSelectedCoderUIModel focused: false ].
 	selectedCoderUIModel := aContextCoderUIModel.
-	
-	selectedCoderUIModel focused: true.
+
+	self
+		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel focused: true ]).
 	selectedCoderUIModel expanded: true.
 	
 	"Update the content as some actions (for example save)
@@ -174,17 +185,19 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel coder updateSourceFromContext.
 	
 	"Update the selection based on the new PC"
-	selectedCoderUIModel updateProgramCounterRange.
+	selectedCoderUIModel updateProgramCounterRange
 ]
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectContext: aContext [
-	self stackFramesList
-		scrollToItemSuchThat: [ :each | 
-			each coder context = aContext
-				ifTrue: [ self selectCoderUIModel: each.
-					true ]
-				ifFalse: [ false ] ]
+	self selectedContext == aContext
+		ifTrue: [ self selectCoderUIModel: selectedCoderUIModel ]
+		ifFalse: [ self stackFramesList
+				scrollToItemSuchThat: [ :each | 
+					each coder context = aContext
+						ifTrue: [ self selectCoderUIModel: each.
+							true ]
+						ifFalse: [ false ] ] ]
 ]
 
 { #category : #accessing }
@@ -192,9 +205,15 @@ GtAbstractExpandableStackElement >> selectedCoder [
 	^ selectedCoderUIModel coder
 ]
 
+{ #category : #accessing }
+GtAbstractExpandableStackElement >> selectedContext [
+	selectedCoderUIModel isNil ifTrue: [ ^ nil ].
+	^ selectedCoderUIModel coder context
+]
+
 { #category : #'accessing elements' }
 GtAbstractExpandableStackElement >> stackFramesList [
-	^ self children first.
+	^ self childNamed: #expandableFrames
 ]
 
 { #category : #updating }
