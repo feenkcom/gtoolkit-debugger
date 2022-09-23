@@ -5,13 +5,13 @@ Class {
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
 		'contextStream',
-		'currentCoderViewModels',
-		'futureCoderViewModels',
 		'coderViewModelStream',
 		'session',
 		'lock',
 		'announcer',
-		'context'
+		'context',
+		'filters',
+		'coderViewModelCache'
 	],
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
@@ -34,16 +34,22 @@ GtPharoStackModel >> coderViewModelStream [
 { #category : #accessing }
 GtPharoStackModel >> context: aContext [
 	context ~~ aContext
-		ifTrue: [ context := aContext.
-			self resetCoderViewModelCache.
-			coderViewModelStream := (self contextStream
-					collect: [ :each | self getCoderViewModelForContext: each ]) cached.
-			self announce: GtDebuggerStackChanged new ]
+		ifTrue: [ (context notNil and: [ context isDead ])
+				ifTrue: [ self resetCoderViewModelCache ].
+			context := aContext.
+			self updateContextStreams ]
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> contextStream [
-	^ GtPharoStackStream onContext: context
+	| allContexts |
+	allContexts := GtPharoStackStream onContext: context.
+	^ (filters isNil or: [ filters isEmpty ])
+		ifTrue: [ allContexts ]
+		ifFalse: [ allContexts
+				select: [ :each | 
+					each sender isNil
+						or: [ filters anySatisfy: [ :filter | filter matches: each method method ] ] ] ]
 ]
 
 { #category : #accessing }
@@ -53,6 +59,17 @@ GtPharoStackModel >> createCoderFor: aContext in: aSession [
 	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #forceRefreshStack to: self.
 	coder announcer weak when: DebugActionExecuted send: #forceRefreshStack to: self.
 	^ coder
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> filters [
+	^ filters ifNil: [ #() ]
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> filters: aCollection [
+	filters := Set withAll: aCollection.
+	self updateContextStreams
 ]
 
 { #category : #accessing }
@@ -67,42 +84,24 @@ GtPharoStackModel >> forceRefreshStack [
 { #category : #accessing }
 GtPharoStackModel >> getCoderViewModelForContext: aContext [
 	^ lock
-		critical: [ self removeFutureDeadContexts.
-			currentCoderViewModels
-				push: ((futureCoderViewModels notEmpty
-						and: [ futureCoderViewModels top coder context == aContext ])
-						ifTrue: [ futureCoderViewModels pop ]
-						ifFalse: [ (self createCoderFor: aContext in: session) asCoderViewModel ]) ]
+		critical: [ coderViewModelCache
+				at: aContext
+				ifAbsentPut: [ (self createCoderFor: aContext in: session) asCoderViewModel ] ]
 		ifError: [ nil ]
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> initialize [
 	super initialize.
-	currentCoderViewModels := Stack new.
-	futureCoderViewModels := Stack new.
+	coderViewModelCache := IdentityDictionary new.
 	lock := Semaphore forMutualExclusion
-]
-
-{ #category : #accessing }
-GtPharoStackModel >> moveCurrentContextsToFuture [
-	[ currentCoderViewModels notEmpty ]
-		whileTrue: [ | coderViewModel |
-			coderViewModel := currentCoderViewModels pop.
-			coderViewModel context isDead ifFalse: [ futureCoderViewModels push: coderViewModel ] ]
-]
-
-{ #category : #accessing }
-GtPharoStackModel >> removeFutureDeadContexts [
-	[ futureCoderViewModels notEmpty and: [ futureCoderViewModels top context isDead ] ]
-		whileTrue: [ futureCoderViewModels pop ]
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> resetCoderViewModelCache [
 	lock
-		critical: [ self removeFutureDeadContexts.
-			self moveCurrentContextsToFuture ]
+		critical: [ coderViewModelCache keys
+				do: [ :each | each isDead ifTrue: [ coderViewModelCache removeKey: each ifAbsent: [  ] ] ] ]
 		ifError: [  ]
 ]
 
@@ -125,4 +124,11 @@ GtPharoStackModel >> stackChanged [
 { #category : #accessing }
 GtPharoStackModel >> updateContent [
 	self context: session context
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> updateContextStreams [
+	coderViewModelStream := (self contextStream
+			collect: [ :each | self getCoderViewModelForContext: each ]) cached.
+	self announce: GtDebuggerStackChanged new
 ]

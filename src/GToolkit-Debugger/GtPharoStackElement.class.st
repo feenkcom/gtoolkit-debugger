@@ -138,6 +138,19 @@ GtPharoStackElement >> contextClassText: aContext [
 ]
 
 { #category : #accessing }
+GtPharoStackElement >> contextFilters [
+	^ stackModel filters
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> contextFilters: aCollection [
+	stackModel
+		filters: ((aCollection includes: GtSearchImageMethodsFilter allMethods)
+				ifTrue: [ #() ]
+				ifFalse: [ aCollection ])
+]
+
+{ #category : #accessing }
 GtPharoStackElement >> contextMethodText: aContext [
 	^ aContext isBlockContext
 		ifTrue: [ '[] in ' , aContext outerContext method selector ]
