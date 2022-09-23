@@ -144,13 +144,13 @@ GtPharoStackElement >> contextMethodText: aContext [
 		ifFalse: [ aContext method selector ]
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtPharoStackElement >> initialize [
 	super initialize.
 	self layout: BlLinearLayout horizontal.
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtPharoStackElement >> initializeStackList [
 	| sidebarElement tabGroup |
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
@@ -234,22 +234,13 @@ GtPharoStackElement >> stackIndexList [
 	^ stackIndex
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 GtPharoStackElement >> updateIndexes [
-	| tree |
-	self
-		inUIProcessDo: [ receiversTab viewModel isSelected
-				ifTrue: [ tree := self computeStackTree: stackModel contextStream toArray wait.
-					treeIndex
-						items: tree
-						immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
-					treeIndex expandAll ].
-			stackTab viewModel isSelected
-				ifTrue: [ self stackIndexList stream: stackModel contextStream.
-					self stackIndexList scrollToIndex: 1 ] ]
+	self updateReceiversIndex.
+	self updateStackIndex
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 GtPharoStackElement >> updateIndexesSelection [
 	| context |
 	selectedCoderUIModel isNil ifTrue: [ ^ self ].
@@ -259,7 +250,29 @@ GtPharoStackElement >> updateIndexesSelection [
 			self updateTreeIndexTo: context ]
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
+GtPharoStackElement >> updateReceiversIndex [
+	| tree |
+	receiversTab viewModel isSelected ifFalse: [ ^ self ].
+	stackModel contextStream toArray await
+		then: [ :array | 
+			tree := self computeStackTree: array.
+			self
+				inUIProcessDo: [ treeIndex
+						items: tree
+						immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
+					treeIndex expandAll ] ]
+]
+
+{ #category : #updating }
+GtPharoStackElement >> updateStackIndex [
+	stackTab viewModel isSelected ifFalse: [ ^ self ].
+	self
+		inUIProcessDo: [ self stackIndexList stream: stackModel contextStream.
+			self stackIndexList scrollToIndex: 1 ]
+]
+
+{ #category : #updating }
 GtPharoStackElement >> updateStackIndexListTo: aContext [
 	| selected |
 	stackTab viewModel isSelected ifFalse: [ ^ self ].
@@ -273,7 +286,7 @@ GtPharoStackElement >> updateStackIndexListTo: aContext [
 							index > 0 ifTrue: [ self stackIndexList selectOne: index ] ] ] ]
 ]
 
-{ #category : #accessing }
+{ #category : #updating }
 GtPharoStackElement >> updateTreeIndexTo: aContext [
 	| selected |
 	receiversTab viewModel isSelected ifFalse: [ ^ self ].
