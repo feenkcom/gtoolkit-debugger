@@ -3,9 +3,9 @@ Class {
 	#superclass : #GtAbstractExpandableStackElement,
 	#instVars : [
 		'stackIndex',
-		'treeIndex',
 		'stackTab',
-		'receiversTab'
+		'receiversTab',
+		'receiversIndex'
 	],
 	#category : #'GToolkit-Debugger-GToolkit-Debugger'
 }
@@ -16,7 +16,23 @@ GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	super actOnCoderInFocusFor: aContextCoderUIModel.
 	context := aContextCoderUIModel context.
 	self updateStackIndexListTo: context.
-	self updateTreeIndexTo: context
+	self updateReceiversIndexTo: context
+]
+
+{ #category : #accessing }
+GtPharoStackElement >> buildReceiversIndex [
+	| list |
+	list := BrGroupedList new.
+	list
+		headerElementStencil: [ BrLabel new
+				margin: (BlInsets top: 10);
+				beSmallSize;
+				aptitude: (BrGlamorousLabelAptitude new foreground: Color gray) ];
+		headerDataBinder: [ :label :each | label text: (self receiverTextFor: each domainObject) ].
+	list
+		when: BrSelectionChanged
+		do: [ :anEvent | self onReceiverIndexSelectionChanged ].
+	^ list
 ]
 
 { #category : #accessing }
@@ -67,51 +83,6 @@ GtPharoStackElement >> buildStackIndex [
 		when: BrSelectionChanged
 		do: [ :anEvent | self onStackIndexSelectionChanged ].
 	^ indexList
-]
-
-{ #category : #accessing }
-GtPharoStackElement >> buildTreeIndex [
-	| indexTree stencil |
-	stencil := [ BrLabel new
-			aptitude: BrGlamorousLabelAptitude;
-			margin: (BlInsets right: 10);
-			beSmallSize;
-			hMatchParent;
-			vFitContent ].
-
-	indexTree := BrColumnedTree new
-			rowStencil: BrGlamorousColumnedTreeSelectableRowElementStencilBuilder new.
-	indexTree column
-		title: 'Receiver';
-		cellStencil: stencil;
-		weight: 5;
-		dataBinder: [ :element :each | 
-			element
-				text: (each isAssociation
-						ifTrue: [ self receiverTextFor: each value first receiver ]
-						ifFalse: [ self contextMethodText: each ]) ].
-	indexTree column
-		title: 'Class';
-		cellStencil: stencil;
-		weight: 3;
-		dataBinder: [ :element :each | 
-			element
-				text: (each isAssociation
-						ifTrue: [ '' ]
-						ifFalse: [ each value methodClass printString ]) ].
-	indexTree column
-		title: 'Package';
-		cellStencil: stencil;
-		weight: 1;
-		dataBinder: [ :element :each | 
-			element
-				text: (each isAssociation
-						ifTrue: [ '' ]
-						ifFalse: [ each method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ] ]) ].
-	indexTree
-		when: BrSelectionChanged
-		do: [ :anEvent | self onStackTreeSelectionChanged ].
-	^ indexTree
 ]
 
 { #category : #accessing }
@@ -172,7 +143,7 @@ GtPharoStackElement >> initializeStackList [
 				normal: [ :theInstance | sidebarElement hide ];
 				detailed: [ :theInstance | sidebarElement show ]).
 	stackIndex := self buildStackIndex.
-	treeIndex := self buildTreeIndex.
+	receiversIndex := self buildReceiversIndex.
 	tabGroup := BrTabGroup new aptitude: BrGlamorousTabGroupAptitude new.
 	stackTab := BrTab new
 			aptitude: BrGlamorousTabAptitude new;
@@ -181,7 +152,7 @@ GtPharoStackElement >> initializeStackList [
 	receiversTab := BrTab new
 			aptitude: BrGlamorousTabAptitude new;
 			label: 'Receivers';
-			stencil: [ treeIndex ].
+			stencil: [ receiversIndex ].
 	tabGroup addTab: stackTab.
 	tabGroup addTab: receiversTab.
 	tabGroup
@@ -195,6 +166,12 @@ GtPharoStackElement >> initializeStackList [
 ]
 
 { #category : #accessing }
+GtPharoStackElement >> onReceiverIndexSelectionChanged [
+	receiversIndex
+		selectedEntityDo: [ :value :index | self selectContext: value object ]
+]
+
+{ #category : #accessing }
 GtPharoStackElement >> onStackChanged [
 	super onStackChanged.
 	self updateIndexes
@@ -205,12 +182,6 @@ GtPharoStackElement >> onStackIndexSelectionChanged [
 	self
 		inUIProcessDo: [ self stackIndexList
 				selectedItemDo: [ :context :index | self selectContext: context ] ]
-]
-
-{ #category : #accessing }
-GtPharoStackElement >> onStackTreeSelectionChanged [
-	treeIndex
-		selectedNodeDo: [ :node | node value isAssociation ifFalse: [ self selectContext: node value ] ]
 ]
 
 { #category : #accessing }
@@ -239,7 +210,7 @@ GtPharoStackElement >> safePrintStringFor: anObject [
 GtPharoStackElement >> selectContext: aContext [
 	super selectContext: aContext.
 	self updateStackIndexListTo: aContext.
-	self updateTreeIndexTo: aContext
+	self updateReceiversIndexTo: aContext
 ]
 
 { #category : #accessing }
@@ -260,21 +231,72 @@ GtPharoStackElement >> updateIndexesSelection [
 	context := selectedCoderUIModel coder context.
 	self
 		inUIProcessDo: [ self updateStackIndexListTo: context.
-			self updateTreeIndexTo: context ]
+			self updateReceiversIndexTo: context ]
 ]
 
 { #category : #updating }
 GtPharoStackElement >> updateReceiversIndex [
-	| tree |
 	receiversTab viewModel isSelected ifFalse: [ ^ self ].
-	stackModel contextStream toArray await
-		then: [ :array | 
-			tree := self computeStackTree: array.
-			self
-				inUIProcessDo: [ treeIndex
-						items: tree
-						immediate: [ :assoc | assoc isAssociation ifTrue: [ assoc value ] ifFalse: [ #() ] ].
-					treeIndex expandAll ] ]
+	self
+		inUIProcessDo: [ receiversIndex
+				stream: ((stackModel contextStream
+						collect: [ :each | 
+							each isBlockContext
+								ifTrue: [ each outerContext receiver ]
+								ifFalse: [ each receiver ] ]) withoutDuplicates useIdentityComparison
+						collect: [ :receiver | 
+							BrGroup new
+								stream: (stackModel contextStream
+										select: [ :context | 
+											(context isBlockContext
+												ifTrue: [ context outerContext receiver ]
+												ifFalse: [ context receiver ]) = receiver ]);
+								domainObject: receiver;
+								itemStencil: [ BrHorizontalPane new
+										margin: (BlInsets left: 10);
+										hMatchParent;
+										vFitContent ];
+								itemDataBinder: [ :pane :each | 
+									pane
+										addAptitude: BrGlamorousListItemAptitude;
+										removeChildren;
+										addChild: (BrLabel new
+												beSmallSize;
+												margin: (BlInsets left: 2 right: 2);
+												hMatchParent;
+												aptitude: BrGlamorousLabelAptitude;
+												text: (self contextMethodText: each);
+												yourself);
+										addChild: (BrLabel new
+												beSmallSize;
+												margin: (BlInsets left: 2 right: 2);
+												hMatchParent;
+												aptitude: BrGlamorousLabelAptitude;
+												text: each methodClass printString;
+												yourself);
+										addChild: (BrLabel new
+												beSmallSize;
+												margin: (BlInsets left: 2 right: 2);
+												hMatchParent;
+												aptitude: BrGlamorousLabelAptitude;
+												text: (each method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ]);
+												yourself) ] ]) ]
+]
+
+{ #category : #updating }
+GtPharoStackElement >> updateReceiversIndexTo: aContext [
+	| selected |
+	receiversTab viewModel isSelected ifFalse: [ ^ self ].
+	receiversIndex
+		inUIProcessDo: [ receiversIndex selectedEntityDo: [ :each | selected := each object ].
+			selected ~~ aContext
+				ifTrue: [ 1
+						to: receiversIndex viewModel entityCount
+						do: [ :i | 
+							(receiversIndex viewModel entityAt: i)
+								ifNotNil: [ :each | 
+									(each isItem and: [ each object == aContext ])
+										ifTrue: [ receiversIndex selectOne: i ] ] ] ] ]
 ]
 
 { #category : #updating }
@@ -297,13 +319,4 @@ GtPharoStackElement >> updateStackIndexListTo: aContext [
 						inUIProcessDo: [ | index |
 							index := self stackIndexList items indexOf: aContext.
 							index > 0 ifTrue: [ self stackIndexList selectOne: index ] ] ] ]
-]
-
-{ #category : #updating }
-GtPharoStackElement >> updateTreeIndexTo: aContext [
-	| selected |
-	receiversTab viewModel isSelected ifFalse: [ ^ self ].
-	treeIndex
-		inUIProcessDo: [ treeIndex selectedNodeDo: [ :each | selected := each value ].
-			selected ~~ aContext ifTrue: [ treeIndex selectAndScrollTo: aContext ] ]
 ]
