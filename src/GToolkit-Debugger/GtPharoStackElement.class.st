@@ -155,11 +155,6 @@ GtPharoStackElement >> initializeStackList [
 			stencil: [ receiversIndex ].
 	tabGroup addTab: stackTab.
 	tabGroup addTab: receiversTab.
-	tabGroup
-		when: BrTabSelectedEvent
-		do: [ :event | 
-			self updateIndexes.
-			self updateIndexesSelection ].
 	sidebarElement addChild: tabGroup.
 	self addChild: sidebarElement.
 	super initializeStackList
@@ -236,7 +231,6 @@ GtPharoStackElement >> updateIndexesSelection [
 
 { #category : #updating }
 GtPharoStackElement >> updateReceiversIndex [
-	receiversTab viewModel isSelected ifFalse: [ ^ self ].
 	self
 		inUIProcessDo: [ receiversIndex
 				stream: ((stackModel contextStream
@@ -286,7 +280,6 @@ GtPharoStackElement >> updateReceiversIndex [
 { #category : #updating }
 GtPharoStackElement >> updateReceiversIndexTo: aContext [
 	| selected |
-	receiversTab viewModel isSelected ifFalse: [ ^ self ].
 	receiversIndex
 		inUIProcessDo: [ receiversIndex selectedEntityDo: [ :each | selected := each object ].
 			selected ~~ aContext
@@ -301,7 +294,6 @@ GtPharoStackElement >> updateReceiversIndexTo: aContext [
 
 { #category : #updating }
 GtPharoStackElement >> updateStackIndex [
-	stackTab viewModel isSelected ifFalse: [ ^ self ].
 	self
 		inUIProcessDo: [ self stackIndexList stream: stackModel contextStream.
 			self stackIndexList scrollToIndex: 1 ]
@@ -310,7 +302,6 @@ GtPharoStackElement >> updateStackIndex [
 { #category : #updating }
 GtPharoStackElement >> updateStackIndexListTo: aContext [
 	| selected |
-	stackTab viewModel isSelected ifFalse: [ ^ self ].
 	self stackIndexList selectedItemDo: [ :context | selected := context ].
 	selected ~~ aContext
 		ifTrue: [ (self stackIndexList scrollToItemSuchThat: [ :each | each == aContext ])
