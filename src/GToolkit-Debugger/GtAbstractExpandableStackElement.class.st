@@ -26,7 +26,6 @@ GtAbstractExpandableStackElement >> areAnnotationsEnabled [
 GtAbstractExpandableStackElement >> buildStackFramesList [
 	^ BrSimpleList new
 		matchParent;
-		padding: (BlInsets all: 10);
 		itemType: [ :itemTypeFactory :eachCoderUIModel | eachCoderUIModel coder elementClass ];
 		itemId: [ :eachCoderUIModel | eachCoderUIModel coder id ];
 		itemStencil: [ :anElementClass | 
@@ -134,6 +133,7 @@ GtAbstractExpandableStackElement >> initialize [
 GtAbstractExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
+	stackFramesList padding: (BlInsets all: 10).
 	stackFramesList items: OrderedCollection new.
 	self addChild: stackFramesList as: #expandableFrames
 ]

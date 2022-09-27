@@ -19,6 +19,15 @@ GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	self updateReceiversIndexTo: context
 ]
 
+{ #category : #initialization }
+GtPharoStackElement >> buildFiltersFrom: filtersElement [
+	| filters |
+	filters := OrderedCollection new.
+	filtersElement
+		filtersDo: [ :descriptor :value | filters add: (descriptor newFilterWithValue: value) ].
+	^ filters
+]
+
 { #category : #accessing }
 GtPharoStackElement >> buildReceiversIndex [
 	| list |
@@ -129,6 +138,12 @@ GtPharoStackElement >> contextMethodText: aContext [
 ]
 
 { #category : #initialization }
+GtPharoStackElement >> filterDescriptors [
+	^ {GtLabeledSearchFilter gtSearchFilterPragmaDescriptor.
+		GtSearchMethodsWithPackagePatternFilter packageFilterDescriptor}
+]
+
+{ #category : #initialization }
 GtPharoStackElement >> initialize [
 	super initialize.
 	self layout: BlLinearLayout horizontal.
@@ -136,7 +151,7 @@ GtPharoStackElement >> initialize [
 
 { #category : #initialization }
 GtPharoStackElement >> initializeStackList [
-	| sidebarElement tabGroup |
+	| stackFramesList stackPane filtersElement sidebarElement tabGroup |
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self
 		addAptitude: (GtPhlowToolDetailAptitude new
@@ -157,7 +172,20 @@ GtPharoStackElement >> initializeStackList [
 	tabGroup addTab: receiversTab.
 	sidebarElement addChild: tabGroup.
 	self addChild: sidebarElement.
-	super initializeStackList
+	stackPane := BrVerticalPane new.
+	stackPane matchParent.
+	stackPane padding: (BlInsets all: 10).
+	filtersElement := GtFiltersElement new.
+	filtersElement padding: (BlInsets all: 2).
+	filtersElement descriptors: self filterDescriptors.
+	filtersElement
+		when: GtFiltersChangedEvent
+		do: [ :event | self contextFilters: (self buildFiltersFrom: filtersElement) ].
+	stackPane addChild: filtersElement as: #filters.
+	stackFramesList := self buildStackFramesList.
+	stackFramesList items: OrderedCollection new.
+	stackPane addChild: stackFramesList as: #expandableFrames.
+	self addChild: stackPane
 ]
 
 { #category : #accessing }
