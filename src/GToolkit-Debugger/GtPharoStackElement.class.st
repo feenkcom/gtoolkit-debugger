@@ -124,10 +124,12 @@ GtPharoStackElement >> contextFilters [
 
 { #category : #accessing }
 GtPharoStackElement >> contextFilters: aCollection [
-	stackModel
-		filters: ((aCollection includes: GtSearchImageMethodsFilter forAllMethods)
-				ifTrue: [ #() ]
-				ifFalse: [ aCollection ])
+	| filters |
+	filters := (aCollection includes: GtSearchImageMethodsFilter forAllMethods)
+			ifTrue: [ #() ]
+			ifFalse: [ aCollection ].
+	stackModel filters: filters.
+	self debuggerElement session filters: filters
 ]
 
 { #category : #accessing }

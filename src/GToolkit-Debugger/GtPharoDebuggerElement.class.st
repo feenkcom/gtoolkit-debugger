@@ -16,6 +16,11 @@ GtPharoDebuggerElement class >> registerToolsOn: registry [
 ]
 
 { #category : #accessing }
+GtPharoDebuggerElement class >> sessionClass [
+	^ GtFilteredDebugSession
+]
+
+{ #category : #accessing }
 GtPharoDebuggerElement >> aboutToOpen [
 	"Select the first non filtered context. This mean that we will ignore some methods 
 	like halts or debug method to select the first interesting stack frame in the debugger."
