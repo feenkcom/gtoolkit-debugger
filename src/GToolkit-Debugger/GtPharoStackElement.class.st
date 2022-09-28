@@ -125,7 +125,7 @@ GtPharoStackElement >> contextFilters [
 { #category : #accessing }
 GtPharoStackElement >> contextFilters: aCollection [
 	stackModel
-		filters: ((aCollection includes: GtSearchImageMethodsFilter allMethods)
+		filters: ((aCollection includes: GtSearchImageMethodsFilter forAllMethods)
 				ifTrue: [ #() ]
 				ifFalse: [ aCollection ])
 ]
@@ -139,8 +139,30 @@ GtPharoStackElement >> contextMethodText: aContext [
 
 { #category : #initialization }
 GtPharoStackElement >> filterDescriptors [
-	^ {GtLabeledSearchFilter gtSearchFilterPragmaDescriptor.
-		GtSearchMethodsWithPackagePatternFilter packageFilterDescriptor}
+	| descriptors |
+	descriptors := OrderedCollection new.
+	(GtSearchFilter allSearchFilters
+		asSortedCollection: [ :a :b | a filterLabel < b filterLabel ])
+		do: [ :each | 
+			| descriptor |
+			descriptor := GtFilterDescriptor new
+					valueNotRequired;
+					creator: [ :value | each ];
+					named: each filterLabel;
+					order: descriptors size.
+			each = GtSearchImageMethodsFilter forAllMethods
+				ifFalse: [ descriptor beNotDefault ].
+			descriptors add: descriptor ].
+	descriptors
+		add: GtSearchMethodsWithPackagePatternFilter packageFilterDescriptor.
+	descriptors
+		add: (GtFilterDescriptor new
+				creator: [ :value | GtSearchImplementorPatternFilter pattern: value ];
+				named: 'Implementor';
+				order: 10;
+				completion: [ GtStringsCompletionStrategy new
+						completions: [ GtPharoIndex current selectorCache ] ]).
+	^ descriptors
 ]
 
 { #category : #initialization }
