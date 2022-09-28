@@ -31,7 +31,7 @@ GtFilteredDebugSession >> isMethodIncluded: aCompiledMethod [
 	lastMethod == aCompiledMethod ifTrue: [ ^ lastResult ].
 	lastMethod := aCompiledMethod.
 	^ lastResult := filters
-			anySatisfy: [ :each | each includesMethod: aCompiledMethod ]
+			anySatisfy: [ :each | each matches: aCompiledMethod ]
 ]
 
 { #category : #accessing }
