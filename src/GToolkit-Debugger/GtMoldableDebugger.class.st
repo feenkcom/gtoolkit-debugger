@@ -9,7 +9,6 @@ Class {
 	#classVars : [
 		'AlwaysOpenFullDebugger',
 		'ErrorRecursion',
-		'FilterCommonMessageSends',
 		'LogDebuggerStackToFile',
 		'LogFileName'
 	],
@@ -34,57 +33,6 @@ GtMoldableDebugger class >> closeAllDebuggers [
 { #category : #'settings api' }
 GtMoldableDebugger class >> defaultLogFileName [
 	^ 'PharoDebug.log'
-]
-
-{ #category : #'settings api' }
-GtMoldableDebugger class >> filterCommonMessageSends [
-	self flag: 'horrible hack not to break the setting browser'.
-	^ false
-]
-
-{ #category : #'settings api' }
-GtMoldableDebugger class >> filterCommonMessageSends: aBoolean [
-	FilterCommonMessageSends := aBoolean
-]
-
-{ #category : #'settings api' }
-GtMoldableDebugger class >> filterDoItSelectors [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtMoldableDebugger class >> filterDoItSelectors: aBoolean [
-	self flag: 'just for backward compatibility'
-]
-
-{ #category : #'settings api' }
-GtMoldableDebugger class >> filterKernelClasses [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtMoldableDebugger class >> filterKernelClasses: aBoolean [
-	self flag: 'just for backward compatibility'
-]
-
-{ #category : #'settings api' }
-GtMoldableDebugger class >> filterLinkSelectors [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtMoldableDebugger class >> filterLinkSelectors: aBoolean [ 
-	self flag: 'just for backward compatibility'
-]
-
-{ #category : #'settings api' }
-GtMoldableDebugger class >> filterNilSelectors [
-	^ false
-]
-
-{ #category : #'accessing - ancient preference selectors' }
-GtMoldableDebugger class >> filterNilSelectors: aBoolean [ 
-	self flag: 'just for backward compatibility'
 ]
 
 { #category : #'settings api' }

@@ -58,9 +58,13 @@ BrDebugglableElementStencil >> exception: anException [
 
 { #category : #accessing }
 BrDebugglableElementStencil >> freeze: anException [
-	anException signalContext
-		ifNotNil: [ anException freeze ].
-	self exception: anException
+	| anExceptionCopy |
+	
+	anExceptionCopy := anException copy.
+	
+	anExceptionCopy signalContext
+		ifNotNil: [ anExceptionCopy freeze ].
+	self exception: anExceptionCopy
 ]
 
 { #category : #'instance creation' }
