@@ -140,34 +140,6 @@ GtPharoStackElement >> contextMethodText: aContext [
 ]
 
 { #category : #initialization }
-GtPharoStackElement >> filterDescriptors [
-	| descriptors |
-	descriptors := OrderedCollection new.
-	(GtSearchFilter allSearchFilters
-		asSortedCollection: [ :a :b | a filterLabel < b filterLabel ])
-		do: [ :each | 
-			| descriptor |
-			descriptor := GtFilterDescriptor new
-					valueNotRequired;
-					creator: [ :value | each ];
-					named: each filterLabel;
-					order: descriptors size.
-			each = GtSearchImageMethodsFilter forAllMethods
-				ifFalse: [ descriptor beNotDefault ].
-			descriptors add: descriptor ].
-	descriptors
-		add: GtSearchMethodsWithPackagePatternFilter packageFilterDescriptor.
-	descriptors
-		add: (GtFilterDescriptor new
-				creator: [ :value | GtSearchImplementorPatternFilter pattern: value ];
-				named: 'Implementor';
-				order: 10;
-				completion: [ GtStringsCompletionStrategy new
-						completions: [ GtPharoIndex current selectorCache ] ]).
-	^ descriptors
-]
-
-{ #category : #initialization }
 GtPharoStackElement >> initialize [
 	super initialize.
 	self layout: BlLinearLayout horizontal.
@@ -201,7 +173,7 @@ GtPharoStackElement >> initializeStackList [
 	stackPane padding: (BlInsets all: 10).
 	filtersElement := GtFiltersElement new.
 	filtersElement padding: (BlInsets all: 2).
-	filtersElement descriptors: self filterDescriptors.
+	filtersElement descriptors: GtSearchFilter globalFilterDescriptors.
 	filtersElement
 		when: GtFiltersChangedEvent
 		do: [ :event | self contextFilters: (self buildFiltersFrom: filtersElement) ].

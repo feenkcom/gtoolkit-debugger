@@ -34,13 +34,3 @@ GtPharoDebuggerElement >> buildStackElement [
 	newStackElement containerName: #stackElement.
 	^ newStackElement
 ]
-
-{ #category : #accessing }
-GtPharoDebuggerElement >> contextFilters [
-	^ self stackElement contextFilters
-]
-
-{ #category : #accessing }
-GtPharoDebuggerElement >> contextFilters: selectedFilters [
-	self stackElement contextFilters: selectedFilters
-]
