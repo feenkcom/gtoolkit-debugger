@@ -21,6 +21,7 @@ GtFilteredDebugSession >> filters: aCollection [
 
 { #category : #accessing }
 GtFilteredDebugSession >> finishStep [
+	(self isContextPostMortem: interruptedContext) ifTrue: [ ^ self ].
 	(filters isNil or: [ filters isEmpty ]) ifTrue: [ ^ self ].
 	[ self isMethodIncluded: interruptedContext method ]
 		whileFalse: [ super stepInto: interruptedContext ]
