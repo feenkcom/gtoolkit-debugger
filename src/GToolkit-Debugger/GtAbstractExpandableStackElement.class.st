@@ -185,7 +185,8 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel coder updateSourceFromContext.
 	
 	"Update the selection based on the new PC"
-	selectedCoderUIModel updateProgramCounterRange
+	self
+		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel updateProgramCounterRange ])
 ]
 
 { #category : #actions }
