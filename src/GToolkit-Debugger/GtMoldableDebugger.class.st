@@ -230,13 +230,8 @@ GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [
 			"Only take into account GT debuggers."
 			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
 				aDebuggerClass availableAutomatically ] ].
-	initialDebugger := debuggerClass
-		ifNil: [ 
-			"Use the main debugger"
-			GtExpandableDebuggerElement on: aDebugSession ]
-		ifNotNil: [ :aDebugger | 
-			"Use a custom extension"
-			aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
+	initialDebugger := (debuggerClass ifNil: [ GtPharoDebuggerElement ])
+			ifNotNil: [ :aDebugger | aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
 	^ initialDebugger
 ]
 

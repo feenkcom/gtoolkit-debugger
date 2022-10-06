@@ -329,7 +329,7 @@ GtAbstractExpandableDebuggerElement >> selectedCoder [
 
 { #category : #'accessing context' }
 GtAbstractExpandableDebuggerElement >> selectedContext [
-	^ self selectedCoder context
+	^ self stackElement selectedContext
 ]
 
 { #category : #opening }

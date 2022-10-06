@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 GtPharoDebuggerElement class >> defaultTitle [
-	^ 'New Gt'
+	^ 'Gt'
 ]
 
 { #category : #'tools registry' }

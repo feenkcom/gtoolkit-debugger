@@ -203,13 +203,12 @@ GtAbstractExpandableStackElement >> selectContext: aContext [
 
 { #category : #accessing }
 GtAbstractExpandableStackElement >> selectedCoder [
-	^ selectedCoderUIModel coder
+	^ selectedCoderUIModel ifNotNil: [ selectedCoderUIModel coder ]
 ]
 
 { #category : #accessing }
 GtAbstractExpandableStackElement >> selectedContext [
-	selectedCoderUIModel isNil ifTrue: [ ^ nil ].
-	^ selectedCoderUIModel coder context
+	^ self selectedCoder ifNotNil: [ :coder | coder context ]
 ]
 
 { #category : #'accessing elements' }
