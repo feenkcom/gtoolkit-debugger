@@ -19,23 +19,28 @@ GtAbstractExpandableDebuggerElement >> actOnDebugActionExecuted [
 
 { #category : #callbacks }
 GtAbstractExpandableDebuggerElement >> actOnDebugSessionChanged [
-
-	| panesContainerElement panesTabGroupElement |
+	| panesContainerElement panesTabGroupElement showToolbar |
 	panesContainerElement := BlElement new
-		                         layout: BlLinearLayout horizontal;
-		                         constraintsDo: [ :c | 
-			                         c horizontal matchParent.
-			                         c vertical matchParent ].
+			layout: BlLinearLayout horizontal;
+			constraintsDo: [ :c | 
+				c horizontal matchParent.
+				c vertical matchParent ].
 	self buildPanesStructureIn: panesContainerElement.
 
 
 	panesTabGroupElement := self
-		                        buildStackTabGroupForElement:
-		                        panesContainerElement
-		                        withToolbar: self createToolbar.
+			buildStackTabGroupForElement: panesContainerElement
+			withToolbar: self createToolbar.
 	self
 		removeChildren;
 		addChild: panesTabGroupElement.
+
+	showToolbar := debuggingSession
+			isContextPostMortem: debuggingSession interruptedContext.
+	self
+		inUIProcessDo: [ toolbar
+				ifNotNil: [ toolbar
+						visibility: (showToolbar ifTrue: [ BlVisibility gone ] ifFalse: [ BlVisibility visible ]) ] ].
 	self updateStackPane
 ]
 
