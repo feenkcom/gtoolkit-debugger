@@ -41,56 +41,6 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 		items: OrderedCollection new
 ]
 
-{ #category : #private }
-GtAbstractExpandableStackElement >> coderUIModelsToDisplayFrom: aSession preservingContexts: currenCodersUIModels [
-	| methodCoderUIModels context firstContext newCoderUIModels |
-	
-	methodCoderUIModels := currenCodersUIModels reject: [ :eachUIModel | eachUIModel coder isDead ].
-	firstContext := methodCoderUIModels isEmpty
-		ifTrue: [ nil ]
-		ifFalse: [ methodCoderUIModels first coder context ].
-	
-	context := aSession interruptedContext.
-	newCoderUIModels := OrderedCollection new.
-	[ context notNil and: [ 
-			context ~~ firstContext  ] ]
-		whileTrue: [ 
-			| newCoder |
-			newCoder := self createCoderFor: context in: aSession.
-			newCoderUIModels add: newCoder asCoderViewModel.
-			context := context sender ].
-		
-	"For the moment look only for a new on:do: context that does not have a coder. 
-	Those contexts can be added by a Step Through action. This is mostly a hack.
-	A better solution would be to iterate over the stack and determine if there are
-	new contexts at any point in the stack. "
-	(context notNil and: [ context sender notNil and: [ 
-		 "The next context should be BlockClosure>>#on:do:"
-		(context sender method = (BlockClosure>>#on:do:)) and: [
-			"There should be no coder for the context: either we just have a coder 
-			or the coder after firstContext is for another context "
-			  methodCoderUIModels size = 1 or: [ methodCoderUIModels second coder context ~~ context sender ] ] ] ]) ifTrue: [ 
-		
-		| newCoder |
-		"Insert a new coder after the first context for the new context."	
-		newCoder := self createCoderFor: context sender in: aSession.
-		methodCoderUIModels 
-			add: newCoder asCoderViewModel
-			afterIndex: 1 ].
-	
-	methodCoderUIModels addAllFirst: newCoderUIModels.
-	^ methodCoderUIModels
-]
-
-{ #category : #private }
-GtAbstractExpandableStackElement >> createCoderFor: aContext in: aSession [
-	| coder |
-	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
-	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #updateDebugger to: self.
-	coder announcer weak when: DebugActionExecuted send: #updateDebugger to: self.
-	^ coder
-]
-
 { #category : #'accessing elements' }
 GtAbstractExpandableStackElement >> debuggerElement [
 	| currentElement |
