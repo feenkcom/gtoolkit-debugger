@@ -41,6 +41,15 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 		items: OrderedCollection new
 ]
 
+{ #category : #accessing }
+GtAbstractExpandableStackElement >> cursorInterval [
+	| cursors |
+	selectedCoderUIModel ifNil: [ ^ 1 to: 0 ].
+	cursors := selectedCoderUIModel cursors.
+	cursors isEmpty ifTrue: [ ^ 1 to: 0 ].
+	^ cursors first position to: cursors first position
+]
+
 { #category : #'accessing elements' }
 GtAbstractExpandableStackElement >> debuggerElement [
 	| currentElement |

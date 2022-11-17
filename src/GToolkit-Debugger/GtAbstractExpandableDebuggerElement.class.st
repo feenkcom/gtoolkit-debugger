@@ -279,6 +279,11 @@ GtAbstractExpandableDebuggerElement >> currentContext [
 	^ self selectedContext 
 ]
 
+{ #category : #accessing }
+GtAbstractExpandableDebuggerElement >> cursorInterval [
+	^ self stackElement cursorInterval
+]
+
 { #category : #'accessing - elements' }
 GtAbstractExpandableDebuggerElement >> detailsPane [
 	^ self childNamed: #detailsPane
