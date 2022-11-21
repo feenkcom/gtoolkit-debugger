@@ -65,20 +65,12 @@ GtAbstractExpandableStackElement >> debuggerElement [
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> disableVariableAnnotations [
-	annotationsEnabled := false.
-	self stackFramesList items do: [ :aCoderUIModel |
-		self todo: #FIXME.
-		"aCoderUIModel coder addOns removeStylerOfType: GtCoderContextVariableValueStyler."
-		aCoderUIModel coder requestUpdateAddOns ].
-	self updateContent
+	stackModel hideVariableValueAnnotations
 ]
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> enableVariableAnnotations [
-	annotationsEnabled := true.
-	self stackFramesList items do: [ :aCoderUIModel |
-		aCoderUIModel coder requestUpdateAddOns ].
-	self updateContent.
+	stackModel showVariableValueAnnotations
 ]
 
 { #category : #initialization }
