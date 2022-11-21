@@ -11,6 +11,61 @@ Class {
 }
 
 { #category : #accessing }
+GtPharoStackElement class >> contextMethodText: aContext [
+	^ aContext isBlockContext
+		ifTrue: [ '[] in ' , aContext outerContext method selector ]
+		ifFalse: [ aContext method selector ]
+]
+
+{ #category : #updating }
+GtPharoStackElement class >> receiversStreamFor: aStackModel [
+	"Hack to work around Pharo block's including 'self' and causing a memory leak"
+
+	^ (aStackModel contextStream
+		collect: [ :each | 
+			each isBlockContext
+				ifTrue: [ each outerContext receiver ]
+				ifFalse: [ each receiver ] ]) withoutDuplicates useIdentityComparison
+		collect: [ :receiver | 
+			BrGroup new
+				stream: (aStackModel contextStream
+						select: [ :context | 
+							(context isBlockContext
+								ifTrue: [ context outerContext receiver ]
+								ifFalse: [ context receiver ]) = receiver ]);
+				domainObject: receiver;
+				itemStencil: [ BrHorizontalPane new
+						margin: (BlInsets left: 10);
+						hMatchParent;
+						vFitContent ];
+				itemDataBinder: [ :pane :each | 
+					pane
+						addAptitude: BrGlamorousListItemAptitude;
+						removeChildren;
+						addChild: (BrLabel new
+								beSmallSize;
+								margin: (BlInsets left: 2 right: 2);
+								hMatchParent;
+								aptitude: BrGlamorousLabelAptitude;
+								text: (self contextMethodText: each);
+								yourself);
+						addChild: (BrLabel new
+								beSmallSize;
+								margin: (BlInsets left: 2 right: 2);
+								hMatchParent;
+								aptitude: BrGlamorousLabelAptitude;
+								text: each methodClass printString;
+								yourself);
+						addChild: (BrLabel new
+								beSmallSize;
+								margin: (BlInsets left: 2 right: 2);
+								hMatchParent;
+								aptitude: BrGlamorousLabelAptitude;
+								text: (each method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ]);
+								yourself) ] ]
+]
+
+{ #category : #accessing }
 GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	| context |
 	super actOnCoderInFocusFor: aContextCoderUIModel.
@@ -67,7 +122,7 @@ GtPharoStackElement >> buildStackIndex [
 		title: 'Method';
 		matchParent;
 		cellStencil: labelBlock;
-		dataBinder: [ :element :context | element text: (self contextMethodText: context) ].
+		dataBinder: [ :element :context | element text: (self class contextMethodText: context) ].
 	indexList column
 		title: 'Package';
 		cellStencil: labelBlock;
@@ -130,13 +185,6 @@ GtPharoStackElement >> contextFilters: aCollection [
 			ifFalse: [ aCollection ].
 	stackModel filters: filters.
 	self debuggerElement session filters: filters
-]
-
-{ #category : #accessing }
-GtPharoStackElement >> contextMethodText: aContext [
-	^ aContext isBlockContext
-		ifTrue: [ '[] in ' , aContext outerContext method selector ]
-		ifFalse: [ aContext method selector ]
 ]
 
 { #category : #initialization }
@@ -256,49 +304,7 @@ GtPharoStackElement >> updateIndexesSelection [
 { #category : #updating }
 GtPharoStackElement >> updateReceiversIndex [
 	self
-		inUIProcessDo: [ receiversIndex
-				stream: ((stackModel contextStream
-						collect: [ :each | 
-							each isBlockContext
-								ifTrue: [ each outerContext receiver ]
-								ifFalse: [ each receiver ] ]) withoutDuplicates useIdentityComparison
-						collect: [ :receiver | 
-							BrGroup new
-								stream: (stackModel contextStream
-										select: [ :context | 
-											(context isBlockContext
-												ifTrue: [ context outerContext receiver ]
-												ifFalse: [ context receiver ]) = receiver ]);
-								domainObject: receiver;
-								itemStencil: [ BrHorizontalPane new
-										margin: (BlInsets left: 10);
-										hMatchParent;
-										vFitContent ];
-								itemDataBinder: [ :pane :each | 
-									pane
-										addAptitude: BrGlamorousListItemAptitude;
-										removeChildren;
-										addChild: (BrLabel new
-												beSmallSize;
-												margin: (BlInsets left: 2 right: 2);
-												hMatchParent;
-												aptitude: BrGlamorousLabelAptitude;
-												text: (self contextMethodText: each);
-												yourself);
-										addChild: (BrLabel new
-												beSmallSize;
-												margin: (BlInsets left: 2 right: 2);
-												hMatchParent;
-												aptitude: BrGlamorousLabelAptitude;
-												text: each methodClass printString;
-												yourself);
-										addChild: (BrLabel new
-												beSmallSize;
-												margin: (BlInsets left: 2 right: 2);
-												hMatchParent;
-												aptitude: BrGlamorousLabelAptitude;
-												text: (each method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ]);
-												yourself) ] ]) ]
+		inUIProcessDo: [ receiversIndex stream: (self class receiversStreamFor: stackModel) ]
 ]
 
 { #category : #updating }
