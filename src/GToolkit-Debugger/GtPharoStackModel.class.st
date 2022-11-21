@@ -91,6 +91,16 @@ GtPharoStackModel >> getCoderViewModelForContext: aContext [
 ]
 
 { #category : #accessing }
+GtPharoStackModel >> hideVariableValueAnnotations [
+	coderViewModelCache
+		do: [ :viewModel | 
+			viewModel
+				stylers: (viewModel stylers
+						reject: [ :each | each isKindOf: GtStackContextVariableValueStyler ]).
+			viewModel requestUpdateAddOns ]
+]
+
+{ #category : #accessing }
 GtPharoStackModel >> initialize [
 	super initialize.
 	coderViewModelCache := IdentityDictionary new.
@@ -114,6 +124,15 @@ GtPharoStackModel >> session [
 GtPharoStackModel >> session: debuggingSession [
 	session := debuggingSession.
 	self updateContent
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> showVariableValueAnnotations [
+	coderViewModelCache
+		do: [ :viewModel | 
+			viewModel
+				addStyler: (GtStackContextVariableValueStyler new coderViewModel: viewModel).
+			viewModel requestUpdateAddOns ]
 ]
 
 { #category : #accessing }
