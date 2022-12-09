@@ -94,9 +94,7 @@ GtPharoStackModel >> getCoderViewModelForContext: aContext [
 GtPharoStackModel >> hideVariableValueAnnotations [
 	coderViewModelCache
 		do: [ :viewModel | 
-			viewModel
-				stylers: (viewModel stylers
-						reject: [ :each | each isKindOf: GtStackContextVariableValueStyler ]).
+			viewModel removeStylersOfClass: GtStackContextVariableValueStyler.
 			viewModel requestUpdateAddOns ]
 ]
 
