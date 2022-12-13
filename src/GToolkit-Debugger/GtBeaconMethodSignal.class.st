@@ -8,7 +8,7 @@ Class {
 		'glutinUIProcessId',
 		'label'
 	],
-	#category : 'GToolkit-Debugger-Logging'
+	#category : #'GToolkit-Debugger-Logging'
 }
 
 { #category : #'instance creation' }
@@ -46,7 +46,7 @@ GtBeaconMethodSignal >> gtViewMethodSourceFor: aView [
 	<gtView>
 	| aMethodClassName methodClass |
 	aMethodClassName := (self methodClassName endsWith: ' class')
-		ifTrue: [ self methodClassName removeSuffix: ' class' ]
+		ifTrue: [ self methodClassName withoutSuffix: ' class' ]
 		ifFalse: [ self methodClassName ].
 	
 	methodClass := aMethodClassName asClassIfAbsent: [ 
