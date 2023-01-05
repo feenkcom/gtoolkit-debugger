@@ -8,7 +8,7 @@ Class {
 		'annotationsEnabled',
 		'stackModel'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #callbacks }
@@ -37,7 +37,17 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 					anEvent currentTarget coderViewModel
 						ifNotNil: [ self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
 			coderElement ];
-		itemDataBinder: [ :eachCoderElement :eachCoderUIModel | eachCoderElement coderViewModel: eachCoderUIModel ];
+		itemDataBinder: [ :eachCoderElement :eachCoderUIModel :eachIndex |
+			GtDebuggerStackElementBindCoderViewModelSignal new
+				coderElement: eachCoderElement;
+				oldCoderViewModel: (eachCoderElement hasTextualCoderViewModel
+					ifTrue: [ eachCoderElement coderViewModel ]
+					ifFalse: [ nil ]);
+				newCoderViewModel: eachCoderUIModel;
+				coderIndex: eachIndex;
+				emit.
+
+			eachCoderElement coderViewModel: eachCoderUIModel ];
 		items: OrderedCollection new
 ]
 
@@ -103,8 +113,10 @@ GtAbstractExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
 	self onStackChanged
 ]
 
-{ #category : #accessing }
+{ #category : #'private - updating' }
 GtAbstractExpandableStackElement >> onStackChanged [
+	GtDebuggerStackElementOnStackChangedSignal emit.
+
 	self
 		inUIProcessDo: [ self stackFramesList stream: stackModel coderViewModelStream.
 			self stackFramesList scrollToIndex: 1 ]
@@ -167,18 +179,24 @@ GtAbstractExpandableStackElement >> stackFramesList [
 	^ self childNamed: #expandableFrames
 ]
 
-{ #category : #updating }
+{ #category : #'private - updating' }
 GtAbstractExpandableStackElement >> updateContent [
+	GtDebuggerStackElementOnUpdateSessionSignal emit.
+
 	self updateForSession: self debuggerElement session
 ]
 
-{ #category : #updating }
+{ #category : #'private - updating' }
 GtAbstractExpandableStackElement >> updateDebugger [
+	GtDebuggerStackElementOnUpdateDebuggerSignal emit.
+
 	self debuggerElement updateContents
 ]
 
-{ #category : #accessing }
+{ #category : #'private - updating' }
 GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
+	GtDebuggerStackElementOnUpdateSessionSignal emit.
+
 	stackModel
 		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
 		ifNotNil: [ stackModel updateContent ].

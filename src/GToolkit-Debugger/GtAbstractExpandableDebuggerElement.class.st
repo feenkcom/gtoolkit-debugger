@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'toolbar'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #accessing }

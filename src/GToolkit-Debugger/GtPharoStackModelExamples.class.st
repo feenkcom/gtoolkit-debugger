@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPharoStackModelExamples,
 	#superclass : #Object,
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Examples'
 }
 
 { #category : #accessing }

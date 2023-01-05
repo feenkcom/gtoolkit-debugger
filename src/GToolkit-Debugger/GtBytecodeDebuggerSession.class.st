@@ -1,7 +1,7 @@
 Class {
 	#name : #GtBytecodeDebuggerSession,
 	#superclass : #DebugSession,
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Models'
 }
 
 { #category : #'debugging actions' }

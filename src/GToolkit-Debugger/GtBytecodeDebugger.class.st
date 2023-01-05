@@ -21,7 +21,7 @@ Class {
 		'bytecodesPane',
 		'bytecodesListElement'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #initialization }

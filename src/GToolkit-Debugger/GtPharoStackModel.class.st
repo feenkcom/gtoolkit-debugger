@@ -13,7 +13,7 @@ Class {
 		'filters',
 		'coderViewModelCache'
 	],
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Models'
 }
 
 { #category : #accessing }

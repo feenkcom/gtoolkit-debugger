@@ -6,7 +6,7 @@ Class {
 		'bytecodesListElement',
 		'expandablePane'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #accessing }
