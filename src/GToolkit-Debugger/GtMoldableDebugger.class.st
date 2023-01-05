@@ -12,7 +12,7 @@ Class {
 		'LogDebuggerStackToFile',
 		'LogFileName'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #'settings api' }

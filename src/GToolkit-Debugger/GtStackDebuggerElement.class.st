@@ -22,7 +22,7 @@ Class {
 		'detailsPane',
 		'stackElement'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #initialization }

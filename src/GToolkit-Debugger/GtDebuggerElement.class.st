@@ -6,7 +6,7 @@ Class {
 		'announcer',
 		'browserClosingHandler'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #testing }

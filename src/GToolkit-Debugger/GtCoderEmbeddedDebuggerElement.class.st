@@ -6,7 +6,7 @@ Class {
 		'signaledException',
 		'isTerminationDisabled'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #opening }

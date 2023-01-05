@@ -7,7 +7,7 @@ Class {
 		'receiversTab',
 		'receiversIndex'
 	],
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #accessing }

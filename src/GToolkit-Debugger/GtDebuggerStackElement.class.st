@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDebuggerStackElement,
 	#superclass : #BlElement,
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Elements'
 }
 
 { #category : #initialization }
