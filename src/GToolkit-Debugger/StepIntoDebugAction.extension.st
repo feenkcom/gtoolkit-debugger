@@ -7,7 +7,7 @@ StepIntoDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 		icon: BrGlamorousIcons into;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F11;
-				build) userPrintString
+				build) gtDisplayString
 ]
 
 { #category : #'*GToolkit-Debugger' }
