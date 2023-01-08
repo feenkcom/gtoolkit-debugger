@@ -8,7 +8,7 @@ RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 			icon: BrGlamorousIcons restart;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F7;
-				build) userPrintString
+				build) gtDisplayString
 ]
 
 { #category : #'*GToolkit-Debugger' }
