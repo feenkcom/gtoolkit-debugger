@@ -97,7 +97,10 @@ GtEmergencyDebugger >> openInGluitinWindow [
 	windowBuilder extent: 750@650.
 
 	self window: (eventsLoop createWindow: windowBuilder).
-	renderer := (PixelsWorld size: window innerExtent windowHandle: window rawWindowHandle)
+	renderer := (PixelsWorld
+			size: window innerExtent
+			windowHandle: window rawWindowHandle
+			displayHandle: window rawDisplayHandle)
 		resizeBuffer: window innerExtent.
 
 	self window requestRedraw.
