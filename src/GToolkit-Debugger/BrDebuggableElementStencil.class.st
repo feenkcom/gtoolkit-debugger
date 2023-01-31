@@ -1,5 +1,5 @@
 Class {
-	#name : #BrDebugglableElementStencil,
+	#name : #BrDebuggableElementStencil,
 	#superclass : #BrStencil,
 	#instVars : [
 		'exception'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'api - instantiation' }
-BrDebugglableElementStencil >> create [
+BrDebuggableElementStencil >> create [
 	<return: #BlElement>
 	| aLabel aButton aContainer |
 	aLabel := BrButton new
@@ -34,7 +34,7 @@ BrDebugglableElementStencil >> create [
 ]
 
 { #category : #'api - instantiation' }
-BrDebugglableElementStencil >> createDebugButton [
+BrDebuggableElementStencil >> createDebugButton [
 	^ BrButton new
 		hFitContent;
 		aptitude: BrGlamorousButtonWithIconAptitude new;
@@ -47,17 +47,17 @@ BrDebugglableElementStencil >> createDebugButton [
 ]
 
 { #category : #accessing }
-BrDebugglableElementStencil >> exception [
+BrDebuggableElementStencil >> exception [
 	^ exception
 ]
 
 { #category : #accessing }
-BrDebugglableElementStencil >> exception: anException [
+BrDebuggableElementStencil >> exception: anException [
 	exception := anException
 ]
 
 { #category : #accessing }
-BrDebugglableElementStencil >> freeze: anException [
+BrDebuggableElementStencil >> freeze: anException [
 	| anExceptionCopy |
 	
 	anExceptionCopy := anException copy.
@@ -68,7 +68,7 @@ BrDebugglableElementStencil >> freeze: anException [
 ]
 
 { #category : #'instance creation' }
-BrDebugglableElementStencil >> newDebugAction [
+BrDebuggableElementStencil >> newDebugAction [
 
 	^ [ 
 	  [ 
@@ -83,7 +83,7 @@ BrDebugglableElementStencil >> newDebugAction [
 ]
 
 { #category : #'instance creation' }
-BrDebugglableElementStencil >> newTextLabel [
+BrDebuggableElementStencil >> newTextLabel [
 	^ self exception printString asRopedText 
 		glamorousCodeFontAndSmallSize;
 		foreground: BrGlamorousColors linkWithErrorColor
