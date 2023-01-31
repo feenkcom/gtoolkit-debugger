@@ -2,7 +2,7 @@ Extension { #name : #Exception }
 
 { #category : #'*GToolkit-Debugger' }
 Exception >> asDebuggableElement [
-	^ BrDebugglableElementStencil new
+	^ BrDebuggableElementStencil new
 		freeze: self;
 		asElement
 ]
