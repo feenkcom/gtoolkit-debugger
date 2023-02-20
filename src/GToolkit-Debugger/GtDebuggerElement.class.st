@@ -207,6 +207,14 @@ GtDebuggerElement >> openInPager [
 	^ self open: aPager withTitle: self session name.
 ]
 
+{ #category : #actions }
+GtDebuggerElement >> resumeAndCloseDebugger [
+	self session
+		resume;
+		clear.
+	self close
+]
+
 { #category : #accessing }
 GtDebuggerElement >> session [
 	^ debuggingSession
