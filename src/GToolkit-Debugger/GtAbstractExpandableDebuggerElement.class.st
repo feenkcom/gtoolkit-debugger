@@ -343,6 +343,20 @@ GtAbstractExpandableDebuggerElement >> selectedContext [
 	^ self stackElement selectedContext
 ]
 
+{ #category : #'accessing - settings' }
+GtAbstractExpandableDebuggerElement >> selectedDetailesTabName [
+	^ self settings 
+		at: #selectedDetailedTabName 
+		ifAbsent: [ nil ]
+]
+
+{ #category : #'accessing - settings' }
+GtAbstractExpandableDebuggerElement >> selectedDetailesTabName: aString [
+	self settings 
+		at: #selectedDetailedTabName 
+		put: aString
+]
+
 { #category : #opening }
 GtAbstractExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 	"I set the debugger to the first non filtered stack"

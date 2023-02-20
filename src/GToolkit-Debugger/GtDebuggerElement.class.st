@@ -207,20 +207,6 @@ GtDebuggerElement >> openInPager [
 	^ self open: aPager withTitle: self session name.
 ]
 
-{ #category : #'accessing - settings' }
-GtDebuggerElement >> selectedDetailesTabName [
-	^ self settings 
-		at: #selectedDetailedTabName 
-		ifAbsent: [ nil ]
-]
-
-{ #category : #'accessing - settings' }
-GtDebuggerElement >> selectedDetailesTabName: aString [
-	self settings 
-		at: #selectedDetailedTabName 
-		put: aString
-]
-
 { #category : #accessing }
 GtDebuggerElement >> session [
 	^ debuggingSession
