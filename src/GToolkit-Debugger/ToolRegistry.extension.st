@@ -31,7 +31,7 @@ ToolRegistry >> debuggersWithRanksMatching: aBlock [
 
 	^ (self registeredDebuggersWithRanks
 			select: [ :aPair | aBlock value: aPair key ])
-			sort: [ :pair1 :pair2 | pair1 value > pair2 value ].
+			sort: [ :pair1 :pair2 | pair1 value < pair2 value ].
 ]
 
 { #category : #'*GToolkit-Debugger' }
