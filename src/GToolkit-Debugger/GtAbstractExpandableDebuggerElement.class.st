@@ -263,7 +263,10 @@ GtAbstractExpandableDebuggerElement >> contextVariables [
 
 { #category : #'accessing - elements' }
 GtAbstractExpandableDebuggerElement >> contextVariablesElement [
-	^ self detailsPane childNamed: #contextVariablesElement
+	^ self detailsPane
+		childNamed: #contextVariablesElement
+		ifFound: [ :elem | elem ]
+		ifNone: [ nil ]
 ]
 
 { #category : #callbacks }
@@ -417,5 +420,6 @@ GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 
 { #category : #updating }
 GtAbstractExpandableDebuggerElement >> updateVariablesList [
-	self contextVariablesElement items: self contextVariables
+	self contextVariablesElement
+		ifNotNil: [ :elem | elem items: self contextVariables ]
 ]
