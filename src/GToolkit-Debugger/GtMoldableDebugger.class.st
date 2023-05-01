@@ -50,6 +50,12 @@ GtMoldableDebugger class >> logFileName [
 	^ LogFileName ifNil: [ self defaultLogFileName ] 
 ]
 
+{ #category : #accessing }
+GtMoldableDebugger class >> logFileName: newName [
+
+	LogFileName := newName
+]
+
 { #category : #'instance creation' }
 GtMoldableDebugger class >> on: aDebugSession [
 	^ self new 
