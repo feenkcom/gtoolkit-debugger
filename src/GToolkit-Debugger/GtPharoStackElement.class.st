@@ -141,7 +141,7 @@ GtPharoStackElement >> buildStackIndex [
 									glamorousRegularFont;
 									fontSize: 12;
 									foreground: Color gray).
-					column width applyOn: label.
+					column columnWidth applyOn: label.
 					label ]).
 	indexList
 		when: BrSelectionChanged
