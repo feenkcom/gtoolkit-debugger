@@ -114,7 +114,6 @@ GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
 	^ self session class
 		debuggingActionsForPragmas: aSymbolsCollection 
 		for: self
-	
 ]
 
 { #category : #announce }

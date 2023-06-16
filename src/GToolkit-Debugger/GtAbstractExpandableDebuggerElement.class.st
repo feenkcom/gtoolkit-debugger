@@ -237,7 +237,7 @@ GtAbstractExpandableDebuggerElement >> buildVariablesListElement [
 				on: Error 
 				do: [ :error | anErrorText := aVariableNode errorMessage asRopedText foreground: Color red ].
 			
-			aCellElement text: ([ anErrorText ifNil: [ aRawValue gtDisplayString asRopedText ] ] 
+			aCellElement text: ([ anErrorText ifNil: [ aRawValue gtDisplayText asRopedText ] ] 
 					on: Error, Halt
 					do: [ :error | error messageText asRopedText foreground: Color red ]) ].
 	^ list
