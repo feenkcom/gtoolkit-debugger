@@ -54,6 +54,17 @@ DebugAction >> actionSelector [
 	^ actionSelector ifNil: [ self defaultActionSelector ]
 ]
 
+{ #category : #'phlow ' }
+DebugAction >> addToPhlowView: aView [
+	aView actionButtonDo: [ :aButtonAction | 
+		self defaultIcon ifNotNil: [ :anIcon |
+			aButtonAction icon: anIcon ].
+		
+		aButtonAction
+			label: self defaultLabel;
+			action: [ self execute ] ]
+]
+
 { #category : #testing }
 DebugAction >> appliesToContext: aContext [
 
@@ -70,6 +81,19 @@ DebugAction >> appliesToCurrentContext [
 DebugAction >> appliesToDebugger: aDebugger [
 
 	^ true
+]
+
+{ #category : #'phlow ' }
+DebugAction >> asBrickButton [
+	| actionButton |
+	actionButton := BrButton new 
+		aptitude: BrGlamorousButtonWithIconAptitude;
+		label: self label; 
+		action: [ 
+			self execute ].
+	self icon ifNotNil: [ :anIcon | 
+		actionButton icon: self icon asElement ].
+	^ actionButton
 ]
 
 { #category : #accessing }

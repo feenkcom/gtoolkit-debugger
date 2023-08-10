@@ -149,8 +149,9 @@ GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
 		when: BlMouseEnterEvent do: [ :anEvent | anEvent currentTarget background: Color veryVeryLightGray lighter ];
 		when: BlMouseLeaveEvent do: [ :anEvent | anEvent currentTarget background: Color white ];
 		action: [ :buttonElement |
-			self actOnButtonSelected: buttonElement forDebuggerOfType: aDebuggerClass ]
-		
+			self 
+				actOnButtonSelected: buttonElement 
+				forDebuggerOfType: aDebuggerClass ]
 ]
 
 { #category : #'building widgets' }

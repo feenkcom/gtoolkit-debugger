@@ -6,3 +6,8 @@ Exception >> asDebuggableElement [
 		freeze: self;
 		asElement
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Exception >> gtDebuggingViewConfiguration [
+	^ GtExceptionDebugingViewConfiguration forException: self
+]
