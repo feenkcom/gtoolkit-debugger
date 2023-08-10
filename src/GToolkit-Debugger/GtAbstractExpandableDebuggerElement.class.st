@@ -132,12 +132,7 @@ GtAbstractExpandableDebuggerElement >> buildStackTabGroupForElement: aStackConta
 		aptitude: BrGlamorousTabWithoutBarAptitude;
 		label: self session name;
 		stencil: (BrValuableStencil from: aStackContainerElement);
-		padding:
-			(BlInsets
-				top: 15
-				right: 0
-				bottom: 15
-				left: 10);
+		padding: (BlInsets top: 15 right: 0 bottom: 15 left: 10);
 		toolbarStencil: [ anObject ].
 	tabGroup := BrTabGroup new.
 	tabGroup
@@ -164,16 +159,9 @@ GtAbstractExpandableDebuggerElement >> buildStackToolbarActions [
 	<return: #Collection of: #BrButton>	
 		
 	| buttons toggle |
-	buttons := (self actionsForPragmas: self stackDebuggingActionsPragmas) collect: [ :aDebuggingAction | 
-		| actionButton |
-		actionButton := BrButton new 
-			aptitude: BrGlamorousButtonWithIconAptitude;
-			label: aDebuggingAction label; 
-			action: [ 
-				aDebuggingAction execute ].
-			aDebuggingAction icon ifNotNil: [ :anIcon | 
-				actionButton icon: aDebuggingAction icon asElement ].
-			actionButton ].
+	buttons := (self actionsForPragmas: self stackDebuggingActionsPragmas) 
+		collect: [ :aDebuggingAction | 
+			aDebuggingAction asBrickButton ].
 		
 	toggle := BrToggle new 
 		aptitude: BrGlamorousButtonWithIconAptitude + BrGlamorousToggleBackgroundAptitude;
@@ -374,6 +362,15 @@ GtAbstractExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 		self stackElement selectContext: filteredStack first ]
 ]
 
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
+	^ debuggingSession exception 
+		ifNil: [ super stackDebuggingActionsPragmas ] 
+		ifNotNil: [ :anException |
+			super stackDebuggingActionsPragmas
+				, anException gtDebuggingViewConfiguration globalDebuggingActionPragmas ] 
+]
+
 { #category : #'accessing - elements' }
 GtAbstractExpandableDebuggerElement >> stackElement [
 	^ self stackPane childNamed: #stackElement
@@ -415,7 +412,33 @@ GtAbstractExpandableDebuggerElement >> updateStackWidget [
 GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 	toolbar removeAllItems.
 	self buildStackToolbarActions do: [ :anAction | 
-		toolbar addItem: anAction ]
+		toolbar addItem: anAction ].
+	self updateToolbarWithExtraActions.
+]
+
+{ #category : #callbacks }
+GtAbstractExpandableDebuggerElement >> updateToolbarWithExtraActions [
+	| phlowAction |
+	phlowAction := GtPhlowAction new dropdown
+		tooltip: 'Inspect';
+		icon: BrGlamorousVectorIcons hamburger;
+		content: [ :aButton | 
+			| actions |
+			actions := OrderedCollection new.
+			debuggingSession exception ifNotNil: [
+				actions add: ('Inspect Exception' -> [ :anElement | 
+					anElement phlow spawnObject: debuggingSession exception.
+					aButton dispatchEvent: BrDropdownHideWish new])].
+			actions add: ('Inspect Debugging Session' -> [ :anElement | 
+				anElement phlow spawnObject: debuggingSession.
+				aButton dispatchEvent: BrDropdownHideWish new ]).
+			BrGlamorousSimpleContextMenuContent new
+				items:actions;
+				yourself ].
+	phlowAction 
+		asElement: [ :actionElement | 
+			toolbar addItem: actionElement ]				
+		withHostElement: toolbar 
 ]
 
 { #category : #updating }
