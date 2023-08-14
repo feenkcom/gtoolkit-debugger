@@ -1,5 +1,5 @@
 Class {
-	#name : #GtExampleExceptionWithDebuggingViews,
+	#name : #GtExampleExceptionWithDebuggingView,
 	#superclass : #Exception,
 	#instVars : [
 		'customData'
@@ -8,17 +8,17 @@ Class {
 }
 
 { #category : #accessing }
-GtExampleExceptionWithDebuggingViews >> customData [
+GtExampleExceptionWithDebuggingView >> customData [
 	^ customData
 ]
 
 { #category : #accessing }
-GtExampleExceptionWithDebuggingViews >> customData: anObject [
+GtExampleExceptionWithDebuggingView >> customData: anObject [
 	customData := anObject
 ]
 
 { #category : #'gt-extensions' }
-GtExampleExceptionWithDebuggingViews >> gtViewCustomDataFor: aView [
+GtExampleExceptionWithDebuggingView >> gtViewCustomDataFor: aView [
 	<gtView> 
 	<gtExceptionDebuggingView>
 	
