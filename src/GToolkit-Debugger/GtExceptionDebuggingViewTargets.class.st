@@ -1,3 +1,14 @@
+"
+{{gtClass:GtExceptionDebuggingViewTargets}} models all the target objects where the domain-specific debugger associated with an exception looks for debugging views. 
+
+This is a composite target, containing a list of invidual target objects that are instances of {{gtClass:GtExceptionDebuggingViewsObjectTarget}}. This allows debugging views and actions to be defined either in the exception objects, or in a list of related objects that the exception configures.
+The main API methods for doing the configuration are:
+	- {{gtMethod:GtExceptionDebuggingViewTargets>>withDebuggingExceptionTargetFor:|label=#selector}}
+	- {{gtMethod:GtExceptionDebuggingViewTargets>>withoutDebuggingExceptionTarget|label=#selector}}
+	- {{gtMethod:GtExceptionDebuggingViewTargets>>addDebuggingTargetFor:|label=#selector}}
+
+It is possible to just configure the exception, or a one or more objects, or both the exception and a list of objects as the target for debugging views and actions.
+"
 Class {
 	#name : #GtExceptionDebuggingViewTargets,
 	#superclass : #Object,
@@ -10,6 +21,8 @@ Class {
 
 { #category : #configuration }
 GtExceptionDebuggingViewTargets >> addDebuggingTargetFor: anObject [
+	"Adds the given object as a target for views and actions"
+
 	objectTargets add: (GtExceptionDebuggingViewsObjectTarget forObject: anObject)
 ]
 
@@ -46,6 +59,7 @@ GtExceptionDebuggingViewTargets >> initialize [
 
 { #category : #configuration }
 GtExceptionDebuggingViewTargets >> withDebuggingExceptionTargetFor: anException [
+	"Configures the given exception as a target for views and actions"
 	exceptionTarget := GtExceptionDebuggingViewsObjectTarget forObject: anException
 ]
 
@@ -59,5 +73,6 @@ GtExceptionDebuggingViewTargets >> withIndividualTargetsDo: aBlock [
 
 { #category : #configuration }
 GtExceptionDebuggingViewTargets >> withoutDebuggingExceptionTarget [
+	"Indicate the current exception should not be used as a target for views and actions"
 	exceptionTarget := nil
 ]
