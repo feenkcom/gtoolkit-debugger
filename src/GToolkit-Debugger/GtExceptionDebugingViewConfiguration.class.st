@@ -5,7 +5,7 @@ Class {
 		'debuggingViewPragmaNames',
 		'globalDebuggingActionPragmaNames',
 		'enableDebuggingViewExtensionComputation',
-		'debuggingTargetObject'
+		'debuggingTargets'
 	],
 	#category : #'GToolkit-Debugger-Models'
 }
@@ -13,7 +13,12 @@ Class {
 { #category : #'*GToolkit-Debugger' }
 GtExceptionDebugingViewConfiguration class >> forException: anException [
 	^ self new
-		 debuggingTargetObject: anException
+		 withDebuggingExceptionTargetFor: anException
+]
+
+{ #category : #configuration }
+GtExceptionDebugingViewConfiguration >> addDebuggingTargetFor: anObject [
+	debuggingTargets addDebuggingTargetFor: anObject
 ]
 
 { #category : #testing }
@@ -24,13 +29,8 @@ GtExceptionDebugingViewConfiguration >> canShowDebuggingExtension [
 ]
 
 { #category : #'accessing configurarion' }
-GtExceptionDebugingViewConfiguration >> debuggingTargetObject [
-	^ debuggingTargetObject
-]
-
-{ #category : #'accessing configurarion' }
-GtExceptionDebugingViewConfiguration >> debuggingTargetObject: aTargetObject [
-	debuggingTargetObject := aTargetObject
+GtExceptionDebugingViewConfiguration >> collectTargetDebuggingViews [
+	^ debuggingTargets collectTargetDebuggingViewsForPragmaNames: self debuggingViewPragmas
 ]
 
 { #category : #'accessing configurarion' }
@@ -88,8 +88,22 @@ GtExceptionDebugingViewConfiguration >> globalDebuggingActionPragmas: aCollectio
 
 { #category : #testing }
 GtExceptionDebugingViewConfiguration >> hasDebuggingViewMethods [
-	^ (GtPhlowCollector new
-		fromObject: self debuggingTargetObject;
-		pragmaNames: self debuggingViewPragmas;
-		collectAllPragmas) size > 0
+	^ debuggingTargets hasDebuggingViewMethodsWithPragmaNames: self debuggingViewPragmas
+]
+
+{ #category : #initialization }
+GtExceptionDebugingViewConfiguration >> initialize [
+	super initialize.
+	
+	debuggingTargets := GtExceptionDebuggingViewTargets new
+]
+
+{ #category : #configuration }
+GtExceptionDebugingViewConfiguration >> withDebuggingExceptionTargetFor: aTargetException [
+	debuggingTargets withDebuggingExceptionTargetFor: aTargetException
+]
+
+{ #category : #configuration }
+GtExceptionDebugingViewConfiguration >> withoutDebuggingExceptionTarget [
+	debuggingTargets withoutDebuggingExceptionTarget
 ]

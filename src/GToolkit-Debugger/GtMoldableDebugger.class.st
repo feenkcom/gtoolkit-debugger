@@ -116,7 +116,6 @@ GtMoldableDebugger >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDe
 	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
 	self updateSwitchButtonsExcluding: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
-	
 ]
 
 { #category : #callbacks }

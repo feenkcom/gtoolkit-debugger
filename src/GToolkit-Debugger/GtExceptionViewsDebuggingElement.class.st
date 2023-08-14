@@ -124,12 +124,7 @@ GtExceptionViewsDebuggingElement >> collectDebuggingActionsForView: aView [
 
 { #category : #'views - collecting' }
 GtExceptionViewsDebuggingElement >> collectTargetDebuggingViews [
-	^ (GtPhlowEmptyView empty composite 
-		title: 'Views';
-		collectorDo: [ :aCollector |
-			aCollector 
-				fromObject: self debuggingConfiguration debuggingTargetObject;
-				pragmaNames: self debuggingConfiguration debuggingViewPragmas ])
+	^ self debuggingConfiguration collectTargetDebuggingViews
 ]
 
 { #category : #accessing }
@@ -194,7 +189,6 @@ GtExceptionViewsDebuggingElement >> updateContent [
 	self updateMainTabLabel.
 	self updateViews.
 	self updateToolbarActions.
-
 ]
 
 { #category : #updating }
