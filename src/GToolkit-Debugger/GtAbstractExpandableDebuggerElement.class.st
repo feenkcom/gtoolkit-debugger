@@ -180,54 +180,65 @@ GtAbstractExpandableDebuggerElement >> buildVariablesListElement [
 	| list |
 	list := BrColumnedList new.
 	list margin: (BlInsets top: 10).
-	list addEventHandler: (GtPhlowListToSelectHandler new 
-		transformation: [ :variableNode | variableNode value ]).
-	list rowStencil: (BrGlamorousColumnedListSelectableRowElementStencilBuilder new).
+	list
+		addEventHandler: (GtPhlowListToSelectHandler new
+				transformation: [ :variableNode | variableNode value ]).
+	list rowStencil: BrGlamorousColumnedListSelectableRowElementStencilBuilder new.
 	list column
 		title: 'Icon';
 		width: 26;
-		cellStencil: [ BlElement new 
-			size: 26@22;
-			layout: BlLinearLayout horizontal alignCenterLeft;
-			labeled: 'Icon Container';
-			padding: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
-		dataBinder: [ :aCellElement :aVariableNode |
+		cellStencil: [ BlElement new
+				size: 26 @ 22;
+				layout: BlLinearLayout horizontal alignCenterLeft;
+				labeled: 'Icon Container';
+				padding: (BlInsets
+						top: 3
+						left: 10
+						bottom: 3
+						right: 0) ];
+		dataBinder: [ :aCellElement :aVariableNode | 
 			| anIconForm aVariableValue |
-			anIconForm := [ 
-				aVariableValue := aVariableNode rawValue.
-				aVariableValue gtInspectorIcon ifNil: [ aVariableValue class systemIcon ]
-			]	on: Error, Halt
-				do: [ :error | self iconNamed: #smallWarningIcon ].
+			anIconForm := [ aVariableValue := aVariableNode rawValue.
+				aVariableValue gtInspectorIcon
+					ifNil: [ aVariableValue class iconNamed: aVariableValue class systemIconName ] ]
+					on: Error , Halt
+					do: [ :error | self iconNamed: #smallWarningIcon ].
 			aCellElement
 				removeChildren;
 				addChild: anIconForm asElement ].
 	list column
 		title: 'Variable';
-		cellStencil: [ 
-			BrLabel new
+		cellStencil: [ BrLabel new
 				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
 				hMatchParent;
 				vFitContent;
-				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
-		dataBinder: [ :aCellElement :aVariableNode |
-			aCellElement text: aVariableNode key asRopedText ].
+				margin: (BlInsets
+						top: 3
+						left: 10
+						bottom: 3
+						right: 0) ];
+		dataBinder: [ :aCellElement :aVariableNode | aCellElement text: aVariableNode key asRopedText ].
 	list column
 		title: 'Value';
-		cellStencil: [
-			BrLabel new
+		cellStencil: [ BrLabel new
 				aptitude: BrGlamorousLabelAptitude new;
 				hMatchParent;
 				vFitContent;
-				margin: (BlInsets top: 3 left: 10 bottom: 3 right: 0) ];
-		dataBinder: [ :aCellElement :aVariableNode |
-			| aRawValue anErrorText|
-			[ aRawValue := aVariableNode rawValue ] 
-				on: Error 
+				margin: (BlInsets
+						top: 3
+						left: 10
+						bottom: 3
+						right: 0) ];
+		dataBinder: [ :aCellElement :aVariableNode | 
+			| aRawValue anErrorText |
+			[ aRawValue := aVariableNode rawValue ]
+				on: Error
 				do: [ :error | anErrorText := aVariableNode errorMessage asRopedText foreground: Color red ].
-			
-			aCellElement text: ([ anErrorText ifNil: [ aRawValue gtDisplayText asRopedText ] ] 
-					on: Error, Halt
-					do: [ :error | error messageText asRopedText foreground: Color red ]) ].
+
+			aCellElement
+				text: ([ anErrorText ifNil: [ aRawValue gtDisplayText asRopedText ] ]
+						on: Error , Halt
+						do: [ :error | error messageText asRopedText foreground: Color red ]) ].
 	^ list
 ]
 
