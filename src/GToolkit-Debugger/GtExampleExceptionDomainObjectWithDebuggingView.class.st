@@ -1,3 +1,9 @@
+"
+This is an example of a domain object that defines three debugging views:
+	- {{gtMethod:name=GtExampleExceptionDomainObjectWithDebuggingView>>gtViewCollectionFor:|label=#selector}} 
+	- {{gtMethod:name=GtExampleExceptionDomainObjectWithDebuggingView>>gtViewDictionaryFor:|label=#selector}}
+	- {{gtMethod:name=GtExampleExceptionDomainObjectWithDebuggingView>>gtViewMessageFor:|label=#selector}}
+"
 Class {
 	#name : #GtExampleExceptionDomainObjectWithDebuggingView,
 	#superclass : #Object,

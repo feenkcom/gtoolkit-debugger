@@ -8,6 +8,8 @@ Exception >> asDebuggableElement [
 ]
 
 { #category : #'*GToolkit-Debugger' }
-Exception >> gtDebuggingViewConfiguration [
-	^ GtExceptionDebugingViewConfiguration forException: self
+Exception >> gtDebuggingExtensionConfiguration [
+	"Return a debugging configuration with default values."
+	
+	^ GtExceptionDebugingExtensionConfiguration forException: self
 ]
