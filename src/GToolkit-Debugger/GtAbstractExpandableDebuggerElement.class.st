@@ -379,7 +379,7 @@ GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
 		ifNil: [ super stackDebuggingActionsPragmas ] 
 		ifNotNil: [ :anException |
 			super stackDebuggingActionsPragmas
-				, anException gtDebuggingViewConfiguration globalDebuggingActionPragmas ] 
+				, anException gtDebuggingExtensionConfiguration globalDebuggingActionPragmas ] 
 ]
 
 { #category : #'accessing - elements' }
