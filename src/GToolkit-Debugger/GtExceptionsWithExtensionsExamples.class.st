@@ -189,3 +189,23 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 
 	^ scripter
 ]
+
+{ #category : #'examples - debuggers' }
+GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering2 [
+	<gtExample>
+	| scripter |
+	
+	scripter := BlScripter new.
+	scripter element: self fullDebuggerOn_exampleExceptionWithDebuggingView.
+	
+	scripter debugger
+		assertIsMainDebuggerElement;
+		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle;
+		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
+			ofType: GtPharoDebuggerElement;
+		assertOneDebuggerSwitchButtonLabeled: GtExceptionDebuggingElement defaultTitle;
+		assertSwitchToDebuggerLabeled: GtExceptionDebuggingElement defaultTitle 
+			ofType: GtExceptionDebuggingElement.
+
+	^ scripter
+]
