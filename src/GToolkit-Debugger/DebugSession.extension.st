@@ -47,3 +47,26 @@ DebugSession class >> debuggingActionsFromClass: aClass forPragma: aSymbol forDe
 						collect: [ :each | each asDebugAction ]) ].
 	^ actions
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession class >> forExceptionFromExampleFor: anException [
+	"Instantiate a debugging session, including a process, for the given exception.
+	This should be used from examples, where the exception was captured by on:do:."
+
+	| context process session |
+
+	"Ensure the entire exception stack is frozen"
+	anException freezeUpTo: nil.
+	
+	context := anException signalerContext.
+	process := Process
+		forContext: context
+		priority: Processor userInterruptPriority.
+	session := DebugSession
+		named: anException description
+		on: process
+		startedAt: context.
+	session exception: anException.
+	
+	^ session
+]

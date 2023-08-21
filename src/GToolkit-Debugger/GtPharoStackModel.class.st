@@ -27,6 +27,11 @@ GtPharoStackModel >> announcer [
 ]
 
 { #category : #accessing }
+GtPharoStackModel >> cachedCodersDo: aBlock [
+	coderViewModelCache do: [ :each | aBlock value: each first ]
+]
+
+{ #category : #accessing }
 GtPharoStackModel >> coderViewModelStream [
 	^ coderViewModelStream asyncSimilarCopy
 ]
@@ -84,18 +89,27 @@ GtPharoStackModel >> forceRefreshStack [
 { #category : #accessing }
 GtPharoStackModel >> getCoderViewModelForContext: aContext [
 	^ lock
-		critical: [ coderViewModelCache
-				at: aContext
-				ifAbsentPut: [ (self createCoderFor: aContext in: session) asCoderViewModel ] ]
+		critical: [ | method entry |
+			method := aContext isBlockContext ifFalse: [ aContext compiledCode ].
+			entry := coderViewModelCache
+					at: aContext
+					ifAbsentPut: [ {(self createCoderFor: aContext in: session) asCoderViewModel.
+							method} ].
+			(entry at: 2) ~~ method
+				ifTrue: [ entry := coderViewModelCache
+							at: aContext
+							put: {(self createCoderFor: aContext in: session) asCoderViewModel.
+									method} ].
+			entry at: 1 ]
 		ifError: [ nil ]
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> hideVariableValueAnnotations [
-	coderViewModelCache
-		do: [ :viewModel | 
-			viewModel removeStylersOfClass: GtStackContextVariableValueStyler.
-			viewModel requestUpdateAddOns ]
+	self
+		cachedCodersDo: [ :each | 
+			each removeStylersOfClass: GtStackContextVariableValueStyler.
+			each requestUpdateAddOns ]
 ]
 
 { #category : #accessing }
@@ -126,8 +140,8 @@ GtPharoStackModel >> session: debuggingSession [
 
 { #category : #accessing }
 GtPharoStackModel >> showVariableValueAnnotations [
-	coderViewModelCache
-		do: [ :viewModel | 
+	self
+		cachedCodersDo: [ :viewModel | 
 			viewModel
 				addStyler: (GtStackContextVariableValueStyler new coderViewModel: viewModel).
 			viewModel requestUpdateAddOns ]

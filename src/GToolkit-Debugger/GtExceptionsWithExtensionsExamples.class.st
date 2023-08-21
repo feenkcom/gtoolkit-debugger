@@ -4,25 +4,60 @@ Class {
 	#category : #'GToolkit-Debugger-Examples'
 }
 
-{ #category : #accessing }
-GtExceptionsWithExtensionsExamples >> createDebuggingSessionForException: anException [ 
-	| exception context process session |
-	exception := anException.
-	exception freezeUpTo: nil.
-	context := exception signalerContext.
-	process := Process
-		forContext: context
-		priority: Processor userInterruptPriority.
-	session := DebugSession
-		named: exception description
-		on: process
-		startedAt: context.
-	session exception: exception.
+{ #category : #asserting }
+GtExceptionsWithExtensionsExamples >> assertDebuggingConfigurationEnabledFor: anException [ 
+	| extensionConfiguration |
+	extensionConfiguration := anException gtDebuggingExtensionConfiguration.
 	
-	^ session
+	self assert: extensionConfiguration notNil.
+	self assert: extensionConfiguration enableDebuggingViewExtension value.
+]
+
+{ #category : #'examples - debuggers' }
+GtExceptionsWithExtensionsExamples >> assertIsMainDebuggerElementFor: aScripter [ 
+	self 
+		assert: aScripter element id
+		equals: GtMoldableDebuggerMainElementId new.
+]
+
+{ #category : #asserting }
+GtExceptionsWithExtensionsExamples >> assertOneDebuggerSwitchButtonLabeled: aDebuggerLabel for: aScripter [
+	<gtExample>
+	| buttonsContainer |
+	
+	buttonsContainer := aScripter element query // GtMoldableDebuggerSwitchButtonsContainerElementId.
+	
+	self
+		assert: buttonsContainer all size
+		equals: 1.
+		
+	self
+		assert: buttonsContainer anyOne children first label asString
+		equals: aDebuggerLabel.
+]
+
+{ #category : #asserting }
+GtExceptionsWithExtensionsExamples >> assertSwitchToDebuggerLabeled: aDebuggerLabel ofType: aDebuggerType for: aScripter [
+	<gtExample>
+	
+	self assertOneDebuggerSwitchButtonLabeled: aDebuggerLabel for: aScripter.
+	
+	aScripter click
+		// GtMoldableDebuggerSwitchButtonsContainerElementId;
+		// BrButton;
+		play.
+		
+	self
+		assert: (aScripter element query // aDebuggerType) all size
+		equals: 1.
 ]
 
 { #category : #accessing }
+GtExceptionsWithExtensionsExamples >> createDebuggingSessionForException: anException [ 
+	^ DebugSession forExceptionFromExampleFor: anException
+]
+
+{ #category : #'examples - debuggers' }
 GtExceptionsWithExtensionsExamples >> debuggerExtensionOn_exampleExceptionWithDebuggingView [
 	<gtExample>
 	| session debugger |
@@ -33,7 +68,7 @@ GtExceptionsWithExtensionsExamples >> debuggerExtensionOn_exampleExceptionWithDe
 	^ debugger
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - debug session' }
 GtExceptionsWithExtensionsExamples >> debugingSession_exampleComparisonExceptionWithDebuggingViews [
 	<gtExample>
 	
@@ -45,7 +80,7 @@ GtExceptionsWithExtensionsExamples >> debugingSession_exampleComparisonException
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - debug session' }
 GtExceptionsWithExtensionsExamples >> debugingSession_exampleExceptionWithDebuggingView [
 	<gtExample>
 	
@@ -57,39 +92,54 @@ GtExceptionsWithExtensionsExamples >> debugingSession_exampleExceptionWithDebugg
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - exceptions' }
 GtExceptionsWithExtensionsExamples >> exampleComparisonExceptionWithDebuggingViews [
 	<gtExample>
+	| exception |
 	
-	^ GtExampleComparisonExceptionWithDebuggingViews new
+	exception:= GtExampleComparisonExceptionWithDebuggingViews new
 		expectedString: GtExampleComparisonExceptionWithDebuggingViews new
 			expectedStringForTest;
 		actualString: GtExampleComparisonExceptionWithDebuggingViews new
 			computedStringForTest;
 		targetClass: GtExampleComparisonExceptionWithDebuggingViews; 
 		targetSelector: #expectedStringForTest.
+	
+	self assertDebuggingConfigurationEnabledFor: exception.
+	
+	^ exception
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - exceptions' }
 GtExceptionsWithExtensionsExamples >> exampleExceptionWithDebuggingView [
 	<gtExample>
+	| exception |
 	
-	^ GtExampleExceptionWithDebuggingView new
+	exception := GtExampleExceptionWithDebuggingView new
 		expectedString: GtExampleComparisonExceptionWithDebuggingViews new
 			expectedShortStringForTest;
 		actualString: GtExampleComparisonExceptionWithDebuggingViews new
-			computedShortStringForTest
+			computedShortStringForTest.
+
+	self assertDebuggingConfigurationEnabledFor: exception.
+			
+	^ exception
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - exceptions' }
 GtExceptionsWithExtensionsExamples >> exampleExceptionWithForwardedDebuggingViews [
 	<gtExample>
+	|exception|
 	
-	^ GtExampleExceptionWithForwardedDebuggingView new
-		initializeWithDomainData
+	exception := GtExampleExceptionWithForwardedDebuggingView new
+		initializeWithDomainData.
+		
+	self assertDebuggingConfigurationEnabledFor: exception.
+	
+	^ exception
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - debuggers' }
 GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleComparisonExceptionWithDebuggingViews [
 	<gtExample>
 	| session debugger |
@@ -100,13 +150,62 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleComparisonExceptionW
 	^ debugger
 ]
 
-{ #category : #accessing }
+{ #category : #'examples - debuggers' }
 GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView [
 	<gtExample>
 	| session debugger |
 	
 	session := self debugingSession_exampleExceptionWithDebuggingView.
 	debugger := GtMoldableDebugger on: session.
-	
+	 
 	^ debugger
+]
+
+{ #category : #'examples - debuggers' }
+GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering [
+	"<gtExample>"
+	| scripter |
+	
+	scripter := BlScripter new.
+	scripter element: self fullDebuggerOn_exampleExceptionWithDebuggingView.
+	
+	self assertIsMainDebuggerElementFor: scripter.
+	
+	self 
+		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle 
+		for: scripter.
+	self 
+		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
+		ofType: GtPharoDebuggerElement 
+		for: scripter.
+		
+	self 
+		assertOneDebuggerSwitchButtonLabeled: GtExceptionDebuggingElement defaultTitle 
+		for: scripter.
+	self 
+		assertSwitchToDebuggerLabeled: GtExceptionDebuggingElement defaultTitle 
+		ofType: GtExceptionDebuggingElement 
+		for: scripter.
+
+	^ scripter
+]
+
+{ #category : #'examples - debuggers' }
+GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering2 [
+	"<gtExample>"
+	| scripter |
+	
+	scripter := BlScripter new.
+	scripter element: self fullDebuggerOn_exampleExceptionWithDebuggingView.
+	
+	scripter debugger
+		assertIsMainDebuggerElement;
+		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle;
+		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
+			ofType: GtPharoDebuggerElement;
+		assertOneDebuggerSwitchButtonLabeled: GtExceptionDebuggingElement defaultTitle;
+		assertSwitchToDebuggerLabeled: GtExceptionDebuggingElement defaultTitle 
+			ofType: GtExceptionDebuggingElement.
+
+	^ scripter
 ]
