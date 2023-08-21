@@ -157,6 +157,7 @@ GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
 GtMoldableDebugger >> createButtonsContainer [
 	| container |
 	container := BlElement new
+		id: GtMoldableDebuggerSwitchButtonsContainerElementId;
 		layout: BlLinearLayout horizontal;
 		clipChildren: false;
 		constraintsDo: [ :c |
@@ -182,12 +183,15 @@ GtMoldableDebugger >> inPager [
 { #category : #initialization }
 GtMoldableDebugger >> initialize [
 	super initialize.
+	
 	self 
+		id: GtMoldableDebuggerMainElementId;
 		layout: BlFrameLayout new;
 		constraintsDo: [:c | 
 			c horizontal matchParent.
 			c vertical matchParent ];
 		clipChildren: false.
+		
 	debuggerContainer := BlElement new
 	 	layout: BlFrameLayout new;
 		clipChildren: false;
@@ -196,6 +200,7 @@ GtMoldableDebugger >> initialize [
 			c vertical matchParent ].
 	buttonsContainer := self createButtonsContainer.
 	debuggerContainer addChild: buttonsContainer.
+	
 	self addChild: debuggerContainer.
 ]
 
