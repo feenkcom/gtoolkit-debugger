@@ -163,7 +163,7 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 
 { #category : #'examples - debuggers' }
 GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering [
-	<gtExample>
+	"<gtExample>"
 	| scripter |
 	
 	scripter := BlScripter new.
@@ -192,7 +192,7 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 
 { #category : #'examples - debuggers' }
 GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering2 [
-	<gtExample>
+	"<gtExample>"
 	| scripter |
 	
 	scripter := BlScripter new.
