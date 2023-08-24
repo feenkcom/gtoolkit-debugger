@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'coderProcess'
 	],
-	#category : 'GToolkit-Debugger-Examples'
+	#category : #'GToolkit-Debugger-Examples'
 }
 
 { #category : #examples }
@@ -35,8 +35,8 @@ GtEmbeddedDebuggerExamples >> coderWithDivideByZeroError [
 
 { #category : #private }
 GtEmbeddedDebuggerExamples >> debuggerAttributesIn: aCoder at: anIndex [
-	^ ((aCoder sourceText attributesAt: anIndex) select: [ :each | 
-		each isKindOf: GtEmbeddedDebuggerAttribute ])
+	^ (aCoder currentSourceText attributesAt: anIndex)
+		select: [ :each | each isKindOf: GtEmbeddedDebuggerAttribute ]
 ]
 
 { #category : #private }
