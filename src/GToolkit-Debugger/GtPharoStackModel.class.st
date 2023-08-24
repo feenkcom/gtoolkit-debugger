@@ -96,10 +96,8 @@ GtPharoStackModel >> getCoderViewModelForContext: aContext [
 					ifAbsentPut: [ {(self createCoderFor: aContext in: session) asCoderViewModel.
 							method} ].
 			(entry at: 2) ~~ method
-				ifTrue: [ entry := coderViewModelCache
-							at: aContext
-							put: {(self createCoderFor: aContext in: session) asCoderViewModel.
-									method} ].
+				ifTrue: [ entry first coder forMethod: method.
+					entry at: 2 put: method ].
 			entry at: 1 ]
 		ifError: [ nil ]
 ]
