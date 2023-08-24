@@ -143,10 +143,6 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel focused: true ]).
 	selectedCoderUIModel expanded: true.
 	
-	"Update the content as some actions (for example save)
-	can change the compiled method stored in the context."
-	selectedCoderUIModel coder updateSourceFromContext.
-	
 	"Update the selection based on the new PC"
 	self
 		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel updateProgramCounterRange ])
