@@ -49,6 +49,43 @@ GtScripterDebuggerExamples >> assertUninstalledIndicatorVisible: scripter at: in
 		play
 ]
 
+{ #category : #examples }
+GtScripterDebuggerExamples >> createDNUMethod [
+	"<gtExample>"
+	| scripter |
+	scripter := self scripterOnDNUDebugger.
+
+	[ scripter assert
+		@ [ :element | ((element childWithId: #toolbar) childAt: 1) childAt: 1 ];
+		value: [ :button | button label asString ] equals: 'Create';
+		play.
+
+	scripter click
+		@ [ :element | ((element childWithId: #toolbar) childAt: 1) childAt: 1 ];
+		play.
+	(Delay forMilliseconds: 1000) wait.
+	scripter pulse.
+	
+	scripter click
+		label: 'Click first coder';
+		id: GtSourceCoderExpanderToggleId index: 1;
+		play.
+
+	self assert: (self class includesSelector: #dnuCall).
+
+	self
+		assertContext: scripter
+		at: 1
+		satisfies: [ :context | context selector = #dnuCall ].
+
+	scripter assert
+		id: GtSourceCoderEditorId index: 1;
+		value: [ :editor | editor text asString beginsWith: 'dnuCall' ] equals: true;
+		play ] ensure: [ self class removeSelector: #dnuCall ].
+
+	^ scripter
+]
+
 { #category : #private }
 GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
 	| process |
@@ -259,6 +296,17 @@ GtScripterDebuggerExamples >> savingMethodOutsideDebuggerShowsUninstalledIndicat
 	
 	self assertUninstalledIndicatorVisible: scripter at: 1.
 
+	^ scripter
+]
+
+{ #category : #scripter }
+GtScripterDebuggerExamples >> scripterOnDNUDebugger [
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ self dnuCall ]
+			stoppingAt: [ :context | context selector = #doesNotUnderstand: ].
+	scripter := BlScripter new.
+	scripter element: debugger.
 	^ scripter
 ]
 
