@@ -2,6 +2,17 @@ Extension { #name : #MorphicUIManager }
 
 { #category : #'*GToolkit-Debugger' }
 MorphicUIManager >> gtDebugProcess: process context: context label: title fullView: bool notification: notificationString [
+	^ self 
+		gtDebugProcess: process 
+		context: context 
+		label: title 
+		fullView: bool 
+		notification: notificationString 
+		forException: nil
+]
+
+{ #category : #'*GToolkit-Debugger' }
+MorphicUIManager >> gtDebugProcess: process context: context label: title fullView: bool notification: notificationString forException: anException [
 	"Open a notifier in response to an error, halt, or notify. A notifier view
 	just shows a short view of the sender stack and provides a menu that
 	lets the user open a full debugger."
@@ -9,7 +20,8 @@ MorphicUIManager >> gtDebugProcess: process context: context label: title fullVi
 	| debugSession |
 
 	debugSession := process newDebugSessionNamed: title startedAt: context.
-	
+	anException ifNotNil: [
+		debugSession exception: anException ].
 	debugSession logStackToFileIfNeeded.
 	debugSession isAboutUIProcess ifTrue: [ 
 		DefaultExecutionEnvironment beActiveDuring: [self spawnNewProcess]].
@@ -34,6 +46,7 @@ MorphicUIManager >> gtDebugProcess: process context: context withEmbeddedDebugge
 	debugSession := process
 		newDebugSessionNamed: exception description
 		startedAt: context.
+	debugSession exception: exception.
 	debugSession logStackToFileIfNeeded.
 	debugSession isAboutUIProcess
 		ifTrue:
