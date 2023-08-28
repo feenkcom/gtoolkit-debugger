@@ -6,7 +6,7 @@ The following examples creates an example instance of the exception:
 "
 Class {
 	#name : #GtExampleComparisonExceptionWithDebuggingViews,
-	#superclass : #Exception,
+	#superclass : #Error,
 	#instVars : [
 		'expectedString',
 		'actualString',
@@ -24,6 +24,16 @@ GtExampleComparisonExceptionWithDebuggingViews >> actualString [
 { #category : #accessing }
 GtExampleComparisonExceptionWithDebuggingViews >> actualString: aString [
 	actualString := aString
+]
+
+{ #category : #accessing }
+GtExampleComparisonExceptionWithDebuggingViews >> compileObtainedAsExpected [
+	self targetClass 
+		compile: ('{1}
+	^ {2}' format: {
+				self targetSelector.
+				self actualString printString })
+		classified: 'data'
 ]
 
 { #category : #accessing }
