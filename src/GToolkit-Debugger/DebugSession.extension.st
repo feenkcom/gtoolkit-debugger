@@ -70,3 +70,9 @@ DebugSession class >> forExceptionFromExampleFor: anException [
 	
 	^ session
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextPostMortem [
+	
+	^ self isContextPostMortem: self interruptedContext
+]
