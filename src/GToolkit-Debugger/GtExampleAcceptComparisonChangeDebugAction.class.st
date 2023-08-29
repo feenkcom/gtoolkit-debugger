@@ -18,16 +18,16 @@ GtExampleAcceptComparisonChangeDebugAction class >> exampleComparisonDebuggingAc
 
 { #category : #accessing }
 GtExampleAcceptComparisonChangeDebugAction >> defaultLabel [
-	^ 'Accept new version'
+	^ 'Accept actual version and resume'
 ]
 
 { #category : #accessing }
 GtExampleAcceptComparisonChangeDebugAction >> executeAction [
 	self inform: 'Executed'.
 	
-	"self debugger 
-		acceptCurrentTest;
-		resumeAndCloseDebugger"
+	self debugger session exception
+		compileObtainedAsExpected.
+	self debugger resumeAndCloseDebugger.
 ]
 
 { #category : #accessing }
