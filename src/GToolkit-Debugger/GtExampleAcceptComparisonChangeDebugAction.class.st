@@ -23,8 +23,6 @@ GtExampleAcceptComparisonChangeDebugAction >> defaultLabel [
 
 { #category : #accessing }
 GtExampleAcceptComparisonChangeDebugAction >> executeAction [
-	self inform: 'Executed'.
-	
 	self debugger session exception
 		compileObtainedAsExpected.
 	self debugger resumeAndCloseDebugger.
