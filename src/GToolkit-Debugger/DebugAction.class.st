@@ -85,14 +85,22 @@ DebugAction >> appliesToDebugger: aDebugger [
 
 { #category : #'phlow ' }
 DebugAction >> asBrickButton [
-	| actionButton |
+	| currentIcon currentLabel aptitude actionButton |
+	currentIcon := self icon.
+	currentLabel := self label.
+	
+	aptitude := self icon 
+		ifNil: [ BrGlamorousButtonWithLabelAptitude ]
+		ifNotNil: [ BrGlamorousButtonWithIconAptitude ].
+		
 	actionButton := BrButton new 
-		aptitude: BrGlamorousButtonWithIconAptitude;
+		aptitude: aptitude;
 		label: self label; 
 		action: [ 
 			self execute ].
 	self icon ifNotNil: [ :anIcon | 
 		actionButton icon: self icon asElement ].
+	
 	^ actionButton
 ]
 
