@@ -25,6 +25,12 @@ Class {
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
+{ #category : #'instace creation' }
+GtExceptionDebugingExtensionConfiguration class >> forException: anException [
+	^ self new
+		 withDebuggingExceptionTargetFor: anException
+]
+
 { #category : #configuration }
 GtExceptionDebugingExtensionConfiguration >> addDebuggingTargetFor: anObject [
 	"Add a debugging target used to look for debugging views. It is possible to register multiple target objects, apart from the exception object."
