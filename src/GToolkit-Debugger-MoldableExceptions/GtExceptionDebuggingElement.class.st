@@ -13,7 +13,7 @@ Class {
 		'compositeView',
 		'debuggingConfiguration'
 	],
-	#category : #'GToolkit-Debugger-Elements'
+	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
 { #category : #testing }

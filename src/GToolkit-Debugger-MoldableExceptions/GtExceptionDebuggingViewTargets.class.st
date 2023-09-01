@@ -16,7 +16,7 @@ Class {
 		'exceptionTarget',
 		'objectTargets'
 	],
-	#category : #'GToolkit-Debugger-Models'
+	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
 { #category : #configuration }

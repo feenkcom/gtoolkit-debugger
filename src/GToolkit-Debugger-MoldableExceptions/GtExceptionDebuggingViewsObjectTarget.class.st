@@ -14,7 +14,7 @@ Class {
 	#instVars : [
 		'targetObject'
 	],
-	#category : #'GToolkit-Debugger-Models'
+	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
 { #category : #'instance creation' }

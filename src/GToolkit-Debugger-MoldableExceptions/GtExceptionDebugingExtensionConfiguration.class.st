@@ -22,10 +22,10 @@ Class {
 		'enableDebuggingViewExtensionComputation',
 		'debuggingTargets'
 	],
-	#category : #'GToolkit-Debugger-Models'
+	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
-{ #category : #'*GToolkit-Debugger' }
+{ #category : #'instace creation' }
 GtExceptionDebugingExtensionConfiguration class >> forException: anException [
 	^ self new
 		 withDebuggingExceptionTargetFor: anException
