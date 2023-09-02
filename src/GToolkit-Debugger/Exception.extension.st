@@ -13,3 +13,10 @@ Exception >> gtDebuggingExtensionConfiguration [
 	
 	^ GtExceptionDebugingExtensionConfiguration forException: self
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Exception >> gtDebuggingTransformationsSettings [
+	"Return the current settings for transformations."
+	
+	^ GtMoldableExceptionTransformationsSettings defaultInstance
+]
