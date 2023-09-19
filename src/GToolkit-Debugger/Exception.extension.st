@@ -11,7 +11,7 @@ Exception >> asDebuggableElement [
 Exception >> gtDebuggingExtensionConfiguration [
 	"Return a debugging configuration with default values."
 	
-	^ GtExceptionDebugingExtensionConfiguration forException: self
+	^ GtMoldableExceptionDebugingExtensionConfiguration forException: self
 ]
 
 { #category : #'*GToolkit-Debugger' }
