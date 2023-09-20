@@ -1,10 +1,10 @@
 "
-{{gtClass:GtExceptionDebuggingElement}} is a domain-specific debugger that shows views and debugging actions based on the current exception.
+{{gtClass:GtMoldableExceptionDebuggingElement}} is a domain-specific debugger that shows views and debugging actions based on the current exception.
 
-The debugged uses the settings from the {{gtClass:name=GtExceptionDebugingExtensionConfiguration}}  instance returned by {{gtMethod:name=Exception>>#gtDebuggingExtensionConfiguration}}  (this can be overriden by exceptions) to select debugging views and actions.
+The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionDebugingExtensionConfiguration}}  instance returned by {{gtMethod:name=Exception>>#gtDebuggingExtensionConfiguration}}  (this can be overriden by exceptions) to select debugging views and actions.
 "
 Class {
-	#name : #GtExceptionDebuggingElement,
+	#name : #GtMoldableExceptionDebuggingElement,
 	#superclass : #GtDebuggerElement,
 	#instVars : [
 		'toolbar',
@@ -17,19 +17,19 @@ Class {
 }
 
 { #category : #testing }
-GtExceptionDebuggingElement class >> availableAutomatically [
+GtMoldableExceptionDebuggingElement class >> availableAutomatically [
 	"Should this debugger be taken into account when looking for a debugger to handle an exception."
 	
 	^ true
 ]
 
 { #category : #accessing }
-GtExceptionDebuggingElement class >> defaultTitle [
+GtMoldableExceptionDebuggingElement class >> defaultTitle [
 	^ 'Exception'
 ]
 
 { #category : #testing }
-GtExceptionDebuggingElement class >> handlesDebugSession: aDebugSession [
+GtMoldableExceptionDebuggingElement class >> handlesDebugSession: aDebugSession [
 	| targetException |
 	
 	targetException := aDebugSession exception.
@@ -39,31 +39,31 @@ GtExceptionDebuggingElement class >> handlesDebugSession: aDebugSession [
 ]
 
 { #category : #'tool registration' }
-GtExceptionDebuggingElement class >> registerToolsOn: registry [
+GtMoldableExceptionDebuggingElement class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
 	registry registerDebugger: self withRank: 100.
 ]
 
 { #category : #accessing }
-GtExceptionDebuggingElement class >> sessionClass [
+GtMoldableExceptionDebuggingElement class >> sessionClass [
 	^ GtFilteredDebugSession
 ]
 
 { #category : #callbacks }
-GtExceptionDebuggingElement >> actOnDebugSessionChanged [
+GtMoldableExceptionDebuggingElement >> actOnDebugSessionChanged [
 	debuggingConfiguration := self targetException gtDebuggingExtensionConfiguration.
 	self updateContent.
 ]
 
 { #category : #'views - collecting' }
-GtExceptionDebuggingElement >> attachDebuggingActionsForView: aView [ 
+GtMoldableExceptionDebuggingElement >> attachDebuggingActionsForView: aView [ 
 	(self collectDebuggingActionsForView: aView) 
 		do: [ :aDebuggingAction |
 			aDebuggingAction addToPhlowView: aView ].
 ]
 
 { #category : #'building - widgets' }
-GtExceptionDebuggingElement >> buildMainTabWithContent: aTabContent andToolbar: aToolbarElement [
+GtMoldableExceptionDebuggingElement >> buildMainTabWithContent: aTabContent andToolbar: aToolbarElement [
 	^ BrTab new
 		aptitude: BrGlamorousTabWithoutBarAptitude;
 		"label: self session name;"
@@ -73,7 +73,7 @@ GtExceptionDebuggingElement >> buildMainTabWithContent: aTabContent andToolbar: 
 ]
 
 { #category : #'building - widgets' }
-GtExceptionDebuggingElement >> buildStackToolbarActions [
+GtMoldableExceptionDebuggingElement >> buildStackToolbarActions [
 	<return: #Collection of: #BrButton>	
 	| buttons |
 	
@@ -85,7 +85,7 @@ GtExceptionDebuggingElement >> buildStackToolbarActions [
 ]
 
 { #category : #'building - widgets' }
-GtExceptionDebuggingElement >> buildTabGroupWithTab: aTab [
+GtMoldableExceptionDebuggingElement >> buildTabGroupWithTab: aTab [
 	| tabGroup |
 	tabGroup := BrTabGroup new.
 	tabGroup
@@ -108,42 +108,42 @@ GtExceptionDebuggingElement >> buildTabGroupWithTab: aTab [
 ]
 
 { #category : #'building - widgets' }
-GtExceptionDebuggingElement >> buildToolbar [
+GtMoldableExceptionDebuggingElement >> buildToolbar [
 	^ BrToolbar new
 		aptitude: BrGlamorousToolbarAptitude new;
 		yourself
 ]
 
 { #category : #'building - widgets' }
-GtExceptionDebuggingElement >> buildViewsContainer [
+GtMoldableExceptionDebuggingElement >> buildViewsContainer [
 	^ BrFrame new
 		matchParent
 ]
 
 { #category : #'views - collecting' }
-GtExceptionDebuggingElement >> collectDebuggingActionsForView: aView [ 
+GtMoldableExceptionDebuggingElement >> collectDebuggingActionsForView: aView [ 
 	 ^ (self actionsForPragmas: self viewActionsPragmas)
 	 	select: [ :aDebuggingAction | 
 			aDebuggingAction appliesToPhlowView: aView]
 ]
 
 { #category : #'views - collecting' }
-GtExceptionDebuggingElement >> collectTargetDebuggingViews [
+GtMoldableExceptionDebuggingElement >> collectTargetDebuggingViews [
 	^ self debuggingConfiguration collectTargetDebuggingViews
 ]
 
 { #category : #accessing }
-GtExceptionDebuggingElement >> debuggingConfiguration [
+GtMoldableExceptionDebuggingElement >> debuggingConfiguration [
 	^ debuggingConfiguration
 ]
 
 { #category : #accessing }
-GtExceptionDebuggingElement >> exceptionGlobalDebugActionsPragmas [
+GtMoldableExceptionDebuggingElement >> exceptionGlobalDebugActionsPragmas [
 	^ self debuggingConfiguration globalDebuggingActionPragmas
 ]
 
 { #category : #initialization }
-GtExceptionDebuggingElement >> initialize [
+GtMoldableExceptionDebuggingElement >> initialize [
 	super initialize.
 	
 	self
@@ -156,7 +156,7 @@ GtExceptionDebuggingElement >> initialize [
 ]
 
 { #category : #initialization }
-GtExceptionDebuggingElement >> initializeContent [
+GtMoldableExceptionDebuggingElement >> initializeContent [
 	toolbar := self buildToolbar.
 	viewsContainer := self buildViewsContainer.
 	
@@ -168,7 +168,7 @@ GtExceptionDebuggingElement >> initializeContent [
 ]
 
 { #category : #initialization }
-GtExceptionDebuggingElement >> initializeViewsContainer [
+GtMoldableExceptionDebuggingElement >> initializeViewsContainer [
 	| mainContainer |
 	mainContainer := BrFrame new
 		matchParent. 
@@ -177,7 +177,7 @@ GtExceptionDebuggingElement >> initializeViewsContainer [
 ]
 
 { #category : #'debugging actions' }
-GtExceptionDebuggingElement >> resumeAndCloseDebugger [
+GtMoldableExceptionDebuggingElement >> resumeAndCloseDebugger [
 	(self session)
 		resume;
 		clear.
@@ -185,24 +185,24 @@ GtExceptionDebuggingElement >> resumeAndCloseDebugger [
 ]
 
 { #category : #accessing }
-GtExceptionDebuggingElement >> targetException [
+GtMoldableExceptionDebuggingElement >> targetException [
 	^ debuggingSession exception
 ]
 
 { #category : #updating }
-GtExceptionDebuggingElement >> updateContent [
+GtMoldableExceptionDebuggingElement >> updateContent [
 	self updateMainTabLabel.
 	self updateViews.
 	self updateToolbarActions.
 ]
 
 { #category : #updating }
-GtExceptionDebuggingElement >> updateMainTabLabel [
+GtMoldableExceptionDebuggingElement >> updateMainTabLabel [
 	mainTab label: self session name
 ]
 
 { #category : #updating }
-GtExceptionDebuggingElement >> updateToolbarActions [
+GtMoldableExceptionDebuggingElement >> updateToolbarActions [
 	toolbar removeAllItems.
 	self buildStackToolbarActions do: [ :anAction | 
 		toolbar addItem: anAction ].
@@ -212,7 +212,7 @@ GtExceptionDebuggingElement >> updateToolbarActions [
 ]
 
 { #category : #updating }
-GtExceptionDebuggingElement >> updateToolbarWithActionsFromView: aPhlowView [
+GtMoldableExceptionDebuggingElement >> updateToolbarWithActionsFromView: aPhlowView [
 	aPhlowView allActionsPromise wait do: [ :aPhlowAction |
 		aPhlowAction 
 			asElement: [ :actionElement | 
@@ -221,7 +221,7 @@ GtExceptionDebuggingElement >> updateToolbarWithActionsFromView: aPhlowView [
 ]
 
 { #category : #updating }
-GtExceptionDebuggingElement >> updateToolbarWithExtraActions [
+GtMoldableExceptionDebuggingElement >> updateToolbarWithExtraActions [
 	| phlowAction |
 	phlowAction := GtPhlowAction new dropdown
 		tooltip: 'Inspect';
@@ -243,7 +243,7 @@ GtExceptionDebuggingElement >> updateToolbarWithExtraActions [
 ]
 
 { #category : #updating }
-GtExceptionDebuggingElement >> updateViews [
+GtMoldableExceptionDebuggingElement >> updateViews [
 	| viewsElement |
 	compositeView := self collectTargetDebuggingViews.
 	
@@ -262,6 +262,6 @@ GtExceptionDebuggingElement >> updateViews [
 ]
 
 { #category : #accessing }
-GtExceptionDebuggingElement >> viewActionsPragmas [
+GtMoldableExceptionDebuggingElement >> viewActionsPragmas [
 	^ self targetException gtDebuggerViewActionsPragmas
 ]

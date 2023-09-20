@@ -63,7 +63,7 @@ GtExceptionsWithExtensionsExamples >> debuggerExtensionOn_exampleExceptionWithDe
 	| session debugger |
 	
 	session := self debugingSession_exampleExceptionWithDebuggingView.
-	debugger := GtExceptionDebuggingElement on: session.
+	debugger := GtMoldableExceptionDebuggingElement on: session.
 	
 	^ debugger
 ]
@@ -180,11 +180,11 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 		for: scripter.
 		
 	self 
-		assertOneDebuggerSwitchButtonLabeled: GtExceptionDebuggingElement defaultTitle 
+		assertOneDebuggerSwitchButtonLabeled: GtMoldableExceptionDebuggingElement defaultTitle 
 		for: scripter.
 	self 
-		assertSwitchToDebuggerLabeled: GtExceptionDebuggingElement defaultTitle 
-		ofType: GtExceptionDebuggingElement 
+		assertSwitchToDebuggerLabeled: GtMoldableExceptionDebuggingElement defaultTitle 
+		ofType: GtMoldableExceptionDebuggingElement 
 		for: scripter.
 
 	^ scripter
@@ -203,9 +203,9 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle;
 		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
 			ofType: GtPharoDebuggerElement;
-		assertOneDebuggerSwitchButtonLabeled: GtExceptionDebuggingElement defaultTitle;
-		assertSwitchToDebuggerLabeled: GtExceptionDebuggingElement defaultTitle 
-			ofType: GtExceptionDebuggingElement.
+		assertOneDebuggerSwitchButtonLabeled: GtMoldableExceptionDebuggingElement defaultTitle;
+		assertSwitchToDebuggerLabeled: GtMoldableExceptionDebuggingElement defaultTitle 
+			ofType: GtMoldableExceptionDebuggingElement.
 
 	^ scripter
 ]
