@@ -11,7 +11,7 @@ The main API methods for configuring the debugger are:
 	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>withoutDebuggingExceptionTarget|label=#selector}}
 	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>addDebuggingTargetFor:|label=#selector}}
 	
-To instantiate the configuration  {{gtMethod:GtMoldableExceptionDebugingExtensionConfiguration class>>forException:}} is used, which adds by default the current exception as a target for looking for views.
+To instantiate the configuration  {{gtMethod:GtMoldableExceptionDebuggingToolConfiguration class>>forException:}} is used, which  for {{gtClass:GtMoldableExceptionDebugingExtensionConfiguration}} adds by default the current exception as a target for looking for views.
 "
 Class {
 	#name : #GtMoldableExceptionDebugingExtensionConfiguration,
