@@ -15,7 +15,7 @@ To instantiate the configuration  {{gtMethod:GtMoldableExceptionDebugingExtensio
 "
 Class {
 	#name : #GtMoldableExceptionDebugingExtensionConfiguration,
-	#superclass : #Object,
+	#superclass : #GtMoldableExceptionDebuggerConfiguration,
 	#instVars : [
 		'debuggingViewPragmaNames',
 		'globalDebuggingActionPragmaNames',
@@ -24,12 +24,6 @@ Class {
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
-
-{ #category : #'instace creation' }
-GtMoldableExceptionDebugingExtensionConfiguration class >> forException: anException [
-	^ self new
-		 withDebuggingExceptionTargetFor: anException
-]
 
 { #category : #configuration }
 GtMoldableExceptionDebugingExtensionConfiguration >> addDebuggingTargetFor: anObject [
@@ -115,6 +109,13 @@ GtMoldableExceptionDebugingExtensionConfiguration >> initialize [
 	super initialize.
 	
 	debuggingTargets := GtMoldableExceptionDebuggingViewTargets new
+]
+
+{ #category : #initialization }
+GtMoldableExceptionDebugingExtensionConfiguration >> initializeForException: anException [
+	super initializeForException: anException.
+	
+	self withDebuggingExceptionTargetFor: anException
 ]
 
 { #category : #configuration }

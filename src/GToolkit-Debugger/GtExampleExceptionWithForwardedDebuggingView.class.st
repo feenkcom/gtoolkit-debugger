@@ -24,7 +24,7 @@ GtExampleExceptionWithForwardedDebuggingView class >> signalWithDomainData [
 
 { #category : #accessing }
 GtExampleExceptionWithForwardedDebuggingView >> gtDebuggingExtensionConfiguration [
-	"Create a debugging configuration that add three extra domain
+	"Create a debugging configuration that adds three extra domain
 	objects where to look for debugging views, and that only enables
 	the debugging extension if any of the three debugging objects has data."
 	
