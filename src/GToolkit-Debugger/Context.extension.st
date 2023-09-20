@@ -51,9 +51,10 @@ Context >> gtBytecodeDebuggerRetrieveContextValues [
 
 { #category : #'*GToolkit-Debugger' }
 Context >> gtDebuggerDoItBindings [
-	^ (self compiledCode isDoIt and: [ self receiver isNil ]) 
+	^ (self compiledCode isDoIt) 
 		ifTrue: [ self compiledCode literals select: [ :each | 
-			each class = WorkspaceVariable ] ]
+			(each class = WorkspaceVariable) or: [
+				each class = DoItVariable] ] ]
 		ifFalse: [ #() ]
 ]
 
