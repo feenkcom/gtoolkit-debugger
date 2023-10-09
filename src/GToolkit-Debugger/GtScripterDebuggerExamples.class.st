@@ -6,70 +6,79 @@ Class {
 
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertContext: scripter at: index satisfies: aBlock [
-	scripter assert
-		id: GtSourceCoderEditorId index: index;
-		value: [ :editor | 
-				editor
-					allParentsDetect: [ :each | each class = GtExpandableContextMethodCoderElement ]
-					ifFound: [ :each | aBlock value: each coderViewModel context ]
-					ifNone: [  ] ]
-			equals: true;
-		play
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: index;
+				value: [ :editor | 
+						editor
+							allParentsDetect: [ :each | each class = GtExpandableContextMethodCoderElement ]
+							ifFound: [ :each | aBlock value: each coderViewModel context ]
+							ifNone: [  ] ]
+					equals: true ]
 ]
 
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertModifiedIndicatorInvisible: scripter at: index [
-	scripter assert
-		id: GtTextualCoderModificationIndicatorId index: index;
-		value: [ :element | element visibility ] equals: BlVisibility gone;
-		play
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtTextualCoderModificationIndicatorId index: index;
+				value: [ :element | element visibility ] equals: BlVisibility gone ]
 ]
 
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertModifiedIndicatorVisible: scripter at: index [
-	scripter assert
-		id: GtTextualCoderModificationIndicatorId index: index;
-		value: [ :element | element visibility ] equals: BlVisibility visible;
-		play
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtTextualCoderModificationIndicatorId index: index;
+				value: [ :element | element visibility ] equals: BlVisibility visible ]
 ]
 
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertUninstalledIndicatorInvisible: scripter at: index [
-	scripter assert
-		id: #'coder-uninstalled-indicator' index: index;
-		value: [ :element | element visibility ] equals: BlVisibility gone;
-		play
+	scripter
+		assertStep: [ :s | 
+			s
+				id: #'coder-uninstalled-indicator' index: index;
+				value: [ :element | element visibility ] equals: BlVisibility gone ]
 ]
 
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertUninstalledIndicatorVisible: scripter at: index [
-	scripter assert
-		id: #'coder-uninstalled-indicator' index: index;
-		value: [ :element | element visibility ] equals: BlVisibility visible;
-		play
+	scripter
+		assertStep: [ :s | 
+			s
+				id: #'coder-uninstalled-indicator' index: index;
+				value: [ :element | element visibility ] equals: BlVisibility visible ]
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> createDNUMethod [
 	"<gtExample>"
+
 	| scripter |
 	scripter := self scripterOnDNUDebugger.
 
-	[ scripter assert
-		@ [ :element | ((element childWithId: #toolbar) childAt: 1) childAt: 1 ];
-		value: [ :button | button label asString ] equals: 'Create';
-		play.
+	[ scripter
+		assertStep: [ :s | 
+			s
+				@ [ :element | ((element childWithId: #toolbar) childAt: 1) childAt: 1 ];
+				value: [ :button | button label asString ] equals: 'Create' ].
 
-	scripter click
-		@ [ :element | ((element childWithId: #toolbar) childAt: 1) childAt: 1 ];
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				@ [ :element | ((element childWithId: #toolbar) childAt: 1) childAt: 1 ] ].
 	(Delay forMilliseconds: 1000) wait.
 	scripter pulse.
-	
-	scripter click
-		label: 'Click first coder';
-		id: GtSourceCoderExpanderToggleId index: 1;
-		play.
+
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click first coder';
+				id: GtSourceCoderExpanderToggleId index: 1 ].
 
 	self assert: (self class includesSelector: #dnuCall).
 
@@ -78,10 +87,12 @@ GtScripterDebuggerExamples >> createDNUMethod [
 		at: 1
 		satisfies: [ :context | context selector = #dnuCall ].
 
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor text asString beginsWith: 'dnuCall' ] equals: true;
-		play ] ensure: [ self class removeSelector: #dnuCall ].
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor text asString beginsWith: 'dnuCall' ]
+					equals: true ] ] ensure: [ self class removeSelector: #dnuCall ].
 
 	^ scripter
 ]
@@ -125,17 +136,19 @@ GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
-	scripter keyPress
-		key: BlKeyboardKey return;
-		play.
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey return ].
 
 	self assertModifiedIndicatorVisible: scripter at: 1.
 
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
-	scripter click
-		id: GtMethodCoderSaveActionId index: 1;
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtMethodCoderSaveActionId index: 1 ].
 	scripter pulse.
 
 	self
@@ -147,15 +160,17 @@ GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 
 	self assertModifiedIndicatorInvisible: scripter at: 1.
 
-	scripter keyPress
-		key: BlKeyboardKey backspace;
-		play.
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey backspace ].
 
 	self assertModifiedIndicatorVisible: scripter at: 1.
 
-	scripter keyPress
-		key: BlKeyboardKey return;
-		play.
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey return ].
 
 	self assertModifiedIndicatorInvisible: scripter at: 1 ]
 		ensure: [ self class removeSelector: #aMethod ].
@@ -170,15 +185,17 @@ GtScripterDebuggerExamples >> modifyingMethodShowsIndicator [
 
 	self assertModifiedIndicatorInvisible: scripter at: 1.
 
-	scripter keyPress
-		key: BlKeyboardKey return;
-		play.
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey return ].
 
 	self assertModifiedIndicatorVisible: scripter at: 1.
 
-	scripter keyPress
-		key: BlKeyboardKey backspace;
-		play.
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey backspace ].
 
 	self assertModifiedIndicatorInvisible: scripter at: 1.
 
@@ -206,9 +223,10 @@ GtScripterDebuggerExamples >> savingBlockRestartsMethod [
 		at: 1
 		satisfies: [ :context | context isBlockContext ].
 
-	scripter click
-		id: GtMethodCoderSaveActionId index: 1;
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtMethodCoderSaveActionId index: 1 ].
 
 	self
 		assertContext: scripter
@@ -233,9 +251,10 @@ GtScripterDebuggerExamples >> savingBlockThatCannotBeRestarted [
 
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
-	scripter click
-		id: GtMethodCoderSaveActionId index: 1;
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtMethodCoderSaveActionId index: 1 ].
 
 
 	self
@@ -256,28 +275,33 @@ GtScripterDebuggerExamples >> savingDoesNotMoveCursor [
 	| scripter |
 	scripter := self scripterOnOnePlusOneDebugger.
 
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor editor cursors first position ] equals: 0;
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor editor cursors first position ] equals: 0 ].
 
-	scripter keyPress
-		key: BlKeyboardKey arrowRight;
-		play.
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey arrowRight ].
 
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor editor cursors first position ] equals: 1;
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor editor cursors first position ] equals: 1 ].
 
-	scripter click
-		id: GtMethodCoderSaveActionId index: 1;
-		play.
+	scripter
+		clickStep: [ :s | 
+			s
+				id: GtMethodCoderSaveActionId index: 1 ].
 
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor editor cursors first position ] equals: 1;
-		play.
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor editor cursors first position ] equals: 1 ].
 
 	^ scripter
 ]
@@ -351,38 +375,43 @@ GtScripterDebuggerExamples >> switchingCodersDoesNotLoseChanges [
 	| scripter methodSource |
 	scripter := self scripterOnOnePlusOneDebugger.
 	methodSource := (self class >> #returnOnePlusOne) sourceCode.
-	
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor text asString ] equals: methodSource;
-		play.
-		
-	scripter keyPress
-		key: BlKeyboardKey return;
-		play.
-		
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor text asString ] equals: String cr , methodSource;
-		play.
-		
-	scripter click
-		label: 'Click second coder';
-		id: GtSourceCoderExpanderToggleId index: 2;
-		play.
-		
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor text asString ] equals: methodSource ].
+
+	scripter
+		keyPressStep: [ :s | 
+			s
+				key: BlKeyboardKey return ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor text asString ] equals: String cr , methodSource ].
+
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click second coder';
+				id: GtSourceCoderExpanderToggleId index: 2 ].
+
 	scripter requestFocus
 		id: GtSourceCoderEditorId index: 2;
 		play.
-		
+
 	scripter requestFocus
 		id: GtSourceCoderEditorId index: 1;
 		play.
-		
-	scripter assert
-		id: GtSourceCoderEditorId index: 1;
-		value: [ :editor | editor text asString ] equals: String cr , methodSource;
-		play.
-		
+
+	scripter
+		assertStep: [ :s | 
+			s
+				id: GtSourceCoderEditorId index: 1;
+				value: [ :editor | editor text asString ] equals: String cr , methodSource ].
+
 	^ scripter
 ]
