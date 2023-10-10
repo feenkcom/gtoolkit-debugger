@@ -31,13 +31,11 @@ GtDebuggerDevScripterCheckStep >> assertOneDebuggerSwitchButtonLabeled: aDebugge
 { #category : #assertions }
 GtDebuggerDevScripterCheckStep >> assertSwitchToDebuggerLabeled: aDebuggerLabel ofType: aDebuggerType [
 	<gtExample>
-	
-	self scripter click
-		// GtMoldableDebuggerSwitchButtonsContainerElementId;
-		// BrButton;
-		play.
-		
-	self
-		assert: (self scripter element query // aDebuggerType) all size
-		equals: 1.
+	self scripter
+		clickStep: [ :s | 
+			s
+				// GtMoldableDebuggerSwitchButtonsContainerElementId;
+				// BrButton ].
+
+	self assert: (self scripter element query // aDebuggerType) all size equals: 1
 ]

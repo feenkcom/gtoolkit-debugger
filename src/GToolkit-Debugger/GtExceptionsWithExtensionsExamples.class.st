@@ -39,17 +39,15 @@ GtExceptionsWithExtensionsExamples >> assertOneDebuggerSwitchButtonLabeled: aDeb
 { #category : #asserting }
 GtExceptionsWithExtensionsExamples >> assertSwitchToDebuggerLabeled: aDebuggerLabel ofType: aDebuggerType for: aScripter [
 	<gtExample>
-	
 	self assertOneDebuggerSwitchButtonLabeled: aDebuggerLabel for: aScripter.
-	
-	aScripter click
-		// GtMoldableDebuggerSwitchButtonsContainerElementId;
-		// BrButton;
-		play.
-		
-	self
-		assert: (aScripter element query // aDebuggerType) all size
-		equals: 1.
+
+	aScripter
+		clickStep: [ :s | 
+			s
+				// GtMoldableDebuggerSwitchButtonsContainerElementId;
+				// BrButton ].
+
+	self assert: (aScripter element query // aDebuggerType) all size equals: 1
 ]
 
 { #category : #accessing }
