@@ -64,25 +64,28 @@ GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsElement [
-	| detailsTabGroupElement |
+	| detailsContainer detailsTabGroupElement debuggerPlaygroundElement |
+	
+	detailsContainer := BrVerticalPane new
+		matchParent;
+		addAptitude: BrShadowAptitude.
 	
 	detailsTabGroupElement := self buildDetailsTabElement.
-	detailsTabGroupElement viewModel 
-		when: BrTabSelectedEvent 
-		do: [ :event | event tab widgetDo: [ :aTab | self selectedDetailesTabName: aTab label asString ] ].
-
-	(detailsTabGroupElement viewModel tabs 
-		select: [ :aTabModel | aTabModel isAttachedToWidget ])
-			detect: [ :aTabModel | aTabModel widget label asString = self selectedDetailesTabName ]
-			ifFound: [ :aTabModel | aTabModel select ].
-	^ detailsTabGroupElement
+	self registerDetailsTabSelectionEventsFor: detailsTabGroupElement.
+			
+	debuggerPlaygroundElement := self buildPlaygroundElement.
+	
+	detailsContainer addChild: detailsTabGroupElement.
+	detailsContainer addChild: debuggerPlaygroundElement.
+	
+	^ detailsContainer
 ]
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
 		background: Color white;
-		aptitude: BrGlamorousTabGroupAptitude + BrShadowAptitude;
+		aptitude: BrGlamorousTabGroupAptitude;
 		addTab: (BrTab new
 			aptitude: BrGlamorousTabAptitude new;
 			label: 'Variables';
@@ -111,12 +114,21 @@ GtAbstractExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 	detailsPane := self buildPaneElement
 		layout: BlFrameLayout new;
 		padding: (BlInsets all: 10).
-	resizableDetailsPane := BrVerticalPane new matchParent addAptitude: (BrGlamorousWithHorizontalResizerAptitude new beLeft).
+	resizableDetailsPane := BrVerticalPane new matchParent 
+		addAptitude: (BrGlamorousWithHorizontalResizerAptitude new beLeft).
+	
 	resizableDetailsPane addChild: detailsPane as: #detailsPane.
 	aContainer 
 		removeChildren;
 		addChild: stackPane as: #stackPane;
 		addChild: resizableDetailsPane
+]
+
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> buildPlaygroundElement [
+	^ GtDebuggerPlaygroundElement new
+		debuggerElement:  self;
+		updateContent
 ]
 
 { #category : #'building widgets' }
@@ -333,6 +345,21 @@ GtAbstractExpandableDebuggerElement >> initialize [
 						key: BlKeyboardKey F7;
 						build);
 				action: [ :anEvent :aShortcut | (RestartDebugAction forDebugger: self) execute ])
+]
+
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> registerDetailsTabSelectionEventsFor: aDetailsTabGroupElement [ 
+	aDetailsTabGroupElement viewModel 
+		when: BrTabSelectedEvent 
+		do: [ :anEvent | anEvent tab 
+			widgetDo: [ :aTab | 
+				self selectedDetailesTabName: aTab label asString ] ].
+
+	(aDetailsTabGroupElement viewModel tabs 
+		select: [ :aTabModel | aTabModel isAttachedToWidget ])
+			detect: [ :aTabModel | 
+				aTabModel widget label asString = self selectedDetailesTabName ]
+			ifFound: [ :aTabModel | aTabModel select ].
 ]
 
 { #category : #'accessing context' }
