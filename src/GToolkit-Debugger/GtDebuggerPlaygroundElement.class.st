@@ -23,11 +23,6 @@ GtDebuggerPlaygroundElement >> collapse [
 ]
 
 { #category : #accessing }
-GtDebuggerPlaygroundElement >> currentPlaygroundPageStrategy [
-	^ GtDebuggerEvaluatorPlaygroundPageStrategy new
-]
-
-{ #category : #accessing }
 GtDebuggerPlaygroundElement >> databasesRegistry [
 	^ databasesRegistry ifNil: [
 			LeDatabasesRegistry default ]
