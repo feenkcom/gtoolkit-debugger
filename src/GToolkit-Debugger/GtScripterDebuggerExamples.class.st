@@ -7,12 +7,13 @@ Class {
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertContext: scripter at: index satisfies: aBlock [
 	scripter
-		assertStep: [ :s | 
-			s
+		assertStep: [ :aStep | 
+			aStep
 				id: GtSourceCoderEditorId index: index;
 				value: [ :editor | 
 						editor
-							allParentsDetect: [ :each | each class = GtExpandableContextMethodCoderElement ]
+							allParentsDetect: [ :each | 
+								each class = GtExpandableContextMethodCoderElement ]
 							ifFound: [ :each | aBlock value: each coderViewModel context ]
 							ifNone: [  ] ]
 					equals: true ]
@@ -30,8 +31,8 @@ GtScripterDebuggerExamples >> assertModifiedIndicatorInvisible: scripter at: ind
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertModifiedIndicatorVisible: scripter at: index [
 	scripter
-		assertStep: [ :s | 
-			s
+		assertStep: [ :aStep | 
+			aStep
 				id: GtTextualCoderModificationIndicatorId index: index;
 				value: [ :element | element visibility ] equals: BlVisibility visible ]
 ]
@@ -116,6 +117,27 @@ GtScripterDebuggerExamples >> doMethod [
 	total := 0.
 	(1 to: 10) asArray do: [ :i | total := total + i ].
 	^ total
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> doubleClickExpandDebuggerPlayground [
+	<gtExample>
+	| scripter |
+	scripter := self scripterOnDoMethodDebugger.
+
+	scripter debugger
+		assertPlaygroundExpanderCollapsed;
+		doubleClickOnPlaygroudExpander;
+		assertPlaygroundExpanderVisible.
+	
+	self assert: (scripter element query 
+		lepiterQuery firstSnippetInPage) anyOne hasFocus.
+	
+	scripter debugger
+		doubleClickOnPlaygroudExpander;
+		assertPlaygroundExpanderCollapsed.
+		
+	^ scripter
 ]
 
 { #category : #examples }
