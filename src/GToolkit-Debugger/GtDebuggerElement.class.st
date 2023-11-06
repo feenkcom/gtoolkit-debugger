@@ -141,6 +141,11 @@ GtDebuggerElement >> close [
 	self terminateSession.
 ]
 
+{ #category : #accessing }
+GtDebuggerElement >> debugSession [
+	^ debuggingSession
+]
+
 { #category : #actions }
 GtDebuggerElement >> detachSession [
 	debuggingSession := nil

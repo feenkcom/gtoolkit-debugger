@@ -141,6 +141,56 @@ GtScripterDebuggerExamples >> doubleClickExpandDebuggerPlayground [
 ]
 
 { #category : #examples }
+GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod [
+	<gtExample>
+	
+	^ BlScripter new
+		element: self methodContextCoderOnInheritedMethod asElement
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_BreadcrumbContent [
+	<gtExample>
+	| scripter |
+	
+	scripter := self methodContextCoderElementOnInheritedMethod.
+	scripter
+		checks: 'Check Breadcrumb'
+		do: [ :aStep | 
+			aStep
+				assertStep: [ :s | 
+					s
+						label: 'Assert Breadcrumb Package Name';
+						value: [ :aButton | aButton label asString ]
+							equals: [ Object package name ];
+						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
+						onChildAt: 1 ].
+
+			aStep
+				assertStep: [ :s | 
+					s
+						label: 'Assert Breadcrumb Class Name';
+						value: [ :aButton | aButton label asString ]
+							equals: [ 'ByteString (Object)' ];
+						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
+						onChildAt: 3 ] ].
+	
+	^ scripter
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> methodContextCoderOnInheritedMethod [
+	<gtExample>
+	| debugger |
+	debugger := self
+			debuggerOn: [ '123' printString  ]
+			stoppingAt: [ :context | context selector = #printString ].
+	^ GtPharoMethodContextCoder
+		forContext: debugger debugSession interruptedContext
+		session: debugger debugSession.
+]
+
+{ #category : #examples }
 GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 	<gtExample>
 	| scripter debugger |
