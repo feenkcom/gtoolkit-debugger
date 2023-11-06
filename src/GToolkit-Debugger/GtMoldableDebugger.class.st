@@ -176,6 +176,11 @@ GtMoldableDebugger >> currentDebugger [
 ]
 
 { #category : #accessing }
+GtMoldableDebugger >> debugSession [
+	^ self currentDebugger debugSession
+]
+
+{ #category : #accessing }
 GtMoldableDebugger >> inPager [
 	^ (GtPager createWrappedOn: self) maximized
 ]
