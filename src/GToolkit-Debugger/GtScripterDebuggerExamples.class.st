@@ -171,9 +171,18 @@ GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_Breadcr
 					s
 						label: 'Assert Breadcrumb Class Name';
 						value: [ :aButton | aButton label asString ]
-							equals: [ 'ByteString (Object)' ];
+							equals: [ 'ByteString' ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
-						onChildAt: 3 ] ].
+						onChildAt: 3 ].
+						
+			aStep
+				assertStep: [ :s | 
+					s
+						label: 'Assert Breadcrumb Class Name';
+						value: [ :aButton | aButton label asString ]
+							equals: [ 'Object' ];
+						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
+						id: #secondBehaviorButton ] ].
 	
 	^ scripter
 ]
