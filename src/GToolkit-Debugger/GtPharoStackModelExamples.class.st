@@ -17,7 +17,7 @@ GtPharoStackModelExamples >> createStackModel [
 			on: process
 			startedAt: process suspendedContext.
 	4 timesRepeat: [ debuggingSession stepInto ].
-	^ GtPharoStackModel onSession: debuggingSession
+	^ GtDebuggerPharoStackModel onSession: debuggingSession
 ]
 
 { #category : #accessing }

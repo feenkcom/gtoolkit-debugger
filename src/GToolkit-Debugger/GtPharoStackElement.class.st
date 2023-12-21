@@ -241,6 +241,7 @@ GtPharoStackElement >> onReceiverIndexSelectionChanged [
 { #category : #accessing }
 GtPharoStackElement >> onStackChanged [
 	super onStackChanged.
+	
 	self updateIndexes
 ]
 
@@ -276,6 +277,7 @@ GtPharoStackElement >> safePrintStringFor: anObject [
 { #category : #accessing }
 GtPharoStackElement >> selectContext: aContext [
 	super selectContext: aContext.
+	
 	self updateStackIndexListTo: aContext.
 	self updateReceiversIndexTo: aContext
 ]
@@ -324,9 +326,9 @@ GtPharoStackElement >> updateReceiversIndexTo: aContext [
 
 { #category : #updating }
 GtPharoStackElement >> updateStackIndex [
-	self
-		inUIProcessDo: [ self stackIndexList stream: stackModel contextStream.
-			self stackIndexList scrollToIndex: 1 ]
+	self inUIProcessDo: [ 
+		self stackIndexList stream: stackModel contextStream.
+		self stackIndexList scrollToIndex: 1 ]
 ]
 
 { #category : #updating }

@@ -52,6 +52,11 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 ]
 
 { #category : #accessing }
+GtAbstractExpandableStackElement >> createStackModelOnSession: aDebuggingSession [
+	^ GtDebuggerPharoStackModel onSession: aDebuggingSession
+]
+
+{ #category : #accessing }
 GtAbstractExpandableStackElement >> cursorInterval [
 	| cursors |
 	selectedCoderUIModel ifNil: [ ^ 1 to: 0 ].
@@ -101,7 +106,7 @@ GtAbstractExpandableStackElement >> initializeStackList [
 
 { #category : #accessing }
 GtAbstractExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
-	stackModel := GtPharoStackModel onSession: aDebuggingSession.
+	stackModel := self createStackModelOnSession: aDebuggingSession.
 	stackModel announcer weak
 		when: GtDebuggerStackChanged
 			send: #onStackChanged
@@ -118,7 +123,8 @@ GtAbstractExpandableStackElement >> onStackChanged [
 	GtDebuggerStackElementOnStackChangedSignal emit.
 
 	self
-		inUIProcessDo: [ self stackFramesList stream: stackModel coderViewModelStream.
+		inUIProcessDo: [ 
+			self stackFramesList stream: stackModel coderViewModelStream.
 			self stackFramesList scrollToIndex: 1 ]
 ]
 
@@ -156,10 +162,12 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 GtAbstractExpandableStackElement >> selectContext: aContext [
 	self selectedContext == aContext
 		ifTrue: [ self selectCoderUIModel: selectedCoderUIModel ]
-		ifFalse: [ self stackFramesList
-				scrollToItemSuchThat: [ :each | 
-					each coder context = aContext
-						ifTrue: [ self selectCoderUIModel: each.
+		ifFalse: [ 
+			self stackFramesList
+				scrollToItemSuchThat: [ :aCoderViewModel | 
+					aCoderViewModel coder context == aContext
+						ifTrue: [ 
+							self selectCoderUIModel: aCoderViewModel.
 							true ]
 						ifFalse: [ false ] ] ]
 ]
@@ -200,5 +208,6 @@ GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
 	stackModel
 		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
 		ifNotNil: [ stackModel updateContent ].
+	
 	self openFirstNonFilteredContextFrom: stackModel coderViewModelStream
 ]
