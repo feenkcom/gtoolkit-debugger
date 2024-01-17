@@ -14,7 +14,8 @@ Class {
 { #category : #callbacks }
 GtAbstractExpandableStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
-	self debuggerElement actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
+	self debuggerElement 
+		actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
 ]
 
 { #category : #testing }
@@ -34,8 +35,8 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 			coderElement
 				when: BlFocusInEvent
 				do: [ :anEvent | 
-					anEvent currentTarget coderViewModel
-						ifNotNil: [ self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
+					anEvent currentTarget coderViewModel ifNotNil: [ 
+						self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
 			coderElement ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel :eachIndex |
 			GtDebuggerStackElementBindCoderViewModelSignal new
@@ -155,7 +156,8 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	
 	"Update the selection based on the new PC"
 	self
-		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel updateProgramCounterRange ])
+		enqueueTask: (BlTaskAction new action: [ 
+			selectedCoderUIModel updateProgramCounterRange ])
 ]
 
 { #category : #actions }
