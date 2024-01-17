@@ -160,12 +160,12 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectContext: aContext [
-	self selectedContext == aContext
+	self selectedContext = aContext
 		ifTrue: [ self selectCoderUIModel: selectedCoderUIModel ]
 		ifFalse: [ 
 			self stackFramesList
 				scrollToItemSuchThat: [ :aCoderViewModel | 
-					aCoderViewModel coder context == aContext
+					aCoderViewModel coder context = aContext
 						ifTrue: [ 
 							self selectCoderUIModel: aCoderViewModel.
 							true ]
