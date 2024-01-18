@@ -199,8 +199,8 @@ GtPharoStackElement >> initializeStackList [
 	sidebarElement := GtPhlowHorizontalSidebarElement new beLeft.
 	self
 		addAptitude: (GtPhlowToolDetailAptitude new
-				normal: [ :theInstance | sidebarElement hide ];
-				detailed: [ :theInstance | sidebarElement show ]).
+				normal: [ :aStyle | aStyle do: [ sidebarElement hide ] ];
+				detailed: [ :aStyle | aStyle do: [ sidebarElement show ] ]).
 	stackIndex := self buildStackIndex.
 	receiversIndex := self buildReceiversIndex.
 	tabGroup := BrTabGroup new aptitude: BrGlamorousTabGroupAptitude new.
