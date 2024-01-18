@@ -1,6 +1,8 @@
 Class {
 	#name : #GtMoldableDebugger,
 	#superclass : #BlElement,
+	#traits : 'TGtPhlowToolDetailAdjustable',
+	#classTraits : 'TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
 		'debuggerElement',
 		'debuggerContainer',
