@@ -104,11 +104,11 @@ GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
 	process := aBlock newProcess.
 	[ testBlock value: process suspendedContext ]
 		whileFalse: [ process step: process suspendedContext ].
-	^ GtMoldableDebugger
+	^ (GtMoldableDebugger
 		on: (DebugSession
 				named: 'Scripted debugger'
 				on: process
-				startedAt: process suspendedContext)
+				startedAt: process suspendedContext)) beDetailedLevel
 ]
 
 { #category : #'debugger methods' }
