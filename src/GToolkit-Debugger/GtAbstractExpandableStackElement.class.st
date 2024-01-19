@@ -14,7 +14,8 @@ Class {
 { #category : #callbacks }
 GtAbstractExpandableStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
-	self debuggerElement actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
+	self debuggerElement 
+		actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
 ]
 
 { #category : #testing }
@@ -34,8 +35,8 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 			coderElement
 				when: BlFocusInEvent
 				do: [ :anEvent | 
-					anEvent currentTarget coderViewModel
-						ifNotNil: [ self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
+					anEvent currentTarget coderViewModel ifNotNil: [ 
+						self actOnCoderInFocusFor: anEvent currentTarget coderViewModel ] ].
 			coderElement ];
 		itemDataBinder: [ :eachCoderElement :eachCoderUIModel :eachIndex |
 			GtDebuggerStackElementBindCoderViewModelSignal new
@@ -49,6 +50,11 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 
 			eachCoderElement coderViewModel: eachCoderUIModel ];
 		items: OrderedCollection new
+]
+
+{ #category : #accessing }
+GtAbstractExpandableStackElement >> createStackModelOnSession: aDebuggingSession [
+	^ GtDebuggerPharoStackModel onSession: aDebuggingSession
 ]
 
 { #category : #accessing }
@@ -101,7 +107,7 @@ GtAbstractExpandableStackElement >> initializeStackList [
 
 { #category : #accessing }
 GtAbstractExpandableStackElement >> initializeStackModelFor: aDebuggingSession [
-	stackModel := GtPharoStackModel onSession: aDebuggingSession.
+	stackModel := self createStackModelOnSession: aDebuggingSession.
 	stackModel announcer weak
 		when: GtDebuggerStackChanged
 			send: #onStackChanged
@@ -118,7 +124,8 @@ GtAbstractExpandableStackElement >> onStackChanged [
 	GtDebuggerStackElementOnStackChangedSignal emit.
 
 	self
-		inUIProcessDo: [ self stackFramesList stream: stackModel coderViewModelStream.
+		inUIProcessDo: [ 
+			self stackFramesList stream: stackModel coderViewModelStream.
 			self stackFramesList scrollToIndex: 1 ]
 ]
 
@@ -149,17 +156,20 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	
 	"Update the selection based on the new PC"
 	self
-		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel updateProgramCounterRange ])
+		enqueueTask: (BlTaskAction new action: [ 
+			selectedCoderUIModel updateProgramCounterRange ])
 ]
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectContext: aContext [
-	self selectedContext == aContext
+	self selectedContext = aContext
 		ifTrue: [ self selectCoderUIModel: selectedCoderUIModel ]
-		ifFalse: [ self stackFramesList
-				scrollToItemSuchThat: [ :each | 
-					each coder context = aContext
-						ifTrue: [ self selectCoderUIModel: each.
+		ifFalse: [ 
+			self stackFramesList
+				scrollToItemSuchThat: [ :aCoderViewModel | 
+					aCoderViewModel coder context = aContext
+						ifTrue: [ 
+							self selectCoderUIModel: aCoderViewModel.
 							true ]
 						ifFalse: [ false ] ] ]
 ]
@@ -200,5 +210,6 @@ GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
 	stackModel
 		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
 		ifNotNil: [ stackModel updateContent ].
+	
 	self openFirstNonFilteredContextFrom: stackModel coderViewModelStream
 ]
