@@ -284,8 +284,11 @@ DebugAction >> keymap: aKeymap [
 
 { #category : #accessing }
 DebugAction >> label [
-
-	^ label ifNil: [ self defaultLabel ]
+	^ label
+		ifNil: [ | keyMap |
+			(keyMap := self keymap)
+				ifNil: [ self defaultLabel ]
+				ifNotNil: [ self defaultLabel , ' [' , keyMap gtDisplayString , ']' ] ]
 ]
 
 { #category : #accessing }
