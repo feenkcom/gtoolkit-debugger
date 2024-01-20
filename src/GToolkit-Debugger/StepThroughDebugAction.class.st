@@ -17,19 +17,12 @@ StepThroughDebugAction class >> actionType [
 { #category : #registration }
 StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
+	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
 		icon: BrGlamorousIcons through;
-		keymap: (BlKeyCombination builder
+		keymap: ((BlKeyCombination builder
 				key: BlKeyboardKey F12;
-				build) gtDisplayString
-]
-
-{ #category : #registration }
-StepThroughDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
-	<gt2StackDebuggingAction>
-	
-	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons through
+				build) or: BlKeyCombination builder primary alt arrowRight build)
 ]
 
 { #category : #accessing }
