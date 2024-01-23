@@ -22,7 +22,7 @@ ResumeDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 		icon: BrGlamorousIcons play;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F5;
-				build) 
+				build) gtDisplayString
 ]
 
 { #category : #accessing }

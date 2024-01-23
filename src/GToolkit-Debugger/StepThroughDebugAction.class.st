@@ -22,7 +22,7 @@ StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 		icon: BrGlamorousIcons through;
 		keymap: ((BlKeyCombination builder
 				key: BlKeyboardKey F12;
-				build) or: BlKeyCombination builder primary alt arrowRight build)
+				build) or: BlKeyCombination builder primary alt arrowRight build) gtDisplayString
 ]
 
 { #category : #accessing }
