@@ -10,7 +10,7 @@ BaselineOfGToolkitDebuggerExtensions >> baseline: spec [
 	spec for: #'common' do: [
 		spec
 			baseline: 'GToolkitDebugger' with: [
-				spec repository: 'github://feenkcom/gtoolkit-debugger:v0.8.1992/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-debugger:v0.8.1993/src' ].
 
 		spec package: 'GToolkit-DebuggerExtensions' with: [
 			spec requires: #('GToolkitDebugger') ].
