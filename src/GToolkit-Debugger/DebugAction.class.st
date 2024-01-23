@@ -88,19 +88,44 @@ DebugAction >> asBrickButton [
 	| currentIcon currentLabel aptitude actionButton |
 	currentIcon := self icon.
 	currentLabel := self label.
-	
-	aptitude := self icon 
-		ifNil: [ BrGlamorousButtonWithLabelAptitude ]
-		ifNotNil: [ BrGlamorousButtonWithIconAptitude ].
-		
-	actionButton := BrButton new 
-		aptitude: aptitude;
-		label: self label; 
-		action: [ 
-			self execute ].
-	self icon ifNotNil: [ :anIcon | 
-		actionButton icon: self icon asElement ].
-	
+
+	aptitude := self icon
+			ifNil: [ BrGlamorousButtonWithLabelAptitude ]
+			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
+	aptitude
+		add: (BrGlamorousWithTooltipAptitude
+				content: [ | tooltipElement |
+					tooltipElement := BrHorizontalGrid new
+							fitContent;
+							padding: (BlInsets all: 5);
+							columnCount: 2;
+							addChild: (BrLabel new
+									aptitude: BrGlamorousLabelAptitude;
+									text: self label).
+					self keymap
+						ifNotNil: [ tooltipElement
+								addChild: (BrHorizontalPane new
+										fitContent;
+										geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+										border: (BlBorder paint: Color gray width: 1);
+										padding: (BlInsets all: 1);
+										margin: (BlInsets top: 2 left: 10);
+										addChild: (BrLabel new
+												aptitude: BrGlamorousLabelAptitude;
+												text: (self keymap asRopedText
+														fontName: 'Source Code Pro';
+														foreground: Color gray;
+														fontSize: 10);
+												hFitContent;
+												yourself);
+										yourself) ].
+					tooltipElement ]).
+	actionButton := BrButton new
+			aptitude: aptitude;
+			label: self label;
+			action: [ self execute ].
+	self icon ifNotNil: [ :anIcon | actionButton icon: self icon asElement ].
+
 	^ actionButton
 ]
 
@@ -284,11 +309,7 @@ DebugAction >> keymap: aKeymap [
 
 { #category : #accessing }
 DebugAction >> label [
-	^ label
-		ifNil: [ | keyMap |
-			(keyMap := self keymap)
-				ifNil: [ self defaultLabel ]
-				ifNotNil: [ self defaultLabel , ' [' , keyMap gtDisplayString , ']' ] ]
+	^ label ifNil: [ self defaultLabel ]
 ]
 
 { #category : #accessing }
