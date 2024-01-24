@@ -17,20 +17,13 @@ RestartDebugAction class >> actionType [
 { #category : #registration }
 RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
+		<gt2StackDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
 			icon: BrGlamorousIcons restart;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F7;
 				build) gtDisplayString
-]
-
-{ #category : #registration }
-RestartDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
-	<gt2StackDebuggingAction>
-	
-	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons restart
 ]
 
 { #category : #accessing }

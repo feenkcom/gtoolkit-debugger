@@ -17,19 +17,12 @@ StepOverDebugAction class >> actionType [
 { #category : #registration }
 StepOverDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
+	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
 		icon: BrGlamorousIcons over;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F10;
 				build) gtDisplayString
-]
-
-{ #category : #registration }
-StepOverDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
-	<gt2StackDebuggingAction>
-	
-	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons over
 ]
 
 { #category : #accessing }

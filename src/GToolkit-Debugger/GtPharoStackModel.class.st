@@ -15,16 +15,6 @@ Class {
 }
 
 { #category : #accessing }
-GtPharoStackModel class >> onSession: debuggingSession [
-	^self new session: debuggingSession
-]
-
-{ #category : #announcer }
-GtPharoStackModel >> announcer [
-	^ announcer ifNil: [ announcer := Announcer new ]
-]
-
-{ #category : #accessing }
 GtPharoStackModel >> cachedCodersDo: aBlock [
 	"Evaluate a given block with all currently cached coder view models in
 	an arbitrary order."
@@ -65,15 +55,6 @@ GtPharoStackModel >> contextStream [
 ]
 
 { #category : #accessing }
-GtPharoStackModel >> createCoderFor: aContext in: aSession [
-	| coder |
-	coder := GtPharoMethodContextCoder forContext: aContext session: aSession.
-	coder announcer weak when: GtCoderRefreshStackAnnouncement send: #forceRefreshStack to: self.
-	coder announcer weak when: DebugActionExecuted send: #forceRefreshStack to: self.
-	^ coder
-]
-
-{ #category : #accessing }
 GtPharoStackModel >> filters [
 	<return: #Set>
 
@@ -93,22 +74,6 @@ GtPharoStackModel >> forceRefreshStack [
 	currentContext := nil.
 	self updateBasedOnCurentContext: aContext.
 	self announce: GtCoderRefreshStackAnnouncement new
-]
-
-{ #category : #accessing }
-GtPharoStackModel >> getCoderViewModelForContext: aContext [
-	^ lock
-		critical: [ | method entry |
-			method := aContext isBlockContext ifFalse: [ aContext compiledCode ].
-			entry := coderViewModelCache
-					at: aContext
-					ifAbsentPut: [ {(self createCoderFor: aContext in: session) asCoderViewModel.
-							method} ].
-			(entry at: 2) ~~ method
-				ifTrue: [ entry first coder forMethod: method.
-					entry at: 2 put: method ].
-			entry at: 1 ]
-		ifError: [ nil ]
 ]
 
 { #category : #accessing }
@@ -145,14 +110,6 @@ GtPharoStackModel >> gtContextsFor: aView [
 ]
 
 { #category : #accessing }
-GtPharoStackModel >> hideVariableValueAnnotations [
-	self
-		cachedCodersDo: [ :each | 
-			each removeStylersOfClass: GtStackContextVariableValueStyler.
-			each requestUpdateAddOns ]
-]
-
-{ #category : #accessing }
 GtPharoStackModel >> initialize [
 	super initialize.
 
@@ -173,23 +130,9 @@ GtPharoStackModel >> resetCoderViewModelCache [
 ]
 
 { #category : #accessing }
-GtPharoStackModel >> session [
-	^ session
-]
-
-{ #category : #accessing }
 GtPharoStackModel >> session: aDebuggingSession [
 	session := aDebuggingSession.
 	self updateBasedOnCurentSession
-]
-
-{ #category : #accessing }
-GtPharoStackModel >> showVariableValueAnnotations [
-	self
-		cachedCodersDo: [ :viewModel | 
-			viewModel
-				addStyler: (GtStackContextVariableValueStyler new coderViewModel: viewModel).
-			viewModel requestUpdateAddOns ]
 ]
 
 { #category : #accessing }
