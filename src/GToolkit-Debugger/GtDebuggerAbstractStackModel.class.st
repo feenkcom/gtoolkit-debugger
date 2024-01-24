@@ -7,11 +7,8 @@ Class {
 		'announcer',
 		'filters',
 		'coderViewModelCache',
-		'lock',
 		'session',
-		'context',
-		'coderViewModelStream',
-		'contextStream'
+		'currentContext'
 	],
 	#category : #'GToolkit-Debugger-Models'
 }
@@ -28,50 +25,68 @@ GtDebuggerAbstractStackModel >> announcer [
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> cachedCodersDo: aBlock [
-	coderViewModelCache do: [ :each | aBlock value: each first ]
+	"Evaluate a given block with all currently cached coder view models in
+	an arbitrary order."
+	coderViewModelCache do: [ :eachCoder | aBlock value: eachCoder ]
 ]
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> coderViewModelStream [
-	^ coderViewModelStream asyncSimilarCopy
+	^ self contextStream
+		map: [ :eachContext | (self createCoderFor: eachContext in: session) asCoderViewModel]
+		cache: coderViewModelCache
 ]
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> context: aContext [
-	self subclassResponsibility
+	self
+		deprecated: 'Please use updateBasedOnCurentContext: instead.'
+		transformWith:
+			'`@receiver context: `@statements1'
+				-> '`@receiver updateBasedOnCurentContext: `@statements1'.
+
+	self updateBasedOnCurentContext: aContext
 ]
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> contextStream [
 	| allContexts |
-	allContexts := GtPharoStackStream onContext: context.
-	^ (filters isNil or: [ filters isEmpty ])
-		ifTrue: [ allContexts ]
-		ifFalse: [ allContexts
-				select: [ :each | 
-					each sender isNil
-						or: [ filters anySatisfy: [ :filter | filter matches: each method method ] ] ] ]
+
+	allContexts := GtPharoStackStream onContext: currentContext.
+	
+	filters
+		ifEmpty: [ ^ allContexts ].
+
+	^ allContexts
+		select: [ :each | 
+			each sender isNil
+				or: [ filters anySatisfy: [ :filter | filter matches: each method method ] ] ]
+]
+
+{ #category : #accessing }
+GtDebuggerAbstractStackModel >> createCoderFor: aContext in: aSession [
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> filters [
-	^ filters ifNil: [ #() ]
+	<return: #Set>
+
+	^ filters
 ]
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> filters: aCollection [
 	filters := Set withAll: aCollection.
-	self updateContextStreams
+	self notifyDebuggerStackChanged
 ]
 
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> forceRefreshStack [
 	| aContext |
-	
-	aContext := context.
-	context := nil.
-	self context: aContext.
-	
+	aContext := currentContext.
+	currentContext := nil.
+	self updateBasedOnCurentContext: aContext.
 	self announce: GtCoderRefreshStackAnnouncement new
 ]
 
@@ -84,8 +99,13 @@ GtDebuggerAbstractStackModel >> getCoderViewModelForContext: aContext [
 GtDebuggerAbstractStackModel >> initialize [
 	super initialize.
 	
-	coderViewModelCache := IdentityDictionary new.
-	lock := Semaphore forMutualExclusion
+	filters := Set new.
+	coderViewModelCache := AsyncSharedIdentityDictionary new
+]
+
+{ #category : #announcer }
+GtDebuggerAbstractStackModel >> notifyDebuggerStackChanged [
+	self announce: GtDebuggerStackChanged new
 ]
 
 { #category : #accessing }
@@ -94,21 +114,28 @@ GtDebuggerAbstractStackModel >> session [
 ]
 
 { #category : #accessing }
-GtDebuggerAbstractStackModel >> session: debuggingSession [
-	session := debuggingSession.
-	self updateContent
+GtDebuggerAbstractStackModel >> session: aDebuggingSession [
+	session := aDebuggingSession.
+	self updateBasedOnCurentSession
 ]
 
 { #category : #accessing }
+GtDebuggerAbstractStackModel >> updateBasedOnCurentContext: aContext [
+	self subclassResponsibility
+]
+
+{ #category : #updating }
+GtDebuggerAbstractStackModel >> updateBasedOnCurentSession [
+	self updateBasedOnCurentContext: session context
+]
+
+{ #category : #updating }
 GtDebuggerAbstractStackModel >> updateContent [
-	self context: session context
-]
+	self
+		deprecated: 'Please use updateBasedOnCurentSession: instead.'
+		transformWith:
+			'`@receiver updateContent'
+				-> '`@receiver updateBasedOnCurentSession'.
 
-{ #category : #accessing }
-GtDebuggerAbstractStackModel >> updateContextStreams [
-	coderViewModelStream := (self contextStream
-		collect: [ :each | 
-			self getCoderViewModelForContext: each ]) cached.
-	
-	self announce: GtDebuggerStackChanged new
+	self updateBasedOnCurentSession
 ]
