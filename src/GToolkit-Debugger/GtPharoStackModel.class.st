@@ -4,14 +4,12 @@ Class {
 	#traits : 'TGtAnnouncer',
 	#classTraits : 'TGtAnnouncer classTrait',
 	#instVars : [
-		'contextStream',
-		'coderViewModelStream',
 		'session',
 		'lock',
 		'announcer',
-		'context',
 		'filters',
-		'coderViewModelCache'
+		'coderViewModelCache',
+		'currentContext'
 	],
 	#category : #'GToolkit-Debugger-Models'
 }
@@ -28,33 +26,42 @@ GtPharoStackModel >> announcer [
 
 { #category : #accessing }
 GtPharoStackModel >> cachedCodersDo: aBlock [
-	coderViewModelCache do: [ :each | aBlock value: each first ]
+	"Evaluate a given block with all currently cached coder view models in
+	an arbitrary order."
+	coderViewModelCache do: [ :eachCoder | aBlock value: eachCoder ]
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> coderViewModelStream [
-	^ coderViewModelStream asyncSimilarCopy
+	^ self contextStream
+		map: [ :eachContext | (self createCoderFor: eachContext in: session) asCoderViewModel]
+		cache: coderViewModelCache
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> context: aContext [
-	context ~~ aContext
-		ifTrue: [ (context notNil and: [ context isDead ])
-				ifTrue: [ self resetCoderViewModelCache ].
-			context := aContext.
-			self updateContextStreams ]
+	self
+		deprecated: 'Please use updateBasedOnCurentContext: instead.'
+		transformWith:
+			'`@receiver context: `@statements1'
+				-> '`@receiver updateBasedOnCurentContext: `@statements1'.
+
+	self updateBasedOnCurentContext: aContext
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> contextStream [
 	| allContexts |
-	allContexts := GtPharoStackStream onContext: context.
-	^ (filters isNil or: [ filters isEmpty ])
-		ifTrue: [ allContexts ]
-		ifFalse: [ allContexts
-				select: [ :each | 
-					each sender isNil
-						or: [ filters anySatisfy: [ :filter | filter matches: each method method ] ] ] ]
+
+	allContexts := GtPharoStackStream onContext: currentContext.
+	
+	filters
+		ifEmpty: [ ^ allContexts ].
+
+	^ allContexts
+		select: [ :each | 
+			each sender isNil
+				or: [ filters anySatisfy: [ :filter | filter matches: each method method ] ] ]
 ]
 
 { #category : #accessing }
@@ -68,21 +75,23 @@ GtPharoStackModel >> createCoderFor: aContext in: aSession [
 
 { #category : #accessing }
 GtPharoStackModel >> filters [
-	^ filters ifNil: [ #() ]
+	<return: #Set>
+
+	^ filters
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> filters: aCollection [
 	filters := Set withAll: aCollection.
-	self updateContextStreams
+	self notifyDebuggerStackChanged
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> forceRefreshStack [
 	| aContext |
-	aContext := context.
-	context := nil.
-	self context: aContext.
+	aContext := currentContext.
+	currentContext := nil.
+	self updateBasedOnCurentContext: aContext.
 	self announce: GtCoderRefreshStackAnnouncement new
 ]
 
@@ -103,6 +112,39 @@ GtPharoStackModel >> getCoderViewModelForContext: aContext [
 ]
 
 { #category : #accessing }
+GtPharoStackModel >> gtCachedCoders: aView [
+	<gtView>
+	
+	^ aView list
+		title: 'Cached coders';
+		priority: 5;
+		items: [ Array streamContents: [ :aStream | self cachedCodersDo: [ :eachCoder | aStream nextPut: eachCoder ] ] ];
+		actionUpdateButton
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> gtContextCoderViewModelsFor: aView [
+	<gtView>
+	
+	^ aView list
+		title: 'Context coders';
+		priority: 4;
+		items: [ self coderViewModelStream ];
+		actionUpdateButton
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> gtContextsFor: aView [
+	<gtView>
+	
+	^ aView list
+		title: 'Contexts';
+		priority: 3;
+		items: [ self contextStream ];
+		actionUpdateButton
+]
+
+{ #category : #accessing }
 GtPharoStackModel >> hideVariableValueAnnotations [
 	self
 		cachedCodersDo: [ :each | 
@@ -113,16 +155,21 @@ GtPharoStackModel >> hideVariableValueAnnotations [
 { #category : #accessing }
 GtPharoStackModel >> initialize [
 	super initialize.
-	coderViewModelCache := IdentityDictionary new.
+
+	filters := Set new.
+	coderViewModelCache := AsyncSharedIdentityDictionary new.
 	lock := Semaphore forMutualExclusion
 ]
 
 { #category : #accessing }
+GtPharoStackModel >> notifyDebuggerStackChanged [
+	self announce: GtDebuggerStackChanged new
+]
+
+{ #category : #accessing }
 GtPharoStackModel >> resetCoderViewModelCache [
-	lock
-		critical: [ coderViewModelCache keys
-				do: [ :each | each isDead ifTrue: [ coderViewModelCache removeKey: each ifAbsent: [  ] ] ] ]
-		ifError: [  ]
+	coderViewModelCache keys
+		do: [ :each | each isDead ifTrue: [ coderViewModelCache removeKey: each ifAbsent: [  ] ] ]
 ]
 
 { #category : #accessing }
@@ -131,9 +178,9 @@ GtPharoStackModel >> session [
 ]
 
 { #category : #accessing }
-GtPharoStackModel >> session: debuggingSession [
-	session := debuggingSession.
-	self updateContent
+GtPharoStackModel >> session: aDebuggingSession [
+	session := aDebuggingSession.
+	self updateBasedOnCurentSession
 ]
 
 { #category : #accessing }
@@ -146,18 +193,31 @@ GtPharoStackModel >> showVariableValueAnnotations [
 ]
 
 { #category : #accessing }
-GtPharoStackModel >> stackChanged [
-	self announce: GtDebuggerStackChanged new
+GtPharoStackModel >> updateBasedOnCurentContext: aContext [
+	"Changes the Context to a given one trying to preserve
+	cached coders for each stack frame"
+	currentContext == aContext
+		ifTrue: [ ^ self ].
+
+	(currentContext notNil and: [ currentContext isDead ])
+		ifTrue: [ self resetCoderViewModelCache ].
+
+	currentContext := aContext.
+	self notifyDebuggerStackChanged
+]
+
+{ #category : #accessing }
+GtPharoStackModel >> updateBasedOnCurentSession [
+	self updateBasedOnCurentContext: session context
 ]
 
 { #category : #accessing }
 GtPharoStackModel >> updateContent [
-	self context: session context
-]
+	self
+		deprecated: 'Please use updateBasedOnCurentSession: instead.'
+		transformWith:
+			'`@receiver updateContent'
+				-> '`@receiver updateBasedOnCurentSession'.
 
-{ #category : #accessing }
-GtPharoStackModel >> updateContextStreams [
-	coderViewModelStream := (self contextStream
-			collect: [ :each | self getCoderViewModelForContext: each ]) cached.
-	self announce: GtDebuggerStackChanged new
+	self updateBasedOnCurentSession
 ]

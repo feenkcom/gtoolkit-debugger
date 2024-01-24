@@ -184,7 +184,8 @@ GtPharoStackElement >> contextFilters: aCollection [
 			ifTrue: [ #() ]
 			ifFalse: [ aCollection ].
 	stackModel filters: filters.
-	self debuggerElement session filters: filters
+	
+	self debuggerElementDo: [ :aDebuggerElement | aDebuggerElement session filters: filters ]
 ]
 
 { #category : #initialization }
@@ -246,9 +247,10 @@ GtPharoStackElement >> onStackChanged [
 
 { #category : #accessing }
 GtPharoStackElement >> onStackIndexSelectionChanged [
-	self
-		inUIProcessDo: [ self stackIndexList
-				selectedItemDo: [ :context :index | self selectContext: context ] ]
+	"Is executed in a UI process when selection in the index list changes.
+	When that happens we should update the selected context in the coders list"
+	self stackIndexList
+		selectedItemDo: [ :context :index | self selectContext: context ]
 ]
 
 { #category : #accessing }

@@ -31,6 +31,6 @@ GtPharoDebuggerElement >> aboutToOpen [
 GtPharoDebuggerElement >> buildStackElement [
 	| newStackElement |
 	newStackElement := GtPharoStackElement new.
-	newStackElement containerName: #stackElement.
+	newStackElement id: #stackElement.
 	^ newStackElement
 ]

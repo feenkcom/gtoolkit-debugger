@@ -1,8 +1,8 @@
 Class {
 	#name : #GtAbstractExpandableStackElement,
 	#superclass : #BlElement,
-	#traits : 'TBrLayoutResizable',
-	#classTraits : 'TBrLayoutResizable classTrait',
+	#traits : 'TBrLayoutResizable + TGtPhlowToolDetailAdjustable',
+	#classTraits : 'TBrLayoutResizable classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
 		'selectedCoderUIModel',
 		'annotationsEnabled',
@@ -14,7 +14,8 @@ Class {
 { #category : #callbacks }
 GtAbstractExpandableStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
-	self debuggerElement actOnSelectedContextChangedFor: aContextCoderUIModel coder context.
+	self debuggerElementDo: [ :aDebuggerElement |
+		aDebuggerElement actOnSelectedContextChangedFor: aContextCoderUIModel coder context ]
 ]
 
 { #category : #testing }
@@ -61,16 +62,15 @@ GtAbstractExpandableStackElement >> cursorInterval [
 ]
 
 { #category : #'accessing elements' }
-GtAbstractExpandableStackElement >> debuggerElement [
-	| currentElement |
-	currentElement := self.
-	[ currentElement hasParent ] whileTrue: [ 
-		| containerName |
-		currentElement := 	currentElement parent.
-		containerName := currentElement userData at: #debuggerContainer ifAbsent: [ nil ].
-		containerName = #debuggerElement ifTrue: [ 
-			^ currentElement ] ].
-	^ nil
+GtAbstractExpandableStackElement >> debuggerElementDo: aBlock [	
+	self
+		allParentsDetect: [:echParent |
+			echParent userData
+				at: #debuggerContainer
+				ifPresent: [ :aContainerName | aContainerName = #debuggerElement ]
+				ifAbsent: [ false ] ]
+		ifFound: aBlock
+		ifNone: [  ]
 ]
 
 { #category : #actions }
@@ -118,7 +118,8 @@ GtAbstractExpandableStackElement >> onStackChanged [
 	GtDebuggerStackElementOnStackChangedSignal emit.
 
 	self
-		inUIProcessDo: [ self stackFramesList stream: stackModel coderViewModelStream.
+		inUIProcessDo: [
+			self stackFramesList stream: stackModel coderViewModelStream.
 			self stackFramesList scrollToIndex: 1 ]
 ]
 
@@ -136,12 +137,12 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: stream [
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel
-		ifNotNil: [ :aPreviousSelectedCoderUIModel | aPreviousSelectedCoderUIModel focused: false ].
+		ifNotNil: [ :aPreviousSelectedCoderUIModel |
+			aPreviousSelectedCoderUIModel focused: false ].
 	selectedCoderUIModel := aContextCoderUIModel.
 
-	self
-		enqueueTask: (BlTaskAction new action: [ selectedCoderUIModel focused: true ]).
 	selectedCoderUIModel expanded: true.
+	selectedCoderUIModel focused: true.
 	
 	"Update the content as some actions (for example save)
 	can change the compiled method stored in the context."
@@ -183,14 +184,14 @@ GtAbstractExpandableStackElement >> stackFramesList [
 GtAbstractExpandableStackElement >> updateContent [
 	GtDebuggerStackElementOnUpdateSessionSignal emit.
 
-	self updateForSession: self debuggerElement session
+	self debuggerElementDo: [ :aDebuggerElement | self updateForSession: aDebuggerElement session ]
 ]
 
 { #category : #'private - updating' }
 GtAbstractExpandableStackElement >> updateDebugger [
 	GtDebuggerStackElementOnUpdateDebuggerSignal emit.
-
-	self debuggerElement updateContents
+	
+	self debuggerElementDo: [ :aDebuggerElement | aDebuggerElement debuggerElement updateContents ]
 ]
 
 { #category : #'private - updating' }
@@ -199,6 +200,6 @@ GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
 
 	stackModel
 		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
-		ifNotNil: [ stackModel updateContent ].
+		ifNotNil: [ stackModel updateBasedOnCurentSession ].
 	self openFirstNonFilteredContextFrom: stackModel coderViewModelStream
 ]
