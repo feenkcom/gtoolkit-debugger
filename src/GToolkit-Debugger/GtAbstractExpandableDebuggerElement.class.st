@@ -84,6 +84,7 @@ GtAbstractExpandableDebuggerElement >> buildDetailsElement [
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
+		matchParent;
 		background: Color white;
 		aptitude: BrGlamorousTabGroupAptitude;
 		addTab: (BrTab new
@@ -112,6 +113,7 @@ GtAbstractExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 		constraintsDo: [ :c | c linear weight: 2 ];
 		layout: BlLinearLayout horizontal.
 	detailsPane := self buildPaneElement
+		beInSeparateCompositionLayer;
 		layout: BlFrameLayout new;
 		padding: (BlInsets all: 10).
 	resizableDetailsPane := BrVerticalPane new matchParent 
@@ -167,11 +169,11 @@ GtAbstractExpandableDebuggerElement >> buildStackTabGroupForElement: aStackConta
 ]
 
 { #category : #'building widgets' }
-GtAbstractExpandableDebuggerElement >> buildStackToolbarActions [
+GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsFor: aCollectionOfDebuggingActions [
 	<return: #Collection of: #BrButton>	
-		
 	| buttons toggle |
-	buttons := (self actionsForPragmas: self stackDebuggingActionsPragmas) 
+	
+	buttons := aCollectionOfDebuggingActions
 		collect: [ :aDebuggingAction | 
 			aDebuggingAction asBrickButton ].
 		
@@ -284,6 +286,7 @@ GtAbstractExpandableDebuggerElement >> contextVariablesElement [
 GtAbstractExpandableDebuggerElement >> createToolbar [
 
 	toolbar := BrToolbar new.
+	toolbar beInSeparateCompositionLayer.
 	toolbar aptitude: BrGlamorousToolbarAptitude new.
 	self updateToolbarActions.
 	^ toolbar
@@ -301,13 +304,18 @@ GtAbstractExpandableDebuggerElement >> cursorInterval [
 
 { #category : #'accessing - elements' }
 GtAbstractExpandableDebuggerElement >> detailsPane [
-	^ self childNamed: #detailsPane
+	^ self childWithId: #detailsPane
 ]
 
 { #category : #opening }
 GtAbstractExpandableDebuggerElement >> filteredStack [
 	^ (self session stackOfSize: 50 ) select: [ :aContext | 
 		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> getStackDebuggingActions [
+	^ self actionsForPragmas: self stackDebuggingActionsPragmas
 ]
 
 { #category : #initialization }
@@ -448,8 +456,18 @@ GtAbstractExpandableDebuggerElement >> updateStackWidget [
 
 { #category : #callbacks }
 GtAbstractExpandableDebuggerElement >> updateToolbarActions [
+	| debuggingActions |
+	
+	debuggingActions := self getStackDebuggingActions.
+	(debuggingActions
+		gtHasEqualElements: toolbar viewModel model
+		by: [ :a :b | a id = b id ])
+			ifTrue: [ ^ self ].
+			
+	toolbar viewModel model: debuggingActions.
+
 	toolbar removeAllItems.
-	self buildStackToolbarActions do: [ :anAction | 
+	(self buildStackToolbarActionsFor: debuggingActions) do: [ :anAction | 
 		toolbar addItem: anAction ].
 	self updateToolbarWithExtraActions.
 ]
@@ -482,5 +500,9 @@ GtAbstractExpandableDebuggerElement >> updateToolbarWithExtraActions [
 { #category : #updating }
 GtAbstractExpandableDebuggerElement >> updateVariablesList [
 	self contextVariablesElement
-		ifNotNil: [ :elem | elem items: self contextVariables ]
+		ifNotNil: [ :elem | 
+			| newContextVariables |
+			newContextVariables := self contextVariables.
+			(elem items gtHasIdenticalElements: newContextVariables)
+				ifFalse: [ elem items: self contextVariables ] ]
 ]

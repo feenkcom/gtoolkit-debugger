@@ -26,7 +26,7 @@ GtPharoStackModelExamples >> stepOutOfTestMethod3InModel: model [
 	session := model session.
 	session
 		stepIntoUntil: [ :context | context method ~= (self class >> #testMethod3) ].
-	model updateContent
+	model updateBasedOnCurentSession
 ]
 
 { #category : #accessing }
