@@ -86,6 +86,7 @@ GtDebuggerAbstractStackModel >> forceRefreshStack [
 	| aContext |
 	aContext := currentContext.
 	currentContext := nil.
+	
 	self updateBasedOnCurentContext: aContext.
 	self announce: GtCoderRefreshStackAnnouncement new
 ]
@@ -95,7 +96,7 @@ GtDebuggerAbstractStackModel >> initialize [
 	super initialize.
 	
 	filters := Set new.
-	coderViewModelCache := AsyncSharedIdentityDictionary new
+	coderViewModelCache := AsyncSharedDictionary new
 ]
 
 { #category : #announcer }
