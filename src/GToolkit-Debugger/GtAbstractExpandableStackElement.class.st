@@ -129,25 +129,23 @@ GtAbstractExpandableStackElement >> onStackChanged [
 { #category : #accessing }
 GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 	| anItemsProvider aPreloadPromise |
-	
 	anItemsProvider := BrStreamItemsProvider new.
-	anItemsProvider stream: aStream.	
+	anItemsProvider stream: aStream.
 	aPreloadPromise := anItemsProvider
-		itemSuchThat: [ :eachCoder | (eachCoder coder context method hasPragmaNamed: #debuggerCompleteToSender) not ]
-		do: [ :anIndex :isSynchronous |
-			| anAction |
-			
-			anAction := [
-				self stackFramesList itemsProvider: anItemsProvider.
-				self stackFramesList scrollToIndex: anIndex offset: 0.
-				self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
-				
-			isSynchronous
-				ifTrue: anAction
-				ifFalse: [ self enqueueTask: (BlTaskAction new action: anAction) ]. ].
-	
-	(GtDebuggerStackElementFirstNonFilteredContextPreloadSignal new promise: aPreloadPromise) emit.
-		
+			itemSuchThat: [ :eachCoder | (self shouldJumpOverCoverViewModel: eachCoder) not ]
+			do: [ :anIndex :isSynchronous | 
+				| anAction |
+				anAction := [ self stackFramesList itemsProvider: anItemsProvider.
+					self stackFramesList scrollToIndex: anIndex offset: 0.
+					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
+
+				isSynchronous
+					ifTrue: anAction
+					ifFalse: [ self enqueueTask: (BlTaskAction new action: anAction) ] ].
+
+	(GtDebuggerStackElementFirstNonFilteredContextPreloadSignal new
+		promise: aPreloadPromise) emit.
+
 	self enqueueTask: (BlPromiseTask new promise: aPreloadPromise)
 ]
 
@@ -211,6 +209,11 @@ GtAbstractExpandableStackElement >> selectedCoder [
 { #category : #accessing }
 GtAbstractExpandableStackElement >> selectedContext [
 	^ self selectedCoder ifNotNil: [ :coder | coder context ]
+]
+
+{ #category : #accessing }
+GtAbstractExpandableStackElement >> shouldJumpOverCoverViewModel: eachCoder [
+	^ false
 ]
 
 { #category : #'accessing elements' }

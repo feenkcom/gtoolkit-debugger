@@ -281,6 +281,11 @@ GtPharoStackElement >> safePrintStringFor: anObject [
 	^ [anObject printString] onErrorDo: [:ex | 'Error computing printString!' ]
 ]
 
+{ #category : #updating }
+GtPharoStackElement >> shouldJumpOverCoverViewModel: eachCoder [
+	^ eachCoder coder context method hasPragmaNamed: #debuggerCompleteToSender
+]
+
 { #category : #accessing }
 GtPharoStackElement >> stackIndexList [
 	^ stackIndex
