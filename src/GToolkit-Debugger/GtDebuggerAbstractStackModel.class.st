@@ -90,11 +90,6 @@ GtDebuggerAbstractStackModel >> forceRefreshStack [
 	self announce: GtCoderRefreshStackAnnouncement new
 ]
 
-{ #category : #accessing }
-GtDebuggerAbstractStackModel >> getCoderViewModelForContext: aContext [
-	self subclassResponsibility
-]
-
 { #category : #initialization }
 GtDebuggerAbstractStackModel >> initialize [
 	super initialize.

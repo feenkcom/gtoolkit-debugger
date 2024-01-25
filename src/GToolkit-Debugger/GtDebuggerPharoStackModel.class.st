@@ -15,24 +15,6 @@ GtDebuggerPharoStackModel >> createCoderFor: aContext in: aSession [
 	^ coder
 ]
 
-{ #category : #accessing }
-GtDebuggerPharoStackModel >> getCoderViewModelForContext: aContext [
-	^ lock
-		critical: [ | method entry |
-			method := aContext isBlockContext ifFalse: [ aContext compiledCode ].
-			entry := coderViewModelCache
-					at: aContext
-					ifAbsentPut: [ {
-						(self createCoderFor: aContext in: session) asCoderViewModel.
-						method } ].
-			(entry at: 2) ~~ method
-				ifTrue: [ 
-					entry first coder forMethod: method.
-					entry at: 2 put: method ].
-			entry at: 1 ]
-		ifError: [ nil ]
-]
-
 { #category : #'gt-extensions' }
 GtDebuggerPharoStackModel >> gtCachedCoders: aView [
 	<gtView>
