@@ -174,7 +174,7 @@ GtAbstractExpandableStackElement >> selectCoderForContext: aContext [
 
 { #category : #actions }
 GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
-	"Most be called from a UI process"
+	"Must be called from a UI process"
 	selectedCoderUIModel
 		ifNotNil: [ :aPreviousSelectedCoderUIModel |
 			"Only unfocus if the new selected coder is different"
@@ -236,6 +236,11 @@ GtAbstractExpandableStackElement >> updateDebugger [
 ]
 
 { #category : #'private - updating' }
+GtAbstractExpandableStackElement >> updateExistingStackModelFor: aDebuggingSession [ 
+	stackModel setCurrentContext: aDebuggingSession context
+]
+
+{ #category : #'private - updating' }
 GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
 	"Debugging session changed, update the context stack list.
 	Possible update reasons are:
@@ -245,7 +250,7 @@ GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
 
 	stackModel
 		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
-		ifNotNil: [ stackModel setCurrentContext: aDebuggingSession context ].
+		ifNotNil: [ self updateExistingStackModelFor: aDebuggingSession ].
 
 	self openFirstNonFilteredContextFrom: stackModel coderViewModelStream
 ]
