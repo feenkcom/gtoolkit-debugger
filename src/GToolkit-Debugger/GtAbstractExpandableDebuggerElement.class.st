@@ -84,6 +84,7 @@ GtAbstractExpandableDebuggerElement >> buildDetailsElement [
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsTabElement [
 	^ BrTabGroup new
+		matchParent;
 		background: Color white;
 		aptitude: BrGlamorousTabGroupAptitude;
 		addTab: (BrTab new
@@ -112,6 +113,7 @@ GtAbstractExpandableDebuggerElement >> buildPanesStructureIn: aContainer [
 		constraintsDo: [ :c | c linear weight: 2 ];
 		layout: BlLinearLayout horizontal.
 	detailsPane := self buildPaneElement
+		beInSeparateCompositionLayer;
 		layout: BlFrameLayout new;
 		padding: (BlInsets all: 10).
 	resizableDetailsPane := BrVerticalPane new matchParent 
@@ -284,6 +286,7 @@ GtAbstractExpandableDebuggerElement >> contextVariablesElement [
 GtAbstractExpandableDebuggerElement >> createToolbar [
 
 	toolbar := BrToolbar new.
+	toolbar beInSeparateCompositionLayer.
 	toolbar aptitude: BrGlamorousToolbarAptitude new.
 	self updateToolbarActions.
 	^ toolbar
@@ -301,7 +304,7 @@ GtAbstractExpandableDebuggerElement >> cursorInterval [
 
 { #category : #'accessing - elements' }
 GtAbstractExpandableDebuggerElement >> detailsPane [
-	^ self childNamed: #detailsPane
+	^ self childWithId: #detailsPane
 ]
 
 { #category : #opening }

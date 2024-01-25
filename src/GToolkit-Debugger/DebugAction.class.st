@@ -123,7 +123,7 @@ DebugAction >> asBrickButton [
 	actionButton := BrButton new
 			aptitude: aptitude;
 			label: self label;
-			action: [ self execute ].
+			when: BlMouseDownEvent do: [ :e | e consumed: true. self execute ].
 	self icon ifNotNil: [ :anIcon | actionButton icon: self icon asElement ].
 
 	^ actionButton

@@ -66,12 +66,14 @@ GtPharoStackElement class >> receiversStreamFor: aStackModel [
 ]
 
 { #category : #accessing }
-GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
-	| context |
-	super actOnCoderInFocusFor: aContextCoderUIModel.
-	context := aContextCoderUIModel context.
-	self updateStackIndexListTo: context.
-	self updateReceiversIndexTo: context
+GtPharoStackElement >> actOnCoderInFocusFor: aContextCoderViewModel [
+	"Is sent when a coder view model receives focus.
+	It is an entrance point for updating all UI elements except the context coders list itself"
+	| aFocusedContext |
+	super actOnCoderInFocusFor: aContextCoderViewModel.
+	aFocusedContext := aContextCoderViewModel context.
+	self updateStackIndexListTo: aFocusedContext.
+	self updateReceiversIndexTo: aFocusedContext
 ]
 
 { #category : #initialization }
@@ -228,15 +230,17 @@ GtPharoStackElement >> initializeStackList [
 		do: [ :event | self contextFilters: (self buildFiltersFrom: filtersElement) ].
 	stackPane addChild: filtersElement as: #filters.
 	stackFramesList := self buildStackFramesList.
-	stackFramesList items: OrderedCollection new.
 	stackPane addChild: stackFramesList as: #expandableFrames.
 	self addChild: stackPane
 ]
 
 { #category : #accessing }
 GtPharoStackElement >> onReceiverIndexSelectionChanged [
+	"Is executed in a UI process when selection in the receiver list changes.
+	When that happens we should update the selected context in the coders list"
+	
 	receiversIndex
-		selectedEntityDo: [ :value :index | self selectContext: value object ]
+		selectedEntityDo: [ :value :index | self selectCoderForContext: value object ]
 ]
 
 { #category : #accessing }
@@ -250,8 +254,9 @@ GtPharoStackElement >> onStackChanged [
 GtPharoStackElement >> onStackIndexSelectionChanged [
 	"Is executed in a UI process when selection in the index list changes.
 	When that happens we should update the selected context in the coders list"
+	
 	self stackIndexList
-		selectedItemDo: [ :context :index | self selectContext: context ]
+		selectedItemDo: [ :context :index | self selectCoderForContext: context ]
 ]
 
 { #category : #accessing }
@@ -277,16 +282,15 @@ GtPharoStackElement >> safePrintStringFor: anObject [
 ]
 
 { #category : #accessing }
-GtPharoStackElement >> selectContext: aContext [
-	super selectContext: aContext.
-	
-	self updateStackIndexListTo: aContext.
-	self updateReceiversIndexTo: aContext
-]
-
-{ #category : #accessing }
 GtPharoStackElement >> stackIndexList [
 	^ stackIndex
+]
+
+{ #category : #updating }
+GtPharoStackElement >> updateForSession: aDebuggingSession [
+	super updateForSession: aDebuggingSession.
+	
+	self updateIndexes
 ]
 
 { #category : #updating }
@@ -296,34 +300,27 @@ GtPharoStackElement >> updateIndexes [
 ]
 
 { #category : #updating }
-GtPharoStackElement >> updateIndexesSelection [
-	| context |
-	selectedCoderUIModel isNil ifTrue: [ ^ self ].
-	context := selectedCoderUIModel coder context.
-	self
-		inUIProcessDo: [ self updateStackIndexListTo: context.
-			self updateReceiversIndexTo: context ]
-]
-
-{ #category : #updating }
 GtPharoStackElement >> updateReceiversIndex [
 	self
 		inUIProcessDo: [ receiversIndex stream: (self class receiversStreamFor: stackModel) ]
 ]
 
 { #category : #updating }
-GtPharoStackElement >> updateReceiversIndexTo: aContext [
-	| selected |
-	receiversIndex
-		inUIProcessDo: [ receiversIndex selectedEntityDo: [ :each | selected := each object ].
-			selected ~~ aContext
-				ifTrue: [ 1
-						to: receiversIndex viewModel entityCount
-						do: [ :i | 
-							(receiversIndex viewModel entityAt: i)
-								ifNotNil: [ :each | 
-									(each isItem and: [ each object == aContext ])
-										ifTrue: [ receiversIndex selectOne: i ] ] ] ] ]
+GtPharoStackElement >> updateReceiversIndexTo: aContext [	
+	"Must be sent from a UI process"
+	| alreadySelectedContext |
+
+	receiversIndex selectedEntityDo: [ :each | alreadySelectedContext := each object ].
+	alreadySelectedContext == aContext
+		ifTrue: [ ^ self ].
+
+	1
+		to: receiversIndex viewModel entityCount
+		do: [ :i | 
+			(receiversIndex viewModel entityAt: i)
+				ifNotNil: [ :each | 
+					(each isItem and: [ each object == aContext ])
+						ifTrue: [ receiversIndex selectOne: i ] ] ]
 ]
 
 { #category : #updating }
@@ -335,13 +332,17 @@ GtPharoStackElement >> updateStackIndex [
 
 { #category : #updating }
 GtPharoStackElement >> updateStackIndexListTo: aContext [
-	| selected |
-	self stackIndexList selectedItemDo: [ :context | selected := context ].
-	selected ~~ aContext
-		ifTrue: [ (self stackIndexList scrollToItemSuchThat: [ :each | each == aContext ])
-				then: [ :v | 
-					self stackIndexList
-						inUIProcessDo: [ | index |
-							index := self stackIndexList items indexOf: aContext.
-							index > 0 ifTrue: [ self stackIndexList selectOne: index ] ] ] ]
+	"Must be sent from a UI process"
+	| alreadySelectedContext |
+
+	self stackIndexList selectedItemDo: [ :context | alreadySelectedContext := context ].
+	alreadySelectedContext == aContext
+		ifTrue: [ ^ self ].
+
+	self stackIndexList
+		itemSuchThat: [ :each | each == aContext ]
+		do:  [ :anIndex |
+			self stackIndexList
+				scrollToIndex: anIndex;
+				selectOne: anIndex ]
 ]

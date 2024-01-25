@@ -80,6 +80,22 @@ GtDebuggerPharoStackModel >> resetCoderViewModelCache [
 		do: [ :each | each isDead ifTrue: [ coderViewModelCache removeKey: each ifAbsent: [  ] ] ]
 ]
 
+{ #category : #updating }
+GtDebuggerPharoStackModel >> setCurrentContext: aContext [
+	"Changes the Context to a given one trying to preserve
+	cached coders for each stack frame.
+	Return true if the context changed"
+	<return: #Boolean>
+	currentContext == aContext
+		ifTrue: [ ^ false ].
+
+	(currentContext notNil and: [ currentContext isDead ])
+		ifTrue: [ self resetCoderViewModelCache ].
+
+	currentContext := aContext.
+	^ true
+]
+
 { #category : #accessing }
 GtDebuggerPharoStackModel >> showVariableValueAnnotations [
 	self
@@ -93,12 +109,6 @@ GtDebuggerPharoStackModel >> showVariableValueAnnotations [
 GtDebuggerPharoStackModel >> updateBasedOnCurentContext: aContext [
 	"Changes the Context to a given one trying to preserve
 	cached coders for each stack frame"
-	currentContext == aContext
-		ifTrue: [ ^ self ].
-
-	(currentContext notNil and: [ currentContext isDead ])
-		ifTrue: [ self resetCoderViewModelCache ].
-
-	currentContext := aContext.
-	self notifyDebuggerStackChanged
+	(self setCurrentContext: aContext)
+		ifTrue: [ self notifyDebuggerStackChanged ]
 ]

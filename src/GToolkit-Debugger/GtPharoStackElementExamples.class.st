@@ -5,8 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-GtPharoStackElementExamples >> createPharoStackElementScripter [
-	<gtExample>
+GtPharoStackElementExamples >> createPharoStackElement [
 	| context debuggingSession process stackElement |
 	context := [ self testMethod1 ] asContext.
 	process := Process
@@ -22,7 +21,13 @@ GtPharoStackElementExamples >> createPharoStackElementScripter [
 		updateForSession: debuggingSession;
 		beDetailedLevel.
 	
-	^ BlScripter new element: stackElement
+	^ stackElement
+]
+
+{ #category : #accessing }
+GtPharoStackElementExamples >> createPharoStackElementScripter [
+	<gtExample>
+	^ BlScripter new element: self createPharoStackElement
 ]
 
 { #category : #accessing }
