@@ -213,8 +213,7 @@ GtAbstractExpandableStackElement >> selectedContext [
 
 { #category : #accessing }
 GtAbstractExpandableStackElement >> shouldJumpOverCoverViewModel: eachCoder [
-	^ (eachCoder coder context method hasPragmaNamed: #debuggerCompleteToSender)
-		not
+	^ false
 ]
 
 { #category : #'accessing elements' }
