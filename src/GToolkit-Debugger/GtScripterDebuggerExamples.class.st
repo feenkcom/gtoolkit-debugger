@@ -493,6 +493,16 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
 				// GtSourceCoderEditorId;
 				// GtSourceCoderEditorId ].
 
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+
 	^ scripter
 ]
 
@@ -541,6 +551,16 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
 				// (GtExpandableContextMethodCoderId indexed: 1);
 				// GtSourceCoderEditorId;
 				// GtSourceCoderEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
 
 	^ scripter
 ]
