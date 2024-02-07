@@ -449,6 +449,54 @@ GtScripterDebuggerExamples >> scripterOnReturnedBlockDebugger [
 ]
 
 { #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
+	<gtExample>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new sum21 ]
+			stoppingAt: [ :context | context selector = #sum21 ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace size: 1600 @ 600 ];
+		play.
+
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on method two expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert tempA value';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #tempA ]
+					equals: 2;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert tempB value';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #tempB ]
+					equals: 1;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
 	<gtExample>
 	| scripter debugger |

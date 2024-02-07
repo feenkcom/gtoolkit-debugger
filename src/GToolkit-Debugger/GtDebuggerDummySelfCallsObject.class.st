@@ -24,6 +24,13 @@ GtDebuggerDummySelfCallsObject >> one [
 ]
 
 { #category : #accessing }
+GtDebuggerDummySelfCallsObject >> sum21 [
+	| a |
+	a := 2.
+	^ self sumC: a d: 1
+]
+
+{ #category : #accessing }
 GtDebuggerDummySelfCallsObject >> sum39 [
 	| a b |
 	a := 3.
