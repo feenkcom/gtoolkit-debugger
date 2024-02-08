@@ -48,6 +48,7 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 				coderIndex: eachIndex;
 				emit.
 
+			eachCoderElement id: (GtExpandableContextMethodCoderId indexed: eachIndex).
 			eachCoderElement coderViewModel: eachCoderUIModel ];
 		stream: AsyncEmptyStream new
 ]

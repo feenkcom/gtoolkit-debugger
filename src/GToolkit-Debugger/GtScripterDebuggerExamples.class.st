@@ -448,6 +448,182 @@ GtScripterDebuggerExamples >> scripterOnReturnedBlockDebugger [
 	^ scripter
 ]
 
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
+	<gtExample>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new sum21 ]
+			stoppingAt: [ :context | context selector = #sum21 ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace size: 1600 @ 600 ];
+		play.
+
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on method two expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert tempA value';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #tempA ]
+					equals: 2;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert tempB value';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #tempB ]
+					equals: 1;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
+	<gtExample>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new sum39 ]
+			stoppingAt: [ :context | context selector = #sum39 ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace size: 1600 @ 600 ];
+		play.
+
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on method two expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert embedded method bingings';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #valueA ]
+					equals: 3;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert embedded method bingings';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #valueB ]
+					equals: 9;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSelfCallThreeDebugger [
+	<gtExample>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new three ]
+			stoppingAt: [ :context | context selector = #three ].
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace size: 1200 @ 600 ];
+		play.
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert element has method two expander';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert element has method one expander';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 2) ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on method two expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert embeded method has play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click embeded method play and inspect button';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+
+	^ scripter
+]
+
 { #category : #examples }
 GtScripterDebuggerExamples >> switchingCodersDoesNotLoseChanges [
 	"https://github.com/feenkcom/gtoolkit/issues/3418"
