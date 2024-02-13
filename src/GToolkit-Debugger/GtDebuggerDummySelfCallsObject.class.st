@@ -7,6 +7,16 @@ Class {
 	#category : #'GToolkit-Debugger-Dummies'
 }
 
+{ #category : #accessing }
+GtDebuggerDummySelfCallsObject >> * anObject [
+	self shouldNotImplement
+]
+
+{ #category : #accessing }
+GtDebuggerDummySelfCallsObject >> enumerate [
+	^ #(3 6 9) inject: 1 into: [ :result :value | result raisedTo: value ]
+]
+
 { #category : #initialization }
 GtDebuggerDummySelfCallsObject >> initialize [
 	super initialize.
@@ -16,6 +26,13 @@ GtDebuggerDummySelfCallsObject >> initialize [
 { #category : #accessing }
 GtDebuggerDummySelfCallsObject >> instAPlusOne [
 	^ self sumA: instA b: instA
+]
+
+{ #category : #accessing }
+GtDebuggerDummySelfCallsObject >> instAReceiver [
+	| a |
+	a := 3.
+	^ instA raisedTo: a
 ]
 
 { #category : #accessing }
@@ -54,6 +71,14 @@ GtDebuggerDummySelfCallsObject >> sumA: valueA b: valueB [
 { #category : #accessing }
 GtDebuggerDummySelfCallsObject >> sumC: tempA d: tempB [
 	^ self sumA: tempA b: tempB
+]
+
+{ #category : #accessing }
+GtDebuggerDummySelfCallsObject >> tempReceiver [
+	| a b |
+	a := 3.
+	b := 9.
+	^ a raisedTo: b
 ]
 
 { #category : #accessing }
