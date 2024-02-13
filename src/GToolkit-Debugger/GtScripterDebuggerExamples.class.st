@@ -427,6 +427,79 @@ GtScripterDebuggerExamples >> scripterOnDoMethodDebugger [
 ]
 
 { #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnEnumerationDebugger [
+	<gtExample>
+	<noTest>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new enumerate ]
+			stoppingAt: [ :context | context selector = #enumerate ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	debugger debugSession stepThrough.
+	debugger debugSession stepThrough.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace size: 1200 @ 600 ];
+		play.	"scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert element has a method expander';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on the method expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert embeded method has play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert aNumber value';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #aNumber ]
+					equals: 3;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert receiver object';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel selfObject ]
+					equals: 42;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click embeded method play and inspect button';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ]."
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger [
 	<gtExample>
 	| scripter debugger |
@@ -684,6 +757,79 @@ GtScripterDebuggerExamples >> scripterOnSelfCallThreeDebugger [
 				// GtSourceCoderEditorId;
 				// GtSourceCoderExpandedContentElement;
 				// GtPharoMethodPlayAndInspectActionId ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click embeded method play and inspect button';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnTempReceiverDebugger [
+	<gtExample>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new tempReceiver ]
+			stoppingAt: [ :context | context selector = #tempReceiver ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace size: 1200 @ 600 ];
+		play.
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert element has a method expander';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on the method expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert embeded method has play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert aNumber value';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #aNumber ]
+					equals: 9;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert receiver object';
+				value: [ :aCoderElement | aCoderElement textualCoderViewModel selfObject ]
+					equals: 3;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderEditorId ].
+
 	scripter
 		clickStep: [ :s | 
 			s

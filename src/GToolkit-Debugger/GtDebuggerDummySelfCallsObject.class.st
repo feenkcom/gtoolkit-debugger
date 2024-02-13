@@ -74,6 +74,14 @@ GtDebuggerDummySelfCallsObject >> sumC: tempA d: tempB [
 ]
 
 { #category : #accessing }
+GtDebuggerDummySelfCallsObject >> tempReceiver [
+	| a b |
+	a := 3.
+	b := 9.
+	^ a raisedTo: b
+]
+
+{ #category : #accessing }
 GtDebuggerDummySelfCallsObject >> three [
 	^ self two + self one
 ]
