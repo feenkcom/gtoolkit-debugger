@@ -1,17 +1,17 @@
 "
-{{gtClass:GtMoldableExceptionDebugingExtensionConfiguration}} allows exceptions to configure a domain-specific debugger shown when the exception is raised.
+{{gtClass:GtMoldableExceptionDebuggingExtensionConfiguration}} allows exceptions to configure a domain-specific debugger shown when the exception is raised.
 
 The domain-specific debugger uses this configuration to locate debugging views and actions specific to an exception.
 
 The main API methods for configuring the debugger are:
-	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>debuggingViewPragmas:|label=#selector}} - by default `<gtExceptionDebuggingView>` is used {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>defaultDebuggingViewPragmaNames|label=#selector}}
-	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>globalDebuggingActionPragmas:|label=#selector}} - there is no default value as this looks for global actions that subclass {{gtClass:DebugAction}}; each exception should use a different pragma for defining its global values
-	- {{gtMethod:GtMoldableExceptionDebugingExtensionConfiguration>>enableDebuggingViewExtension:|label=#selector}} - by default all exceptions have the attached domain-specific debugger enabled
-	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>withDebuggingExceptionTargetFor:|label=#selector}} 
-	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>withoutDebuggingExceptionTarget|label=#selector}}
-	- {{gtMethod:name=GtMoldableExceptionDebugingExtensionConfiguration>>addDebuggingTargetFor:|label=#selector}}
+	- {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>debuggingViewPragmas:|label=#selector}} - by default `<gtExceptionDebuggingView>` is used {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>defaultDebuggingViewPragmaNames|label=#selector}}
+	- {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>globalDebuggingActionPragmas:|label=#selector}} - there is no default value as this looks for global actions that subclass {{gtClass:DebugAction}}; each exception should use a different pragma for defining its global values
+	- {{gtMethod:GtMoldableExceptionDebuggingExtensionConfiguration>>enableDebuggingViewExtension:|label=#selector}} - by default all exceptions have the attached domain-specific debugger enabled
+	- {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>withDebuggingExceptionTargetFor:|label=#selector}} 
+	- {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>withoutDebuggingExceptionTarget|label=#selector}}
+	- {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>addDebuggingTargetFor:|label=#selector}}
 	
-To instantiate the configuration  {{gtMethod:GtMoldableExceptionDebuggingToolConfiguration class>>forException:}} is used, which  for {{gtClass:GtMoldableExceptionDebugingExtensionConfiguration}} adds by default the current exception as a target for looking for views.
+To instantiate the configuration  {{gtMethod:GtMoldableExceptionDebuggingToolConfiguration class>>forException:}} is used, which  for {{gtClass:GtMoldableExceptionDebuggingExtensionConfiguration}} adds by default the current exception as a target for looking for views.
 "
 Class {
 	#name : #GtMoldableExceptionDebuggingExtensionConfiguration,
