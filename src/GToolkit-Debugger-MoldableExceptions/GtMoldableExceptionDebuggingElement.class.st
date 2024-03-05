@@ -1,7 +1,7 @@
 "
 {{gtClass:GtMoldableExceptionDebuggingElement}} is a domain-specific debugger that shows views and debugging actions based on the current exception.
 
-The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionDebugingExtensionConfiguration}}  instance returned by {{gtMethod:name=Exception>>#gtDebuggingExtensionConfiguration}}  (this can be overriden by exceptions) to select debugging views and actions.
+The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionDebuggingExtensionConfiguration}}  instance returned by {{gtMethod:name=Exception>>#gtDebuggingExtensionConfiguration}}  (this can be overriden by exceptions) to select debugging views and actions.
 "
 Class {
 	#name : #GtMoldableExceptionDebuggingElement,
