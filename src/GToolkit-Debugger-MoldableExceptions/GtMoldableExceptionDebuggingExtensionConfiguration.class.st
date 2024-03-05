@@ -14,7 +14,7 @@ The main API methods for configuring the debugger are:
 To instantiate the configuration  {{gtMethod:GtMoldableExceptionDebuggingToolConfiguration class>>forException:}} is used, which  for {{gtClass:GtMoldableExceptionDebugingExtensionConfiguration}} adds by default the current exception as a target for looking for views.
 "
 Class {
-	#name : #GtMoldableExceptionDebugingExtensionConfiguration,
+	#name : #GtMoldableExceptionDebuggingExtensionConfiguration,
 	#superclass : #GtMoldableExceptionDebuggerConfiguration,
 	#instVars : [
 		'debuggingViewPragmaNames',
@@ -26,106 +26,106 @@ Class {
 }
 
 { #category : #configuration }
-GtMoldableExceptionDebugingExtensionConfiguration >> addDebuggingTargetFor: anObject [
+GtMoldableExceptionDebuggingExtensionConfiguration >> addDebuggingTargetFor: anObject [
 	"Add a debugging target used to look for debugging views. It is possible to register multiple target objects, apart from the exception object."
 	debuggingTargets addDebuggingTargetFor: anObject
 ]
 
 { #category : #testing }
-GtMoldableExceptionDebugingExtensionConfiguration >> canShowDebuggingExtension [
+GtMoldableExceptionDebuggingExtensionConfiguration >> canShowDebuggingExtension [
 	^ self enableDebuggingViewExtension and: [
 		self debuggingViewPragmas notEmpty and: [
 			self hasDebuggingViewMethods ] ] 
 ]
 
 { #category : #'accessing configurarion' }
-GtMoldableExceptionDebugingExtensionConfiguration >> collectTargetDebuggingViews [
+GtMoldableExceptionDebuggingExtensionConfiguration >> collectTargetDebuggingViews [
 	^ debuggingTargets collectTargetDebuggingViewsForPragmaNames: self debuggingViewPragmas
 ]
 
 { #category : #'accessing configurarion' }
-GtMoldableExceptionDebugingExtensionConfiguration >> debuggingViewPragmas [
+GtMoldableExceptionDebuggingExtensionConfiguration >> debuggingViewPragmas [
 	^ debuggingViewPragmaNames ifNil: [
 		self defaultDebuggingViewPragmaNames ]
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebugingExtensionConfiguration >> debuggingViewPragmas: aCollection [
+GtMoldableExceptionDebuggingExtensionConfiguration >> debuggingViewPragmas: aCollection [
 	"Configure the list of pragmas used to look for debugging views."
 	debuggingViewPragmaNames := aCollection
 ]
 
 { #category : #'accessing - defaults' }
-GtMoldableExceptionDebugingExtensionConfiguration >> defaultDebuggingViewPragmaNames [
+GtMoldableExceptionDebuggingExtensionConfiguration >> defaultDebuggingViewPragmaNames [
 	^ #(gtExceptionDebuggingView)
 ]
 
 { #category : #'accessing - defaults' }
-GtMoldableExceptionDebugingExtensionConfiguration >> defaultEnableDebuggingViewExtensionComputation [
+GtMoldableExceptionDebuggingExtensionConfiguration >> defaultEnableDebuggingViewExtensionComputation [
 	^ [ true ]
 ]
 
 { #category : #'accessing - defaults' }
-GtMoldableExceptionDebugingExtensionConfiguration >> defaultGlobalDebuggingActionPragmas [
+GtMoldableExceptionDebuggingExtensionConfiguration >> defaultGlobalDebuggingActionPragmas [
 	^ #()
 ]
 
 { #category : #'accessing configurarion' }
-GtMoldableExceptionDebugingExtensionConfiguration >> enableDebuggingViewExtension [
+GtMoldableExceptionDebuggingExtensionConfiguration >> enableDebuggingViewExtension [
 	^ self enableDebuggingViewExtensionComputation value
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebugingExtensionConfiguration >> enableDebuggingViewExtension: aBlock [
+GtMoldableExceptionDebuggingExtensionConfiguration >> enableDebuggingViewExtension: aBlock [
 	"Configure the block used to determine is to enable the domain-specific debugger associated with this exception."
 	enableDebuggingViewExtensionComputation := aBlock
 ]
 
 { #category : #utils }
-GtMoldableExceptionDebugingExtensionConfiguration >> enableDebuggingViewExtensionComputation [
+GtMoldableExceptionDebuggingExtensionConfiguration >> enableDebuggingViewExtensionComputation [
 	^ enableDebuggingViewExtensionComputation ifNil: [
 		self defaultEnableDebuggingViewExtensionComputation]
 ]
 
 { #category : #'accessing configurarion' }
-GtMoldableExceptionDebugingExtensionConfiguration >> globalDebuggingActionPragmas [
+GtMoldableExceptionDebuggingExtensionConfiguration >> globalDebuggingActionPragmas [
 	^ globalDebuggingActionPragmaNames ifNil: [
 		self defaultGlobalDebuggingActionPragmas ]
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebugingExtensionConfiguration >> globalDebuggingActionPragmas: aCollection [
+GtMoldableExceptionDebuggingExtensionConfiguration >> globalDebuggingActionPragmas: aCollection [
 	"Configure the pragmas used to look for global debugging actions. These actions are specific to the exception."
 	globalDebuggingActionPragmaNames := aCollection
 ]
 
 { #category : #testing }
-GtMoldableExceptionDebugingExtensionConfiguration >> hasDebuggingViewMethods [
+GtMoldableExceptionDebuggingExtensionConfiguration >> hasDebuggingViewMethods [
 	^ debuggingTargets hasDebuggingViewMethodsWithPragmaNames: self debuggingViewPragmas
 ]
 
 { #category : #initialization }
-GtMoldableExceptionDebugingExtensionConfiguration >> initialize [
+GtMoldableExceptionDebuggingExtensionConfiguration >> initialize [
 	super initialize.
 	
 	debuggingTargets := GtMoldableExceptionDebuggingViewTargets new
 ]
 
 { #category : #initialization }
-GtMoldableExceptionDebugingExtensionConfiguration >> initializeForException: anException [
+GtMoldableExceptionDebuggingExtensionConfiguration >> initializeForException: anException [
 	super initializeForException: anException.
 	
 	self withDebuggingExceptionTargetFor: anException
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebugingExtensionConfiguration >> withDebuggingExceptionTargetFor: aTargetException [
+GtMoldableExceptionDebuggingExtensionConfiguration >> withDebuggingExceptionTargetFor: aTargetException [
 	"Use the given exception to look for debugging views"
 	debuggingTargets withDebuggingExceptionTargetFor: aTargetException
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebugingExtensionConfiguration >> withoutDebuggingExceptionTarget [
+GtMoldableExceptionDebuggingExtensionConfiguration >> withoutDebuggingExceptionTarget [
 	"Indicate that the current exception should not be used for looking for debugging views"
 	debuggingTargets withoutDebuggingExceptionTarget
 ]
