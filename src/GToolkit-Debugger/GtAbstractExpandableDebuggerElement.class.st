@@ -38,9 +38,10 @@ GtAbstractExpandableDebuggerElement >> actOnDebugSessionChanged [
 	showToolbar := debuggingSession
 			isContextPostMortem: debuggingSession interruptedContext.
 	self
-		inUIProcessDo: [ toolbar
-				ifNotNil: [ toolbar
-						visibility: (showToolbar ifTrue: [ BlVisibility gone ] ifFalse: [ BlVisibility visible ]) ] ].
+		enqueueTask: (BlTaskAction new
+				action: [ toolbar
+						ifNotNil: [ toolbar
+								visibility: (showToolbar ifTrue: [ BlVisibility gone ] ifFalse: [ BlVisibility visible ]) ] ]).
 	self updateStackPane
 ]
 

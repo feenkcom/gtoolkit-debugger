@@ -307,7 +307,8 @@ GtPharoStackElement >> updateIndexes [
 { #category : #updating }
 GtPharoStackElement >> updateReceiversIndex [
 	self
-		inUIProcessDo: [ receiversIndex stream: (self class receiversStreamFor: stackModel) ]
+		enqueueTask: (BlTaskAction new
+				action: [ receiversIndex stream: (self class receiversStreamFor: stackModel) ])
 ]
 
 { #category : #updating }
@@ -330,9 +331,10 @@ GtPharoStackElement >> updateReceiversIndexTo: aContext [
 
 { #category : #updating }
 GtPharoStackElement >> updateStackIndex [
-	self inUIProcessDo: [ 
-		self stackIndexList stream: stackModel contextStream.
-		self stackIndexList scrollToIndex: 1 ]
+	self
+		enqueueTask: (BlTaskAction new
+				action: [ self stackIndexList stream: stackModel contextStream.
+					self stackIndexList scrollToIndex: 1 ])
 ]
 
 { #category : #updating }
