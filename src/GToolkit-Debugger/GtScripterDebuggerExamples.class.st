@@ -594,11 +594,11 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger2 [
 		play.
 
 	scripter methodCoder
-		assertExpandersCountIs: 1;
-		clickOnExpander: 1
+		assertMethodExpandersCountIs: 1;
+		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
-					assertExpandersCountIs: 15;
+					assertMethodExpandersCountIs: 15;
 					assertPlayAndInspectActionExists;
 					assertSelfObjectIs: 42;
 					assertBinding: #aNumber is: 3;
@@ -711,31 +711,33 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger2 [
 		play.
 
 	scripter methodCoder
-		assertExpandersCountIs: 1;
-		clickOnExpander: 1
+		assertMethodExpandersCountIs: 1;
+		assertSelfObjectIs: selfObject;
+		assertBinding: #a is: 2;
+		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
-					assertExpandersCountIs: 1;
+					assertMethodExpandersCountIs: 1;
 					assertSelfObjectIs: selfObject;
 					assertBinding: #tempA is: 2;
 					assertBinding: #tempB is: 1;
 					assertPlayAndInspectActionExists;
-					clickOnExpander: 1
+					clickOnMethodCoderExpander: 1
 						insideDo: [ :s2 | 
 							s2
-								assertExpandersCountIs: 1;
+								assertMethodExpandersCountIs: 1;
 								assertSelfObjectIs: selfObject;
 								assertBinding: #valueA is: 2;
 								assertBinding: #valueB is: 1;
 								assertPlayAndInspectActionExists;
-								clickOnExpander: 1
+								clickOnMethodCoderExpander: 1
 									insideDo: [ :s3 | 
 										s3
-											assertExpandersCountIs: 1;
+											assertMethodExpandersCountIs: 1;
 											assertSelfObjectIs: 2;
 											assertBinding: #aNumber is: 1;
 											assertPlayAndInspectActionExists;
-											clickOnExpander: 1
+											clickOnMethodCoderExpander: 1
 												insideDo: [ :s4 | 
 													s4
 														assertSelfObjectIs: 2;
