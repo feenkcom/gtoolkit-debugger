@@ -713,34 +713,44 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger2 [
 	scripter methodCoder
 		assertMethodExpandersCountIs: 1;
 		assertSelfObjectIs: selfObject;
+		assertTargetBehaviorIs: selfObject class;
+		assertExplicitProviderClassIs: selfObject class;
 		assertBinding: #a is: 2;
 		clickOnMethodCoderExpander: 1
-			insideDo: [ :s | 
-				s
+			insideDo: [ :sumCDStep | 
+				sumCDStep
 					assertMethodExpandersCountIs: 1;
 					assertSelfObjectIs: selfObject;
+					assertTargetBehaviorIs: selfObject class;
+					assertExplicitProviderClassIs: selfObject class;
 					assertBinding: #tempA is: 2;
 					assertBinding: #tempB is: 1;
 					assertPlayAndInspectActionExists;
 					clickOnMethodCoderExpander: 1
-						insideDo: [ :s2 | 
-							s2
+						insideDo: [ :sumABStep | 
+							sumABStep
 								assertMethodExpandersCountIs: 1;
 								assertSelfObjectIs: selfObject;
+								assertTargetBehaviorIs: selfObject class;
+								assertExplicitProviderClassIs: selfObject class;
 								assertBinding: #valueA is: 2;
 								assertBinding: #valueB is: 1;
 								assertPlayAndInspectActionExists;
 								clickOnMethodCoderExpander: 1
-									insideDo: [ :s3 | 
-										s3
+									insideDo: [ :plusStep | 
+										plusStep
 											assertMethodExpandersCountIs: 1;
 											assertSelfObjectIs: 2;
+											assertTargetBehaviorIs: SmallInteger;
+											assertExplicitProviderClassIs: nil;
 											assertBinding: #aNumber is: 1;
 											assertPlayAndInspectActionExists;
 											clickOnMethodCoderExpander: 1
 												insideDo: [ :s4 | 
 													s4
 														assertSelfObjectIs: 2;
+														assertTargetBehaviorIs: Integer;
+														assertExplicitProviderClassIs: nil;
 														assertBinding: #aNumber is: 1;
 														assertPlayAndInspectActionExists ] ] ] ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
