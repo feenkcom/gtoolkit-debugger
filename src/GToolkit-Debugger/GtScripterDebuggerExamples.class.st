@@ -691,6 +691,63 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
 ]
 
 { #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger2 [
+	<gtExample>
+	| scripter debugger selfObject |
+	debugger := self
+			debuggerOn: [ selfObject := GtDebuggerDummySelfCallsObject new.
+				selfObject sum21 ]
+			stoppingAt: [ :context | context selector = #sum21 ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+	scripter model: selfObject.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 900 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertExpandersCountIs: 1;
+		clickOnExpander: 1
+			insideDo: [ :s | 
+				s
+					assertExpandersCountIs: 1;
+					assertSelfObjectIs: selfObject;
+					assertBinding: #tempA is: 2;
+					assertBinding: #tempB is: 1;
+					assertPlayAndInspectActionExists;
+					clickOnExpander: 1
+						insideDo: [ :s2 | 
+							s2
+								assertExpandersCountIs: 1;
+								assertSelfObjectIs: selfObject;
+								assertBinding: #valueA is: 2;
+								assertBinding: #valueB is: 1;
+								assertPlayAndInspectActionExists;
+								clickOnExpander: 1
+									insideDo: [ :s3 | 
+										s3
+											assertExpandersCountIs: 1;
+											assertSelfObjectIs: 2;
+											assertBinding: #aNumber is: 1;
+											assertPlayAndInspectActionExists;
+											clickOnExpander: 1
+												insideDo: [ :s4 | 
+													s4
+														assertSelfObjectIs: 2;
+														assertBinding: #aNumber is: 1;
+														assertPlayAndInspectActionExists ] ] ] ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
 	<gtExample>
 	| scripter debugger |
