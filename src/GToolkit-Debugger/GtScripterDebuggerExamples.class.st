@@ -578,7 +578,6 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger2 [
 	<gtExample>
-	<noTest>
 	| scripter debugger |
 	debugger := self
 			debuggerOn: [ GtDebuggerDummySelfCallsObject new instAReceiver ]
