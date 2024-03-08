@@ -443,8 +443,11 @@ GtScripterDebuggerExamples >> scripterOnEnumerationDebugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace size: 1200 @ 600 ];
-		play.	"scripter
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.	
+		
+	"scripter
 		assertStep: [ :s | 
 			s
 				label: 'Assert element has a method expander';
@@ -513,7 +516,8 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace size: 1200 @ 600 ];
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
 		play.
 
 	scripter
@@ -571,6 +575,41 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger [
 	^ scripter
 ]
 
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger2 [
+	<gtExample>
+	<noTest>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySelfCallsObject new instAReceiver ]
+			stoppingAt: [ :context | context selector = #instAReceiver ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertExpandersCountIs: 1;
+		clickOnExpander: 1
+			insideDo: [ :s | 
+				s
+					assertExpandersCountIs: 15;
+					assertPlayAndInspectActionExists;
+					assertSelfObjectIs: 42;
+					assertBinding: #aNumber is: 3;
+					clickOnPlayAndInspectButton ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+	^ scripter
+]
+
 { #category : #scripter }
 GtScripterDebuggerExamples >> scripterOnOnePlusOneDebugger [
 	| scripter debugger |
@@ -607,7 +646,8 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace size: 1600 @ 600 ];
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
 		play.
 
 	scripter
@@ -666,7 +706,8 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace size: 1600 @ 600 ];
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
 		play.
 
 	scripter
@@ -722,7 +763,8 @@ GtScripterDebuggerExamples >> scripterOnSelfCallThreeDebugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace size: 1200 @ 600 ];
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
 		play.
 
 	scripter
@@ -784,7 +826,8 @@ GtScripterDebuggerExamples >> scripterOnTempReceiverDebugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace size: 1200 @ 600 ];
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
 		play.
 
 	scripter
