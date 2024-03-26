@@ -90,10 +90,10 @@ DebugAction >> asBrickButton [
 	currentLabel := self label.
 
 	aptitude := self icon
-			ifNil: [ BrGlamorousButtonWithLabelAptitude ]
-			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
+		ifNil: [ BrGlamorousButtonWithLabelAptitude ]
+		ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
 	aptitude
-		add: (BrGlamorousWithTooltipAptitude
+		+ (BrGlamorousWithTooltipAptitude
 				content: [ | tooltipElement |
 					tooltipElement := BrHorizontalGrid new
 							fitContent;
