@@ -32,6 +32,13 @@ GtMoldableDebugger class >> closeAllDebuggers [
 	self flag: 'Take the new GT debuggers into account'.
 ]
 
+{ #category : #accessing }
+GtMoldableDebugger class >> defaultFutureExecutionConfiguration [
+	^ AsyncFutureExecutionConfiguration new
+		highPriority;
+		customGroup: #DebuggerScrollingList
+]
+
 { #category : #'settings api' }
 GtMoldableDebugger class >> defaultLogFileName [
 	^ 'PharoDebug.log'
