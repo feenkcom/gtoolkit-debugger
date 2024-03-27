@@ -37,6 +37,7 @@ GtDebuggerDummySelfCallsObject >> instAReceiver [
 
 { #category : #accessing }
 GtDebuggerDummySelfCallsObject >> one [
+	self printString.
 	^ 1
 ]
 

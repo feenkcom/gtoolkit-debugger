@@ -100,15 +100,15 @@ GtScripterDebuggerExamples >> createDNUMethod [
 
 { #category : #private }
 GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
-	| process |
+	| process debugSession |
 	process := aBlock newProcess.
-	[ testBlock value: process suspendedContext ]
-		whileFalse: [ process step: process suspendedContext ].
-	^ (GtMoldableDebugger
-		on: (DebugSession
-				named: 'Scripted debugger'
-				on: process
-				startedAt: process suspendedContext)) beDetailedLevel
+	debugSession := DebugSession
+			named: 'Scripted debugger'
+			on: process
+			startedAt: process suspendedContext.
+	[ testBlock value: debugSession interruptedContext ]
+		whileFalse: [ debugSession stepInto ].
+	^ (GtMoldableDebugger on: debugSession) beDetailedLevel
 ]
 
 { #category : #'debugger methods' }
@@ -875,6 +875,88 @@ GtScripterDebuggerExamples >> scripterOnSelfCallThreeDebugger [
 				// GtSourceCoderEditorId;
 				// GtSourceCoderExpandedContentElement;
 				// GtPharoMethodPlayAndInspectActionId ].
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSuperInitializeDebugger [
+	<gtExample>
+	| scripter debugger anObject |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummySuperCallsObject new ]
+			stoppingAt: [ :context | context selector = #initialize ].
+	anObject := debugger debugSession interruptedContext receiver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertCompiledMethodIs: GtDebuggerDummySelfCallsObject >> #initialize;
+		assertSelfObjectIs: anObject;
+		assertMethodExpandersCountIs: 1;
+		clickOnMethodCoderExpander: 1
+			insideDo: [ :s | 
+				s
+					assertCompiledMethodIs: ProtoObject >> #initialize;
+					assertSelfObjectIs: anObject;
+					assertMethodExpandersCountIs: 0;
+					assertPlayAndInspectActionExists ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
+	<gtExample>
+	| scripter debugger anObject |
+	debugger := self
+			debuggerOn: [ GtDebuggerDummyTwoSuperCallsObject new one ]
+			stoppingAt: [ :context | context selector = #one ].
+	anObject := debugger debugSession interruptedContext receiver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertCompiledMethodIs: GtDebuggerDummySuperCallsObject >> #one;
+		assertSelfObjectIs: anObject;
+		assertMethodExpandersCountIs: 1;
+		clickOnMethodCoderExpander: 1
+			insideDo: [ :s | 
+				s
+					assertCompiledMethodIs: GtDebuggerDummySelfCallsObject >> #one;
+					assertSelfObjectIs: anObject;
+					assertMethodExpandersCountIs: 1;
+					assertPlayAndInspectActionExists;
+					clickOnMethodCoderExpander: 1
+						insideDo: [ :printStringStep | 
+							printStringStep
+								assertCompiledMethodIs: GtDebuggerDummySuperCallsObject >> #printString;
+								assertSelfObjectIs: anObject;
+								assertMethodExpandersCountIs: 1;
+								assertPlayAndInspectActionExists;
+								clickOnMethodCoderExpander: 1
+									insideDo: [ :objectPrintStringStep | 
+										objectPrintStringStep
+											assertCompiledMethodIs: Object >> #printString;
+											assertSelfObjectIs: anObject;
+											assertMethodExpandersCountIs: 1;
+											assertPlayAndInspectActionExists ] ] ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
 
 	^ scripter
 ]
