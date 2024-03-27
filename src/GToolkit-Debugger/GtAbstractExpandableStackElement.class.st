@@ -50,6 +50,7 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 
 			eachCoderElement id: (GtExpandableContextMethodCoderId indexed: eachIndex).
 			eachCoderElement coderViewModel: eachCoderUIModel ];
+		"the list is initialized with an empty stream to reuse the same stream items provider"
 		stream: AsyncEmptyStream new
 ]
 
@@ -104,7 +105,6 @@ GtAbstractExpandableStackElement >> initializeStackList [
 	| stackFramesList |
 	stackFramesList := self buildStackFramesList.
 	stackFramesList padding: (BlInsets all: 10).
-	stackFramesList items: OrderedCollection new.
 	self addChild: stackFramesList as: #expandableFrames
 ]
 
@@ -132,6 +132,7 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 	| anItemsProvider aPreloadPromise |
 	anItemsProvider := BrStreamItemsProvider new.
 	anItemsProvider stream: aStream.
+	anItemsProvider executionConfiguration: GtMoldableDebugger defaultFutureExecutionConfiguration.
 	aPreloadPromise := anItemsProvider
 			itemSuchThat: [ :eachCoder | (self shouldJumpOverCoverViewModel: eachCoder) not ]
 			do: [ :anIndex :isSynchronous | 

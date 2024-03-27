@@ -308,7 +308,10 @@ GtPharoStackElement >> updateIndexes [
 GtPharoStackElement >> updateReceiversIndex [
 	self
 		enqueueTask: (BlTaskAction new
-				action: [ receiversIndex stream: (self class receiversStreamFor: stackModel) ])
+				action: [
+					receiversIndex
+						stream: (self class receiversStreamFor: stackModel)
+						executionConfiguration: GtMoldableDebugger defaultFutureExecutionConfiguration ])
 ]
 
 { #category : #updating }
@@ -333,7 +336,10 @@ GtPharoStackElement >> updateReceiversIndexTo: aContext [
 GtPharoStackElement >> updateStackIndex [
 	self
 		enqueueTask: (BlTaskAction new
-				action: [ self stackIndexList stream: stackModel contextStream.
+				action: [
+					self stackIndexList
+						stream: stackModel contextStream
+						executionConfiguration: GtMoldableDebugger defaultFutureExecutionConfiguration.
 					self stackIndexList scrollToIndex: 1 ])
 ]
 
