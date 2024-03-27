@@ -182,7 +182,7 @@ GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_Breadcr
 						value: [ :aButton | aButton label asString ]
 							equals: [ 'Object' ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
-						id: #secondBehaviorButton ] ].
+						id: GtPharoHeaderProviderBehaviorId ] ].
 	
 	^ scripter
 ]
@@ -932,12 +932,16 @@ GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
 
 	scripter methodCoder
 		assertCompiledMethodIs: GtDebuggerDummySuperCallsObject >> #one;
+		assertHeaderReceiverBehaviorIs: GtDebuggerDummyTwoSuperCallsObject;
+		assertHeaderProviderBehaviorIs: GtDebuggerDummySuperCallsObject;
 		assertSelfObjectIs: anObject;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
 					assertCompiledMethodIs: GtDebuggerDummySelfCallsObject >> #one;
+					assertHeaderReceiverBehaviorIs: GtDebuggerDummyTwoSuperCallsObject;
+					assertHeaderProviderBehaviorIs: GtDebuggerDummySelfCallsObject;
 					assertSelfObjectIs: anObject;
 					assertMethodExpandersCountIs: 1;
 					assertPlayAndInspectActionExists;
@@ -945,6 +949,8 @@ GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
 						insideDo: [ :printStringStep | 
 							printStringStep
 								assertCompiledMethodIs: GtDebuggerDummySuperCallsObject >> #printString;
+								assertHeaderReceiverBehaviorIs: GtDebuggerDummyTwoSuperCallsObject;
+								assertHeaderProviderBehaviorIs: GtDebuggerDummySuperCallsObject;
 								assertSelfObjectIs: anObject;
 								assertMethodExpandersCountIs: 1;
 								assertPlayAndInspectActionExists;
@@ -952,6 +958,8 @@ GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
 									insideDo: [ :objectPrintStringStep | 
 										objectPrintStringStep
 											assertCompiledMethodIs: Object >> #printString;
+											assertHeaderReceiverBehaviorIs: GtDebuggerDummyTwoSuperCallsObject;
+											assertHeaderProviderBehaviorIs: Object;
 											assertSelfObjectIs: anObject;
 											assertMethodExpandersCountIs: 1;
 											assertPlayAndInspectActionExists ] ] ];
