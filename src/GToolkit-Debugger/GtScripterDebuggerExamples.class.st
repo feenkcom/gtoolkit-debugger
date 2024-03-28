@@ -1043,6 +1043,59 @@ GtScripterDebuggerExamples >> scripterOnTempReceiverDebugger [
 	^ scripter
 ]
 
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnThreeObjectDummyThreeMethodDebugger [
+	<gtExample>
+	| scripter debugger aSelfObject varA |
+	debugger := self
+			debuggerOn: [ GtPharoDummyThreeObject new dummyThree ]
+			stoppingAt: [ :context | context selector = #dummyThree ].
+	debugger debugSession stepOver.
+	debugger debugSession stepOver.
+	aSelfObject := debugger debugSession interruptedContext receiver.
+	varA := debugger debugSession interruptedContext tempNamed: #a.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertCompiledMethodIs: GtPharoDummyOneObject >> #dummyThree;
+		assertExplicitProviderClassIs: GtPharoDummyThreeObject;
+		assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+		assertSelfObjectIs: aSelfObject;
+		assertBinding: #a is: varA;
+		assertMethodExpandersCountIs: 2;
+		clickOnMethodCoderExpander: 2
+			insideDo: [ :printStringStep | 
+				printStringStep
+					assertCompiledMethodIs: GtPharoDummyTwoObject >> #printString;
+					assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+					assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
+					assertSelfObjectIs: varA;
+					assertMethodExpandersCountIs: 1;
+					assertPlayAndInspectActionExists;
+					clickOnMethodCoderExpander: 1
+						insideDo: [ :objectPrintStringStep | 
+							objectPrintStringStep
+								assertCompiledMethodIs: Object >> #printString;
+								assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+								assertHeaderMethodBehaviorIs: Object;
+								assertSelfObjectIs: varA;
+								assertMethodExpandersCountIs: 1;
+								assertPlayAndInspectActionExists ] ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+
+	^ scripter
+]
+
 { #category : #examples }
 GtScripterDebuggerExamples >> switchingCodersDoesNotLoseChanges [
 	"https://github.com/feenkcom/gtoolkit/issues/3418"
