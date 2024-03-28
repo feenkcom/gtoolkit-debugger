@@ -429,15 +429,11 @@ GtScripterDebuggerExamples >> scripterOnDoMethodDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 	<gtExample>
-	<noTest>
-	| scripter debugger |
+	| scripter debugger selfObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new enumerate ]
 			stoppingAt: [ :context | context selector = #enumerate ].
-	debugger debugSession stepOver.
-	debugger debugSession stepOver.
-	debugger debugSession stepThrough.
-	debugger debugSession stepThrough.
+	selfObject := debugger debugSession interruptedContext receiver.
 	scripter := BlScripter new.
 	scripter element: debugger.
 
@@ -445,9 +441,57 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 		label: 'Set window size';
 		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
 		onSpace;
-		play.	
-		
-	scripter methodCoder assert.
+		play.
+
+	scripter methodCoder
+		assertSelfObjectIs: selfObject;
+		assertTargetBehaviorIs: selfObject class;
+		assertExplicitProviderClassIs: selfObject class;
+		assertMethodExpandersCountIs: 1;
+		clickOnMethodCoderExpander: 1
+			insideDo: [ :sumCDStep | 
+				sumCDStep
+					assertSelfObjectIs: #(3 6 9);
+					assertTargetBehaviorIs: Collection;
+					assertExplicitProviderClassIs: #(3 6 9) class;
+					assertHeaderProviderBehaviorIs: #(3 6 9) class;
+					assertHeaderMethodBehaviorIs: Collection ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+	scripter click
+		// #stepThrough;
+		play.
+	scripter click
+		// #stepThrough;
+		play.
+
+	scripter methodCoder
+		assertSelfObjectIs: selfObject;
+		assertTargetBehaviorIs: selfObject class;
+		assertExplicitProviderClassIs: selfObject class;
+		assertMethodExpandersCountIs: 2;
+		clickOnMethodCoderExpander: 2
+			insideDo: [ :injectStep | 
+				injectStep
+					assertSelfObjectIs: #(3 6 9);
+					assertTargetBehaviorIs: Collection;
+					assertExplicitProviderClassIs: #(3 6 9) class;
+					assertHeaderProviderBehaviorIs: #(3 6 9) class;
+					assertHeaderMethodBehaviorIs: Collection;
+					assertBinding: #thisValue is: 1 ];
+		clickOnMethodCoderExpander: 2 insideDo: [ :sumCDStep |  ];
+		clickOnMethodCoderExpander: 1
+			insideDo: [ :raisedToStep | 
+				raisedToStep
+					assertSelfObjectIs: 1;
+					assertTargetBehaviorIs: Number;
+					assertExplicitProviderClassIs: 1 class;
+					assertHeaderProviderBehaviorIs: 1 class;
+					assertHeaderMethodBehaviorIs: Number;
+					assertBinding: #aNumber is: 3 ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
 
 	^ scripter
 ]
