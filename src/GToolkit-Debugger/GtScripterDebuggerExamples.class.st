@@ -447,57 +447,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 		onSpace;
 		play.	
 		
-	"scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert element has a method expander';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click on the method expander';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert embeded method has play and inspect button';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert aNumber value';
-				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #aNumber ]
-					equals: 3;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderEditorId ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert receiver object';
-				value: [ :aCoderElement | aCoderElement textualCoderViewModel selfObject ]
-					equals: 42;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderEditorId ].
-
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click embeded method play and inspect button';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ]."
+	scripter methodCoder assert.
 
 	^ scripter
 ]
@@ -588,7 +538,9 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 											assertMethodExpandersCountIs: 1;
 											assertSelfObjectIs: 2;
 											assertTargetBehaviorIs: SmallInteger;
-											assertExplicitProviderClassIs: nil;
+											assertExplicitProviderClassIs: SmallInteger;
+											assertHeaderProviderBehaviorIs: SmallInteger;
+											assertHeaderMethodBehaviorIsNotVisible;
 											assertBinding: #aNumber is: 1;
 											assertPlayAndInspectActionExists;
 											clickOnMethodCoderExpander: 1
@@ -596,7 +548,9 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 													s4
 														assertSelfObjectIs: 2;
 														assertTargetBehaviorIs: Integer;
-														assertExplicitProviderClassIs: nil;
+														assertExplicitProviderClassIs: SmallInteger;
+														assertHeaderProviderBehaviorIs: SmallInteger;
+														assertHeaderMethodBehaviorIs: Integer;
 														assertBinding: #aNumber is: 1;
 														assertPlayAndInspectActionExists ] ] ] ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
