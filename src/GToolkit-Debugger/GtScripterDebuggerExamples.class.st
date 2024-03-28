@@ -182,7 +182,7 @@ GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_Breadcr
 						value: [ :aButton | aButton label asString ]
 							equals: [ 'Object' ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
-						id: GtPharoHeaderProviderBehaviorId ] ].
+						id: GtPharoHeaderMethodBehaviorId ] ].
 	
 	^ scripter
 ]
@@ -432,7 +432,7 @@ GtScripterDebuggerExamples >> scripterOnEnumerationDebugger [
 	<noTest>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new enumerate ]
+			debuggerOn: [ GtPharoDummyOneObject new enumerate ]
 			stoppingAt: [ :context | context selector = #enumerate ].
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
@@ -507,7 +507,7 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new instAReceiver ]
+			debuggerOn: [ GtPharoDummyOneObject new instAReceiver ]
 			stoppingAt: [ :context | context selector = #instAReceiver ].
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
@@ -580,7 +580,7 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger2 [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new instAReceiver ]
+			debuggerOn: [ GtPharoDummyOneObject new instAReceiver ]
 			stoppingAt: [ :context | context selector = #instAReceiver ].
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
@@ -636,7 +636,7 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new sum21 ]
+			debuggerOn: [ GtPharoDummyOneObject new sum21 ]
 			stoppingAt: [ :context | context selector = #sum21 ].
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
@@ -695,7 +695,7 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger2 [
 	<gtExample>
 	| scripter debugger selfObject |
 	debugger := self
-			debuggerOn: [ selfObject := GtPharoDummySelfCallsObject new.
+			debuggerOn: [ selfObject := GtPharoDummyOneObject new.
 				selfObject sum21 ]
 			stoppingAt: [ :context | context selector = #sum21 ].
 	debugger debugSession stepOver.
@@ -764,7 +764,7 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new sum39 ]
+			debuggerOn: [ GtPharoDummyOneObject new sum39 ]
 			stoppingAt: [ :context | context selector = #sum39 ].
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
@@ -824,7 +824,7 @@ GtScripterDebuggerExamples >> scripterOnSelfCallThreeDebugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new three ]
+			debuggerOn: [ GtPharoDummyOneObject new three ]
 			stoppingAt: [ :context | context selector = #three ].
 	scripter := BlScripter new.
 	scripter element: debugger.
@@ -884,7 +884,7 @@ GtScripterDebuggerExamples >> scripterOnSuperInitializeDebugger [
 	<gtExample>
 	| scripter debugger anObject |
 	debugger := self
-			debuggerOn: [ GtPharoDummySuperCallsObject new ]
+			debuggerOn: [ GtPharoDummyTwoObject new ]
 			stoppingAt: [ :context | context selector = #initialize ].
 	anObject := debugger debugSession interruptedContext receiver.
 	scripter := BlScripter new.
@@ -897,7 +897,7 @@ GtScripterDebuggerExamples >> scripterOnSuperInitializeDebugger [
 		play.
 
 	scripter methodCoder
-		assertCompiledMethodIs: GtPharoDummySelfCallsObject >> #initialize;
+		assertCompiledMethodIs: GtPharoDummyOneObject >> #initialize;
 		assertSelfObjectIs: anObject;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
@@ -918,7 +918,7 @@ GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
 	<gtExample>
 	| scripter debugger anObject |
 	debugger := self
-			debuggerOn: [ GtPharoDummyTwoSuperCallsObject new one ]
+			debuggerOn: [ GtPharoDummyThreeObject new one ]
 			stoppingAt: [ :context | context selector = #one ].
 	anObject := debugger debugSession interruptedContext receiver.
 	scripter := BlScripter new.
@@ -931,26 +931,26 @@ GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
 		play.
 
 	scripter methodCoder
-		assertCompiledMethodIs: GtPharoDummySuperCallsObject >> #one;
-		assertHeaderReceiverBehaviorIs: GtPharoDummyTwoSuperCallsObject;
-		assertHeaderProviderBehaviorIs: GtPharoDummySuperCallsObject;
+		assertCompiledMethodIs: GtPharoDummyTwoObject >> #one;
+		assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+		assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
 		assertSelfObjectIs: anObject;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
-					assertCompiledMethodIs: GtPharoDummySelfCallsObject >> #one;
-					assertHeaderReceiverBehaviorIs: GtPharoDummyTwoSuperCallsObject;
-					assertHeaderProviderBehaviorIs: GtPharoDummySelfCallsObject;
+					assertCompiledMethodIs: GtPharoDummyOneObject >> #one;
+					assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+					assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
 					assertSelfObjectIs: anObject;
 					assertMethodExpandersCountIs: 1;
 					assertPlayAndInspectActionExists;
 					clickOnMethodCoderExpander: 1
 						insideDo: [ :printStringStep | 
 							printStringStep
-								assertCompiledMethodIs: GtPharoDummySuperCallsObject >> #printString;
-								assertHeaderReceiverBehaviorIs: GtPharoDummyTwoSuperCallsObject;
-								assertHeaderProviderBehaviorIs: GtPharoDummySuperCallsObject;
+								assertCompiledMethodIs: GtPharoDummyTwoObject >> #printString;
+								assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+								assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
 								assertSelfObjectIs: anObject;
 								assertMethodExpandersCountIs: 1;
 								assertPlayAndInspectActionExists;
@@ -958,8 +958,8 @@ GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
 									insideDo: [ :objectPrintStringStep | 
 										objectPrintStringStep
 											assertCompiledMethodIs: Object >> #printString;
-											assertHeaderReceiverBehaviorIs: GtPharoDummyTwoSuperCallsObject;
-											assertHeaderProviderBehaviorIs: Object;
+											assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+											assertHeaderMethodBehaviorIs: Object;
 											assertSelfObjectIs: anObject;
 											assertMethodExpandersCountIs: 1;
 											assertPlayAndInspectActionExists ] ] ];
@@ -974,7 +974,7 @@ GtScripterDebuggerExamples >> scripterOnTempReceiverDebugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
-			debuggerOn: [ GtPharoDummySelfCallsObject new tempReceiver ]
+			debuggerOn: [ GtPharoDummyOneObject new tempReceiver ]
 			stoppingAt: [ :context | context selector = #tempReceiver ].
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
