@@ -427,7 +427,7 @@ GtScripterDebuggerExamples >> scripterOnDoMethodDebugger [
 ]
 
 { #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnEnumerationDebugger [
+GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 	<gtExample>
 	<noTest>
 	| scripter debugger |
@@ -503,80 +503,7 @@ GtScripterDebuggerExamples >> scripterOnEnumerationDebugger [
 ]
 
 { #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger [
-	<gtExample>
-	| scripter debugger |
-	debugger := self
-			debuggerOn: [ GtPharoDummyOneObject new instAReceiver ]
-			stoppingAt: [ :context | context selector = #instAReceiver ].
-	debugger debugSession stepOver.
-	debugger debugSession stepOver.
-	scripter := BlScripter new.
-	scripter element: debugger.
-
-	scripter do
-		label: 'Set window size';
-		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
-		onSpace;
-		play.
-
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert element has a method expander';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click on the method expander';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert embeded method has play and inspect button';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert aNumber value';
-				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #aNumber ]
-					equals: 3;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderEditorId ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert receiver object';
-				value: [ :aCoderElement | aCoderElement textualCoderViewModel selfObject ]
-					equals: 42;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderEditorId ].
-
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click embeded method play and inspect button';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ].
-
-	^ scripter
-]
-
-{ #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger2 [
+GtScripterDebuggerExamples >> scripterOnOneObjectMethodInstAReceiverDebugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
@@ -609,89 +536,8 @@ GtScripterDebuggerExamples >> scripterOnInstAReceiverDebugger2 [
 	^ scripter
 ]
 
-{ #category : #scripter }
-GtScripterDebuggerExamples >> scripterOnOnePlusOneDebugger [
-	| scripter debugger |
-	debugger := self
-			debuggerOn: [ self returnOnePlusOne ]
-			stoppingAt: [ :context | context selector = #returnOnePlusOne ].
-	scripter := BlScripter new.
-	scripter element: debugger.
-	^ scripter
-]
-
-{ #category : #scripter }
-GtScripterDebuggerExamples >> scripterOnReturnedBlockDebugger [
-	| scripter debugger |
-	debugger := self
-			debuggerOn: [ self returnBlock value ]
-			stoppingAt: [ :context | context selector = #returnBlock and: [ context isBlockContext ] ].
-	scripter := BlScripter new.
-	scripter element: debugger.
-	^ scripter
-]
-
 { #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger [
-	<gtExample>
-	| scripter debugger |
-	debugger := self
-			debuggerOn: [ GtPharoDummyOneObject new sum21 ]
-			stoppingAt: [ :context | context selector = #sum21 ].
-	debugger debugSession stepOver.
-	debugger debugSession stepOver.
-	scripter := BlScripter new.
-	scripter element: debugger.
-
-	scripter do
-		label: 'Set window size';
-		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
-		onSpace;
-		play.
-
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click on method two expander';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert tempA value';
-				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #tempA ]
-					equals: 2;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderEditorId ].
-
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert tempB value';
-				value: [ :aCoderElement | aCoderElement textualCoderViewModel localBindings bindingValueOf: #tempB ]
-					equals: 1;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderEditorId ].
-
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert play and inspect button';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ].
-
-	^ scripter
-]
-
-{ #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger2 [
+GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 	<gtExample>
 	| scripter debugger selfObject |
 	debugger := self
@@ -760,7 +606,7 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSum21Debugger2 [
 ]
 
 { #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
+GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum39Debugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
@@ -820,157 +666,7 @@ GtScripterDebuggerExamples >> scripterOnSelfCallSumABDebugger [
 ]
 
 { #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnSelfCallThreeDebugger [
-	<gtExample>
-	| scripter debugger |
-	debugger := self
-			debuggerOn: [ GtPharoDummyOneObject new three ]
-			stoppingAt: [ :context | context selector = #three ].
-	scripter := BlScripter new.
-	scripter element: debugger.
-
-	scripter do
-		label: 'Set window size';
-		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
-		onSpace;
-		play.
-
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert element has method two expander';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert element has method one expander';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 2) ].
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click on method two expander';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// (GtPharoMethodExpanderId indexed: 1) ].
-	scripter
-		assertStep: [ :s | 
-			s
-				label: 'Assert embeded method has play and inspect button';
-				exists;
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ].
-	scripter
-		clickStep: [ :s | 
-			s
-				label: 'Click embeded method play and inspect button';
-				// (GtExpandableContextMethodCoderId indexed: 1);
-				// GtSourceCoderEditorId;
-				// GtSourceCoderExpandedContentElement;
-				// GtPharoMethodPlayAndInspectActionId ].
-
-	^ scripter
-]
-
-{ #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnSuperInitializeDebugger [
-	<gtExample>
-	| scripter debugger anObject |
-	debugger := self
-			debuggerOn: [ GtPharoDummyTwoObject new ]
-			stoppingAt: [ :context | context selector = #initialize ].
-	anObject := debugger debugSession interruptedContext receiver.
-	scripter := BlScripter new.
-	scripter element: debugger.
-
-	scripter do
-		label: 'Set window size';
-		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
-		onSpace;
-		play.
-
-	scripter methodCoder
-		assertCompiledMethodIs: GtPharoDummyOneObject >> #initialize;
-		assertSelfObjectIs: anObject;
-		assertMethodExpandersCountIs: 1;
-		clickOnMethodCoderExpander: 1
-			insideDo: [ :s | 
-				s
-					assertCompiledMethodIs: ProtoObject >> #initialize;
-					assertSelfObjectIs: anObject;
-					assertMethodExpandersCountIs: 0;
-					assertPlayAndInspectActionExists ];
-		// (GtExpandableContextMethodCoderId indexed: 1);
-		play.
-
-	^ scripter
-]
-
-{ #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnSuperOneDebugger [
-	<gtExample>
-	| scripter debugger anObject |
-	debugger := self
-			debuggerOn: [ GtPharoDummyThreeObject new one ]
-			stoppingAt: [ :context | context selector = #one ].
-	anObject := debugger debugSession interruptedContext receiver.
-	scripter := BlScripter new.
-	scripter element: debugger.
-
-	scripter do
-		label: 'Set window size';
-		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
-		onSpace;
-		play.
-
-	scripter methodCoder
-		assertCompiledMethodIs: GtPharoDummyTwoObject >> #one;
-		assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
-		assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
-		assertSelfObjectIs: anObject;
-		assertMethodExpandersCountIs: 1;
-		clickOnMethodCoderExpander: 1
-			insideDo: [ :s | 
-				s
-					assertCompiledMethodIs: GtPharoDummyOneObject >> #one;
-					assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
-					assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
-					assertSelfObjectIs: anObject;
-					assertMethodExpandersCountIs: 1;
-					assertPlayAndInspectActionExists;
-					clickOnMethodCoderExpander: 1
-						insideDo: [ :printStringStep | 
-							printStringStep
-								assertCompiledMethodIs: GtPharoDummyTwoObject >> #printString;
-								assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
-								assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
-								assertSelfObjectIs: anObject;
-								assertMethodExpandersCountIs: 1;
-								assertPlayAndInspectActionExists;
-								clickOnMethodCoderExpander: 1
-									insideDo: [ :objectPrintStringStep | 
-										objectPrintStringStep
-											assertCompiledMethodIs: Object >> #printString;
-											assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
-											assertHeaderMethodBehaviorIs: Object;
-											assertSelfObjectIs: anObject;
-											assertMethodExpandersCountIs: 1;
-											assertPlayAndInspectActionExists ] ] ];
-		// (GtExpandableContextMethodCoderId indexed: 1);
-		play.
-
-	^ scripter
-]
-
-{ #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnTempReceiverDebugger [
+GtScripterDebuggerExamples >> scripterOnOneObjectMethodTempReceiverDebugger [
 	<gtExample>
 	| scripter debugger |
 	debugger := self
@@ -1044,7 +740,89 @@ GtScripterDebuggerExamples >> scripterOnTempReceiverDebugger [
 ]
 
 { #category : #'examples - embedded method' }
-GtScripterDebuggerExamples >> scripterOnThreeObjectDummyThreeMethodDebugger [
+GtScripterDebuggerExamples >> scripterOnOneObjectMethodThreeDebugger [
+	<gtExample>
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ GtPharoDummyOneObject new three ]
+			stoppingAt: [ :context | context selector = #three ].
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert element has method two expander';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert element has method one expander';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 2) ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click on method two expander';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter
+		assertStep: [ :s | 
+			s
+				label: 'Assert embeded method has play and inspect button';
+				exists;
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+	scripter
+		clickStep: [ :s | 
+			s
+				label: 'Click embeded method play and inspect button';
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement;
+				// GtPharoMethodPlayAndInspectActionId ].
+
+	^ scripter
+]
+
+{ #category : #scripter }
+GtScripterDebuggerExamples >> scripterOnOnePlusOneDebugger [
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ self returnOnePlusOne ]
+			stoppingAt: [ :context | context selector = #returnOnePlusOne ].
+	scripter := BlScripter new.
+	scripter element: debugger.
+	^ scripter
+]
+
+{ #category : #scripter }
+GtScripterDebuggerExamples >> scripterOnReturnedBlockDebugger [
+	| scripter debugger |
+	debugger := self
+			debuggerOn: [ self returnBlock value ]
+			stoppingAt: [ :context | context selector = #returnBlock and: [ context isBlockContext ] ].
+	scripter := BlScripter new.
+	scripter element: debugger.
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnThreeObjectMethodDummyThreeDebugger [
 	<gtExample>
 	| scripter debugger aSelfObject varA |
 	debugger := self
@@ -1092,6 +870,96 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectDummyThreeMethodDebugger [
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
 
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnThreeObjectMethodOneDebugger [
+	<gtExample>
+	| scripter debugger anObject |
+	debugger := self
+			debuggerOn: [ GtPharoDummyThreeObject new one ]
+			stoppingAt: [ :context | context selector = #one ].
+	anObject := debugger debugSession interruptedContext receiver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertCompiledMethodIs: GtPharoDummyTwoObject >> #one;
+		assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+		assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
+		assertSelfObjectIs: anObject;
+		assertMethodExpandersCountIs: 1;
+		clickOnMethodCoderExpander: 1
+			insideDo: [ :s | 
+				s
+					assertCompiledMethodIs: GtPharoDummyOneObject >> #one;
+					assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+					assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+					assertSelfObjectIs: anObject;
+					assertMethodExpandersCountIs: 1;
+					assertPlayAndInspectActionExists;
+					clickOnMethodCoderExpander: 1
+						insideDo: [ :printStringStep | 
+							printStringStep
+								assertCompiledMethodIs: GtPharoDummyTwoObject >> #printString;
+								assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+								assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
+								assertSelfObjectIs: anObject;
+								assertMethodExpandersCountIs: 1;
+								assertPlayAndInspectActionExists;
+								clickOnMethodCoderExpander: 1
+									insideDo: [ :objectPrintStringStep | 
+										objectPrintStringStep
+											assertCompiledMethodIs: Object >> #printString;
+											assertHeaderProviderBehaviorIs: GtPharoDummyThreeObject;
+											assertHeaderMethodBehaviorIs: Object;
+											assertSelfObjectIs: anObject;
+											assertMethodExpandersCountIs: 1;
+											assertPlayAndInspectActionExists ] ] ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
+	<gtExample>
+	| scripter debugger anObject |
+	debugger := self
+			debuggerOn: [ GtPharoDummyTwoObject new ]
+			stoppingAt: [ :context | context selector = #initialize ].
+	anObject := debugger debugSession interruptedContext receiver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertCompiledMethodIs: GtPharoDummyOneObject >> #initialize;
+		assertSelfObjectIs: anObject;
+		assertMethodExpandersCountIs: 1;
+		clickOnMethodCoderExpander: 1
+			insideDo: [ :s | 
+				s
+					assertCompiledMethodIs: ProtoObject >> #initialize;
+					assertSelfObjectIs: anObject;
+					assertMethodExpandersCountIs: 0;
+					assertPlayAndInspectActionExists ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
 
 	^ scripter
 ]
