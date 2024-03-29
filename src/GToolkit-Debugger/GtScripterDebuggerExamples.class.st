@@ -535,9 +535,9 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 	<gtExample>
 	| scripter debugger selfObject |
 	debugger := self
-			debuggerOn: [ selfObject := GtPharoDummyOneObject new.
-				selfObject sum21 ]
+			debuggerOn: [ GtPharoDummyOneObject new sum21 ]
 			stoppingAt: [ :context | context selector = #sum21 ].
+	selfObject := debugger debugSession interruptedContext receiver.
 	debugger debugSession stepOver.
 	debugger debugSession stepOver.
 	scripter := BlScripter new.
@@ -948,12 +948,18 @@ GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
 	scripter methodCoder
 		assertCompiledMethodIs: GtPharoDummyOneObject >> #initialize;
 		assertSelfObjectIs: anObject;
+		assertExplicitProviderClassIs: GtPharoDummyTwoObject;
+		assertHeaderProviderBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
 					assertCompiledMethodIs: ProtoObject >> #initialize;
 					assertSelfObjectIs: anObject;
+					assertExplicitProviderClassIs: GtPharoDummyTwoObject;
+					assertHeaderProviderBehaviorIs: GtPharoDummyTwoObject;
+					assertHeaderMethodBehaviorIs: ProtoObject;
 					assertMethodExpandersCountIs: 0;
 					assertPlayAndInspectActionExists ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
