@@ -27,6 +27,9 @@ BaselineOfGToolkitDebugger >> baseline: spec [
 				spec requires: #('GToolkit-Debugger' ). ];
 				
 			package: 'GToolkit-Debugger-Emergency' with: [
-				spec requires: #('GToolkit-Debugger' ). ]. ].
+				spec requires: #('GToolkit-Debugger' ). ];
+		
+			package: 'GToolkit-Debugger-Experiments'  with: [
+				spec requires: #('GToolkit-Debugger' ). ] ].
 
 ]
