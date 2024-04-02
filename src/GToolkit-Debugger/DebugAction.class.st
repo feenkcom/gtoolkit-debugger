@@ -90,8 +90,8 @@ DebugAction >> asBrickButton [
 	currentLabel := self label.
 
 	aptitude := self icon
-		ifNil: [ BrGlamorousButtonWithLabelAptitude ]
-		ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
+			ifNil: [ BrGlamorousButtonWithLabelAptitude ]
+			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
 	aptitude
 		+ (BrGlamorousWithTooltipAptitude
 				content: [ | tooltipElement |
@@ -123,8 +123,13 @@ DebugAction >> asBrickButton [
 	actionButton := BrButton new
 			aptitude: aptitude;
 			label: self label;
-			when: BlMouseDownEvent do: [ :e | e consumed: true. self execute ].
+			when: BlMouseDownEvent
+				do: [ :e | 
+					e consumed: true.
+					self execute ].
 	self icon ifNotNil: [ :anIcon | actionButton icon: self icon asElement ].
+
+	self id ifNotNil: [ :anId | actionButton id: anId ].
 
 	^ actionButton
 ]
