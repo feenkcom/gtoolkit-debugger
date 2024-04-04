@@ -54,6 +54,11 @@ GtAbstractExpandableDebuggerElement >> actOnSelectedContextChangedFor: aContext 
 		addChild: detailsTabGroupElement as: #detailsElement
 ]
 
+{ #category : #callbacks }
+GtAbstractExpandableDebuggerElement >> actOnSelectedContextChangedWithoutFocusChangeFor: aContext [
+	"No action needed at the moment"
+]
+
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
