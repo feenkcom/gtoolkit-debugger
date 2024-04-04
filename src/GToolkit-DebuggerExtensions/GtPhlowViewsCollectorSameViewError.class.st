@@ -13,7 +13,7 @@ Class {
 		'viewSelector',
 		'targetObject'
 	],
-	#category : #'GToolkit-DebuggerExtensions'
+	#category : #'GToolkit-DebuggerExtensions-ViewsCollector'
 }
 
 { #category : #'instance creation' }

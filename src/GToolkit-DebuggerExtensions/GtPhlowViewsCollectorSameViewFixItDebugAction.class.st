@@ -1,7 +1,7 @@
 Class {
 	#name : #GtPhlowViewsCollectorSameViewFixItDebugAction,
 	#superclass : #DebugAction,
-	#category : #'GToolkit-DebuggerExtensions'
+	#category : #'GToolkit-DebuggerExtensions-ViewsCollector'
 }
 
 { #category : #initialization }
