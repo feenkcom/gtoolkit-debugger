@@ -60,6 +60,12 @@ GtMoldableExceptionTransformationsSettings >> areTransformationsAllowed [
 	^ areAutomaticTransformationsAllowed ifNil: [ false ] 
 ]
 
+{ #category : #testing }
+GtMoldableExceptionTransformationsSettings >> canApplyAutomaticTransformationForException: anException [
+	^ self areTransformationsAllowed and: [
+		(disabledExceptions includes: anException class name) not ]
+]
+
 { #category : #configuration }
 GtMoldableExceptionTransformationsSettings >> disableAutomaticTransformationForException: anException [
 	^ disabledExceptions add: anException class name
@@ -91,7 +97,7 @@ GtMoldableExceptionTransformationsSettings >> gtViewMoldableExceptionsWithTransf
 			TGtMoldableExceptionSignalWithTransformation users asOrderedCollection ];
 		column: 'Exception' text: [ :anExceptionClass | anExceptionClass name ];
 		column: 'Automatic Transformation Allowed' text: [ :anExceptionClass | 
-			self isAutomaticTransformationEnabledForException:  anExceptionClass name ];
+			self canApplyAutomaticTransformationForException:  anExceptionClass name ];
 		column: 'Is Disabled' text: [ :anExceptionClass | 
 			disabledExceptions includes: anExceptionClass name ];
 		actionButtonIcon: (self areTransformationsAllowed
@@ -111,12 +117,6 @@ GtMoldableExceptionTransformationsSettings >> initialize [
 	
 	self disableAutomaticTransformations.
 	disabledExceptions := Set new.
-]
-
-{ #category : #testing }
-GtMoldableExceptionTransformationsSettings >> isAutomaticTransformationEnabledForException: anException [
-	^ self areTransformationsAllowed and: [
-		(disabledExceptions includes: anException class name) not ]
 ]
 
 { #category : #configuration }
