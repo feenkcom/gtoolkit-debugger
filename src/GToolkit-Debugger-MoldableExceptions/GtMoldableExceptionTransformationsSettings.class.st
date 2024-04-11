@@ -102,7 +102,7 @@ GtMoldableExceptionTransformationsSettings >> gtViewMoldableExceptionsWithTransf
 				ifFalse: [ 'Allow automatic transformations' ])
 			action: [ :aButton |
 				self toggleAutomaticTransformationStatus.
-				aButton phlow fireUpdateWish ]
+				aButton phlow fireToolUpdateWish ]
 ]
 
 { #category : #initialization }
