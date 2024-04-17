@@ -23,6 +23,18 @@ GtMoldableExceptionDebuggingViewsObjectTarget class >> forObject: anObject [
 		 targetObject: anObject
 ]
 
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewsObjectTarget >> collectTargetDebuggingActionsForPragmaNames: aCollectionOfPragmaNames forDebugger: aDebuggerElement [
+
+	^ (GtPhlowActionsCollector new
+		pragmaNames: aCollectionOfPragmaNames;
+		fromObject: self targetObject;
+		context: (GtPhlowContext new 
+			currentDebugger: aDebuggerElement);
+		collect) collect: [ :aPhlowAction |
+			GtPhlowActionToDebugActionAdapter forPhlowAction: aPhlowAction ]
+]
+
 { #category : #configuration }
 GtMoldableExceptionDebuggingViewsObjectTarget >> configureDebuggingViewsCollector: aViewsCollector [
 	^ aViewsCollector 

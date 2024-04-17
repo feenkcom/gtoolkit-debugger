@@ -76,3 +76,8 @@ DebugSession >> isInterruptedContextPostMortem [
 	
 	^ self isContextPostMortem: self interruptedContext
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> restartInterruptedContext [
+	self restart: self interruptedContext
+]

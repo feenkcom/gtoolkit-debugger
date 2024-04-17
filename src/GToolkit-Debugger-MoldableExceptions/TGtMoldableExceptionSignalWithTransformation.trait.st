@@ -12,7 +12,7 @@ TGtMoldableExceptionSignalWithTransformation >> gtMoldableExceptionTransformatio
 TGtMoldableExceptionSignalWithTransformation >> signal [
 	| transformation |
 	(self gtDebuggingTransformationsSettings 
-		isAutomaticTransformationEnabledForException: self) ifFalse: [ 
+		canApplyAutomaticTransformationForException: self) ifFalse: [ 
 			^ super signal ].
 	
 	transformation := self gtMoldableExceptionTransformation.
