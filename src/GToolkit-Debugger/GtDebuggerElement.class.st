@@ -171,13 +171,13 @@ GtDebuggerElement >> interruptedContext [
 GtDebuggerElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
 
-	browserClosingHandler ifNotNil: [ self space removeEventHandler: browserClosingHandler ].
+	browserClosingHandler ifNotNil: [ 
+		self space removeEventHandler: browserClosingHandler ].
 	browserClosingHandler := BlEventHandler 
 		on: BlSpaceDestroyedEvent 
 		do: [ :event | self actOnBrowserClosing: event ].
 	
 	self space addEventHandler: browserClosingHandler
-	
 ]
 
 { #category : #opening }
