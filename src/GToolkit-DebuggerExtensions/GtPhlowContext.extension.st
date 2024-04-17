@@ -16,7 +16,7 @@ GtPhlowContext >> currentDebugger: aDebuggerElement [
 { #category : #'*GToolkit-DebuggerExtensions' }
 GtPhlowContext >> currentDebuggingSession [
 	^ self 
-		optionAt: #debuggingSession 
+		optionAt: #currentDebugger 
 		ifPresent: [ :aDebugger | aDebugger debugSession ]
 		ifAbsent: [ nil ]
 ]

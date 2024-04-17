@@ -108,9 +108,27 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 ]
 
 { #category : #'gt - extensions' }
+GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext: aPhlowActionContext [
+	<gtPhlowSameViewReturnDebugAction>
+	
+	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
+		ifTrue: [ ^ anAction noAction ].
+	
+	^ anAction button
+		icon: BrGlamorousVectorIcons refresh;
+		label: 'Retry';
+		priority: 15;
+		tooltip: 'Retry executing the creation of the view';
+		action: [ 
+			"All we need here is to restart the interrupted context and resumt execution"
+			aPhlowActionContext currentDebuggingSession restartInterruptedContext.
+			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
+]
+
+{ #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebuggingExtensionConfiguration [
 	^ super gtDebuggingExtensionConfiguration
-		globalDebuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
+		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
 
 { #category : #'gt - extensions' }
@@ -142,7 +160,9 @@ GtPhlowViewsCollectorSameViewError >> gtViewViewCodeWithExplanationFor: aView [
 			currentView
 				actionButtonIcon: BrGlamorousVectorIcons browse
 					tooltip: 'Browse method'
-					action: [ self viewMethod gtBrowse ];
+					action: [ :aButton |
+						aButton phlow 
+							spawnTool: (GtMethodCoderTool compiledMethod: self viewMethod)  ];
 				yourself ]
 ]
 

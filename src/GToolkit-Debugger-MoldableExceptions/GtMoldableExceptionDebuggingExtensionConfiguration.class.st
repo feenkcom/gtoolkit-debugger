@@ -53,7 +53,7 @@ GtMoldableExceptionDebuggingExtensionConfiguration >> collectTargetDebuggingView
 
 { #category : #configuration }
 GtMoldableExceptionDebuggingExtensionConfiguration >> debuggingActionPragmas: aCollection [
-	"A utility method for configuring the same pragma for global and object-specific debugging actions."
+	"A utility method for configuring the same pragma for global and target-specific debugging actions."
 	
 	self globalDebuggingActionPragmas: aCollection.
 	self targetObjectDebuggingActionPragmas: aCollection.

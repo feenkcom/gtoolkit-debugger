@@ -29,8 +29,7 @@ GtPhlowViewsCollectorSameViewProceedDebugAction >> defaultLabel [
 
 { #category : #accessing }
 GtPhlowViewsCollectorSameViewProceedDebugAction >> executeAction [
-	self session 
-		restart: self session interruptedContext.
+	self session restartInterruptedContext.
 	self debugger resumeAndCloseDebugger.
 ]
 
