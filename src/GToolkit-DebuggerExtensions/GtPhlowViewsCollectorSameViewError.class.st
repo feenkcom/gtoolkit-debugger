@@ -90,28 +90,27 @@ GtPhlowViewsCollectorSameViewError >> createMessageText [
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext: aPhlowActionContext [
 	<gtPhlowSameViewReturnDebugAction>
-	
 	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
 	self gtMoldableExceptionTransformation shouldTransform 
 		ifFalse: [ ^ anAction noAction ].
 	
-	^ anAction button
-		label: 'Fix it';
+	^ anAction dropdown
+		label: 'Fix it & Proceed';
 		icon: BrGlamorousVectorIcons repair ;
 		priority: 50;
 		id: #'gtPhlowSameViewReturnDebugAction-fixit';
 		tooltip: 'Fix the returned view and retry the view creation';
-		action: [ 
-			self gtMoldableExceptionTransformation performTransformation.
-			aPhlowActionContext currentDebuggingSession restartInterruptedContext.
-			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
+		preferredExtent: 650@350;
+		content: [ 
+			self refactoringContentElementWithPostAction: [
+				aPhlowActionContext currentDebuggingSession restartInterruptedContext.
+				aPhlowActionContext currentDebugger resumeAndCloseDebugger ] ]
 ]
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext: aPhlowActionContext [
 	<gtPhlowSameViewReturnDebugAction>
-	
 	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
 	
@@ -135,7 +134,7 @@ GtPhlowViewsCollectorSameViewError >> gtDebuggingExtensionConfiguration [
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDefaultDebuggerExtensionConfiguration [
-	^ super gtDebuggingExtensionConfiguration
+	^ super gtDefaultDebuggerExtensionConfiguration
 		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
 
@@ -164,6 +163,7 @@ GtPhlowViewsCollectorSameViewError >> gtViewViewCodeWithExplanationFor: aView in
 				self shouldTransform ifTrue: [.
 					currentView
 						actionDropdownButtonIcon: BrGlamorousVectorIcons repair 
+							label: 'Fix it'
 							tooltip: 'Refactor view return' 
 							content: [ self refactoringContentElement ] ] ].
 			currentView 
@@ -214,6 +214,20 @@ GtPhlowViewsCollectorSameViewError >> refactoringContentElement [
 		vExact: 300.
 	container addChild: ((self transformationNamespace
 		gtApplyingChangesFor:  GtPhlowView empty) 
+			asElementDo: [:e | e]).
+	
+	^ container
+]
+
+{ #category : #'ui - building' }
+GtPhlowViewsCollectorSameViewError >> refactoringContentElementWithPostAction: aBlock [
+	| container|
+	
+	container := BrFrame new
+		hExact: 650;
+		vExact: 300.
+	container addChild: ((self transformationNamespace changes
+		gtDebuggingApplyingChangesFor:  (GtPhlowView empty) withPostAction: aBlock ) 
 			asElementDo: [:e | e]).
 	
 	^ container
