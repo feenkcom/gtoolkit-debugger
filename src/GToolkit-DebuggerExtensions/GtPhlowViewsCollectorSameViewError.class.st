@@ -143,7 +143,7 @@ GtPhlowViewsCollectorSameViewError >> gtViewDescriptionFor: aView [
 ]
 
 { #category : #'gt - extensions' }
-GtPhlowViewsCollectorSameViewError >> gtViewViewCodeWithExplanationFor: aView [
+GtPhlowViewsCollectorSameViewError >> gtViewViewCodeWithExplanationFor: aView inContext: aPhlowContext [
 	<gtView>
 	<gtExceptionDebuggingView>
 	
@@ -152,12 +152,13 @@ GtPhlowViewsCollectorSameViewError >> gtViewViewCodeWithExplanationFor: aView [
 		priority: 0;
 		stencil: [ self createExplanationWithCoderElement ];
 		in: [ :currentView |
-			self shouldTransform ifTrue: [.
-				currentView
-					actionDropdownButtonIcon: BrGlamorousVectorIcons repair 
-						tooltip: 'Refactor view return' 
-						content: [ self refactoringContentElement ] ].
-			currentView
+			aPhlowContext isForDebugging ifFalse: [
+				self shouldTransform ifTrue: [.
+					currentView
+						actionDropdownButtonIcon: BrGlamorousVectorIcons repair 
+							tooltip: 'Refactor view return' 
+							content: [ self refactoringContentElement ] ] ].
+			currentView 
 				actionButtonIcon: BrGlamorousVectorIcons browse
 					tooltip: 'Browse method'
 					action: [ :aButton |

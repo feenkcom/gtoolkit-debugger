@@ -142,7 +142,8 @@ GtMoldableExceptionDebuggingElement >> collectTargetDebuggingActions [
 
 { #category : #'views - collecting' }
 GtMoldableExceptionDebuggingElement >> collectTargetDebuggingViews [
-	^ self debuggingConfiguration collectTargetDebuggingViews
+	^ self debuggingConfiguration 
+		collectTargetDebuggingViewsForDebugger: self
 ]
 
 { #category : #accessing }
