@@ -175,7 +175,7 @@ GtAbstractExpandableDebuggerElement >> buildStackTabGroupForElement: aStackConta
 ]
 
 { #category : #'building widgets' }
-GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsFor: aCollectionOfDebuggingActions [
+GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActions: aCollectionOfDebuggingActions [
 	<return: #Collection of: #BrButton>	
 	| buttons toggle |
 	
@@ -473,8 +473,9 @@ GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 	toolbar viewModel model: debuggingActions.
 
 	toolbar removeAllItems.
-	(self buildStackToolbarActionsFor: debuggingActions) do: [ :anAction | 
-		toolbar addItem: anAction ].
+	(self buildStackToolbarActionsForDebuggingActions: debuggingActions) 
+		do: [ :anAction | 
+			toolbar addItem: anAction ].
 	self updateToolbarWithExtraActions.
 ]
 
