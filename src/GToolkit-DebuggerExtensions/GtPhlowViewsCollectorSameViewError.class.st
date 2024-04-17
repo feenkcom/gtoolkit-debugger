@@ -104,7 +104,6 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 		tooltip: 'Fix the returned view and retry the view creation';
 		action: [ 
 			self gtMoldableExceptionTransformation performTransformation.
-	
 			aPhlowActionContext currentDebuggingSession restartInterruptedContext.
 			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
 ]
@@ -123,7 +122,7 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext:
 		id: #'gtPhlowSameViewReturnDebugAction-retry';
 		tooltip: 'Retry executing the creation of the view';
 		action: [ 
-			"All we need here is to restart the interrupted context and resumt execution"
+			"All we need here is to restart the interrupted context and resume execution"
 			aPhlowActionContext currentDebuggingSession restartInterruptedContext.
 			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
 ]
