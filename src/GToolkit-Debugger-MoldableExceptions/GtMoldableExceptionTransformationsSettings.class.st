@@ -97,7 +97,7 @@ GtMoldableExceptionTransformationsSettings >> gtViewMoldableExceptionsWithTransf
 			TGtMoldableExceptionSignalWithTransformation users asOrderedCollection ];
 		column: 'Exception' text: [ :anExceptionClass | anExceptionClass name ];
 		column: 'Automatic Transformation Allowed' text: [ :anExceptionClass | 
-			self canApplyAutomaticTransformationForException:  anExceptionClass name ];
+			self isAutomaticTransformationEnabledForException:  anExceptionClass name ];
 		column: 'Is Disabled' text: [ :anExceptionClass | 
 			disabledExceptions includes: anExceptionClass name ];
 		actionButtonIcon: (self areTransformationsAllowed
@@ -108,7 +108,7 @@ GtMoldableExceptionTransformationsSettings >> gtViewMoldableExceptionsWithTransf
 				ifFalse: [ 'Allow automatic transformations' ])
 			action: [ :aButton |
 				self toggleAutomaticTransformationStatus.
-				aButton phlow fireUpdateWish ]
+				aButton phlow fireToolUpdateWish ]
 ]
 
 { #category : #initialization }
