@@ -1,19 +1,27 @@
 Extension { #name : #GtPhlowContext }
 
 { #category : #'*GToolkit-DebuggerExtensions' }
-GtPhlowContext >> currentDebuggingSession [
+GtPhlowContext >> currentDebugger [
 	^ self 
-		optionAt: #debuggingSession 
+		optionAt: #currentDebugger 
 		ifAbsent: [ nil ]
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions' }
-GtPhlowContext >> currentDebuggingSession: aDebuggingSession [
+GtPhlowContext >> currentDebugger: aDebuggerElement [
 	self 
-		optionAt: #debuggingSession put: aDebuggingSession
+		optionAt: #currentDebugger put: aDebuggerElement
+]
+
+{ #category : #'*GToolkit-DebuggerExtensions' }
+GtPhlowContext >> currentDebuggingSession [
+	^ self 
+		optionAt: #debuggingSession 
+		ifPresent: [ :aDebugger | aDebugger debugSession ]
+		ifAbsent: [ nil ]
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions' }
 GtPhlowContext >> isForDebugging [
-	^ self hasOptionAt: #debuggingSession
+	^ self hasOptionAt: #currentDebugger
 ]
