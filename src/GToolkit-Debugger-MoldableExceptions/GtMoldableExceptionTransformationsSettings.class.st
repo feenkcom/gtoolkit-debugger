@@ -97,7 +97,7 @@ GtMoldableExceptionTransformationsSettings >> gtViewMoldableExceptionsWithTransf
 			TGtMoldableExceptionSignalWithTransformation users asOrderedCollection ];
 		column: 'Exception' text: [ :anExceptionClass | anExceptionClass name ];
 		column: 'Automatic Transformation Allowed' text: [ :anExceptionClass | 
-			self isAutomaticTransformationEnabledForException:  anExceptionClass name ];
+			self canApplyAutomaticTransformationForException: anExceptionClass name ];
 		column: 'Is Disabled' text: [ :anExceptionClass | 
 			disabledExceptions includes: anExceptionClass name ];
 		actionButtonIcon: (self areTransformationsAllowed
