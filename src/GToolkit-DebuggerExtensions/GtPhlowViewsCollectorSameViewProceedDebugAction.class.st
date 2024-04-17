@@ -6,7 +6,7 @@ Class {
 
 { #category : #accessing }
 GtPhlowViewsCollectorSameViewProceedDebugAction class >> proceedReturnDebugActionFor: aDebugger [
-	<gtPhlowSaveViewReturnFixDebugAction>
+	<gtPhlowSameViewReturnDebugAction>
 	
 	^ self forDebugger: aDebugger
 ]

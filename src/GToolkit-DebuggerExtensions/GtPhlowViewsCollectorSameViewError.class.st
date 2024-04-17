@@ -113,7 +113,7 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebuggingExtensionConfiguration [
 	^ super gtDebuggingExtensionConfiguration
-		globalDebuggingActionPragmas: #(gtPhlowSaveViewReturnFixDebugAction)
+		globalDebuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
 
 { #category : #'gt - extensions' }
