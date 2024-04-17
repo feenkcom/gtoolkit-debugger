@@ -181,10 +181,11 @@ GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActio
 	
 	buttons := aCollectionOfDebuggingActions
 		collect: [ :aDebuggingAction | 
-			aDebuggingAction asBrickButton ].
+			aDebuggingAction asDebugActionElementWithHostElement: self ].
 		
 	toggle := BrToggle new 
-		aptitude: BrGlamorousButtonWithIconAptitude + BrGlamorousToggleBackgroundAptitude;
+		aptitude: BrGlamorousButtonWithIconAptitude 
+			+ BrGlamorousToggleBackgroundAptitude;
 		label: 'Variable Value Overlays';
 		icon: BrGlamorousIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
@@ -270,6 +271,31 @@ GtAbstractExpandableDebuggerElement >> buildWatchVariablesElement [
 	^ watchVariablesElement
 ]
 
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectGlobalDebuggingActions [
+	^ self actionsForPragmas: self stackDebuggingActionsPragmas
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectMainToolbarDebuggingActions [
+	| globalDebuggingActions targetObjectsDebuggingActions |
+	
+	globalDebuggingActions := self collectGlobalDebuggingActions.
+	targetObjectsDebuggingActions := self collectTargetDebuggingActions.
+	
+	^ (globalDebuggingActions, targetObjectsDebuggingActions) 
+		sorted: [ :aDebuggingAction | aDebuggingAction order ] ascending
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
+	^ debuggingSession exception 
+		ifNil: [ #() ] 
+		ifNotNil: [ :anException |
+			anException gtDefaultDebuggerExtensionConfiguration
+				collectTargetDebuggingActionsForDebugger: self ] 
+]
+
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> contextVariables [
 	| activeCoder |
@@ -317,11 +343,6 @@ GtAbstractExpandableDebuggerElement >> detailsPane [
 GtAbstractExpandableDebuggerElement >> filteredStack [
 	^ (self session stackOfSize: 50 ) select: [ :aContext | 
 		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
-]
-
-{ #category : #'building actions' }
-GtAbstractExpandableDebuggerElement >> getStackDebuggingActions [
-	^ self actionsForPragmas: self stackDebuggingActionsPragmas
 ]
 
 { #category : #initialization }
@@ -420,7 +441,7 @@ GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
 		ifNil: [ super stackDebuggingActionsPragmas ] 
 		ifNotNil: [ :anException |
 			super stackDebuggingActionsPragmas
-				, anException gtDebuggingExtensionConfiguration globalDebuggingActionPragmas ] 
+				, anException gtDefaultDebuggerExtensionConfiguration globalDebuggingActionPragmas ] 
 ]
 
 { #category : #'accessing - elements' }
@@ -464,15 +485,15 @@ GtAbstractExpandableDebuggerElement >> updateStackWidget [
 GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 	| debuggingActions |
 	
-	debuggingActions := self getStackDebuggingActions.
+	debuggingActions := self collectMainToolbarDebuggingActions.
 	(debuggingActions
 		gtHasEqualElements: toolbar viewModel model
 		by: [ :a :b | a id = b id ])
 			ifTrue: [ ^ self ].
 			
 	toolbar viewModel model: debuggingActions.
-
 	toolbar removeAllItems.
+	
 	(self buildStackToolbarActionsForDebuggingActions: debuggingActions) 
 		do: [ :anAction | 
 			toolbar addItem: anAction ].

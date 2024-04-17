@@ -22,6 +22,11 @@ GtPhlowActionToDebugActionAdapter >> asDebugActionElementWithHostElement: aHostE
 ]
 
 { #category : #accessing }
+GtPhlowActionToDebugActionAdapter >> id [ 
+	^ self phlowAction id
+]
+
+{ #category : #accessing }
 GtPhlowActionToDebugActionAdapter >> order [
 	^ phlowAction priority 
 ]

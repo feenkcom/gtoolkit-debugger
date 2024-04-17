@@ -73,15 +73,8 @@ GtMoldableExceptionDebuggingElement >> buildMainTabWithContent: aTabContent andT
 ]
 
 { #category : #'building - widgets' }
-GtMoldableExceptionDebuggingElement >> buildStackToolbarActionsInToolbar: aToolbar [
-	<return: #Collection of: #BrButton>	
-	| globalDebuggingActions targetObjectsDebuggingActions |
-	
-	globalDebuggingActions := self collectGlobalDebuggingActions.
-	targetObjectsDebuggingActions := self collectTargetDebuggingActions.
-	
-	^ ((globalDebuggingActions, targetObjectsDebuggingActions) 
-		sorted: [ :aDebuggingAction | aDebuggingAction order ] ascending)
+GtMoldableExceptionDebuggingElement >> buildStackToolbarActionElementsForToolbar: aToolbar [
+	^ self collectMainToolbarDebuggingActions
 		collect: [ :aDebuggingAction | 
 			aDebuggingAction asDebugActionElementWithHostElement: aToolbar ]
 ]
@@ -132,6 +125,17 @@ GtMoldableExceptionDebuggingElement >> collectDebuggingActionsForView: aView [
 { #category : #'views - collecting' }
 GtMoldableExceptionDebuggingElement >> collectGlobalDebuggingActions [
 	^ self actionsForPragmas: self exceptionGlobalDebugActionsPragmas
+]
+
+{ #category : #'building - widgets' }
+GtMoldableExceptionDebuggingElement >> collectMainToolbarDebuggingActions [
+	| globalDebuggingActions targetObjectsDebuggingActions |
+	
+	globalDebuggingActions := self collectGlobalDebuggingActions.
+	targetObjectsDebuggingActions := self collectTargetDebuggingActions.
+	
+	^ (globalDebuggingActions, targetObjectsDebuggingActions) 
+		sorted: [ :aDebuggingAction | aDebuggingAction order ] ascending
 ]
 
 { #category : #'views - collecting' }
@@ -210,7 +214,7 @@ GtMoldableExceptionDebuggingElement >> updateMainTabLabel [
 { #category : #updating }
 GtMoldableExceptionDebuggingElement >> updateToolbarActions [
 	toolbar removeAllItems.
-	(self buildStackToolbarActionsInToolbar: toolbar) do: [ :anAction | 
+	(self buildStackToolbarActionElementsForToolbar: toolbar) do: [ :anAction | 
 		toolbar addItem: anAction ].
 	compositeView views size = 1 ifTrue: [
 		self updateToolbarWithActionsFromView: compositeView views first ].

@@ -98,7 +98,9 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 	
 	^ anAction button
 		label: 'Fix it';
-		priority: 10;
+		icon: BrGlamorousVectorIcons repair ;
+		priority: 50;
+		id: #'gtPhlowSameViewReturnDebugAction-fixit';
 		tooltip: 'Fix the returned view and retry the view creation';
 		action: [ 
 			self gtMoldableExceptionTransformation performTransformation.
@@ -117,7 +119,8 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext:
 	^ anAction button
 		icon: BrGlamorousVectorIcons refresh;
 		label: 'Retry';
-		priority: 15;
+		priority: 55;
+		id: #'gtPhlowSameViewReturnDebugAction-retry';
 		tooltip: 'Retry executing the creation of the view';
 		action: [ 
 			"All we need here is to restart the interrupted context and resumt execution"
@@ -127,6 +130,12 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext:
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebuggingExtensionConfiguration [
+	^ super gtDebuggingExtensionConfiguration
+		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
+]
+
+{ #category : #'gt - extensions' }
+GtPhlowViewsCollectorSameViewError >> gtDefaultDebuggerExtensionConfiguration [
 	^ super gtDebuggingExtensionConfiguration
 		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
