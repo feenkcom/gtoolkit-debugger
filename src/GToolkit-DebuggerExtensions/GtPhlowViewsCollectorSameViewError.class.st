@@ -89,9 +89,9 @@ GtPhlowViewsCollectorSameViewError >> createMessageText [
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext: aPhlowActionContext [
-	<gtPhlowViewCollectorSameViewAction>
+	<gtPhlowSameViewReturnDebugAction>
 	
-	aPhlowActionContext debuggingSession isInterruptedContextPostMortem
+	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
 	self gtMoldableExceptionTransformation shouldTransform 
 		ifFalse: [ ^ anAction noAction ].
@@ -101,13 +101,10 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 		priority: 10;
 		tooltip: 'Fix the returned view and retry the view creation';
 		action: [ 
-			| debuggingSession  |
-			debuggingSession := aPhlowActionContext debuggingSession.
-
 			self gtMoldableExceptionTransformation performTransformation.
 	
-			debuggingSession restartInterruptedContext.
-			debuggingSession resumeAndCloseDebuggerRequest ]
+			aPhlowActionContext currentDebuggingSession restartInterruptedContext.
+			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
 ]
 
 { #category : #'gt - extensions' }
