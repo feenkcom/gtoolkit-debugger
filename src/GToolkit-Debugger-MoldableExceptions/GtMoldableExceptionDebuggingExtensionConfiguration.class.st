@@ -20,7 +20,8 @@ Class {
 		'debuggingViewPragmaNames',
 		'globalDebuggingActionPragmaNames',
 		'enableDebuggingViewExtensionComputation',
-		'debuggingTargets'
+		'debuggingTargets',
+		'targetObjectDebuggingActionPragmaNames'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
@@ -39,8 +40,23 @@ GtMoldableExceptionDebuggingExtensionConfiguration >> canShowDebuggingExtension 
 ]
 
 { #category : #'accessing configurarion' }
+GtMoldableExceptionDebuggingExtensionConfiguration >> collectTargetDebuggingActionsForDebugger: aDebuggerElement [
+	^ debuggingTargets 
+		collectTargetDebuggingActionsForPragmaNames: self targetObjectDebuggingActionPragmas
+		forDebugger: aDebuggerElement
+]
+
+{ #category : #'accessing configurarion' }
 GtMoldableExceptionDebuggingExtensionConfiguration >> collectTargetDebuggingViews [
 	^ debuggingTargets collectTargetDebuggingViewsForPragmaNames: self debuggingViewPragmas
+]
+
+{ #category : #configuration }
+GtMoldableExceptionDebuggingExtensionConfiguration >> debuggingActionPragmas: aCollection [
+	"A utility method for configuring the same pragma for global and object-specific debugging actions."
+	
+	self globalDebuggingActionPragmas: aCollection.
+	self targetObjectDebuggingActionPragmas: aCollection.
 ]
 
 { #category : #'accessing configurarion' }
@@ -67,6 +83,11 @@ GtMoldableExceptionDebuggingExtensionConfiguration >> defaultEnableDebuggingView
 
 { #category : #'accessing - defaults' }
 GtMoldableExceptionDebuggingExtensionConfiguration >> defaultGlobalDebuggingActionPragmas [
+	^ #()
+]
+
+{ #category : #'accessing - defaults' }
+GtMoldableExceptionDebuggingExtensionConfiguration >> defaultTargetObjectDebuggingActionPragmas [
 	^ #()
 ]
 
@@ -116,6 +137,18 @@ GtMoldableExceptionDebuggingExtensionConfiguration >> initializeForException: an
 	super initializeForException: anException.
 	
 	self withDebuggingExceptionTargetFor: anException
+]
+
+{ #category : #'accessing configurarion' }
+GtMoldableExceptionDebuggingExtensionConfiguration >> targetObjectDebuggingActionPragmas [
+	^ targetObjectDebuggingActionPragmaNames ifNil: [
+		self defaultTargetObjectDebuggingActionPragmas ]
+]
+
+{ #category : #configuration }
+GtMoldableExceptionDebuggingExtensionConfiguration >> targetObjectDebuggingActionPragmas: aCollection [
+	"Configure the pragmas used to look for phlow debugging actions attached to target objects. These actions are specific to this exception."
+	targetObjectDebuggingActionPragmaNames := aCollection
 ]
 
 { #category : #configuration }

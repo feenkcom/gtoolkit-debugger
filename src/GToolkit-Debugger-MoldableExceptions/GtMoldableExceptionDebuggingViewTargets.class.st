@@ -27,6 +27,20 @@ GtMoldableExceptionDebuggingViewTargets >> addDebuggingTargetFor: anObject [
 ]
 
 { #category : #accessing }
+GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingActionsForPragmaNames: aCollectionOfPragmaNames forDebugger: aDebuggerElement [
+
+	| debuggingActions  |
+	
+	debuggingActions := OrderedCollection new.
+	self withIndividualTargetsDo: [ :aTarget |
+		debuggingActions addAll: (aTarget 
+			collectTargetDebuggingActionsForPragmaNames: aCollectionOfPragmaNames 
+			forDebugger: aDebuggerElement) ].
+			
+	^ debuggingActions
+]
+
+{ #category : #accessing }
 GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames [
 	| compositeView |
 	compositeView := GtPhlowView empty composite 
