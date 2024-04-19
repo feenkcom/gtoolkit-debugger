@@ -177,11 +177,14 @@ GtAbstractExpandableDebuggerElement >> buildStackTabGroupForElement: aStackConta
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActions: aCollectionOfDebuggingActions [
 	<return: #Collection of: #BrButton>	
-	| buttons toggle |
+	| debuggingActionButtons toggle |
 	
-	buttons := aCollectionOfDebuggingActions
-		collect: [ :aDebuggingAction | 
-			aDebuggingAction asDebugActionElementWithHostElement: self ].
+	debuggingActionButtons := OrderedCollection new.
+	aCollectionOfDebuggingActions do: [ :aDebuggingAction | 
+		aDebuggingAction 
+			asDebugActionElementWithHostElement: self
+			do: [ :anElement | 
+				debuggingActionButtons add: anElement ] ].
 		
 	toggle := BrToggle new 
 		aptitude: BrGlamorousButtonWithIconAptitude 
@@ -192,8 +195,9 @@ GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActio
 			self stackElement enableVariableAnnotations ];
 		when: BrToggleDeactivatedEvent do: [ :anEvent | 
 			self stackElement disableVariableAnnotations ].
-	buttons add: toggle.
-	^ buttons
+	debuggingActionButtons add: toggle.
+	
+	^ debuggingActionButtons
 ]
 
 { #category : #'building widgets' }

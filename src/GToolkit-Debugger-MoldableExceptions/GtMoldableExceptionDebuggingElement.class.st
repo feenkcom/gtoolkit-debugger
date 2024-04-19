@@ -74,9 +74,17 @@ GtMoldableExceptionDebuggingElement >> buildMainTabWithContent: aTabContent andT
 
 { #category : #'building - widgets' }
 GtMoldableExceptionDebuggingElement >> buildStackToolbarActionElementsForToolbar: aToolbar [
-	^ self collectMainToolbarDebuggingActions
-		collect: [ :aDebuggingAction | 
-			aDebuggingAction asDebugActionElementWithHostElement: aToolbar ]
+	| debuggingActionButtons |
+	
+	debuggingActionButtons := OrderedCollection new.
+	self collectMainToolbarDebuggingActions
+		do: [ :aDebuggingAction | 
+			aDebuggingAction 
+				asDebugActionElementWithHostElement: aToolbar
+				do: [ :anElement | 
+					debuggingActionButtons add: anElement ] ].
+	
+	^ debuggingActionButtons
 ]
 
 { #category : #'building - widgets' }
