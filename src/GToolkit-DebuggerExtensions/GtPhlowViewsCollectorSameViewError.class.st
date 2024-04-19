@@ -90,6 +90,7 @@ GtPhlowViewsCollectorSameViewError >> createMessageText [
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext: aPhlowActionContext [
 	<gtPhlowSameViewReturnDebugAction>
+	
 	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
 	self gtMoldableExceptionTransformation shouldTransform 
@@ -106,6 +107,32 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 			self refactoringContentElementWithPostAction: [
 				aPhlowActionContext currentDebuggingSession restartInterruptedContext.
 				aPhlowActionContext currentDebugger resumeAndCloseDebugger ] ]
+]
+
+{ #category : #'gt - extensions' }
+GtPhlowViewsCollectorSameViewError >> gtDebugActionPatchFor: anAction inContext: aPhlowActionContext [
+	<gtPhlowSameViewReturnDebugAction>
+	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
+		ifTrue: [ ^ anAction noAction ].
+	
+	^ anAction button
+		icon: BrGlamorousVectorIcons play;
+		label: 'Patch';
+		priority: 55;
+		id: #'gtPhlowSameViewReturnDebugAction-patch';
+		tooltip: 'Replace the returned object with an empty view and continue execution';
+		action: [ 
+			| currentContent newEmptyView |
+			currentContent := aPhlowActionContext 
+				currentDebuggingSession interruptedContext .
+			
+			newEmptyView := (currentContent 
+				tempNamed: #aCollectionOfArguments) first empty.
+			currentContent
+				tempNamed: #aPhlowView
+				put: newEmptyView.
+			
+			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
 ]
 
 { #category : #'gt - extensions' }
