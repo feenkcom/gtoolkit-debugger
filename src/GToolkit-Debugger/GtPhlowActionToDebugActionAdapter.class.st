@@ -17,8 +17,8 @@ GtPhlowActionToDebugActionAdapter class >> forPhlowAction: aPhlowAction [
 ]
 
 { #category : #converting }
-GtPhlowActionToDebugActionAdapter >> asDebugActionElementWithHostElement: aHostElement [
-	^ phlowAction asElement: [ :anElement | anElement] withHostElement: aHostElement
+GtPhlowActionToDebugActionAdapter >> asDebugActionElementWithHostElement: aHostElement do: aBlock [
+	^ phlowAction asElement: aBlock withHostElement: aHostElement
 ]
 
 { #category : #accessing }
