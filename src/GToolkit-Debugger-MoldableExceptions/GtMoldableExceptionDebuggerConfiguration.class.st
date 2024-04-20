@@ -24,9 +24,10 @@ GtMoldableExceptionDebuggerConfiguration >> collectTargetDebuggingActionsForDebu
 ]
 
 { #category : #'accessing configurarion' }
-GtMoldableExceptionDebuggerConfiguration >> collectTargetDebuggingViewsForDebugger: aDebugger [
+GtMoldableExceptionDebuggerConfiguration >> collectTargetDebuggingViewsForDebugger: aDebugger in: aComposite [
 	^ debuggingTargets 
 		collectTargetDebuggingViewsForPragmaNames: self debuggingViewPragmas
+		in: aComposite
 		forDebugger: aDebugger
 ]
 
