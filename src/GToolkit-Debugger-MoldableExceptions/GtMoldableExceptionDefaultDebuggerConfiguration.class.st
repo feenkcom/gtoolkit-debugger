@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-GtMoldableExceptionDefaultDebuggerConfiguration >> collectTargetDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
+GtMoldableExceptionDefaultDebuggerConfiguration >> collectContextDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
 	^ (GtMoldableExceptionDebuggingViewsObjectTarget forObject: aReceiver) 
 			collectTargetDebuggingViewsForPragmaNames: self receiverViewPragmaNames
 			in: aComposite

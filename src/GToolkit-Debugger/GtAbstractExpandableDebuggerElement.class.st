@@ -343,7 +343,7 @@ GtAbstractExpandableDebuggerElement >> collectReceiverExceptionSpecificDebugging
 		| currentReceiver |
 		currentReceiver := self selectedContext  receiver .
 		anException gtDefaultDebuggerExtensionConfiguration
-			collectTargetDebuggingViewsForReceiver: currentReceiver
+			collectContextDebuggingViewsForReceiver: currentReceiver
 			forDebugger: self 
 			in: aComposite ] 
 ]
