@@ -44,11 +44,10 @@ GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingActionsForPragm
 GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames in: aComposite forDebugger: aDebuggerElement [
 		
 	self withIndividualTargetsDo: [ :aTarget |
-		aComposite collectorAppend: [ :aCollector |
-			aCollector pragmaNames: aCollectionOfPragmaNames.
-			aCollector context: (GtPhlowContext new 
-				currentDebugger: aDebuggerElement).
-			aTarget configureDebuggingViewsCollector: aCollector ] ] 
+		aTarget
+			collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames 
+			in: aComposite 
+			forDebugger: aDebuggerElement ] 
 ]
 
 { #category : #testing }

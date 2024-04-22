@@ -83,7 +83,7 @@ GtExampleComparisonExceptionWithDebuggingViews >> gtDebuggingExtensionConfigurat
 { #category : #'gt - extensions' }
 GtExampleComparisonExceptionWithDebuggingViews >> gtViewChangeViewFor: aView [ 
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	^ aView forward 
 		title: 'Changes';
@@ -99,7 +99,7 @@ GtExampleComparisonExceptionWithDebuggingViews >> gtViewChangeViewFor: aView [
 { #category : #'gt - extensions' }
 GtExampleComparisonExceptionWithDebuggingViews >> gtViewDiffFor: aView [ 
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	^ aView forward 
 		title: 'Diff';

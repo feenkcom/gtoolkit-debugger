@@ -287,12 +287,20 @@ GtAbstractExpandableDebuggerElement >> buildWatchVariablesElement [
 ]
 
 { #category : #'building actions' }
-GtAbstractExpandableDebuggerElement >> collectContextDetailsPaneDebuggingViewsIn: aComposite [ 
-	aComposite collectorAppend: [ :aCollector |
-		aCollector pragmaName: #gtContextDebuggingView.
-		aCollector context: (GtPhlowContext new 
-			currentDebugger: self).
-		aCollector fromObject: self selectedContext ]
+GtAbstractExpandableDebuggerElement >> collectContextDebuggingViewsIn: aComposite [ 
+	| targetObjects |
+	targetObjects := {
+		self selectedContext . 
+		self selectedContext  receiver } asOrderedCollection.
+	debuggingSession exception ifNotNil: [ :anException | 
+		targetObjects add: anException ].
+		
+	targetObjects do: [ :aTargetObject | 
+		aComposite collectorAppend: [ :aCollector |
+			aCollector pragmaName: #gtContextView.
+			aCollector context: (GtPhlowContext new 
+				currentDebugger: self).
+			aCollector fromObject: aTargetObject ] ]
 ]
 
 { #category : #'building actions' }
@@ -309,8 +317,8 @@ GtAbstractExpandableDebuggerElement >> collectDetailsPaneDebuggingViews [
 { #category : #'building actions' }
 GtAbstractExpandableDebuggerElement >> collectDetailsPaneDebuggingViewsin: aComposite [
 	
-	self collectContextDetailsPaneDebuggingViewsIn: aComposite.
-	self collectTargetDetailsPaneDebuggingViewsIn: aComposite.
+	self collectContextDebuggingViewsIn: aComposite. 
+	self collectReceiverExceptionSpecificDebuggingViewsIn: aComposite.
 ]
 
 { #category : #'building actions' }
@@ -330,22 +338,23 @@ GtAbstractExpandableDebuggerElement >> collectMainToolbarDebuggingActions [
 ]
 
 { #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectReceiverExceptionSpecificDebuggingViewsIn: aComposite [
+	debuggingSession exception ifNotNil: [ :anException |
+		| currentReceiver |
+		currentReceiver := self selectedContext  receiver .
+		anException gtDefaultDebuggerExtensionConfiguration
+			collectTargetDebuggingViewsForReceiver: currentReceiver
+			forDebugger: self 
+			in: aComposite ] 
+]
+
+{ #category : #'building actions' }
 GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
 	^ debuggingSession exception 
 		ifNil: [ #() ] 
 		ifNotNil: [ :anException |
 			anException gtDefaultDebuggerExtensionConfiguration
 				collectTargetDebuggingActionsForDebugger: self ] 
-]
-
-{ #category : #'building actions' }
-GtAbstractExpandableDebuggerElement >> collectTargetDetailsPaneDebuggingViewsIn: aComposite [
-	^ debuggingSession exception 
-		ifNil: [ #() ] 
-		ifNotNil: [ :anException |
-			anException gtDefaultDebuggerExtensionConfiguration
-				collectTargetDebuggingViewsForDebugger: self
-				in: aComposite ] 
 ]
 
 { #category : #'building widgets' }

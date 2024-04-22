@@ -22,6 +22,13 @@ GtPhlowContext >> currentDebuggingSession [
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions' }
+GtPhlowContext >> hasReceiverOfType: aClass [
+	self isForDebugging ifFalse: [ ^ false  ].
+	^ self currentDebugger selectedContext receiver
+		isKindOf: aClass
+]
+
+{ #category : #'*GToolkit-DebuggerExtensions' }
 GtPhlowContext >> isForDebugging [
 	^ self hasOptionAt: #currentDebugger
 ]

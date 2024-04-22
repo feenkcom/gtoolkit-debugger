@@ -179,7 +179,7 @@ GtPhlowViewsCollectorSameViewError >> gtViewDescriptionFor: aView [
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtViewViewCodeWithExplanationFor: aView inContext: aPhlowContext [
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	^ aView explicit
 		title: 'View Code';
