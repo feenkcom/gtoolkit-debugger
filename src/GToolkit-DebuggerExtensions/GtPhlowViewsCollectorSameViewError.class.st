@@ -97,8 +97,8 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 		ifFalse: [ ^ anAction noAction ].
 	
 	^ anAction dropdown
-		label: 'Fix it & Proceed';
-		icon: BrGlamorousVectorIcons repair ;
+		label: 'Fix & retry';
+		icon: BrGlamorousVectorIcons play ;
 		priority: 50;
 		id: #'gtPhlowSameViewReturnDebugAction-fixit';
 		tooltip: 'Fix the returned view and retry the view creation';
