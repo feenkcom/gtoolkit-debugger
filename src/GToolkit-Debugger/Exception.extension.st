@@ -9,9 +9,10 @@ Exception >> asDebuggableElement [
 
 { #category : #'*GToolkit-Debugger' }
 Exception >> gtDebuggingExtensionConfiguration [
+	<gtDebuggerConfiguration>
 	"Return a debugging configuration with default values."
 	
-	^ GtMoldableExceptionDebuggingExtensionConfiguration forException: self
+	^ GtMoldableExceptionCustomDebuggerConfiguration forException: self
 ]
 
 { #category : #'*GToolkit-Debugger' }

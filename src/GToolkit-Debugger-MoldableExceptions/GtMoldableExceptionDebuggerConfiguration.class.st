@@ -1,13 +1,20 @@
 Class {
 	#name : #GtMoldableExceptionDebuggerConfiguration,
-	#superclass : #GtMoldableExceptionDebuggingToolConfiguration,
+	#superclass : #Object,
 	#instVars : [
 		'globalDebuggingActionPragmaNames',
 		'targetObjectDebuggingActionPragmaNames',
-		'debuggingTargets'
+		'debuggingTargets',
+		'targetException'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
+
+{ #category : #'instance creation' }
+GtMoldableExceptionDebuggerConfiguration class >> forException: anException [
+	^ self new
+		 initializeForException: anException
+]
 
 { #category : #configuration }
 GtMoldableExceptionDebuggerConfiguration >> addDebuggingTargetFor: anObject [
@@ -61,9 +68,14 @@ GtMoldableExceptionDebuggerConfiguration >> initialize [
 
 { #category : #initialization }
 GtMoldableExceptionDebuggerConfiguration >> initializeForException: anException [
-	super initializeForException: anException.
+	targetException := anException.
 	
 	self withDebuggingExceptionTargetFor: anException
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggerConfiguration >> targetException [
+	^ targetException
 ]
 
 { #category : #'accessing configurarion' }

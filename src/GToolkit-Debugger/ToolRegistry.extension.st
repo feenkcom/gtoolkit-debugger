@@ -3,9 +3,10 @@ Extension { #name : #ToolRegistry }
 { #category : #'*GToolkit-Debugger' }
 ToolRegistry >> debuggerDispatcherForDebugSession: aDebugSession matching: aBlock [
 	| debuggers |
-	debuggers := self debuggersWithRanksMatching: [ :aDebugger | 
-		(aBlock value: aDebugger) and: [ 
-			aDebugger handlesDebugSession: aDebugSession ] ].
+	debuggers := self debuggersWithRanksMatching: [ :aDebuggerClass | 
+		(aDebuggerClass includesBehavior: GtDebuggerElement) and: [
+			(aBlock value: aDebuggerClass) and: [ 
+				aDebuggerClass handlesDebugSession: aDebugSession ] ] ].
 	(debuggers size > 0) ifTrue: [ ^ (debuggers at: 1) key ].
 	^ nil
 ]

@@ -24,6 +24,11 @@ GtMoldableExceptionDebuggingElement class >> availableAutomatically [
 ]
 
 { #category : #accessing }
+GtMoldableExceptionDebuggingElement class >> debuggerConfiguration [
+	^ nil
+]
+
+{ #category : #accessing }
 GtMoldableExceptionDebuggingElement class >> defaultTitle [
 	^ 'Exception'
 ]

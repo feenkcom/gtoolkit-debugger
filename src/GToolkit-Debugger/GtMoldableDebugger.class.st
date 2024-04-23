@@ -135,7 +135,7 @@ GtMoldableDebugger >> actOnDebugActionExecuted [
 		self currentDebugger actOnDebugActionExecuted. ]
 ]
 
-{ #category : #accessing }
+{ #category : #'initialization - debuggers' }
 GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession [
 	^ ((Smalltalk tools debuggersForDebugSession: aDebugSession)
 			select: [ :aDebuggerClass | 
@@ -259,18 +259,23 @@ GtMoldableDebugger >> openInPager [
 	self open: aPager titled: debuggerElement session name.
 ]
 
-{ #category : #initialization }
+{ #category : #'initialization - debuggers' }
 GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
-	| debuggerClass initialDebugger |
+	| debuggerClass |
+	debuggerClass := self selectInitialDebuggerTypeFor: aDebugSession.
+	^ debuggerClass on: (debuggerClass spanNewSessionFrom: aDebugSession) .
+]
+
+{ #category : #'initialization - debuggers' }
+GtMoldableDebugger >> selectInitialDebuggerTypeFor: aDebugSession [ 
+	| debuggerClass |
 	debuggerClass := Smalltalk tools 
 		debuggerDispatcherForDebugSession: aDebugSession
 		matching: [ :aDebuggerClass | 
 			"Only take into account GT debuggers."
 			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
 				aDebuggerClass availableAutomatically ] ].
-	initialDebugger := (debuggerClass ifNil: [ GtPharoDebuggerElement ])
-			ifNotNil: [ :aDebugger | aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
-	^ initialDebugger
+	^debuggerClass ifNil: [ GtPharoDebuggerElement ]
 ]
 
 { #category : #private }
