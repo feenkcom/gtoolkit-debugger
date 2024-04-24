@@ -17,8 +17,8 @@ GtDebuggerElement class >> availableAutomatically [
 ]
 
 { #category : #initialization }
-GtDebuggerElement class >> debuggerProvider [
-	^ GtStandaloneDebuggerProvider new 
+GtDebuggerElement class >> debuggerSpecification [
+	^ GtMoldableExceptionStandaloneDebuggerSpecification new 
 		debuggerClass: self
 ]
 

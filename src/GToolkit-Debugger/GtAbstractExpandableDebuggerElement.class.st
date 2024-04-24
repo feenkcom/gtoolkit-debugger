@@ -342,7 +342,7 @@ GtAbstractExpandableDebuggerElement >> collectReceiverExceptionSpecificDebugging
 	debuggingSession exception ifNotNil: [ :anException |
 		| currentReceiver |
 		currentReceiver := self selectedContext  receiver .
-		anException gtDefaultDebuggerExtensionConfiguration
+		anException gtDefaultDebuggerSpecification
 			collectContextDebuggingViewsForReceiver: currentReceiver
 			forDebugger: self 
 			in: aComposite ] 
@@ -353,7 +353,7 @@ GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
 	^ debuggingSession exception 
 		ifNil: [ #() ] 
 		ifNotNil: [ :anException |
-			anException gtDefaultDebuggerExtensionConfiguration
+			anException gtDefaultDebuggerSpecification
 				collectTargetDebuggingActionsForDebugger: self ] 
 ]
 
@@ -508,7 +508,7 @@ GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
 		ifNil: [ super stackDebuggingActionsPragmas ] 
 		ifNotNil: [ :anException |
 			super stackDebuggingActionsPragmas
-				, anException gtDefaultDebuggerExtensionConfiguration globalDebuggingActionPragmas ] 
+				, anException gtDefaultDebuggerSpecification globalDebuggingActionPragmas ] 
 ]
 
 { #category : #'accessing - elements' }

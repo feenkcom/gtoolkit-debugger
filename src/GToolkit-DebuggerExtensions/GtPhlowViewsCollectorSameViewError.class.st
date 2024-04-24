@@ -154,14 +154,14 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext:
 ]
 
 { #category : #'gt - extensions' }
-GtPhlowViewsCollectorSameViewError >> gtDebuggingExtensionConfiguration [
-	^ super gtDebuggingExtensionConfiguration
+GtPhlowViewsCollectorSameViewError >> gtDefaultDebuggerSpecification [
+	^ super gtDefaultDebuggerSpecification
 		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
 
 { #category : #'gt - extensions' }
-GtPhlowViewsCollectorSameViewError >> gtDefaultDebuggerExtensionConfiguration [
-	^ super gtDefaultDebuggerExtensionConfiguration
+GtPhlowViewsCollectorSameViewError >> gtExceptionDebuggerSpecification [
+	^ super gtExceptionDebuggerSpecification
 		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
 

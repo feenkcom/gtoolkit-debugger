@@ -75,8 +75,8 @@ Lorem ipsum dolor sitt amet, consectetur incididunt ut labore et dolore magna al
 ]
 
 { #category : #accessing }
-GtExampleComparisonExceptionWithDebuggingViews >> gtDebuggingExtensionConfiguration [
-	^ super gtDebuggingExtensionConfiguration
+GtExampleComparisonExceptionWithDebuggingViews >> gtExceptionDebuggerSpecification [
+	^ super gtExceptionDebuggerSpecification
 		globalDebuggingActionPragmas: #(gtExampleComparisonDebuggingAction)
 ]
 

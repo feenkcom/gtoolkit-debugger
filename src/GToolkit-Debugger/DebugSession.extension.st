@@ -1,70 +1,70 @@
 Extension { #name : #DebugSession }
 
 { #category : #'*GToolkit-Debugger' }
-DebugSession >> allDebuggerProviders [
-	^ ((self allStandaloneDebuggerProviders
-		, self allMoldableExceptionDebuggersProviders)
-			reject: [ :aDebuggerProvider |
-				aDebuggerProvider isNil ])
-			sorted: [ :aDebuggerProvider |
-				aDebuggerProvider priority ] ascending
+DebugSession >> allDebuggerSpecifications [
+	^ ((self allStandaloneDebuggerSpecifications
+		, self allMoldableExceptionDebuggersSpecifications)
+			reject: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications isNil ])
+			sorted: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications priority ] ascending
 ]
 
 { #category : #'*GToolkit-Debugger' }
-DebugSession >> allMoldableExceptionDebuggersProviders [
+DebugSession >> allMoldableExceptionDebuggersSpecifications [
 	| pragmas |
 	self exception ifNil: [ ^ #() ].
 	
 	pragmas := Pragma
-		allNamed: #gtDebuggerConfiguration
+		allNamed: #gtDebuggerSpecification
 		from: self exception class
 		to: Exception.
 
 	^ pragmas collect: [ :aPragma | 
-		GtMoldableExceptionDebuggerProvider forConfiguration:  (self exception 
-			perform: aPragma methodSelector) ].
+		 self exception 
+			perform: aPragma methodSelector ].
 ]
 
 { #category : #'*GToolkit-Debugger' }
-DebugSession >> allStandaloneDebuggerProviders [
+DebugSession >> allStandaloneDebuggerSpecifications [
 	^ Smalltalk tools registeredDebuggersWithRanks 
 		collect: [ :assoc |
-			assoc key debuggerProvider
+			assoc key debuggerSpecification
 				ifNil: [ nil ]
-				ifNotNil: [ :aProvider |
-					aProvider
+				ifNotNil: [ :aDebuggerSpecifications |
+					aDebuggerSpecifications
 						priority: assoc value;
 						yourself ] ]
 ]
 
 { #category : #'*GToolkit-Debugger' }
-DebugSession >> applicableDebuggerProviders [
-	^ ((self applicableStandaloneDebuggerProviders
-		, self applicableMoldableExceptionDebuggersProviders)
-			reject: [ :aDebuggerProvider |
-				aDebuggerProvider isNil ])
-			sorted: [ :aDebuggerProvider |
-				aDebuggerProvider priority ] ascending
+DebugSession >> applicableDebuggerSpecifications [
+	^ ((self applicableStandaloneDebuggerSpecifications
+		, self applicableMoldableExceptionDebuggersSpecifications)
+			reject: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications isNil ])
+			sorted: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications priority ] ascending
 ]
 
 { #category : #'*GToolkit-Debugger' }
-DebugSession >> applicableMoldableExceptionDebuggersProviders [
-	| possibleProviders |
+DebugSession >> applicableMoldableExceptionDebuggersSpecifications [
+	| possibleSpecifications |
 
-	possibleProviders := self allMoldableExceptionDebuggersProviders.
+	possibleSpecifications := self allMoldableExceptionDebuggersSpecifications.
 			
-	^ possibleProviders select: [ :aProvider |
-		aProvider handlesDebugSession: self ]
+	^ possibleSpecifications select: [ :aDebuggerSpecification |
+		aDebuggerSpecification handlesDebugSession: self ]
 ]
 
 { #category : #'*GToolkit-Debugger' }
-DebugSession >> applicableStandaloneDebuggerProviders [
+DebugSession >> applicableStandaloneDebuggerSpecifications [
 	^ self applicableStandaloneDebuggerTypesWithRanks 
 		collect: [ :assoc |
-			assoc key debuggerProvider
+			assoc key debuggerSpecification
 				ifNil: [ nil ]
-				ifNotNil: [ :aProvider |
-					aProvider
+				ifNotNil: [ :aDebuggerSpecification |
+					aDebuggerSpecification
 						priority: assoc value;
 						yourself ] ]
 ]
@@ -152,8 +152,8 @@ DebugSession >> gtViewDebuggerSpecificationsFor: aView [
 	^ aView columnedList 
 		title: 'Debugger Specifications';
 		items: [ 
-			(self allDebuggerProviders collect: [ :aDebuggerProvider |	
-				aDebuggerProvider -> (aDebuggerProvider 
+			(self allDebuggerSpecifications collect: [ :aDebuggerSpecification |	
+				aDebuggerSpecification -> (aDebuggerSpecification 
 					handlesDebugSession: self) ]) ];
 		column: 'Type' textDo: [ :aColumn |
 			aColumn 
