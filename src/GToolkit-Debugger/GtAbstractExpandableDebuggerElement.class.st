@@ -102,12 +102,17 @@ GtAbstractExpandableDebuggerElement >> buildDetailsElement [
 GtAbstractExpandableDebuggerElement >> buildDetailsTabElement [
 	| compositeView tabGroup |
 	
-	compositeView := self collectDetailsPaneDebuggingViews.
+	"compositeView := self collectDetailsPaneDebuggingViews.
 	
 	tabGroup := compositeView asElementDo: [ :e | e ].
 	tabGroup
 		matchParent;
-		background: Color white.
+		background: Color white."
+		
+	tabGroup := BrTabGroup new
+		matchParent;
+		background: Color white;
+		aptitude: BrGlamorousTabGroupAptitude.
 
 	self addDefaultTabsToGroup: tabGroup.
 			
