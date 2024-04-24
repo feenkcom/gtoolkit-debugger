@@ -28,6 +28,14 @@ ToolRegistry >> debuggersMatching: aBlock [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+ToolRegistry >> debuggersWithRankForDebugSession: aDebugSession [
+
+	^ self debuggersWithRanksMatching: [ :aDebuggerClass | 
+		(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
+			aDebuggerClass handlesDebugSession: aDebugSession ] ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
 ToolRegistry >> debuggersWithRanksMatching: aBlock [
 
 	^ (self registeredDebuggersWithRanks

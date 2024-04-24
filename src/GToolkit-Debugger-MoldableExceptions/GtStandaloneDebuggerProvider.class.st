@@ -2,7 +2,8 @@ Class {
 	#name : #GtStandaloneDebuggerProvider,
 	#superclass : #GtDebuggerProvider,
 	#instVars : [
-		'debuggerClass'
+		'debuggerClass',
+		'priority'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
@@ -10,6 +11,11 @@ Class {
 { #category : #'api - testing' }
 GtStandaloneDebuggerProvider >> availableAutomatically [
 	^ debuggerClass availableAutomatically
+]
+
+{ #category : #initalization }
+GtStandaloneDebuggerProvider >> debuggerClass [
+	^ debuggerClass
 ]
 
 { #category : #initalization }
@@ -25,6 +31,16 @@ GtStandaloneDebuggerProvider >> handlesDebugSession: aDebugSession [
 { #category : #accessing }
 GtStandaloneDebuggerProvider >> icon [
 	^ debuggerClass defaultIcon
+]
+
+{ #category : #accessing }
+GtStandaloneDebuggerProvider >> priority [
+	^ priority 
+]
+
+{ #category : #accessing }
+GtStandaloneDebuggerProvider >> priority: aPriority [
+	priority := aPriority
 ]
 
 { #category : #'api - accessing' }

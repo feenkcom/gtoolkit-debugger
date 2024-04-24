@@ -23,7 +23,8 @@ Class {
 		'activationPredicate',
 		'debuggerIcon',
 		'debuggerTitle',
-		'sessionClass'
+		'sessionClass',
+		'debuggerPriority'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
@@ -59,8 +60,28 @@ GtMoldableExceptionCustomDebuggerConfiguration >> debuggerIcon [
 ]
 
 { #category : #accessing }
+GtMoldableExceptionCustomDebuggerConfiguration >> debuggerIcon: anIcon [
+	debuggerIcon  := anIcon
+]
+
+{ #category : #accessing }
+GtMoldableExceptionCustomDebuggerConfiguration >> debuggerPriority [
+	^ debuggerPriority  
+]
+
+{ #category : #accessing }
+GtMoldableExceptionCustomDebuggerConfiguration >> debuggerPriority: anInteger [
+	debuggerPriority  := anInteger
+]
+
+{ #category : #accessing }
 GtMoldableExceptionCustomDebuggerConfiguration >> debuggerTitle [
 	^ debuggerTitle  
+]
+
+{ #category : #accessing }
+GtMoldableExceptionCustomDebuggerConfiguration >> debuggerTitle: aString [
+	debuggerTitle  := aString
 ]
 
 { #category : #'accessing configurarion' }
@@ -88,6 +109,11 @@ GtMoldableExceptionCustomDebuggerConfiguration >> defaultEnableDebuggingViewExte
 { #category : #accessing }
 GtMoldableExceptionCustomDebuggerConfiguration >> defaultIcon [
 	^ BrGlamorousVectorIcons debug
+]
+
+{ #category : #accessing }
+GtMoldableExceptionCustomDebuggerConfiguration >> defaultPriority [
+	^ 100
 ]
 
 { #category : #accessing }
@@ -122,7 +148,8 @@ GtMoldableExceptionCustomDebuggerConfiguration >> initialize [
 	super initialize.
 	
 	debuggerIcon := self defaultIcon.
-	debuggerTitle := self debuggerTitle.
+	debuggerTitle := self defaultTitle.
+	debuggerPriority := self defaultPriority. 
 	availableAutomatically := true.
 	sessionClass := GtFilteredDebugSession
 ]

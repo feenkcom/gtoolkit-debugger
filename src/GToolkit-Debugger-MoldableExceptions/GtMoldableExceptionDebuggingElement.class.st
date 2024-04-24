@@ -24,7 +24,7 @@ GtMoldableExceptionDebuggingElement class >> availableAutomatically [
 ]
 
 { #category : #accessing }
-GtMoldableExceptionDebuggingElement class >> debuggerConfiguration [
+GtMoldableExceptionDebuggingElement class >> debuggerProvider [
 	^ nil
 ]
 

@@ -7,6 +7,12 @@ Class {
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
+{ #category : #accessing }
+GtDebuggerProvider class >> forConfiguration: aConfiguration [
+	^ self new 
+		debuggerConfiguration: aConfiguration
+]
+
 { #category : #'api - testing' }
 GtDebuggerProvider >> availableAutomatically [
 	self subclassResponsibility

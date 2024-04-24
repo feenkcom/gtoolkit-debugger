@@ -1,16 +1,17 @@
 Class {
 	#name : #GtMoldableExceptionDebuggerProvider,
 	#superclass : #GtDebuggerProvider,
-	#instVars : [
-		'availableAutomatically',
-		'sessionClass'
-	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
 
 { #category : #'api - testing' }
 GtMoldableExceptionDebuggerProvider >> availableAutomatically [
 	^ debuggerConfiguration availableAutomatically
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggerProvider >> debuggerClass [
+	^ GtMoldableExceptionDebuggingElement
 ]
 
 { #category : #'api - testing' }
@@ -28,6 +29,11 @@ GtMoldableExceptionDebuggerProvider >> handlesDebugSession: aDebugSession [
 { #category : #'api - accessing' }
 GtMoldableExceptionDebuggerProvider >> icon [
 	^ debuggerConfiguration debuggerIcon  
+]
+
+{ #category : #'api - accessing' }
+GtMoldableExceptionDebuggerProvider >> priority [
+	^ debuggerConfiguration debuggerPriority  
 ]
 
 { #category : #'api - accessing' }

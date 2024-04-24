@@ -144,16 +144,16 @@ GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession [
 ]
 
 { #category : #'building widgets' }
-GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
+GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerProvider [
 	^ BrTab new
 		aptitude: BrGlamorousTabSwitcherWithLabelAndIconAptitude new ;
-		icon: aDebuggerClass defaultIcon;
-		label: aDebuggerClass defaultTitle;
+		icon: aDebuggerProvider icon;
+		label: aDebuggerProvider title;
 		stencil: [ BrFrame new fitContent ];
 		in: [ :aTab |
 			aTab userData 
-				at: #debuggerClass
-				put: aDebuggerClass.
+				at: #debuggerProvider
+				put: aDebuggerProvider.
 			aTab ]
 ]
 
@@ -175,7 +175,7 @@ GtMoldableDebugger >> createButtonsContainer [
 				self 
 					actOnButtonSelected: nil 
 					forDebuggerOfType: (anEvent tab widget
-						userData at: #debuggerClass) ] ] .
+						userData at: #debuggerProvider) debuggerClass ] ] .
 	^ container
 ]
 
@@ -261,8 +261,15 @@ GtMoldableDebugger >> openInPager [
 
 { #category : #'initialization - debuggers' }
 GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
-	| debuggerClass |
-	debuggerClass := self selectInitialDebuggerTypeFor: aDebugSession.
+	| automaticallyAvailableProviders debuggerClass |
+	
+	automaticallyAvailableProviders := aDebugSession applicableDebuggerProviders 
+		select: [ :aDebuggerProvider | aDebuggerProvider availableAutomatically ].
+		
+	debuggerClass := automaticallyAvailableProviders 
+		ifEmpty: [ GtPharoDebuggerElement ]
+		ifNotEmpty: [ :aCollection | aCollection first debuggerClass ].
+		
 	^ debuggerClass on: (debuggerClass spanNewSessionFrom: aDebugSession) .
 ]
 
@@ -316,26 +323,26 @@ GtMoldableDebugger >> updateDebuggerElement: aNewDebuggerElement [
 
 { #category : #private }
 GtMoldableDebugger >> updateSwitchButtonsForCurrentDebuggerElement: aDebuggerElement [
-	| availableDebuggerTypes |
+	| applicableDebuggerProviders |
 	
-	availableDebuggerTypes := self 
-		availableDebuggerTypesForDebugSession: aDebuggerElement session.
+	applicableDebuggerProviders := aDebuggerElement session
+		applicableDebuggerProviders.
 	
 	self withTabSwitchingDisabledDo: [
 		buttonsContainer tabs copy do: [ :aTab |
 			buttonsContainer viewModel 
 				removeTab: aTab ].
 		
-		availableDebuggerTypes size > 1 ifFalse: [ 
+		applicableDebuggerProviders size > 1 ifFalse: [ 
 			"We only show the toolbar for changing the debugger in case we have more then one debugger"
 			^ self ].
 	
-		availableDebuggerTypes do: [ :aDebuggerClass |
+		applicableDebuggerProviders do: [ :aDebuggerProvider |
 			| switchTab |
-			switchTab := self createButtonForSwitchingTo: aDebuggerClass.
+			switchTab := self createButtonForSwitchingTo: aDebuggerProvider.
 			buttonsContainer addTab: switchTab.
 			
-			aDebuggerClass = aDebuggerElement class ifTrue: [
+			aDebuggerProvider debuggerClass = aDebuggerElement class ifTrue: [
 				switchTab select ] ] ]
 ]
 

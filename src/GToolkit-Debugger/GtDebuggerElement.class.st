@@ -17,7 +17,7 @@ GtDebuggerElement class >> availableAutomatically [
 ]
 
 { #category : #initialization }
-GtDebuggerElement class >> debuggerConfiguration [
+GtDebuggerElement class >> debuggerProvider [
 	^ GtStandaloneDebuggerProvider new 
 		debuggerClass: self
 ]
