@@ -4,7 +4,7 @@
 The domain-specific debugger uses this configuration to locate debugging views and actions specific to an exception.
 
 The main API methods for configuring the debugger are:
-	- {{gtMethod:name=GtMoldableExceptionDebuggerConfiguration>>debuggingViewPragmas:|label=#selector}} - by default `<gtExceptionDebuggingView>` is used {{gtMethod:name=GtMoldableExceptionDebuggerConfiguration>>defaultDebuggingViewPragmaNames|label=#selector}}
+	- {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>debuggingViewPragmas:|label=#selector}} - by default `<gtExceptionDebuggingView>` is used {{gtMethod:name=GtMoldableExceptionDebuggingExtensionConfiguration>>defaultDebuggingViewPragmaNames|label=#selector}}
 	- {{gtMethod:name=GtMoldableExceptionDebuggerConfiguration>>globalDebuggingActionPragmas:|label=#selector}} - there is no default value as this looks for global actions that subclass {{gtClass:DebugAction}}; each exception should use a different pragma for defining its global values
 	- {{gtMethod:GtMoldableExceptionDebuggingExtensionConfiguration>>enableDebuggingViewExtension:|label=#selector}} - by default all exceptions have the attached domain-specific debugger enabled
 	- {{gtMethod:name=GtMoldableExceptionDebuggerConfiguration>>withDebuggingExceptionTargetFor:|label=#selector}} 
@@ -17,7 +17,8 @@ Class {
 	#name : #GtMoldableExceptionDebuggingExtensionConfiguration,
 	#superclass : #GtMoldableExceptionDebuggerConfiguration,
 	#instVars : [
-		'enableDebuggingViewExtensionComputation'
+		'enableDebuggingViewExtensionComputation',
+		'debuggingViewPragmaNames'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
@@ -27,6 +28,31 @@ GtMoldableExceptionDebuggingExtensionConfiguration >> canShowDebuggingExtension 
 	^ self enableDebuggingViewExtension and: [
 		self debuggingViewPragmas notEmpty and: [
 			self hasDebuggingViewMethods ] ] 
+]
+
+{ #category : #'accessing configurarion' }
+GtMoldableExceptionDebuggingExtensionConfiguration >> collectTargetDebuggingViewsForDebugger: aDebugger in: aComposite [
+	^ debuggingTargets 
+		collectTargetDebuggingViewsForPragmaNames: self debuggingViewPragmas
+		in: aComposite
+		forDebugger: aDebugger
+]
+
+{ #category : #'accessing configurarion' }
+GtMoldableExceptionDebuggingExtensionConfiguration >> debuggingViewPragmas [
+	^ debuggingViewPragmaNames ifNil: [
+		self defaultDebuggingViewPragmaNames ]
+]
+
+{ #category : #'accessing configurarion' }
+GtMoldableExceptionDebuggingExtensionConfiguration >> debuggingViewPragmas: aCollection [
+	"Configure the list of pragmas used to look for debugging views."
+	debuggingViewPragmaNames := aCollection
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggingExtensionConfiguration >> defaultDebuggingViewPragmaNames [
+	^ #(gtExceptionView)
 ]
 
 { #category : #'accessing - defaults' }

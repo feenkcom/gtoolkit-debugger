@@ -60,6 +60,16 @@ GtAbstractExpandableDebuggerElement >> actOnSelectedContextChangedWithoutFocusCh
 ]
 
 { #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> addDefaultTabsToGroup: aTabGroup [ 
+	aTabGroup
+		addTab: (BrTab new
+			aptitude: BrGlamorousTabAptitude new;
+			label: 'Variables';
+			stencil: [ self buildContextVariablesElement ])
+		at: 1
+]
+
+{ #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
@@ -70,18 +80,19 @@ GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsElement [
-	| detailsContainer detailsTabGroupElement debuggerPlaygroundElement |
+	| detailsContainer detailsTabGroup debuggerPlaygroundElement |
 	
 	detailsContainer := BrVerticalPane new
 		matchParent;
 		addAptitude: BrShadowAptitude.
 	
-	detailsTabGroupElement := self buildDetailsTabElement.
-	self registerDetailsTabSelectionEventsFor: detailsTabGroupElement.
+	detailsTabGroup := self buildDetailsTabElement.
+	self registerDetailsTabSelectionEventsFor: detailsTabGroup.
+	self selectDetailsTabFor: detailsTabGroup. 
 			
 	debuggerPlaygroundElement := self buildPlaygroundElement.
 	
-	detailsContainer addChild: detailsTabGroupElement.
+	detailsContainer addChild: detailsTabGroup.
 	detailsContainer addChild: debuggerPlaygroundElement.
 	
 	^ detailsContainer
@@ -89,18 +100,23 @@ GtAbstractExpandableDebuggerElement >> buildDetailsElement [
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsTabElement [
-	^ BrTabGroup new
+	| compositeView tabGroup |
+	
+	"compositeView := self collectDetailsPaneDebuggingViews.
+	
+	tabGroup := compositeView asElementDo: [ :e | e ].
+	tabGroup
+		matchParent;
+		background: Color white."
+		
+	tabGroup := BrTabGroup new
 		matchParent;
 		background: Color white;
-		aptitude: BrGlamorousTabGroupAptitude;
-		addTab: (BrTab new
-			aptitude: BrGlamorousTabAptitude new;
-			label: 'Variables';
-			stencil: [ self buildContextVariablesElement ]);
-		addTab: (BrTab new
-			aptitude: BrGlamorousTabAptitude new;
-			label: 'Watches';
-			stencil: [ self buildWatchVariablesElement ])
+		aptitude: BrGlamorousTabGroupAptitude.
+
+	self addDefaultTabsToGroup: tabGroup.
+			
+	^ tabGroup
 ]
 
 { #category : #'building widgets' }
@@ -276,6 +292,41 @@ GtAbstractExpandableDebuggerElement >> buildWatchVariablesElement [
 ]
 
 { #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectContextDebuggingViewsIn: aComposite [ 
+	| targetObjects |
+	targetObjects := {
+		self selectedContext . 
+		self selectedContext  receiver } asOrderedCollection.
+	debuggingSession exception ifNotNil: [ :anException | 
+		targetObjects add: anException ].
+		
+	targetObjects do: [ :aTargetObject | 
+		aComposite collectorAppend: [ :aCollector |
+			aCollector pragmaName: #gtContextView.
+			aCollector context: (GtPhlowContext new 
+				currentDebugger: self).
+			aCollector fromObject: aTargetObject ] ]
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectDetailsPaneDebuggingViews [
+	| composite |
+	composite := GtPhlowView empty composite.
+	composite title: 'Views'.
+		
+	self collectDetailsPaneDebuggingViewsin: composite.
+	
+	^ composite
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectDetailsPaneDebuggingViewsin: aComposite [
+	
+	self collectContextDebuggingViewsIn: aComposite. 
+	self collectReceiverExceptionSpecificDebuggingViewsIn: aComposite.
+]
+
+{ #category : #'building actions' }
 GtAbstractExpandableDebuggerElement >> collectGlobalDebuggingActions [
 	^ self actionsForPragmas: self stackDebuggingActionsPragmas
 ]
@@ -289,6 +340,17 @@ GtAbstractExpandableDebuggerElement >> collectMainToolbarDebuggingActions [
 	
 	^ (globalDebuggingActions, targetObjectsDebuggingActions) 
 		sorted: [ :aDebuggingAction | aDebuggingAction order ] ascending
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectReceiverExceptionSpecificDebuggingViewsIn: aComposite [
+	debuggingSession exception ifNotNil: [ :anException |
+		| currentReceiver |
+		currentReceiver := self selectedContext  receiver .
+		anException gtDefaultDebuggerExtensionConfiguration
+			collectContextDebuggingViewsForReceiver: currentReceiver
+			forDebugger: self 
+			in: aComposite ] 
 ]
 
 { #category : #'building actions' }
@@ -392,13 +454,19 @@ GtAbstractExpandableDebuggerElement >> registerDetailsTabSelectionEventsFor: aDe
 		when: BrTabSelectedEvent 
 		do: [ :anEvent | anEvent tab 
 			widgetDo: [ :aTab | 
-				self selectedDetailesTabName: aTab label asString ] ].
+				self selectedDetailesTabName: aTab label asString ] ]
+]
 
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> selectDetailsTabFor: aDetailsTabGroupElement [ 
 	(aDetailsTabGroupElement viewModel tabs 
 		select: [ :aTabModel | aTabModel isAttachedToWidget ])
 			detect: [ :aTabModel | 
 				aTabModel widget label asString = self selectedDetailesTabName ]
-			ifFound: [ :aTabModel | aTabModel select ].
+			ifFound: [ :aTabModel | aTabModel select ]
+			ifNone: [ aDetailsTabGroupElement viewModel tabs  
+				ifNotEmpty: [ :aTabsList |
+					aTabsList first select ] ].
 ]
 
 { #category : #'accessing context' }
@@ -468,6 +536,23 @@ GtAbstractExpandableDebuggerElement >> updateContents [
 	self updateStackWidget.
 	self updateVariablesList.
 	self updateToolbarActions
+]
+
+{ #category : #updating }
+GtAbstractExpandableDebuggerElement >> updateDetailsPane [
+	self updateVariablesList.
+	self updateDetailsPaneDebuggingViews.
+]
+
+{ #category : #updating }
+GtAbstractExpandableDebuggerElement >> updateDetailsPaneDebuggingViews [
+	"Place to update in the future the tabs in the details pane for step operations within the same context"
+	
+	"| compositeView |
+	
+	compositeView := self collectDetailsPaneDebuggingViews.
+	compositeView ifEmpty: [ ^ self ].
+	"
 ]
 
 { #category : #updating }

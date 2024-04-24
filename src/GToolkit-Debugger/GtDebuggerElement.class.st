@@ -17,6 +17,11 @@ GtDebuggerElement class >> availableAutomatically [
 ]
 
 { #category : #initialization }
+GtDebuggerElement class >> defaultIcon [
+	^ BrGlamorousVectorIcons debug
+]
+
+{ #category : #initialization }
 GtDebuggerElement class >> defaultTitle [
 	^ 'Gt'
 ]

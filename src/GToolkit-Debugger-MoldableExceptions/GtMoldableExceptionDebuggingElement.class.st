@@ -154,8 +154,15 @@ GtMoldableExceptionDebuggingElement >> collectTargetDebuggingActions [
 
 { #category : #'views - collecting' }
 GtMoldableExceptionDebuggingElement >> collectTargetDebuggingViews [
-	^ self debuggingConfiguration 
+	| composite |
+	composite := GtPhlowView empty composite 
+		title: 'Views'.
+		
+	self debuggingConfiguration 
 		collectTargetDebuggingViewsForDebugger: self
+		in: composite.
+	
+	^ composite
 ]
 
 { #category : #accessing }
