@@ -8,13 +8,6 @@ Exception >> asDebuggableElement [
 ]
 
 { #category : #'*GToolkit-Debugger' }
-Exception >> gtDebuggingExtensionConfiguration [
-	"Return a debugging configuration with default values."
-	
-	^ GtMoldableExceptionDebuggingExtensionConfiguration forException: self
-]
-
-{ #category : #'*GToolkit-Debugger' }
 Exception >> gtDebuggingTransformationsSettings [
 	"Return the current settings for transformations."
 	
@@ -22,8 +15,17 @@ Exception >> gtDebuggingTransformationsSettings [
 ]
 
 { #category : #'*GToolkit-Debugger' }
-Exception >> gtDefaultDebuggerExtensionConfiguration [
-	"Return a debugging configuration used to customize the default debugger."
+Exception >> gtDefaultDebuggerSpecification [
+	"Return a debugger specification used to customize the default debugger."
 	
-	^ GtMoldableExceptionDefaultDebuggerConfiguration forException: self
+	^ GtPharoDebuggerElement debuggerSpecification
+		initializeForException: self
+]
+
+{ #category : #'*GToolkit-Debugger' }
+Exception >> gtExceptionDebuggerSpecification [
+	<gtDebuggerSpecification>
+	"Return a debugger specification with default values."
+	
+	^ GtMoldableExceptionSpecificDebuggerSpecification forException: self
 ]

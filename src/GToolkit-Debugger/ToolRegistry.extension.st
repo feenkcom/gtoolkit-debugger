@@ -3,9 +3,10 @@ Extension { #name : #ToolRegistry }
 { #category : #'*GToolkit-Debugger' }
 ToolRegistry >> debuggerDispatcherForDebugSession: aDebugSession matching: aBlock [
 	| debuggers |
-	debuggers := self debuggersWithRanksMatching: [ :aDebugger | 
-		(aBlock value: aDebugger) and: [ 
-			aDebugger handlesDebugSession: aDebugSession ] ].
+	debuggers := self debuggersWithRanksMatching: [ :aDebuggerClass | 
+		(aDebuggerClass includesBehavior: GtDebuggerElement) and: [
+			(aBlock value: aDebuggerClass) and: [ 
+				aDebuggerClass handlesDebugSession: aDebugSession ] ] ].
 	(debuggers size > 0) ifTrue: [ ^ (debuggers at: 1) key ].
 	^ nil
 ]
@@ -24,6 +25,14 @@ ToolRegistry >> debuggersMatching: aBlock [
 	^ (self debuggersWithRanksMatching: aBlock) 
 			inject: OrderedCollection new
 			into: [ :aCollection :aPair | aCollection add: aPair key; yourself ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+ToolRegistry >> debuggersWithRankForDebugSession: aDebugSession [
+
+	^ self debuggersWithRanksMatching: [ :aDebuggerClass | 
+		(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
+			aDebuggerClass handlesDebugSession: aDebugSession ] ]
 ]
 
 { #category : #'*GToolkit-Debugger' }

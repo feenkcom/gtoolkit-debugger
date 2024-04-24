@@ -1,7 +1,7 @@
 "
 {{gtClass:GtMoldableExceptionDebuggingElement}} is a domain-specific debugger that shows views and debugging actions based on the current exception.
 
-The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionDebuggingExtensionConfiguration}}  instance returned by {{gtMethod:name=Exception>>#gtDebuggingExtensionConfiguration}}  (this can be overriden by exceptions) to select debugging views and actions.
+The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionSpecificDebuggerSpecification}}  instance returned by {{gtMethod:name=Exception>>#gtExceptionDebuggerSpecification}}  (this can be overriden by exceptions) to select debugging views and actions.
 "
 Class {
 	#name : #GtMoldableExceptionDebuggingElement,
@@ -24,6 +24,11 @@ GtMoldableExceptionDebuggingElement class >> availableAutomatically [
 ]
 
 { #category : #accessing }
+GtMoldableExceptionDebuggingElement class >> debuggerSpecification [
+	^ nil
+]
+
+{ #category : #accessing }
 GtMoldableExceptionDebuggingElement class >> defaultTitle [
 	^ 'Exception'
 ]
@@ -35,7 +40,7 @@ GtMoldableExceptionDebuggingElement class >> handlesDebugSession: aDebugSession 
 	targetException := aDebugSession exception.
 	targetException ifNil: [ ^ false ].
 	
-	^ targetException gtDebuggingExtensionConfiguration canShowDebuggingExtension
+	^ targetException gtExceptionDebuggerSpecification canShowDebugger
 ]
 
 { #category : #'tool registration' }
@@ -51,7 +56,7 @@ GtMoldableExceptionDebuggingElement class >> sessionClass [
 
 { #category : #callbacks }
 GtMoldableExceptionDebuggingElement >> actOnDebugSessionChanged [
-	debuggingConfiguration := self targetException gtDebuggingExtensionConfiguration.
+	debuggingConfiguration := self targetException gtExceptionDebuggerSpecification.
 	self updateContent.
 ]
 

@@ -7,10 +7,10 @@ Class {
 { #category : #asserting }
 GtExceptionsWithExtensionsExamples >> assertDebuggingConfigurationEnabledFor: anException [ 
 	| extensionConfiguration |
-	extensionConfiguration := anException gtDebuggingExtensionConfiguration.
+	extensionConfiguration := anException gtExceptionDebuggerSpecification.
 	
 	self assert: extensionConfiguration notNil.
-	self assert: extensionConfiguration enableDebuggingViewExtension value.
+	self assert: extensionConfiguration canEnableDebugger value.
 ]
 
 { #category : #'examples - debuggers' }

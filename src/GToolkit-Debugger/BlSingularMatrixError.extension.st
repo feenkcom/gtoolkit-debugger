@@ -1,7 +1,7 @@
 Extension { #name : #BlSingularMatrixError }
 
 { #category : #'*GToolkit-Debugger' }
-BlSingularMatrixError >> gtDefaultDebuggerExtensionConfiguration [
-	^ super gtDefaultDebuggerExtensionConfiguration
+BlSingularMatrixError >> gtDefaultDebuggerSpecification [
+	^ super gtDefaultDebuggerSpecification
 		receiverViewPragmaNames: #(gtSingularMatrixErrorView)
 ]

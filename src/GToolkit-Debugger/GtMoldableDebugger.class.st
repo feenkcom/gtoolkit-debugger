@@ -135,7 +135,7 @@ GtMoldableDebugger >> actOnDebugActionExecuted [
 		self currentDebugger actOnDebugActionExecuted. ]
 ]
 
-{ #category : #accessing }
+{ #category : #'initialization - debuggers' }
 GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession [
 	^ ((Smalltalk tools debuggersForDebugSession: aDebugSession)
 			select: [ :aDebuggerClass | 
@@ -144,16 +144,16 @@ GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession [
 ]
 
 { #category : #'building widgets' }
-GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
+GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerSpecification [
 	^ BrTab new
 		aptitude: BrGlamorousTabSwitcherWithLabelAndIconAptitude new ;
-		icon: aDebuggerClass defaultIcon;
-		label: aDebuggerClass defaultTitle;
+		icon: aDebuggerSpecification icon;
+		label: aDebuggerSpecification title;
 		stencil: [ BrFrame new fitContent ];
 		in: [ :aTab |
 			aTab userData 
-				at: #debuggerClass
-				put: aDebuggerClass.
+				at: #debuggerSpecification
+				put: aDebuggerSpecification.
 			aTab ]
 ]
 
@@ -175,7 +175,7 @@ GtMoldableDebugger >> createButtonsContainer [
 				self 
 					actOnButtonSelected: nil 
 					forDebuggerOfType: (anEvent tab widget
-						userData at: #debuggerClass) ] ] .
+						userData at: #debuggerSpecification) debuggerClass ] ] .
 	^ container
 ]
 
@@ -259,18 +259,32 @@ GtMoldableDebugger >> openInPager [
 	self open: aPager titled: debuggerElement session name.
 ]
 
-{ #category : #initialization }
+{ #category : #'initialization - debuggers' }
 GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
-	| debuggerClass initialDebugger |
+	| automaticallyAvailableSpecifications debuggerClass |
+	
+	automaticallyAvailableSpecifications := aDebugSession 
+		applicableDebuggerSpecifications 
+			select: [ :aDebuggerSpecification | 
+				aDebuggerSpecification availableAutomatically ].
+		
+	debuggerClass := automaticallyAvailableSpecifications 
+		ifEmpty: [ GtPharoDebuggerElement ]
+		ifNotEmpty: [ :aCollection | aCollection first debuggerClass ].
+		
+	^ debuggerClass on: (debuggerClass spanNewSessionFrom: aDebugSession) .
+]
+
+{ #category : #'initialization - debuggers' }
+GtMoldableDebugger >> selectInitialDebuggerTypeFor: aDebugSession [ 
+	| debuggerClass |
 	debuggerClass := Smalltalk tools 
 		debuggerDispatcherForDebugSession: aDebugSession
 		matching: [ :aDebuggerClass | 
 			"Only take into account GT debuggers."
 			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
 				aDebuggerClass availableAutomatically ] ].
-	initialDebugger := (debuggerClass ifNil: [ GtPharoDebuggerElement ])
-			ifNotNil: [ :aDebugger | aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
-	^ initialDebugger
+	^debuggerClass ifNil: [ GtPharoDebuggerElement ]
 ]
 
 { #category : #private }
@@ -311,26 +325,26 @@ GtMoldableDebugger >> updateDebuggerElement: aNewDebuggerElement [
 
 { #category : #private }
 GtMoldableDebugger >> updateSwitchButtonsForCurrentDebuggerElement: aDebuggerElement [
-	| availableDebuggerTypes |
+	| applicableDebuggerSpecifications |
 	
-	availableDebuggerTypes := self 
-		availableDebuggerTypesForDebugSession: aDebuggerElement session.
+	applicableDebuggerSpecifications := aDebuggerElement session
+		applicableDebuggerSpecifications.
 	
 	self withTabSwitchingDisabledDo: [
 		buttonsContainer tabs copy do: [ :aTab |
 			buttonsContainer viewModel 
 				removeTab: aTab ].
 		
-		availableDebuggerTypes size > 1 ifFalse: [ 
+		applicableDebuggerSpecifications size > 1 ifFalse: [ 
 			"We only show the toolbar for changing the debugger in case we have more then one debugger"
 			^ self ].
 	
-		availableDebuggerTypes do: [ :aDebuggerClass |
+		applicableDebuggerSpecifications do: [ :aDebuggerSpecification |
 			| switchTab |
-			switchTab := self createButtonForSwitchingTo: aDebuggerClass.
+			switchTab := self createButtonForSwitchingTo: aDebuggerSpecification.
 			buttonsContainer addTab: switchTab.
 			
-			aDebuggerClass = aDebuggerElement class ifTrue: [
+			aDebuggerSpecification debuggerClass = aDebuggerElement class ifTrue: [
 				switchTab select ] ] ]
 ]
 

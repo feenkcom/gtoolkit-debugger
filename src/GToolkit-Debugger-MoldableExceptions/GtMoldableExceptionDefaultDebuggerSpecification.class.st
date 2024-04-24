@@ -1,6 +1,6 @@
 Class {
-	#name : #GtMoldableExceptionDefaultDebuggerConfiguration,
-	#superclass : #GtMoldableExceptionDebuggerConfiguration,
+	#name : #GtMoldableExceptionDefaultDebuggerSpecification,
+	#superclass : #GtMoldableExceptionStandaloneDebuggerSpecification,
 	#instVars : [
 		'receiverViewPragmaNames'
 	],
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-GtMoldableExceptionDefaultDebuggerConfiguration >> collectContextDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
+GtMoldableExceptionDefaultDebuggerSpecification >> collectContextDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
 	^ (GtMoldableExceptionDebuggingViewsObjectTarget forObject: aReceiver) 
 			collectTargetDebuggingViewsForPragmaNames: self receiverViewPragmaNames
 			in: aComposite
@@ -16,12 +16,12 @@ GtMoldableExceptionDefaultDebuggerConfiguration >> collectContextDebuggingViewsF
 ]
 
 { #category : #accessing }
-GtMoldableExceptionDefaultDebuggerConfiguration >> receiverViewPragmaNames [
+GtMoldableExceptionDefaultDebuggerSpecification >> receiverViewPragmaNames [
 	^ receiverViewPragmaNames ifNil: [ #() ]
 ]
 
 { #category : #accessing }
-GtMoldableExceptionDefaultDebuggerConfiguration >> receiverViewPragmaNames: aCollection [
+GtMoldableExceptionDefaultDebuggerSpecification >> receiverViewPragmaNames: aCollection [
 	"Configure the list of pragmas used to look for debugging views specific to this exception in the receiver."
 	receiverViewPragmaNames := aCollection
 ]
