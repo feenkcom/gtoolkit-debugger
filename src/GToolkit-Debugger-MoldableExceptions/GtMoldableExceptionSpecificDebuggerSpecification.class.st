@@ -22,12 +22,17 @@ Class {
 		'activationPredicate',
 		'sessionClass',
 		'icon',
-		'enableDebuggerCondition',
 		'title',
 		'priority'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
+
+{ #category : #utils }
+GtMoldableExceptionSpecificDebuggerSpecification >> activationPredicate [
+	^ activationPredicate ifNil: [
+		self defaultActivationPredicate ]
+]
 
 { #category : #accessing }
 GtMoldableExceptionSpecificDebuggerSpecification >> availableAutomatically [
@@ -41,7 +46,7 @@ GtMoldableExceptionSpecificDebuggerSpecification >> availableAutomatically: aBoo
 
 { #category : #'accessing configurarion' }
 GtMoldableExceptionSpecificDebuggerSpecification >> canEnableDebugger [
-	^ self enableDebuggerCondition value
+	^ self activationPredicate value
 ]
 
 { #category : #testing }
@@ -71,14 +76,14 @@ GtMoldableExceptionSpecificDebuggerSpecification >> debuggingViewPragmas: aColle
 	debuggingViewPragmaNames := aCollection
 ]
 
+{ #category : #'accessing - defaults' }
+GtMoldableExceptionSpecificDebuggerSpecification >> defaultActivationPredicate [
+	^ [ true ]
+]
+
 { #category : #accessing }
 GtMoldableExceptionSpecificDebuggerSpecification >> defaultDebuggingViewPragmaNames [
 	^ #(gtExceptionView)
-]
-
-{ #category : #'accessing - defaults' }
-GtMoldableExceptionSpecificDebuggerSpecification >> defaultEnableDebuggerCondition [
-	^ [ true ]
 ]
 
 { #category : #accessing }
@@ -96,16 +101,10 @@ GtMoldableExceptionSpecificDebuggerSpecification >> defaultTitle [
 	^ 'Exception'
 ]
 
-{ #category : #utils }
-GtMoldableExceptionSpecificDebuggerSpecification >> enableDebuggerCondition [
-	^ enableDebuggerCondition ifNil: [
-		self defaultEnableDebuggerCondition ]
-]
-
 { #category : #configuration }
 GtMoldableExceptionSpecificDebuggerSpecification >> enableWhen: aBlock [
 	"Configure the block used to determine is to enable the domain-specific debugger associated with this exception."
-	enableDebuggerCondition := aBlock
+	activationPredicate := aBlock
 ]
 
 { #category : #testing }
@@ -159,6 +158,13 @@ GtMoldableExceptionSpecificDebuggerSpecification >> sessionClass [
 { #category : #accessing }
 GtMoldableExceptionSpecificDebuggerSpecification >> sessionClass: aSessionClass [
 	sessionClass := aSessionClass
+]
+
+{ #category : #accessing }
+GtMoldableExceptionSpecificDebuggerSpecification >> specificationProperties [
+	^ super specificationProperties, {
+		{'View Pragmas' . self debuggingViewPragmas}.
+	}
 ]
 
 { #category : #accessing }

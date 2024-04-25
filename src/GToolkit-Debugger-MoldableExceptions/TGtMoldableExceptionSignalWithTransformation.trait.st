@@ -4,6 +4,12 @@ Trait {
 }
 
 { #category : #accessing }
+TGtMoldableExceptionSignalWithTransformation >> canApplyAutomaticTransformation [
+	^ (self gtDebuggingTransformationsSettings 
+		canApplyAutomaticTransformationForException: self)
+]
+
+{ #category : #accessing }
 TGtMoldableExceptionSignalWithTransformation >> gtMoldableExceptionTransformation [
 	^ GtMoldableExceptionTransformation forException: self
 ]
@@ -11,8 +17,7 @@ TGtMoldableExceptionSignalWithTransformation >> gtMoldableExceptionTransformatio
 { #category : #signaling }
 TGtMoldableExceptionSignalWithTransformation >> signal [
 	| transformation |
-	(self gtDebuggingTransformationsSettings 
-		canApplyAutomaticTransformationForException: self) ifFalse: [ 
+	self canApplyAutomaticTransformation ifFalse: [ 
 			^ super signal ].
 	
 	transformation := self gtMoldableExceptionTransformation.

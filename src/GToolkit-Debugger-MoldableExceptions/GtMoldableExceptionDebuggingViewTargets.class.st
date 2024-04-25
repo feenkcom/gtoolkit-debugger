@@ -50,6 +50,15 @@ GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingViewsForPragmaN
 			forDebugger: aDebuggerElement ] 
 ]
 
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewTargets >> description [ 
+	| targetDescriptions|
+	targetDescriptions := OrderedCollection new.
+	self withIndividualTargetsDo: [ :aTarget |
+		targetDescriptions add: aTarget description ].
+	^ targetDescriptions asCommaString
+]
+
 { #category : #testing }
 GtMoldableExceptionDebuggingViewTargets >> hasDebuggingViewMethodsWithPragmaNames: aCollectionOfPragmaNames [
 	| hasPragmas |
