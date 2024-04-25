@@ -18,6 +18,7 @@ Class {
 
 { #category : #'instance creation' }
 GtPhlowViewsCollectorSameViewError class >> signalForViewSelector: aMessageSymbol fromObject: anObject [ 
+	<debuggerCompleteToSender>
 	^ (self new 
 		initializeWithViewSelector: aMessageSymbol
 		targetObject: anObject)

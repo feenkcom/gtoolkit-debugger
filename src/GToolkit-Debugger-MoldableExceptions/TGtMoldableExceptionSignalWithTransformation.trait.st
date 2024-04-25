@@ -16,6 +16,7 @@ TGtMoldableExceptionSignalWithTransformation >> gtMoldableExceptionTransformatio
 
 { #category : #signaling }
 TGtMoldableExceptionSignalWithTransformation >> signal [
+	<debuggerCompleteToSender>
 	| transformation |
 	self canApplyAutomaticTransformation ifFalse: [ 
 			^ super signal ].
