@@ -74,6 +74,15 @@ GtMoldableExceptionDebuggerSpecification >> initializeForException: anException 
 ]
 
 { #category : #accessing }
+GtMoldableExceptionDebuggerSpecification >> specificationProperties [
+	^ super specificationProperties, {
+		{'Debugging Targets' . debuggingTargets. debuggingTargets description}.
+		{'Action Pragmas' . self targetObjectDebuggingActionPragmas}.
+		{'Global Action Pragmas' . self globalDebuggingActionPragmas}
+	}
+]
+
+{ #category : #accessing }
 GtMoldableExceptionDebuggerSpecification >> targetException [
 	^ targetException
 ]

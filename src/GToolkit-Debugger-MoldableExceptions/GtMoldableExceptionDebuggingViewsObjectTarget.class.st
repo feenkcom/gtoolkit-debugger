@@ -51,6 +51,11 @@ GtMoldableExceptionDebuggingViewsObjectTarget >> configureDebuggingViewsCollecto
 		fromObject: self targetObject
 ]
 
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewsObjectTarget >> description [
+	^ self targetObject printString
+]
+
 { #category : #testing }
 GtMoldableExceptionDebuggingViewsObjectTarget >> hasDebuggingViewMethodsWithPragmaNames: aCollectionOfPragmaNames [
 	^ (GtPhlowCollector new
