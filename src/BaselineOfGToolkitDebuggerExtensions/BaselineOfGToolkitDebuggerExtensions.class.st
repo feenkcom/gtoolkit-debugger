@@ -14,5 +14,8 @@ BaselineOfGToolkitDebuggerExtensions >> baseline: spec [
 				spec repository: 'github://feenkcom/gtoolkit-debugger:main/src' ].
 			
 		spec package: #'GToolkit-DebuggerExtensions' with: [
+			spec requires: #('GToolkitDebugger') ].
+	
+		spec package: #'GToolkit-DebuggerExtensions-Zinc' with: [
 			spec requires: #('GToolkitDebugger') ] ]
 ]
