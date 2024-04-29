@@ -253,7 +253,9 @@ GtMoldableExceptionDebuggingElement >> updateViews [
 	viewsElement := compositeView views size = 1 
 		ifTrue: [ compositeView views first asElementDo: [ :e | e ] ]
 		ifFalse: [ compositeView asElementDo: [ :e | e ] ].
-	viewsElement addAptitude: BrShadowAptitude new.
+	viewsElement
+		addAptitude: BrShadowAptitude new;
+		background: self theme default contentBackgroundColor.
 	
 	viewsContainer
 		removeChildren;
