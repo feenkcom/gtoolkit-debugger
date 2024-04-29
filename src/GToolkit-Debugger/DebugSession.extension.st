@@ -123,6 +123,42 @@ DebugSession class >> debuggingActionsFromClass: aClass forPragma: aSymbol forDe
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> findContextSuchThat: aTestBlock withMaxDepth: aMaxDepth ifFound: aFoundBlock ifNone: aNoneBlock [
+	^ self interruptedContext
+		findContextSuchThat: aTestBlock 
+		withMaxDepth: aMaxDepth
+		ifFound: aFoundBlock 
+		ifNone: aNoneBlock
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> findLimitedContextSuchThat: aTestBlock [ 
+	^ self 
+		findLimitedContextSuchThat: aTestBlock 
+		ifFound: [ :aContext | aContext ] 
+		ifNone: [ nil ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> findLimitedContextSuchThat: aTestBlock ifFound: aFoundBlock ifNone: aNoneBlock [
+	^ self 
+		findContextSuchThat: aTestBlock 
+		withMaxDepth: self maxStackSearchDepth
+		ifFound: aFoundBlock 
+		ifNone: aNoneBlock
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> findLimitedFullActiveContextForMethod: aCompiledMethod  ifFound: aFoundBlock ifNone: aNoneBlock [
+	self isInterruptedContextPostMortem ifTrue: [ ^ aNoneBlock value ].
+	^ self 
+		findLimitedContextSuchThat: [ :aContext |
+			aContext compiledCode = aCompiledMethod ] 
+		ifFound: aFoundBlock 
+		ifNone: aNoneBlock
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession class >> forExceptionFromExampleFor: anException [
 	"Instantiate a debugging session, including a process, for the given exception.
 	This should be used from examples, where the exception was captured by on:do:."
@@ -190,9 +226,23 @@ DebugSession >> gtViewDebuggerSpecificationsFor: aView [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> hasLimitedFullActiveContextForMethod: aCompiledMethod [ 
+	^ (self 
+		findLimitedFullActiveContextForMethod: aCompiledMethod
+		ifFound: [ :aContext | true ] 
+		ifNone: [ false ]) 
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextPostMortem [
 	
 	^ self isContextPostMortem: self interruptedContext
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> maxStackSearchDepth [
+	"A limit for how long to search the stack for most debugging operations"
+	^ 100
 ]
 
 { #category : #'*GToolkit-Debugger' }
