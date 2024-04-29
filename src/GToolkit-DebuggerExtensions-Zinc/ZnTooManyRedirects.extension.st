@@ -1,7 +1,22 @@
 Extension { #name : #ZnTooManyRedirects }
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ZnTooManyRedirects >> gtActionContinueWithIncreasingRedirectsFor: anAction inContext: aPhlowActionContext [
+ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRetryCount: newCount [
+	aDebugger  
+		findLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout
+		ifFound: [ :aContext |
+			aContext receiver 
+				maxNumberOfRedirects: newCount.
+							
+			aDebugger 
+				restart: aContext;
+				resumeAndCloseDebugger ]
+		ifNone: [
+			self inform: 'Cannot execute action. Context not found.'] 
+]
+
+{ #category : #'*GToolkit-DebuggerExtensions-Zinc' }
+ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContext: aPhlowActionContext [
 	<gtExceptionAction>
 	| actionLabel |
 	
@@ -18,19 +33,17 @@ ZnTooManyRedirects >> gtActionContinueWithIncreasingRedirectsFor: anAction inCon
 		tooltip: actionLabel;
 		preferredExtent: 650@350;
 		content: [ 
-			GtZnClientTooManyRedirectsRetryElement new 
+			| contentElement |
+			contentElement := GtZnClientTooManyRedirectsRetryElement 
+				forZnClient:  signaler
+				andDebugger: aPhlowActionContext currentDebugger.
+			contentElement  
 				actionLabel: actionLabel;
-				currentMaxNumberOfRedirects: signaler maxNumberOfRedirects;
-				retryAction: [ :newCount |
-					aPhlowActionContext currentDebuggingSession  
-						findLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout
-						ifFound: [ :aContext |
-							aContext receiver 
-								maxNumberOfRedirects: newCount.
-							aPhlowActionContext currentDebuggingSession restart: aContext.
-							aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
-						ifNone: [
-							self inform: 'Cannot execute action. Context not found.'] ] ] 
+				retryAction: [ :newCount :currentDebugger |
+					self 
+						gtActionPerformRetryUsing: currentDebugger
+						withNewRetryCount: newCount].
+			contentElement ] 
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
