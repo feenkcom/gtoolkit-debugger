@@ -1,6 +1,21 @@
 Extension { #name : #Context }
 
 { #category : #'*GToolkit-Debugger' }
+Context >> findContextSuchThat: aTestBlock withMaxDepth: aMaxDepth ifFound: aFoundBlock ifNone: aNoneBlock [
+	|  count |
+	count := 1.
+	^ (self
+		findContextSuchThat: [ :aContext | 
+			count := count + 1.
+			count > aMaxDepth
+				ifTrue: [ ^ aNoneBlock value ].
+			aTestBlock value: aContext ])
+		ifNil: [ aNoneBlock value ]
+		ifNotNil: [ :aContext |
+			aFoundBlock cull: aContext ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
 Context >> gtBytecodeDebuggerRetrieveContextValues [
 	|fieldList displayedTemp slotsSize tempNames |
 

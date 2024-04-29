@@ -136,6 +136,11 @@ GtDebuggerElement >> detachSession [
 	debuggingSession := nil
 ]
 
+{ #category : #querying }
+GtDebuggerElement >> findLimitedFullActiveContextForMethod: aCompiledMethod  ifFound: aFoundBlock ifNone: aNoneBlock [
+	^ debuggingSession findLimitedFullActiveContextForMethod: aCompiledMethod  ifFound: aFoundBlock ifNone: aNoneBlock
+]
+
 { #category : #initialization }
 GtDebuggerElement >> initialize [
 	super initialize.
@@ -158,6 +163,11 @@ GtDebuggerElement >> onAddedToSceneGraph [
 		do: [ :event | self actOnBrowserClosing: event ].
 	
 	self space addEventHandler: browserClosingHandler
+]
+
+{ #category : #actions }
+GtDebuggerElement >> restart: aContext [
+	self session restart: aContext
 ]
 
 { #category : #actions }
