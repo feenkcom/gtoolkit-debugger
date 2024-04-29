@@ -6,16 +6,40 @@ Class {
 		'signaledException',
 		'isTerminationDisabled'
 	],
+	#classVars : [
+		'IsEmbeddedDebuggerEnabled'
+	],
 	#category : #'GToolkit-Debugger-Elements'
 }
 
+{ #category : #configuration }
+GtCoderEmbeddedDebuggerElement class >> disableEmbeddedDebugger [
+	IsEmbeddedDebuggerEnabled := false
+]
+
+{ #category : #configuration }
+GtCoderEmbeddedDebuggerElement class >> enableEmbeddedDebugger [
+	IsEmbeddedDebuggerEnabled := true
+]
+
+{ #category : #testing }
+GtCoderEmbeddedDebuggerElement class >> isEmbeddedDebuggerEnabled [
+	^ IsEmbeddedDebuggerEnabled ifNil: [ IsEmbeddedDebuggerEnabled := false ]
+]
+
 { #category : #opening }
 GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException embeddedIn: sourceCoder withSourceString: aSourceString withSourceInterval: aSourceInterval [
-	sourceCoder
-		notifyShowDebuggerRequest: debugSession
-		dueTo: anException
-		sourceString: aSourceString
-		sourceInterval: aSourceInterval
+	| isHandled |
+	isHandled := false.
+	self isEmbeddedDebuggerEnabled ifTrue: [ 
+		isHandled := sourceCoder
+			notifyShowDebuggerRequest: debugSession
+			dueTo: anException
+			sourceString: aSourceString
+			sourceInterval: aSourceInterval ].
+
+	isHandled
+		ifFalse: [ ^ Smalltalk tools debugger openOn: debugSession withFullView: true ]
 ]
 
 { #category : #accessing }
@@ -56,12 +80,15 @@ GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> debug [
 	self switchToSystemDebugger.
-	self removeFromParent.
+	BlTaskAction
+		enqueueElement: self
+		action: [ self visibility: BlVisibility hidden ]
 ]
 
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> detachSession [
-	debuggingSession := nil 
+	self unsubscribeFromSession.
+	debuggingSession := nil
 ]
 
 { #category : #accessing }
@@ -78,6 +105,20 @@ GtCoderEmbeddedDebuggerElement >> enableTermination [
 GtCoderEmbeddedDebuggerElement >> initialize [
 	super initialize.
 	self enableTermination
+]
+
+{ #category : #'private - announcement handling' }
+GtCoderEmbeddedDebuggerElement >> onDebugSessionDebuggedAnnouncement: anAnnouncement [
+	BlTaskAction
+		enqueueElement: self
+		action: [ self visibility: BlVisibility hidden ]
+]
+
+{ #category : #'private - announcement handling' }
+GtCoderEmbeddedDebuggerElement >> onDebugSessionTerminatedAnnouncement: anAnnouncement [
+	BlTaskAction
+		enqueueElement: self
+		action: [ self visibility: BlVisibility hidden ]
 ]
 
 { #category : #'hooks - children' }
@@ -111,12 +152,12 @@ GtCoderEmbeddedDebuggerElement >> signaledException: anException [
 
 { #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> subscribeToSession [
-	self session
+	self session weak
 			when: GtSharedDebugSessionDebuggedAnnouncement
-			send: #removeFromParent
+			send: #onDebugSessionDebuggedAnnouncement:
 			to: self; 
 			when: GtSharedDebugSessionTerminatedAnnouncement
-			send: #removeFromParent
+			send: #onDebugSessionTerminatedAnnouncement:
 			to: self
 ]
 
@@ -133,7 +174,7 @@ GtCoderEmbeddedDebuggerElement >> switchToSystemDebugger [
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> terminate [
 	self terminateSession.
-	self removeFromParent.
+	BlTaskAction enqueueElement: self action: [ self removeFromParent ]
 ]
 
 { #category : #callbacks }
@@ -142,4 +183,9 @@ GtCoderEmbeddedDebuggerElement >> terminateSession [
 		self session ifNotNil: [ :aSession | 
 			self detachSession.
 			aSession terminate ]]
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerElement >> unsubscribeFromSession [
+	self session unsubscribe: self
 ]

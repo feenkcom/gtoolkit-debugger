@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sessions'
 	],
-	#category : 'GToolkit-Debugger-Session'
+	#category : #'GToolkit-Debugger-Session'
 }
 
 { #category : #'private - adding / removing' }
@@ -55,7 +55,7 @@ GtSharedDebugSessionExamples >> debugSharedSession [
 	aSession := self sharedDebugSession.
 	aCollection := OrderedCollection new.
 	
-	aSession 
+	aSession
 		when: GtSharedDebugSessionDebuggedAnnouncement 
 		do: [ :anAnnouncement | 
 			self assert: aSession interruptedContext isNil.
