@@ -1,7 +1,7 @@
 "
 {{gtClass:GtMoldableExceptionDebuggingElement}} is a domain-specific debugger that shows views and debugging actions based on the current exception.
 
-The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionDebuggingExtensionConfiguration}}  instance returned by {{gtMethod:name=Exception>>#gtDebuggingExtensionConfiguration}}  (this can be overriden by exceptions) to select debugging views and actions.
+The debugged uses the settings from the {{gtClass:name=GtMoldableExceptionSpecificDebuggerSpecification}}  instance returned by {{gtMethod:name=Exception>>#gtExceptionDebuggerSpecification}}  (this can be overriden by exceptions) to select debugging views and actions.
 "
 Class {
 	#name : #GtMoldableExceptionDebuggingElement,
@@ -24,6 +24,11 @@ GtMoldableExceptionDebuggingElement class >> availableAutomatically [
 ]
 
 { #category : #accessing }
+GtMoldableExceptionDebuggingElement class >> debuggerSpecification [
+	^ nil
+]
+
+{ #category : #accessing }
 GtMoldableExceptionDebuggingElement class >> defaultTitle [
 	^ 'Exception'
 ]
@@ -35,7 +40,7 @@ GtMoldableExceptionDebuggingElement class >> handlesDebugSession: aDebugSession 
 	targetException := aDebugSession exception.
 	targetException ifNil: [ ^ false ].
 	
-	^ targetException gtDebuggingExtensionConfiguration canShowDebuggingExtension
+	^ targetException gtExceptionDebuggerSpecification canShowDebugger
 ]
 
 { #category : #'tool registration' }
@@ -51,7 +56,7 @@ GtMoldableExceptionDebuggingElement class >> sessionClass [
 
 { #category : #callbacks }
 GtMoldableExceptionDebuggingElement >> actOnDebugSessionChanged [
-	debuggingConfiguration := self targetException gtDebuggingExtensionConfiguration.
+	debuggingConfiguration := self targetException gtExceptionDebuggerSpecification.
 	self updateContent.
 ]
 
@@ -73,15 +78,18 @@ GtMoldableExceptionDebuggingElement >> buildMainTabWithContent: aTabContent andT
 ]
 
 { #category : #'building - widgets' }
-GtMoldableExceptionDebuggingElement >> buildStackToolbarActions [
-	<return: #Collection of: #BrButton>	
-	| buttons |
+GtMoldableExceptionDebuggingElement >> buildStackToolbarActionElementsForToolbar: aToolbar [
+	| debuggingActionButtons |
 	
-	buttons := (self actionsForPragmas: self exceptionGlobalDebugActionsPragmas) 
-		collect: [ :aDebuggingAction | 
-			aDebuggingAction asBrickButton ].
+	debuggingActionButtons := OrderedCollection new.
+	self collectMainToolbarDebuggingActions
+		do: [ :aDebuggingAction | 
+			aDebuggingAction 
+				asDebugActionElementWithHostElement: aToolbar
+				do: [ :anElement | 
+					debuggingActionButtons add: anElement ] ].
 	
-	^ buttons
+	^ debuggingActionButtons
 ]
 
 { #category : #'building - widgets' }
@@ -128,8 +136,38 @@ GtMoldableExceptionDebuggingElement >> collectDebuggingActionsForView: aView [
 ]
 
 { #category : #'views - collecting' }
+GtMoldableExceptionDebuggingElement >> collectGlobalDebuggingActions [
+	^ self actionsForPragmas: self exceptionGlobalDebugActionsPragmas
+]
+
+{ #category : #'building - widgets' }
+GtMoldableExceptionDebuggingElement >> collectMainToolbarDebuggingActions [
+	| globalDebuggingActions targetObjectsDebuggingActions |
+	
+	globalDebuggingActions := self collectGlobalDebuggingActions.
+	targetObjectsDebuggingActions := self collectTargetDebuggingActions.
+	
+	^ (globalDebuggingActions, targetObjectsDebuggingActions) 
+		sorted: [ :aDebuggingAction | aDebuggingAction order ] ascending
+]
+
+{ #category : #'views - collecting' }
+GtMoldableExceptionDebuggingElement >> collectTargetDebuggingActions [
+	^ self debuggingConfiguration 
+		collectTargetDebuggingActionsForDebugger: self
+]
+
+{ #category : #'views - collecting' }
 GtMoldableExceptionDebuggingElement >> collectTargetDebuggingViews [
-	^ self debuggingConfiguration collectTargetDebuggingViews
+	| composite |
+	composite := GtPhlowView empty composite 
+		title: 'Views'.
+		
+	self debuggingConfiguration 
+		collectTargetDebuggingViewsForDebugger: self
+		in: composite.
+	
+	^ composite
 ]
 
 { #category : #accessing }
@@ -176,14 +214,6 @@ GtMoldableExceptionDebuggingElement >> initializeViewsContainer [
 	self addChild: mainContainer as: #viewsContainer.
 ]
 
-{ #category : #'debugging actions' }
-GtMoldableExceptionDebuggingElement >> resumeAndCloseDebugger [
-	(self session)
-		resume;
-		clear.
-	self close
-]
-
 { #category : #accessing }
 GtMoldableExceptionDebuggingElement >> targetException [
 	^ debuggingSession exception
@@ -204,7 +234,7 @@ GtMoldableExceptionDebuggingElement >> updateMainTabLabel [
 { #category : #updating }
 GtMoldableExceptionDebuggingElement >> updateToolbarActions [
 	toolbar removeAllItems.
-	self buildStackToolbarActions do: [ :anAction | 
+	(self buildStackToolbarActionElementsForToolbar: toolbar) do: [ :anAction | 
 		toolbar addItem: anAction ].
 	compositeView views size = 1 ifTrue: [
 		self updateToolbarWithActionsFromView: compositeView views first ].

@@ -23,10 +23,37 @@ GtMoldableExceptionDebuggingViewsObjectTarget class >> forObject: anObject [
 		 targetObject: anObject
 ]
 
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewsObjectTarget >> collectTargetDebuggingActionsForPragmaNames: aCollectionOfPragmaNames forDebugger: aDebuggerElement [
+
+	^ (GtPhlowActionsCollector new
+		pragmaNames: aCollectionOfPragmaNames;
+		fromObject: self targetObject;
+		context: (GtPhlowContext new 
+			currentDebugger: aDebuggerElement);
+		collect) collect: [ :aPhlowAction |
+			GtPhlowActionToDebugActionAdapter forPhlowAction: aPhlowAction ]
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewsObjectTarget >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames in: aComposite forDebugger: aDebuggerElement [
+		
+	aComposite collectorAppend: [ :aCollector |
+		aCollector pragmaNames: aCollectionOfPragmaNames.
+		aCollector context: (GtPhlowContext new 
+			currentDebugger: aDebuggerElement).
+		self configureDebuggingViewsCollector: aCollector ] 
+]
+
 { #category : #configuration }
 GtMoldableExceptionDebuggingViewsObjectTarget >> configureDebuggingViewsCollector: aViewsCollector [
 	^ aViewsCollector 
 		fromObject: self targetObject
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewsObjectTarget >> description [
+	^ self targetObject printString
 ]
 
 { #category : #testing }

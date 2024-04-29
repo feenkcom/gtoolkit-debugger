@@ -1,12 +1,12 @@
 Class {
 	#name : #GtPhlowViewsCollectorSameViewProceedDebugAction,
 	#superclass : #DebugAction,
-	#category : #'GToolkit-DebuggerExtensions'
+	#category : #'GToolkit-DebuggerExtensions-ViewsCollector'
 }
 
 { #category : #accessing }
 GtPhlowViewsCollectorSameViewProceedDebugAction class >> proceedReturnDebugActionFor: aDebugger [
-	<gtPhlowSaveViewReturnFixDebugAction>
+	"<gtPhlowSameViewReturnDebugAction>"
 	
 	^ self forDebugger: aDebugger
 ]
@@ -29,8 +29,7 @@ GtPhlowViewsCollectorSameViewProceedDebugAction >> defaultLabel [
 
 { #category : #accessing }
 GtPhlowViewsCollectorSameViewProceedDebugAction >> executeAction [
-	self session 
-		restart: self session interruptedContext.
+	self session restartInterruptedContext.
 	self debugger resumeAndCloseDebugger.
 ]
 

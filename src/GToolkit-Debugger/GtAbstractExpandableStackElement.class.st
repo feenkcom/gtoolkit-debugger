@@ -137,7 +137,8 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 			itemSuchThat: [ :eachCoder | (self shouldJumpOverCoverViewModel: eachCoder) not ]
 			do: [ :anIndex :isSynchronous | 
 				| anAction |
-				anAction := [ self stackFramesList itemsProvider: anItemsProvider.
+				anAction := [ 
+					self stackFramesList itemsProvider: anItemsProvider.
 					self stackFramesList scrollToIndex: anIndex offset: 0.
 					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
 
@@ -188,7 +189,13 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel := aContextCoderUIModel.
 
 	selectedCoderUIModel expanded: true.
-	selectedCoderUIModel focused: true.
+	selectedCoderUIModel focused
+		ifFalse: [ selectedCoderUIModel focused: true ]
+		ifTrue: [ 
+			"We do not give the focus in case the coder view model has the focus.
+			Instead we notify the debugger that the current coder was selected without changing the focus"
+			self debuggerElementDo: [ :aDebuggerElement |
+				aDebuggerElement actOnSelectedContextChangedWithoutFocusChangeFor: selectedCoderUIModel coder context ] ].
 	
 	"Update the source code as some actions (for example save)
 	can change the compiled method stored in the context."

@@ -17,6 +17,17 @@ GtDebuggerElement class >> availableAutomatically [
 ]
 
 { #category : #initialization }
+GtDebuggerElement class >> debuggerSpecification [
+	^ GtMoldableExceptionStandaloneDebuggerSpecification new 
+		debuggerClass: self
+]
+
+{ #category : #initialization }
+GtDebuggerElement class >> defaultIcon [
+	^ BrGlamorousVectorIcons debug
+]
+
+{ #category : #initialization }
 GtDebuggerElement class >> defaultTitle [
 	^ 'Gt'
 ]
@@ -37,32 +48,6 @@ GtDebuggerElement class >> on: aDebugSession [
 
 	^ self new 	
 		session: aDebugSession
-]
-
-{ #category : #opening }
-GtDebuggerElement class >> openInspectorOn: aDebuggingSession [
-	| aDebugger |
-
-	aDebugger := self on: aDebuggingSession.
-	^ aDebugger openInPager
-]
-
-{ #category : #opening }
-GtDebuggerElement class >> openOn: aDebuggingSession [
-	| aDebugger |
-
-	aDebugger := self on: aDebuggingSession.
-	^ aDebugger open.
-]
-
-{ #category : #opening }
-GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool [
-	^ self openOn: aDebugSession withFullView: aBool andNotification: nil
-]
-
-{ #category : #opening }
-GtDebuggerElement class >> openOn: aDebugSession withFullView: aBool andNotification: aString [
-	^self openInspectorOn:aDebugSession
 ]
 
 { #category : #'tools registry' }
@@ -151,11 +136,6 @@ GtDebuggerElement >> detachSession [
 	debuggingSession := nil
 ]
 
-{ #category : #accessing }
-GtDebuggerElement >> inPager [
-	^ (GtPager createWrappedOn: self) maximized
-]
-
 { #category : #initialization }
 GtDebuggerElement >> initialize [
 	super initialize.
@@ -171,44 +151,13 @@ GtDebuggerElement >> interruptedContext [
 GtDebuggerElement >> onAddedToSceneGraph [
 	super onAddedToSceneGraph.
 
-	browserClosingHandler ifNotNil: [ self space removeEventHandler: browserClosingHandler ].
+	browserClosingHandler ifNotNil: [ 
+		self space removeEventHandler: browserClosingHandler ].
 	browserClosingHandler := BlEventHandler 
 		on: BlSpaceDestroyedEvent 
 		do: [ :event | self actOnBrowserClosing: event ].
 	
 	self space addEventHandler: browserClosingHandler
-	
-]
-
-{ #category : #opening }
-GtDebuggerElement >> open [
-	self aboutToOpen.
-	self constraintsDo: [ :c |
-		c horizontal matchParent.
-		c vertical matchParent ].
-	^ self open: self withTitle: self session name.
-]
-
-{ #category : #opening }
-GtDebuggerElement >> open: anElement withTitle: aTitleString [
-	| aSpace |
-	aSpace := BlSpace new.
-	aSpace withHalos.
-	aSpace title: aTitleString.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: anElement.
-	^ aSpace show
-]
-
-{ #category : #opening }
-GtDebuggerElement >> openInPager [
-	| aPager |
-	self aboutToOpen.
-	self constraintsDo: [ :c | 
-		c horizontal matchParent.
-		c vertical matchParent ].
-	aPager := self inPager.
-	^ self open: aPager withTitle: self session name.
 ]
 
 { #category : #actions }

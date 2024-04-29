@@ -25,6 +25,13 @@ ResumeDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 				build) gtDisplayString
 ]
 
+{ #category : #registration }
+ResumeDebugAction class >> gtWarningDebuggingActionFor: aDebugger [
+	<gtExceptionWarningActions>
+
+	^ self gt2ContextDebuggingActionFor: aDebugger
+]
+
 { #category : #accessing }
 ResumeDebugAction >> defaultKeymap [
 

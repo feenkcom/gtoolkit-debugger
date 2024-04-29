@@ -90,11 +90,12 @@ DebugAction >> asBrickButton [
 	currentLabel := self label.
 
 	aptitude := self icon
-			ifNil: [ BrGlamorousButtonWithLabelAptitude ]
+			ifNil: [ BrGlamorousButtonWithLabelAptitude new ]
 			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
 	aptitude
-		+ (BrGlamorousWithTooltipAptitude
-				content: [ | tooltipElement |
+		add: (BrGlamorousWithTooltipAptitude
+				content: [ 
+					| tooltipElement |
 					tooltipElement := BrHorizontalGrid new
 							fitContent;
 							padding: (BlInsets all: 5);
@@ -138,6 +139,16 @@ DebugAction >> asBrickButton [
 DebugAction >> asDebugAction [
 
 	^ self
+]
+
+{ #category : #'phlow ' }
+DebugAction >> asDebugActionElementWithHostElement: aHostElement [
+	^ self asBrickButton
+]
+
+{ #category : #'phlow ' }
+DebugAction >> asDebugActionElementWithHostElement: aHostElement do: aBlock [
+	^ aBlock value: self asBrickButton
 ]
 
 { #category : #accessing }

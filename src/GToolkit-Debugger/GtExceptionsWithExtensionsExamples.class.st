@@ -7,10 +7,10 @@ Class {
 { #category : #asserting }
 GtExceptionsWithExtensionsExamples >> assertDebuggingConfigurationEnabledFor: anException [ 
 	| extensionConfiguration |
-	extensionConfiguration := anException gtDebuggingExtensionConfiguration.
+	extensionConfiguration := anException gtExceptionDebuggerSpecification.
 	
 	self assert: extensionConfiguration notNil.
-	self assert: extensionConfiguration enableDebuggingViewExtension value.
+	self assert: extensionConfiguration canEnableDebugger value.
 ]
 
 { #category : #'examples - debuggers' }
@@ -32,7 +32,11 @@ GtExceptionsWithExtensionsExamples >> assertOneDebuggerSwitchButtonLabeled: aDeb
 		equals: 1.
 		
 	self
-		assert: buttonsContainer anyOne children first label asString
+		assert: buttonsContainer anyOne tabs size
+		equals: 2.
+		
+	self
+		assert: (buttonsContainer anyOne tabs detect: [ :aTab | aTab isSelected ]) tabLabel text asString
 		equals: aDebuggerLabel.
 ]
 
@@ -170,7 +174,7 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 	self assertIsMainDebuggerElementFor: scripter.
 	
 	self 
-		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle 
+		assertOneDebuggerSwitchButtonLabeled: GtMoldableExceptionDebuggingElement defaultTitle  
 		for: scripter.
 	self 
 		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
@@ -178,7 +182,7 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 		for: scripter.
 		
 	self 
-		assertOneDebuggerSwitchButtonLabeled: GtMoldableExceptionDebuggingElement defaultTitle 
+		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle 
 		for: scripter.
 	self 
 		assertSwitchToDebuggerLabeled: GtMoldableExceptionDebuggingElement defaultTitle 

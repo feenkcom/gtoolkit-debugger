@@ -5,8 +5,14 @@ Class {
 }
 
 { #category : #accessing }
+GtPharoDebuggerElement class >> debuggerSpecification [
+	^ GtMoldableExceptionDefaultDebuggerSpecification new 
+		debuggerClass: self
+]
+
+{ #category : #accessing }
 GtPharoDebuggerElement class >> defaultTitle [
-	^ 'GT Debugger'
+	^ 'GT'
 ]
 
 { #category : #'tools registry' }

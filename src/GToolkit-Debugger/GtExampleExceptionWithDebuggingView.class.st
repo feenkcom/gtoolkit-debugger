@@ -35,7 +35,7 @@ GtExampleExceptionWithDebuggingView >> expectedString: aString [
 { #category : #'gt-extensions' }
 GtExampleExceptionWithDebuggingView >> gtViewDiffFor: aView [ 
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	^ aView forward 
 		title: 'Diff';

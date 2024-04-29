@@ -27,15 +27,36 @@ GtMoldableExceptionDebuggingViewTargets >> addDebuggingTargetFor: anObject [
 ]
 
 { #category : #accessing }
-GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames [
-	| compositeView |
-	compositeView := GtPhlowView empty composite 
-		title: 'Views'.
+GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingActionsForPragmaNames: aCollectionOfPragmaNames forDebugger: aDebuggerElement [
+
+	| debuggingActions  |
+	
+	debuggingActions := OrderedCollection new.
 	self withIndividualTargetsDo: [ :aTarget |
-		compositeView collectorAppend: [ :aCollector |
-			aCollector pragmaNames: aCollectionOfPragmaNames.
-			aTarget configureDebuggingViewsCollector: aCollector ] ].
-	^ compositeView
+		debuggingActions addAll: (aTarget 
+			collectTargetDebuggingActionsForPragmaNames: aCollectionOfPragmaNames 
+			forDebugger: aDebuggerElement) ].
+			
+	^ debuggingActions
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewTargets >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames in: aComposite forDebugger: aDebuggerElement [
+		
+	self withIndividualTargetsDo: [ :aTarget |
+		aTarget
+			collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames 
+			in: aComposite 
+			forDebugger: aDebuggerElement ] 
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewTargets >> description [ 
+	| targetDescriptions|
+	targetDescriptions := OrderedCollection new.
+	self withIndividualTargetsDo: [ :aTarget |
+		targetDescriptions add: aTarget description ].
+	^ targetDescriptions asCommaString
 ]
 
 { #category : #testing }

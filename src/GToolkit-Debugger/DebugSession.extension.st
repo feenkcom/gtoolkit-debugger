@@ -1,6 +1,80 @@
 Extension { #name : #DebugSession }
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> allDebuggerSpecifications [
+	^ ((self allStandaloneDebuggerSpecifications
+		, self allMoldableExceptionDebuggersSpecifications)
+			reject: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications isNil ])
+			sorted: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications priority ] ascending
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> allMoldableExceptionDebuggersSpecifications [
+	| pragmas |
+	self exception ifNil: [ ^ #() ].
+	
+	pragmas := Pragma
+		allNamed: #gtDebuggerSpecification
+		from: self exception class
+		to: Exception.
+
+	^ pragmas collect: [ :aPragma | 
+		 self exception 
+			perform: aPragma methodSelector ].
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> allStandaloneDebuggerSpecifications [
+	^ Smalltalk tools registeredDebuggersWithRanks 
+		collect: [ :assoc |
+			assoc key debuggerSpecification
+				ifNil: [ nil ]
+				ifNotNil: [ :aDebuggerSpecifications |
+					aDebuggerSpecifications
+						priority: assoc value;
+						yourself ] ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> applicableDebuggerSpecifications [
+	^ ((self applicableStandaloneDebuggerSpecifications
+		, self applicableMoldableExceptionDebuggersSpecifications)
+			reject: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications isNil ])
+			sorted: [ :aDebuggerSpecifications |
+				aDebuggerSpecifications priority ] ascending
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> applicableMoldableExceptionDebuggersSpecifications [
+	| possibleSpecifications |
+
+	possibleSpecifications := self allMoldableExceptionDebuggersSpecifications.
+			
+	^ possibleSpecifications select: [ :aDebuggerSpecification |
+		aDebuggerSpecification handlesDebugSession: self ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> applicableStandaloneDebuggerSpecifications [
+	^ self applicableStandaloneDebuggerTypesWithRanks 
+		collect: [ :assoc |
+			assoc key debuggerSpecification
+				ifNil: [ nil ]
+				ifNotNil: [ :aDebuggerSpecification |
+					aDebuggerSpecification
+						priority: assoc value;
+						yourself ] ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> applicableStandaloneDebuggerTypesWithRanks [
+	^ Smalltalk tools debuggersWithRankForDebugSession: self
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession class >> debuggingActionsForPragma: aSymbol for: aDebugger [
 	^ (DebugAction allSubclasses reject: [ :each | each hasAbstractMethods ])
 		inject: OrderedCollection new
@@ -72,7 +146,56 @@ DebugSession class >> forExceptionFromExampleFor: anException [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> gtViewDebuggerSpecificationsFor: aView [
+	<gtView>
+	
+	^ aView columnedList 
+		title: 'Debugger Specifications';
+		items: [ 
+			(self allDebuggerSpecifications collect: [ :aDebuggerSpecification |	
+				aDebuggerSpecification -> (aDebuggerSpecification 
+					handlesDebugSession: self) ]) ];
+		column: 'Type' textDo: [ :aColumn |
+			aColumn 
+				format: [ :assoc | assoc key debuggerClass
+					asRopedText foreground: (assoc value 
+					ifTrue: [ Color black] 
+					ifFalse: [ Color lightGray ] ) ] ];
+		column: 'Icon' icon: [ :assoc |
+			assoc key icon ];
+		column: 'Title' textDo: [ :aColumn |
+			aColumn 
+				format: [ :assoc | assoc key title
+					asRopedText foreground: (assoc value 
+					ifTrue: [ Color black] 
+					ifFalse: [ Color lightGray ] ) ] ];
+		column: 'Priority' textDo: [ :aColumn |
+			aColumn 
+				width: 80;
+				format: [ :assoc | assoc key priority
+					asRopedText foreground: (assoc value 
+					ifTrue: [ Color black] 
+					ifFalse: [ Color lightGray ] ) ] ];
+		column: 'Is applicable' textDo: [ :aColumn |
+			aColumn 
+				width: 80;
+				format: [ :assoc | 
+					(assoc value ifTrue: ['Yes'] ifFalse: ['No'])
+						asRopedText foreground: (assoc value 
+							ifTrue: [ Color black] 
+							ifFalse: [ Color lightGray ] ) ] ];
+		send: [ :assoc | assoc key ]
+	
+		
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextPostMortem [
 	
 	^ self isContextPostMortem: self interruptedContext
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> restartInterruptedContext [
+	self restart: self interruptedContext
 ]

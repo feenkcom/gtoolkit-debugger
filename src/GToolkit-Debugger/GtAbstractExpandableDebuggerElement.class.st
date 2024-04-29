@@ -54,6 +54,21 @@ GtAbstractExpandableDebuggerElement >> actOnSelectedContextChangedFor: aContext 
 		addChild: detailsTabGroupElement as: #detailsElement
 ]
 
+{ #category : #callbacks }
+GtAbstractExpandableDebuggerElement >> actOnSelectedContextChangedWithoutFocusChangeFor: aContext [
+	"No action needed at the moment"
+]
+
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> addDefaultTabsToGroup: aTabGroup [ 
+	aTabGroup
+		addTab: (BrTab new
+			aptitude: BrGlamorousTabAptitude new;
+			label: 'Variables';
+			stencil: [ self buildContextVariablesElement ])
+		at: 1
+]
+
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
@@ -65,18 +80,19 @@ GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsElement [
-	| detailsContainer detailsTabGroupElement debuggerPlaygroundElement |
+	| detailsContainer detailsTabGroup debuggerPlaygroundElement |
 	
 	detailsContainer := BrVerticalPane new
 		matchParent;
 		addAptitude: BrShadowAptitude.
 	
-	detailsTabGroupElement := self buildDetailsTabElement.
-	self registerDetailsTabSelectionEventsFor: detailsTabGroupElement.
+	detailsTabGroup := self buildDetailsTabElement.
+	self registerDetailsTabSelectionEventsFor: detailsTabGroup.
+	self selectDetailsTabFor: detailsTabGroup. 
 			
 	debuggerPlaygroundElement := self buildPlaygroundElement.
 	
-	detailsContainer addChild: detailsTabGroupElement.
+	detailsContainer addChild: detailsTabGroup.
 	detailsContainer addChild: debuggerPlaygroundElement.
 	
 	^ detailsContainer
@@ -84,18 +100,23 @@ GtAbstractExpandableDebuggerElement >> buildDetailsElement [
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildDetailsTabElement [
-	^ BrTabGroup new
+	| compositeView tabGroup |
+	
+	"compositeView := self collectDetailsPaneDebuggingViews.
+	
+	tabGroup := compositeView asElementDo: [ :e | e ].
+	tabGroup
+		matchParent;
+		background: Color white."
+		
+	tabGroup := BrTabGroup new
 		matchParent;
 		background: Color white;
-		aptitude: BrGlamorousTabGroupAptitude;
-		addTab: (BrTab new
-			aptitude: BrGlamorousTabAptitude new;
-			label: 'Variables';
-			stencil: [ self buildContextVariablesElement ]);
-		addTab: (BrTab new
-			aptitude: BrGlamorousTabAptitude new;
-			label: 'Watches';
-			stencil: [ self buildWatchVariablesElement ])
+		aptitude: BrGlamorousTabGroupAptitude.
+
+	self addDefaultTabsToGroup: tabGroup.
+			
+	^ tabGroup
 ]
 
 { #category : #'building widgets' }
@@ -170,24 +191,29 @@ GtAbstractExpandableDebuggerElement >> buildStackTabGroupForElement: aStackConta
 ]
 
 { #category : #'building widgets' }
-GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsFor: aCollectionOfDebuggingActions [
+GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActions: aCollectionOfDebuggingActions [
 	<return: #Collection of: #BrButton>	
-	| buttons toggle |
+	| debuggingActionButtons toggle |
 	
-	buttons := aCollectionOfDebuggingActions
-		collect: [ :aDebuggingAction | 
-			aDebuggingAction asBrickButton ].
+	debuggingActionButtons := OrderedCollection new.
+	aCollectionOfDebuggingActions do: [ :aDebuggingAction | 
+		aDebuggingAction 
+			asDebugActionElementWithHostElement: self
+			do: [ :anElement | 
+				debuggingActionButtons add: anElement ] ].
 		
 	toggle := BrToggle new 
-		aptitude: BrGlamorousButtonWithIconAptitude + BrGlamorousToggleBackgroundAptitude;
+		aptitude: BrGlamorousButtonWithIconAptitude 
+			+ BrGlamorousToggleBackgroundAptitude;
 		label: 'Variable Value Overlays';
 		icon: BrGlamorousIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			self stackElement enableVariableAnnotations ];
 		when: BrToggleDeactivatedEvent do: [ :anEvent | 
 			self stackElement disableVariableAnnotations ].
-	buttons add: toggle.
-	^ buttons
+	debuggingActionButtons add: toggle.
+	
+	^ debuggingActionButtons
 ]
 
 { #category : #'building widgets' }
@@ -265,6 +291,77 @@ GtAbstractExpandableDebuggerElement >> buildWatchVariablesElement [
 	^ watchVariablesElement
 ]
 
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectContextDebuggingViewsIn: aComposite [ 
+	| targetObjects |
+	targetObjects := {
+		self selectedContext . 
+		self selectedContext  receiver } asOrderedCollection.
+	debuggingSession exception ifNotNil: [ :anException | 
+		targetObjects add: anException ].
+		
+	targetObjects do: [ :aTargetObject | 
+		aComposite collectorAppend: [ :aCollector |
+			aCollector pragmaName: #gtContextView.
+			aCollector context: (GtPhlowContext new 
+				currentDebugger: self).
+			aCollector fromObject: aTargetObject ] ]
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectDetailsPaneDebuggingViews [
+	| composite |
+	composite := GtPhlowView empty composite.
+	composite title: 'Views'.
+		
+	self collectDetailsPaneDebuggingViewsin: composite.
+	
+	^ composite
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectDetailsPaneDebuggingViewsin: aComposite [
+	
+	self collectContextDebuggingViewsIn: aComposite. 
+	self collectReceiverExceptionSpecificDebuggingViewsIn: aComposite.
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectGlobalDebuggingActions [
+	^ self actionsForPragmas: self stackDebuggingActionsPragmas
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectMainToolbarDebuggingActions [
+	| globalDebuggingActions targetObjectsDebuggingActions |
+	
+	globalDebuggingActions := self collectGlobalDebuggingActions.
+	targetObjectsDebuggingActions := self collectTargetDebuggingActions.
+	
+	^ (globalDebuggingActions, targetObjectsDebuggingActions) 
+		sorted: [ :aDebuggingAction | aDebuggingAction order ] ascending
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectReceiverExceptionSpecificDebuggingViewsIn: aComposite [
+	debuggingSession exception ifNotNil: [ :anException |
+		| currentReceiver |
+		currentReceiver := self selectedContext  receiver .
+		anException gtDefaultDebuggerSpecification
+			collectContextDebuggingViewsForReceiver: currentReceiver
+			forDebugger: self 
+			in: aComposite ] 
+]
+
+{ #category : #'building actions' }
+GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
+	^ debuggingSession exception 
+		ifNil: [ #() ] 
+		ifNotNil: [ :anException |
+			anException gtDefaultDebuggerSpecification
+				collectTargetDebuggingActionsForDebugger: self ] 
+]
+
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> contextVariables [
 	| activeCoder |
@@ -314,11 +411,6 @@ GtAbstractExpandableDebuggerElement >> filteredStack [
 		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
 ]
 
-{ #category : #'building actions' }
-GtAbstractExpandableDebuggerElement >> getStackDebuggingActions [
-	^ self actionsForPragmas: self stackDebuggingActionsPragmas
-]
-
 { #category : #initialization }
 GtAbstractExpandableDebuggerElement >> initialize [
 	super initialize.
@@ -362,13 +454,19 @@ GtAbstractExpandableDebuggerElement >> registerDetailsTabSelectionEventsFor: aDe
 		when: BrTabSelectedEvent 
 		do: [ :anEvent | anEvent tab 
 			widgetDo: [ :aTab | 
-				self selectedDetailesTabName: aTab label asString ] ].
+				self selectedDetailesTabName: aTab label asString ] ]
+]
 
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> selectDetailsTabFor: aDetailsTabGroupElement [ 
 	(aDetailsTabGroupElement viewModel tabs 
 		select: [ :aTabModel | aTabModel isAttachedToWidget ])
 			detect: [ :aTabModel | 
 				aTabModel widget label asString = self selectedDetailesTabName ]
-			ifFound: [ :aTabModel | aTabModel select ].
+			ifFound: [ :aTabModel | aTabModel select ]
+			ifNone: [ aDetailsTabGroupElement viewModel tabs  
+				ifNotEmpty: [ :aTabsList |
+					aTabsList first select ] ].
 ]
 
 { #category : #'accessing context' }
@@ -415,7 +513,7 @@ GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
 		ifNil: [ super stackDebuggingActionsPragmas ] 
 		ifNotNil: [ :anException |
 			super stackDebuggingActionsPragmas
-				, anException gtDebuggingExtensionConfiguration globalDebuggingActionPragmas ] 
+				, anException gtDefaultDebuggerSpecification globalDebuggingActionPragmas ] 
 ]
 
 { #category : #'accessing - elements' }
@@ -441,6 +539,23 @@ GtAbstractExpandableDebuggerElement >> updateContents [
 ]
 
 { #category : #updating }
+GtAbstractExpandableDebuggerElement >> updateDetailsPane [
+	self updateVariablesList.
+	self updateDetailsPaneDebuggingViews.
+]
+
+{ #category : #updating }
+GtAbstractExpandableDebuggerElement >> updateDetailsPaneDebuggingViews [
+	"Place to update in the future the tabs in the details pane for step operations within the same context"
+	
+	"| compositeView |
+	
+	compositeView := self collectDetailsPaneDebuggingViews.
+	compositeView ifEmpty: [ ^ self ].
+	"
+]
+
+{ #category : #updating }
 GtAbstractExpandableDebuggerElement >> updateStackPane [
 	| stackElement |
 	stackElement := self buildStackElement.
@@ -459,17 +574,18 @@ GtAbstractExpandableDebuggerElement >> updateStackWidget [
 GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 	| debuggingActions |
 	
-	debuggingActions := self getStackDebuggingActions.
+	debuggingActions := self collectMainToolbarDebuggingActions.
 	(debuggingActions
 		gtHasEqualElements: toolbar viewModel model
 		by: [ :a :b | a id = b id ])
 			ifTrue: [ ^ self ].
 			
 	toolbar viewModel model: debuggingActions.
-
 	toolbar removeAllItems.
-	(self buildStackToolbarActionsFor: debuggingActions) do: [ :anAction | 
-		toolbar addItem: anAction ].
+	
+	(self buildStackToolbarActionsForDebuggingActions: debuggingActions) 
+		do: [ :anAction | 
+			toolbar addItem: anAction ].
 	self updateToolbarWithExtraActions.
 ]
 

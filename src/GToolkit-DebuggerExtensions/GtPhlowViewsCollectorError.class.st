@@ -1,5 +1,5 @@
 Class {
 	#name : #GtPhlowViewsCollectorError,
 	#superclass : #Error,
-	#category : #'GToolkit-DebuggerExtensions'
+	#category : #'GToolkit-DebuggerExtensions-ViewsCollector'
 }

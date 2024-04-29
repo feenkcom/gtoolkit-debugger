@@ -38,7 +38,7 @@ GtExampleExceptionDomainObjectWithDebuggingView >> dictionary: anObject [
 { #category : #'gt - extensions' }
 GtExampleExceptionDomainObjectWithDebuggingView >> gtViewCollectionFor: aView [
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	collection ifNil: [ ^ aView empty ].
 	
@@ -50,7 +50,7 @@ GtExampleExceptionDomainObjectWithDebuggingView >> gtViewCollectionFor: aView [
 { #category : #'gt - extensions' }
 GtExampleExceptionDomainObjectWithDebuggingView >> gtViewDictionaryFor: aView [
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	dictionary ifNil: [ ^ aView empty ].
 	
@@ -65,7 +65,7 @@ GtExampleExceptionDomainObjectWithDebuggingView >> gtViewDictionaryFor: aView [
 { #category : #'gt - extensions' }
 GtExampleExceptionDomainObjectWithDebuggingView >> gtViewMessageFor: aView [
 	<gtView>
-	<gtExceptionDebuggingView>
+	<gtExceptionView>
 	
 	message ifNil: [ ^ aView empty ].
 	

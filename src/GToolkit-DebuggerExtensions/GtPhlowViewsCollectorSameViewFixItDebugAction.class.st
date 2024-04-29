@@ -1,19 +1,18 @@
 Class {
 	#name : #GtPhlowViewsCollectorSameViewFixItDebugAction,
 	#superclass : #DebugAction,
-	#category : #'GToolkit-DebuggerExtensions'
+	#category : #'GToolkit-DebuggerExtensions-ViewsCollector'
 }
 
 { #category : #initialization }
 GtPhlowViewsCollectorSameViewFixItDebugAction class >> fixItReturnDebugActionFor: aDebugger [
-	<gtPhlowSaveViewReturnFixDebugAction>
+	"<gtPhlowSameViewReturnDebugAction>"
 	
 	^ self forDebugger: aDebugger
 ]
 
 { #category : #accessing }
 GtPhlowViewsCollectorSameViewFixItDebugAction >> appliesToDebugger: aDebugger [
-
 	^ aDebugger session isInterruptedContextPostMortem not and: [
 		| targetException |
 		targetException := aDebugger session exception.
@@ -45,5 +44,8 @@ GtPhlowViewsCollectorSameViewFixItDebugAction >> initialize [
 
 { #category : #accessing }
 GtPhlowViewsCollectorSameViewFixItDebugAction >> refactorContent [
-	self debugger session exception transform
+	| transformation |
+	transformation := self debugger 
+		session exception gtMoldableExceptionTransformation.
+	transformation performTransformation.
 ]

@@ -33,7 +33,8 @@ GtDebuggerAbstractStackModel >> cachedCodersDo: aBlock [
 { #category : #accessing }
 GtDebuggerAbstractStackModel >> coderViewModelStream [
 	^ self contextStream
-		map: [ :eachContext | (self createCoderFor: eachContext in: session) asCoderViewModel]
+		map: [ :eachContext | 
+			(self createCoderFor: eachContext in: session) asCoderViewModel ]
 		cache: coderViewModelCache
 ]
 

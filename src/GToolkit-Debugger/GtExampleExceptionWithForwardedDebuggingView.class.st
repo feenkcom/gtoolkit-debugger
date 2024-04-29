@@ -1,5 +1,5 @@
 "
-An example of an exception that defined debugging views in other domain objects through a custom debugging configuration ({{gtMethod:GtExampleExceptionWithForwardedDebuggingView>>gtDebuggingExtensionConfiguration|label=#selector}}).
+An example of an exception that defined debugging views in other domain objects through a custom debugging configuration ({{gtMethod:GtExampleExceptionWithForwardedDebuggingView>>gtExceptionDebuggerSpecification|label=#selector}}).
 
 The following examples creates an example instance of the exception:
 {{gtExample:GtExceptionsWithExtensionsExamples>>exampleExceptionWithForwardedDebuggingViews}}
@@ -23,16 +23,16 @@ GtExampleExceptionWithForwardedDebuggingView class >> signalWithDomainData [
 ]
 
 { #category : #accessing }
-GtExampleExceptionWithForwardedDebuggingView >> gtDebuggingExtensionConfiguration [
+GtExampleExceptionWithForwardedDebuggingView >> gtExceptionDebuggerSpecification [
 	"Create a debugging configuration that adds three extra domain
 	objects where to look for debugging views, and that only enables
 	the debugging extension if any of the three debugging objects has data."
 	
-	^ super gtDebuggingExtensionConfiguration
+	^ super gtExceptionDebuggerSpecification
 		addDebuggingTargetFor: self objectOne;
 		addDebuggingTargetFor: self objectTwo;
 		addDebuggingTargetFor: self objectThree;
-		enableDebuggingViewExtension: [ 
+		enableWhen: [ 
 			self objectOne hasData or: [
 				self objectTwo hasData or: [
 					self objectThree hasData ] ] ] 

@@ -6,7 +6,8 @@ Class {
 	#instVars : [
 		'debuggerElement',
 		'debuggerContainer',
-		'buttonsContainer'
+		'buttonsContainer',
+		'isSwitchingEnabled'
 	],
 	#classVars : [
 		'AlwaysOpenFullDebugger',
@@ -123,7 +124,6 @@ GtMoldableDebugger >> aboutToOpen [
 GtMoldableDebugger >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
 	| newDebuggerElement |
 	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
-	self updateSwitchButtonsExcluding: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
 ]
 
@@ -131,51 +131,51 @@ GtMoldableDebugger >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDe
 GtMoldableDebugger >> actOnDebugActionExecuted [
 	self currentDebugger session ifNotNil: [ :aDebuggingSession | 
 		aDebuggingSession interruptedContext ifNotNil: [ 
-			self updateSwitchButtonsExcluding: self currentDebugger ].
+			self updateSwitchButtonsForCurrentDebuggerElement: self currentDebugger ].
 		self currentDebugger actOnDebugActionExecuted. ]
 ]
 
-{ #category : #accessing }
-GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession excluding: aDebuggerType [ 
+{ #category : #'initialization - debuggers' }
+GtMoldableDebugger >> availableDebuggerTypesForDebugSession: aDebugSession [
 	^ ((Smalltalk tools debuggersForDebugSession: aDebugSession)
-			select: [ :aDebuggerClass | aDebuggerClass inheritsFrom: GtDebuggerElement ]) reverse
-		remove: aDebuggerType ifAbsent: [ ];
+			select: [ :aDebuggerClass | 
+				aDebuggerClass inheritsFrom: GtDebuggerElement ]) 
 		yourself
 ]
 
 { #category : #'building widgets' }
-GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerClass [
-	^ BrButton new
-		beSmallSize;
-		background: Color white;
-		aptitude: BrGlamorousButtonRectangularAptitude new +
-			BrGlamorousButtonLabelAptitude new + 
-			BrShadowAptitude;
-		geometry: (BlRoundedRectangleGeometry cornerRadius: 10);
-		margin: (BlInsets left: 5);
-		label: aDebuggerClass defaultTitle;
-		when: BlMouseEnterEvent do: [ :anEvent | anEvent currentTarget background: Color veryVeryLightGray lighter ];
-		when: BlMouseLeaveEvent do: [ :anEvent | anEvent currentTarget background: Color white ];
-		action: [ :buttonElement |
-			self 
-				actOnButtonSelected: buttonElement 
-				forDebuggerOfType: aDebuggerClass ]
+GtMoldableDebugger >> createButtonForSwitchingTo: aDebuggerSpecification [
+	^ BrTab new
+		aptitude: BrGlamorousTabSwitcherWithLabelAndIconAptitude new ;
+		icon: aDebuggerSpecification icon;
+		label: aDebuggerSpecification title;
+		stencil: [ BrFrame new fitContent ];
+		in: [ :aTab |
+			aTab userData 
+				at: #debuggerSpecification
+				put: aDebuggerSpecification.
+			aTab ]
 ]
 
 { #category : #'building widgets' }
 GtMoldableDebugger >> createButtonsContainer [
 	| container |
-	container := BlElement new
+	container := BrTabGroup new
+		fitContent;
+		labeled: 'Composite Tool';
+		aptitude: BrGlamorousTabGroupSwitcherAptitude;
 		id: GtMoldableDebuggerSwitchButtonsContainerElementId;
-		layout: BlLinearLayout horizontal;
-		clipChildren: false;
 		constraintsDo: [ :c |
-			c horizontal fitContent.
-			c vertical fitContent.
-			c margin: (BlInsets top: -10 left: 0 bottom: 0 right: -10).
 			c ignoreByLayout.
 			c ignored horizontal alignCenter.
 			c ignored vertical alignTop ].
+	container 
+		when: BrTabSelectedEvent do: [ :anEvent | 
+			(debuggerElement notNil and: [self isSwitchingEnabled]) ifTrue: [
+				self 
+					actOnButtonSelected: nil 
+					forDebuggerOfType: (anEvent tab widget
+						userData at: #debuggerSpecification) debuggerClass ] ] .
 	^ container
 ]
 
@@ -187,6 +187,11 @@ GtMoldableDebugger >> currentDebugger [
 { #category : #accessing }
 GtMoldableDebugger >> debugSession [
 	^ self currentDebugger debugSession
+]
+
+{ #category : #accessing }
+GtMoldableDebugger >> enableDebuggerSwitching [
+	isSwitchingEnabled := true
 ]
 
 { #category : #accessing }
@@ -222,8 +227,15 @@ GtMoldableDebugger >> initialize [
 GtMoldableDebugger >> initializeForSession: aDebuggingSession [
 	| newDebuggerElement |
 	newDebuggerElement := self selectInitialDebuggerFor: aDebuggingSession.
-	self updateSwitchButtonsExcluding: newDebuggerElement.
+	self updateSwitchButtonsForCurrentDebuggerElement: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
+	
+	self enableDebuggerSwitching.
+]
+
+{ #category : #testing }
+GtMoldableDebugger >> isSwitchingEnabled [
+	^ isSwitchingEnabled ifNil: [ false ]
 ]
 
 { #category : #opening }
@@ -247,18 +259,32 @@ GtMoldableDebugger >> openInPager [
 	self open: aPager titled: debuggerElement session name.
 ]
 
-{ #category : #initialization }
+{ #category : #'initialization - debuggers' }
 GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
-	| debuggerClass initialDebugger |
+	| automaticallyAvailableSpecifications debuggerClass |
+	
+	automaticallyAvailableSpecifications := aDebugSession 
+		applicableDebuggerSpecifications 
+			select: [ :aDebuggerSpecification | 
+				aDebuggerSpecification availableAutomatically ].
+		
+	debuggerClass := automaticallyAvailableSpecifications 
+		ifEmpty: [ GtPharoDebuggerElement ]
+		ifNotEmpty: [ :aCollection | aCollection first debuggerClass ].
+		
+	^ debuggerClass on: (debuggerClass spanNewSessionFrom: aDebugSession) .
+]
+
+{ #category : #'initialization - debuggers' }
+GtMoldableDebugger >> selectInitialDebuggerTypeFor: aDebugSession [ 
+	| debuggerClass |
 	debuggerClass := Smalltalk tools 
 		debuggerDispatcherForDebugSession: aDebugSession
 		matching: [ :aDebuggerClass | 
 			"Only take into account GT debuggers."
 			(aDebuggerClass includesBehavior: GtDebuggerElement) and: [ 
 				aDebuggerClass availableAutomatically ] ].
-	initialDebugger := (debuggerClass ifNil: [ GtPharoDebuggerElement ])
-			ifNotNil: [ :aDebugger | aDebugger on: (aDebugger spanNewSessionFrom: aDebugSession) ].
-	^ initialDebugger
+	^debuggerClass ifNil: [ GtPharoDebuggerElement ]
 ]
 
 { #category : #private }
@@ -298,15 +324,35 @@ GtMoldableDebugger >> updateDebuggerElement: aNewDebuggerElement [
 ]
 
 { #category : #private }
-GtMoldableDebugger >> updateSwitchButtonsExcluding: aDebuggerElement [
-	| availableDebuggerTypes |
-	availableDebuggerTypes := self 
-		availableDebuggerTypesForDebugSession: aDebuggerElement session 
-		excluding: aDebuggerElement class.
+GtMoldableDebugger >> updateSwitchButtonsForCurrentDebuggerElement: aDebuggerElement [
+	| applicableDebuggerSpecifications |
 	
-	buttonsContainer removeChildren.
-	availableDebuggerTypes do: [ :aDebuggerClass |
-		| switchButton |
-		switchButton := self createButtonForSwitchingTo: aDebuggerClass.
-		buttonsContainer addChild: switchButton ]
+	applicableDebuggerSpecifications := aDebuggerElement session
+		applicableDebuggerSpecifications.
+	
+	self withTabSwitchingDisabledDo: [
+		buttonsContainer tabs copy do: [ :aTab |
+			buttonsContainer viewModel 
+				removeTab: aTab ].
+		
+		applicableDebuggerSpecifications size > 1 ifFalse: [ 
+			"We only show the toolbar for changing the debugger in case we have more then one debugger"
+			^ self ].
+	
+		applicableDebuggerSpecifications do: [ :aDebuggerSpecification |
+			| switchTab |
+			switchTab := self createButtonForSwitchingTo: aDebuggerSpecification.
+			buttonsContainer addTab: switchTab.
+			
+			aDebuggerSpecification debuggerClass = aDebuggerElement class ifTrue: [
+				switchTab select ] ] ]
+]
+
+{ #category : #private }
+GtMoldableDebugger >> withTabSwitchingDisabledDo: aBlockClosure [ 
+	| previousState |
+	previousState := isSwitchingEnabled.
+	isSwitchingEnabled := false.
+	^ aBlockClosure ensure: [
+		isSwitchingEnabled := previousState ]
 ]
