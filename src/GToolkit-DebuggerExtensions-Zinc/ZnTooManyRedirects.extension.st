@@ -24,7 +24,7 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 		hasLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout)
 			ifFalse: [ ^ anAction noAction ].
 		
-	actionLabel := 'Increasing the number of redirects in the Zinc client and retry'.
+	actionLabel := 'Increase the number of redirects in the Zinc client and retry'.
 	^ anAction dropdown
 		label: 'Retry';
 		icon: BrGlamorousVectorIcons refresh ;
