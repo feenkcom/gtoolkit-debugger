@@ -18,6 +18,7 @@ ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRetryCount: ne
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContext: aPhlowActionContext [
 	<gtExceptionAction>
+	<gtStackAction>
 	| actionLabel |
 	
 	(aPhlowActionContext currentDebuggingSession 
@@ -49,7 +50,7 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ZnTooManyRedirects >> gtDefaultDebuggerSpecification [
 	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtExceptionAction);
+		debuggingActionPragmas: #(gtStackAction);
 		yourself
 ]
 

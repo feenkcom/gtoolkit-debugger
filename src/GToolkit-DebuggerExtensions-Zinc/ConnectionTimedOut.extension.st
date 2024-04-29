@@ -18,21 +18,14 @@ ConnectionTimedOut >> gtActionPerformRetryUsing: aDebugger withNewTimeout: aTime
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ConnectionTimedOut >> gtDefaultDebuggerSpecification [
 	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtExceptionAction);
+		debuggingActionPragmas: #(gtStackAction);
 		yourself
-]
-
-{ #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ConnectionTimedOut >> gtExceptionDebuggerSpecification [
-	^ super gtExceptionDebuggerSpecification
-		priority: 1200;
-		availableAutomatically: false;
-		debuggingActionPragmas: #(gtExceptionAction)
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ConnectionTimedOut >> gtZincActionRetryWithIncreasingTimeoutFor: anAction inContext: aPhlowActionContext [
 	<gtExceptionAction>
+	<gtStackAction>
 	| targetContext actionLabel |
 	
 	aPhlowActionContext currentDebuggingSession 
