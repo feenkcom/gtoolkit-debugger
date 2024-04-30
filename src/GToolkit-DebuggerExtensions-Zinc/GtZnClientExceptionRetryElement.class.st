@@ -48,7 +48,7 @@ GtZnClientExceptionRetryElement >> createPlayButton [
 { #category : #'building widgets' }
 GtZnClientExceptionRetryElement >> createRedirectCountLabel [
 	^ BrLabel new 
-		text: 'Maximum redirect count:';
+		text: self editLabelText;
 		aptitude: (BrGlamorousLabelAptitude new 
 			foreground: Color gray;
 			fontSize: 12)
@@ -87,6 +87,11 @@ GtZnClientExceptionRetryElement >> createRedirectsCountEditorElement [
 			countEditorElement deselecter all deselect ].
 			
 	^ newEditorElement
+]
+
+{ #category : #accessing }
+GtZnClientExceptionRetryElement >> editLabelText [
+	^ 'Value:'
 ]
 
 { #category : #initialialize }

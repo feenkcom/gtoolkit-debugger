@@ -18,13 +18,14 @@ ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRetryCount: ne
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContext: aPhlowActionContext [
 	<gtExceptionAction>
+	<gtStackAction>
 	| actionLabel |
 	
 	(aPhlowActionContext currentDebuggingSession 
 		hasLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout)
 			ifFalse: [ ^ anAction noAction ].
 		
-	actionLabel := 'Increasing the number of redirects in the Zinc client and retry'.
+	actionLabel := 'Increase the number of redirects in the Zinc client and retry'.
 	^ anAction dropdown
 		label: 'Retry';
 		icon: BrGlamorousVectorIcons refresh ;
@@ -49,7 +50,7 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ZnTooManyRedirects >> gtDefaultDebuggerSpecification [
 	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtExceptionAction);
+		debuggingActionPragmas: #(gtStackAction);
 		yourself
 ]
 

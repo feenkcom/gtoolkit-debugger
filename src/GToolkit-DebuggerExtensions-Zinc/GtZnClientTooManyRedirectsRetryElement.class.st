@@ -11,6 +11,11 @@ GtZnClientTooManyRedirectsRetryElement >> currentMaxNumberOfRedirects: anInteger
 ]
 
 { #category : #accessing }
+GtZnClientTooManyRedirectsRetryElement >> editLabelText [
+	^ 'Maximum redirect count:'
+]
+
+{ #category : #accessing }
 GtZnClientTooManyRedirectsRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger [ 
 	super initializeForZnClient: aZnClient andDebugger: aDebugger.
 	
