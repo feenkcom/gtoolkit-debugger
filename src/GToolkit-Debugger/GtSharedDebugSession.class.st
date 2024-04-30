@@ -5,7 +5,7 @@ Class {
 		'mutex',
 		'session'
 	],
-	#category : 'GToolkit-Debugger-Session'
+	#category : #'GToolkit-Debugger-Session'
 }
 
 { #category : #'private - asserting' }
@@ -21,14 +21,15 @@ GtSharedDebugSession >> assertSession: aDebugSession [
 { #category : #'api - actions' }
 GtSharedDebugSession >> debug [
 	<return: #GtMoldableDebugger>
-	self releasedSessionDo: [ :aSession |
-		| aDebugger |
-		aDebugger := Smalltalk tools debugger 
-			openOn: aSession 
-			withFullView: true 
-			andNotification: nil.
-		self notifyDebugged.
-		^ aDebugger ].
+	self
+		releasedSessionDo: [ :aSession | 
+			| aDebugger |
+			aDebugger := Smalltalk tools debugger
+					openOn: aSession
+					withFullView: true
+					andNotification: nil.
+			self notifyDebuggedReleasedSession: aSession debugger: aDebugger.
+			^ aDebugger ].
 	^ nil
 ]
 
@@ -92,13 +93,20 @@ GtSharedDebugSession >> name [
 ]
 
 { #category : #'private - notifying' }
-GtSharedDebugSession >> notifyDebugged [
-	self announce: (GtSharedDebugSessionDebuggedAnnouncement new session: self)
+GtSharedDebugSession >> notifyDebuggedReleasedSession: aReleasedSession debugger: aDebugger [
+	self
+		announce: (GtSharedDebugSessionDebuggedAnnouncement new
+				session: self;
+				releasedSession: aReleasedSession;
+				debugger: aDebugger)
 ]
 
 { #category : #'private - notifying' }
-GtSharedDebugSession >> notifyTerminated [
-	self announce: (GtSharedDebugSessionTerminatedAnnouncement new session: self)
+GtSharedDebugSession >> notifyTerminatedReleasedSession: aReleasedSession [
+	self
+		announce: (GtSharedDebugSessionTerminatedAnnouncement new
+				session: self;
+				releasedSession: aReleasedSession)
 ]
 
 { #category : #printing }
@@ -136,7 +144,8 @@ GtSharedDebugSession >> sessionDo: aBlock [
 
 { #category : #'api - actions' }
 GtSharedDebugSession >> terminate [
-	self releasedSessionDo: [ :aSession |
-		aSession terminate.
-		self notifyTerminated ].
+	self
+		releasedSessionDo: [ :aSession | 
+			aSession terminate.
+			self notifyTerminatedReleasedSession: aSession ]
 ]
