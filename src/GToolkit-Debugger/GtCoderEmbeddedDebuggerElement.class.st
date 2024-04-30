@@ -47,10 +47,11 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException 
 
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> debug [
-	self switchToSystemDebugger.
 	BlTaskAction
 		enqueueElement: self
-		action: [ self visibility: BlVisibility hidden ]
+		action: [ 
+			self switchToSystemDebugger.
+			self visibility: BlVisibility hidden ]
 ]
 
 { #category : #initialize }

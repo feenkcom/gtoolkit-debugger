@@ -1,5 +1,18 @@
 Class {
 	#name : #GtSharedDebugSessionDebuggedAnnouncement,
 	#superclass : #GtSharedDebugSessionAnnouncement,
-	#category : 'GToolkit-Debugger-Session'
+	#instVars : [
+		'debugger'
+	],
+	#category : #'GToolkit-Debugger-Session'
 }
+
+{ #category : #accessing }
+GtSharedDebugSessionDebuggedAnnouncement >> debugger [
+	^ debugger
+]
+
+{ #category : #accessing }
+GtSharedDebugSessionDebuggedAnnouncement >> debugger: anObject [
+	debugger := anObject
+]
