@@ -19,7 +19,9 @@ GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 	theSourceStartInText := aText finder
 			caseSensitiveSubstring: anEvaluatedSource;
 			startAtPosition: anEvaluatedInterval first;
-			searchClosest.	"what did we evaluate?"
+			searchClosest.
+			
+	"what did we evaluate?"
 	theSourceStartInText isZero ifTrue: [ ^ self ].
 	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1
 			min: aText size.
