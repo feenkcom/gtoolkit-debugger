@@ -130,12 +130,13 @@ GtCoderEmbeddedDebuggerInSpaceElement >> updateElement [
 	| aText aSpace |
 	aSpace := self debuggerSpace.
 	aText := aSpace
-			ifNotNil: [ 'Locate debugger' asRopedText ]
-			ifNil: [ 'Cannot locate debugger' asRopedText ].
-	aSpace isOpened ifFalse: [ aText := 'Debugger was closed' asRopedText ].
+			ifNotNil: [ aSpace isOpened
+					ifTrue: [ 'Locate debugger' asRopedText ]
+					ifFalse: [ 'Debugger was closed' asRopedText ] ]
+			ifNil: [ 'Debugger was closed' asRopedText ].
 	buttonElement label: aText.
 
-	aSpace isOpened ifFalse: [ 
-		buttonElement visibility: BlVisibility hidden.
-		coderViewModel evaluationStatus: GtCoderNoEvaluationStatus default ]
+	(aSpace isNil or: [ aSpace isOpened not ])
+		ifTrue: [ buttonElement visibility: BlVisibility hidden.
+			coderViewModel evaluationStatus: GtCoderNoEvaluationStatus default ]
 ]
