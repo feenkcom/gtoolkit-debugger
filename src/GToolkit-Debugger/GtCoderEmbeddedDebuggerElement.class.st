@@ -87,7 +87,8 @@ GtCoderEmbeddedDebuggerElement >> initialize [
 				right: 3
 				bottom: 0
 				left: 3).
-	self fitContent
+	self hFitContentLimited.
+	self vFitContent
 ]
 
 { #category : #initialization }
@@ -104,9 +105,9 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
 					bottom: 0
 					left: 3);
 			margin: (BlInsets all: 0);
-			action: [ :aButtonElement :aButtonModel :anEvent |
-				self onButtonAction: anEvent ];
-			fitContent
+			action: [ :aButtonElement :aButtonModel :anEvent | self onButtonAction: anEvent ];
+			vFitContent;
+			hFitContentLimited
 ]
 
 { #category : #'private - event handling' }
