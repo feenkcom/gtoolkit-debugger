@@ -31,7 +31,7 @@ GtZnClientExceptionRetryElement >> createMessageElement [
 		aptitude: BrGlamorousRegularEditorAptitude new .
 	
 	newEditorElement 
-		hExact: 275;
+		hExact: 325;
 		vFitContent.
 	
 	^ newEditorElement

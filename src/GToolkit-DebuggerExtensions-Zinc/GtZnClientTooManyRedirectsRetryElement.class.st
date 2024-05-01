@@ -24,7 +24,7 @@ GtZnClientTooManyRedirectsRetryElement >> initializeForZnClient: aZnClient andDe
 
 { #category : #accessing }
 GtZnClientTooManyRedirectsRetryElement >> messageTextForRedirectCount: anInteger [ 
-	^ 'Reached the maximum number of {1} {2}. Retry by increasing the value in the ZnClient.' format: {
+	^ 'Reached the maximum number of {1} {2}. Increase the maximum number of redirects in the ZnClient and retry the request.' format: {
 		anInteger. 
 		'redirect' asPluralBasedOn: anInteger}
 ]

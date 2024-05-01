@@ -1,9 +1,9 @@
 Extension { #name : #ZnTooManyRedirects }
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRetryCount: newCount [
+ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRedirectCount: newCount [
 	aDebugger  
-		findLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout
+		findLimitedFullActiveContextForMethod: ZnClient>>#execute
 		ifFound: [ :aContext |
 			aContext receiver 
 				maxNumberOfRedirects: newCount.
@@ -22,10 +22,10 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 	| actionLabel |
 	
 	(aPhlowActionContext currentDebuggingSession 
-		hasLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout)
+		hasLimitedFullActiveContextForMethod: ZnClient>>#execute)
 			ifFalse: [ ^ anAction noAction ].
 		
-	actionLabel := 'Increase the number of redirects in the Zinc client and retry'.
+	actionLabel := 'Increase the number of redirects in the Zinc client and retry the request'.
 	^ anAction dropdown
 		label: 'Retry';
 		icon: BrGlamorousVectorIcons refresh ;
@@ -43,7 +43,7 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 				retryAction: [ :newCount :currentDebugger |
 					self 
 						gtActionPerformRetryUsing: currentDebugger
-						withNewRetryCount: newCount].
+						withNewRedirectCount: newCount].
 			contentElement ] 
 ]
 
