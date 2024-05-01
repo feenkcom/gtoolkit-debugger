@@ -124,6 +124,11 @@ GtDebuggerDiffObjectStateComparisonStencil >> fromLabelText: aString [
 ]
 
 { #category : #accessing }
+GtDebuggerDiffObjectStateComparisonStencil >> fromValue: anObject [ 
+	fromValue := anObject 
+]
+
+{ #category : #accessing }
 GtDebuggerDiffObjectStateComparisonStencil >> fullFromLabelText [
 	^ self fromLabelText, ' ', (fromValue 
 		ifNil: [''] 
@@ -140,4 +145,14 @@ GtDebuggerDiffObjectStateComparisonStencil >> fullToLabelText [
 { #category : #accessing }
 GtDebuggerDiffObjectStateComparisonStencil >> toLabelText [
 	^ toLabelText ifNil: [ 'To:' ]
+]
+
+{ #category : #accessing }
+GtDebuggerDiffObjectStateComparisonStencil >> toLabelText: aString [
+	toLabelText := aString
+]
+
+{ #category : #accessing }
+GtDebuggerDiffObjectStateComparisonStencil >> toValue: anObject [ 
+	toValue := anObject 
 ]
