@@ -5,10 +5,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-GtZnClientConnectionTimedOutRetryElement class >> forSocketStream: aSocketStream andDebugger: aDebugger [ 
+GtZnClientConnectionTimedOutRetryElement class >> forSocketStream: aSocketStream andDebugger: aDebugger fromSourceElement: aSourceElement [
 	^ self new 
 		initializeForSocketStream: aSocketStream
 		andDebugger: aDebugger 
+		fromSourceElement: aSourceElement
 ]
 
 { #category : #accessing }
@@ -35,9 +36,16 @@ GtZnClientConnectionTimedOutRetryElement >> initializeForSocketStream: aSocketSt
 	self configureForWaitWithCurrentTimeout: aSocketStream timeout.
 ]
 
+{ #category : #'initialization ' }
+GtZnClientConnectionTimedOutRetryElement >> initializeForSocketStream: aSocketStream andDebugger: aDebugger fromSourceElement: aSourceElement [
+	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement.
+	
+	self configureForWaitWithCurrentTimeout: aSocketStream timeout.
+]
+
 { #category : #initialization }
-GtZnClientConnectionTimedOutRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger [ 
-	super initializeForZnClient: aZnClient andDebugger: aDebugger.
+GtZnClientConnectionTimedOutRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [
+	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement.
 	
 	self configureForRetryWithCurrentTimeout: aZnClient timeout
 ]

@@ -33,11 +33,12 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 		id: #'gtTooManyRedirects-retry';
 		tooltip: actionLabel;
 		preferredExtent: 650@350;
-		content: [ 
+		content: [ :aSourceButton |
 			| contentElement |
 			contentElement := GtZnClientTooManyRedirectsRetryElement 
 				forZnClient:  signaler
-				andDebugger: aPhlowActionContext currentDebugger.
+				andDebugger: aPhlowActionContext currentDebugger
+				fromSourceElement: aSourceButton.
 			contentElement  
 				actionLabel: actionLabel;
 				retryAction: [ :newCount :currentDebugger |

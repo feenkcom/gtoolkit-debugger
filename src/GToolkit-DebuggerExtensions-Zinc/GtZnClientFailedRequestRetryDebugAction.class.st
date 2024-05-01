@@ -15,7 +15,7 @@ GtZnClientFailedRequestRetryDebugAction >> appliesToDebugger: aDebugger [
 	aDebugger session isInterruptedContextPostMortem ifTrue: [ ^ false ].
 	
 	(aDebugger session exception  isNil or: [
-		(ZnClient new retryExceptionSet 
+		((ZnClient new retryExceptionSet - ConnectionTimedOut) 
 			handles: aDebugger debugSession exception)])
 				ifFalse: [ ^ false ].
 		
@@ -91,11 +91,12 @@ GtZnClientFailedRequestRetryDebugAction >> gtActionRetryWithIncreasingRetriesFor
 		id: #'gtZincConnectionFailure-retry';
 		tooltip: actionLabel;
 		preferredExtent: 650@350;
-		content: [ 
+		content: [ :aSourceButton |
 			| contentElement |
 			contentElement := GtZnClientFailedRequestRetryElement 
 				forZnClient:  targetContext receiver
-				andDebugger: aPhlowActionContext currentDebugger.
+				andDebugger: aPhlowActionContext currentDebugger
+				fromSourceElement: aSourceButton.
 			contentElement  
 				actionLabel: actionLabel;
 				retryAction: [ :newCount :currentDebugger |

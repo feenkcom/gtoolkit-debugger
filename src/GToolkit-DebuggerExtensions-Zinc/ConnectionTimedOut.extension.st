@@ -63,11 +63,12 @@ ConnectionTimedOut >> gtZincActionContinueWaitingFor: anAction inContext: aPhlow
 		id: #'gtConnectionTimedOut-wait';
 		tooltip: actionLabel;
 		preferredExtent: 650@350;
-		content: [ 
+		content: [ :aSourceButton |
 			| contentElement |
 			contentElement := GtZnClientConnectionTimedOutRetryElement 
 				forSocketStream: targetContext receiver
-				andDebugger: aPhlowActionContext currentDebugger.
+				andDebugger: aPhlowActionContext currentDebugger
+				fromSourceElement: aSourceButton.
 			contentElement  
 				actionLabel: actionLabel;
 				retryAction: [ :newCount :currentDebugger |
@@ -97,11 +98,12 @@ ConnectionTimedOut >> gtZincActionRetryWithIncreasingTimeoutFor: anAction inCont
 		id: #'gtConnectionTimedOut-retry';
 		tooltip: actionLabel;
 		preferredExtent: 650@350;
-		content: [ 
+		content: [ :aSourceButton |
 			| contentElement |
 			contentElement := GtZnClientConnectionTimedOutRetryElement 
 				forZnClient: targetContext receiver
-				andDebugger: aPhlowActionContext currentDebugger.
+				andDebugger: aPhlowActionContext currentDebugger
+				fromSourceElement: aSourceButton.
 			contentElement  
 				actionLabel: actionLabel;
 				retryAction: [ :newCount :currentDebugger |

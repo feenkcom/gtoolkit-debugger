@@ -16,8 +16,8 @@ GtZnClientTooManyRedirectsRetryElement >> editLabelText [
 ]
 
 { #category : #accessing }
-GtZnClientTooManyRedirectsRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger [ 
-	super initializeForZnClient: aZnClient andDebugger: aDebugger.
+GtZnClientTooManyRedirectsRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [
+	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement.
 	
 	self currentMaxNumberOfRedirects: aZnClient maxNumberOfRedirects
 ]

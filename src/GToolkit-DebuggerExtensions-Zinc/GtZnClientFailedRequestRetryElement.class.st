@@ -16,8 +16,8 @@ GtZnClientFailedRequestRetryElement >> editLabelText [
 ]
 
 { #category : #initialization }
-GtZnClientFailedRequestRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger [ 
-	super initializeForZnClient: aZnClient andDebugger: aDebugger.
+GtZnClientFailedRequestRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [ 
+	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement..
 	
 	self currentNumberOfRetries: aZnClient numberOfRetries
 ]
