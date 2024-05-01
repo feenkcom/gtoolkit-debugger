@@ -49,18 +49,10 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ZnTooManyRedirects >> gtDefaultDebuggerSpecification [
-	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtStackAction);
-		yourself
-]
-
-{ #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ZnTooManyRedirects >> gtExceptionDebuggerSpecification [
 	^ super gtExceptionDebuggerSpecification
 		priority: 1200;
-		availableAutomatically: false;
-		debuggingActionPragmas: #(gtExceptionAction)
+		availableAutomatically: false
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }

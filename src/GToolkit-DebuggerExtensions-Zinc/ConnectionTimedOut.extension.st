@@ -33,15 +33,7 @@ ConnectionTimedOut >> gtActionPerformRetryUsing: aDebugger withNewTimeout: aTime
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ConnectionTimedOut >> gtDefaultDebuggerSpecification [
-	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtStackAction);
-		yourself
-]
-
-{ #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ConnectionTimedOut >> gtZincActionContinueWaitingFor: anAction inContext: aPhlowActionContext [
-	<gtExceptionAction>
 	<gtStackAction>
 	| targetContext actionLabel |
 	
@@ -80,7 +72,6 @@ ConnectionTimedOut >> gtZincActionContinueWaitingFor: anAction inContext: aPhlow
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ConnectionTimedOut >> gtZincActionRetryWithIncreasingTimeoutFor: anAction inContext: aPhlowActionContext [
-	<gtExceptionAction>
 	<gtStackAction>
 	| targetContext actionLabel |
 	

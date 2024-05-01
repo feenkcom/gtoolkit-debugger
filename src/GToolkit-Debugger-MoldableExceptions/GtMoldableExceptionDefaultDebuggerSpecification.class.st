@@ -16,6 +16,11 @@ GtMoldableExceptionDefaultDebuggerSpecification >> collectContextDebuggingViewsF
 ]
 
 { #category : #accessing }
+GtMoldableExceptionDefaultDebuggerSpecification >> defaultTargetObjectDebuggingActionPragmas [
+	^ #(gtStackAction)
+]
+
+{ #category : #accessing }
 GtMoldableExceptionDefaultDebuggerSpecification >> receiverViewPragmaNames [
 	^ receiverViewPragmaNames ifNil: [ #() ]
 ]
