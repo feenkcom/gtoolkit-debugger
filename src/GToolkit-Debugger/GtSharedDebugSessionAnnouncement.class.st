@@ -2,10 +2,21 @@ Class {
 	#name : #GtSharedDebugSessionAnnouncement,
 	#superclass : #Announcement,
 	#instVars : [
-		'session'
+		'session',
+		'releasedSession'
 	],
-	#category : 'GToolkit-Debugger-Session'
+	#category : #'GToolkit-Debugger-Session'
 }
+
+{ #category : #accessing }
+GtSharedDebugSessionAnnouncement >> releasedSession [
+	^ releasedSession
+]
+
+{ #category : #accessing }
+GtSharedDebugSessionAnnouncement >> releasedSession: anObject [
+	releasedSession := anObject
+]
 
 { #category : #'api - accessing' }
 GtSharedDebugSessionAnnouncement >> session [

@@ -1,10 +1,13 @@
 Class {
 	#name : #GtCoderEmbeddedDebuggerElement,
 	#superclass : #BlElement,
+	#traits : 'TBrLayoutResizable',
+	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
 		'debuggingSession',
 		'signaledException',
-		'isTerminationDisabled'
+		'isTerminationDisabled',
+		'buttonElement'
 	],
 	#classVars : [
 		'IsEmbeddedDebuggerEnabled'
@@ -42,47 +45,18 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException 
 		ifFalse: [ ^ Smalltalk tools debugger openOn: debugSession withFullView: true ]
 ]
 
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> actOnDebugSessionChanged [
-	| label text |
-	self layout: (BlGridLayout horizontal cellSpacing: 3).
-	text := self signaledException printString asRopedText.
-	label := BrButton new
-		aptitude: BrGlamorousLabelAptitude new;
-		beSmallSize;
-		label: text;
-		background: self theme status errorBackgroundColor;
-		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-		padding:
-			(BlInsets
-				top: 0
-				right: 3
-				bottom: 0
-				left: 3);
-		margin: (BlInsets all: 0);
-		action: [ self debug ];
-		fitContent.
-	self
-		removeChildren;
-		addChild: label;
-		constraintsDo: [ :c | 
-			c
-				padding:
-					(BlInsets
-						top: -3
-						right: 3
-						bottom: 0
-						left: 3).
-			c vertical fitContent.
-			c horizontal fitContent ]
-]
-
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> debug [
-	self switchToSystemDebugger.
 	BlTaskAction
 		enqueueElement: self
-		action: [ self visibility: BlVisibility hidden ]
+		action: [ 
+			self switchToSystemDebugger.
+			self visibility: BlVisibility hidden ]
+]
+
+{ #category : #initialize }
+GtCoderEmbeddedDebuggerElement >> defaultLayout [
+	^ BlLinearLayout horizontal
 ]
 
 { #category : #actions }
@@ -101,10 +75,45 @@ GtCoderEmbeddedDebuggerElement >> enableTermination [
 	isTerminationDisabled := false
 ]
 
-{ #category : #initialize }
+{ #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initialize [
 	super initialize.
-	self enableTermination
+	self enableTermination.
+
+	self initializeButtonElement.
+	self addChild: buttonElement as: #button.
+	self
+		padding: (BlInsets
+				top: 0
+				right: 3
+				bottom: 0
+				left: 3).
+	self hFitContentLimited.
+	self vFitContent
+]
+
+{ #category : #initialization }
+GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
+	buttonElement := BrButton new
+			aptitude: BrGlamorousLabelAptitude new;
+			beSmallSize;
+			label: '';
+			background: self theme status errorBackgroundColor;
+			geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+			padding: (BlInsets
+					top: 0
+					right: 3
+					bottom: 0
+					left: 3);
+			margin: (BlInsets all: 0);
+			action: [ :aButtonElement :aButtonModel :anEvent | self onButtonAction: anEvent ];
+			vFitContent;
+			hFitContentLimited
+]
+
+{ #category : #'private - event handling' }
+GtCoderEmbeddedDebuggerElement >> onButtonAction: anEvent [
+	self debug
 ]
 
 { #category : #'private - announcement handling' }
@@ -121,14 +130,14 @@ GtCoderEmbeddedDebuggerElement >> onDebugSessionTerminatedAnnouncement: anAnnoun
 		action: [ self visibility: BlVisibility hidden ]
 ]
 
-{ #category : #'hooks - children' }
-GtCoderEmbeddedDebuggerElement >> onRemovedFromSceneGraph [
-	super onRemovedFromSceneGraph.
-	"self terminateSession"
+{ #category : #'private - hooks' }
+GtCoderEmbeddedDebuggerElement >> onSessionChanged [
+	self updateButtonElement
 ]
 
 { #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> session [
+	<return: #GtSharedDebugSession>
 	^ debuggingSession
 ]
 
@@ -136,8 +145,7 @@ GtCoderEmbeddedDebuggerElement >> session [
 GtCoderEmbeddedDebuggerElement >> session: aDebugSession [
 	debuggingSession := aDebugSession.
 	self subscribeToSession.
-	self actOnDebugSessionChanged.
-
+	self onSessionChanged
 ]
 
 { #category : #accessing }
@@ -188,4 +196,11 @@ GtCoderEmbeddedDebuggerElement >> terminateSession [
 { #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> unsubscribeFromSession [
 	self session unsubscribe: self
+]
+
+{ #category : #'private - updating' }
+GtCoderEmbeddedDebuggerElement >> updateButtonElement [
+	| aText |
+	aText := self signaledException printString asRopedText.
+	buttonElement label: aText
 ]
