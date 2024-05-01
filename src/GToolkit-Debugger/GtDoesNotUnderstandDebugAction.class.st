@@ -1,7 +1,7 @@
 Class {
 	#name : #GtDoesNotUnderstandDebugAction,
 	#superclass : #DebugAction,
-	#category : 'GToolkit-Debugger-Actions'
+	#category : #'GToolkit-Debugger-Actions'
 }
 
 { #category : #registration }
@@ -19,19 +19,6 @@ GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	^ (self forDebugger: aDebugger)
 			icon: BrGlamorousIcons add;
 			order: 4
-]
-
-{ #category : #testing }
-GtDoesNotUnderstandDebugAction >> appliesToContext: aContext [
-	^ aContext isContextDoesNotUnderstand or: [ 
-		
-		"Select the second  or third contextes if the interupted context is a does not understand context."
-		"Less then ideal implementation for handling ""|x| x unknown"" "
-		(self session interruptedContext isContextDoesNotUnderstand and: [ 
-			self session interruptedContext sender = aContext ]) or: [ 
-		self session interruptedContext sender notNil and: [ 
-			self session interruptedContext sender isContextDoesNotUnderstand and: [ 
-					self session interruptedContext sender sender = aContext ] ] ] ]
 ]
 
 { #category : #testing }

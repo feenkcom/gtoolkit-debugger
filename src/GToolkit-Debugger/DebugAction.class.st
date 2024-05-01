@@ -66,18 +66,6 @@ DebugAction >> addToPhlowView: aView [
 ]
 
 { #category : #testing }
-DebugAction >> appliesToContext: aContext [
-
-	^ true
-]
-
-{ #category : #testing }
-DebugAction >> appliesToCurrentContext [
-
-	^ self appliesToContext: self currentContext
-]
-
-{ #category : #testing }
 DebugAction >> appliesToDebugger: aDebugger [
 
 	^ true
@@ -139,11 +127,6 @@ DebugAction >> asBrickButton [
 DebugAction >> asDebugAction [
 
 	^ self
-]
-
-{ #category : #'phlow ' }
-DebugAction >> asDebugActionElementWithHostElement: aHostElement [
-	^ self asBrickButton
 ]
 
 { #category : #'phlow ' }
