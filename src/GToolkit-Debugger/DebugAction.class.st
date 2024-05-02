@@ -66,6 +66,18 @@ DebugAction >> addToPhlowView: aView [
 ]
 
 { #category : #testing }
+DebugAction >> appliesToContext: aContext [
+
+	^ true
+]
+
+{ #category : #testing }
+DebugAction >> appliesToCurrentContext [
+
+	^ self appliesToContext: self currentContext
+]
+
+{ #category : #testing }
 DebugAction >> appliesToDebugger: aDebugger [
 
 	^ true
