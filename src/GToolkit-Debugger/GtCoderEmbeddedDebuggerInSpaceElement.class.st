@@ -63,11 +63,7 @@ GtCoderEmbeddedDebuggerInSpaceElement >> evaluationStatus: anEvaluationStatus [
 
 { #category : #private }
 GtCoderEmbeddedDebuggerInSpaceElement >> findSpace [
-	evaluationStatus ifNil: [ ^ nil ].
-	^ GtCoderDebuggerSpaceFinder new
-		debugSession: self debugSession;
-		find;
-		space
+	^ evaluationStatus ifNotNil: #debuggerSpace
 ]
 
 { #category : #initialization }
