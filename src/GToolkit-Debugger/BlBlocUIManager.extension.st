@@ -1,7 +1,7 @@
 Extension { #name : #BlBlocUIManager }
 
 { #category : #'*GToolkit-Debugger' }
-BlBlocUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: sourceCoder withSourceString: aSourceString withSourceInterval: aSourceInterval forException: exception [
+BlBlocUIManager >> gtDebugProcess: process context: context withEmbeddedDebuggerIn: aCoderRequesterObject withSourceString: aSourceString withSourceInterval: aSourceInterval forException: exception [
 	"Open a dedicated debugger as a result of an error that happened when executing code 
 	in an editor. The debugger can decide if and how to embed itself within the editor."
 
@@ -14,7 +14,7 @@ BlBlocUIManager >> gtDebugProcess: process context: context withEmbeddedDebugger
 			GtCoderEmbeddedDebuggerElement
 				openOn: debugSession
 				dueTo: exception
-				embeddedIn: sourceCoder
+				embeddedIn: aCoderRequesterObject
 				withSourceString: aSourceString
 				withSourceInterval: aSourceInterval ]
 ]

@@ -31,11 +31,11 @@ GtCoderEmbeddedDebuggerElement class >> isEmbeddedDebuggerEnabled [
 ]
 
 { #category : #opening }
-GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException embeddedIn: sourceCoder withSourceString: aSourceString withSourceInterval: aSourceInterval [
+GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException embeddedIn: aCoderRequesterObject withSourceString: aSourceString withSourceInterval: aSourceInterval [
 	| isHandled |
 	isHandled := false.
 	self isEmbeddedDebuggerEnabled ifTrue: [ 
-		isHandled := sourceCoder
+		isHandled := aCoderRequesterObject
 			notifyShowDebuggerRequest: debugSession
 			dueTo: anException
 			sourceString: aSourceString
