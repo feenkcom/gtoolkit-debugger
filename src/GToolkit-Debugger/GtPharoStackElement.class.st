@@ -12,9 +12,7 @@ Class {
 
 { #category : #accessing }
 GtPharoStackElement class >> contextMethodText: aContext [
-	^ aContext isBlockContext
-		ifTrue: [ '[] in ' , aContext outerContext method selector ]
-		ifFalse: [ aContext method selector ]
+	^ GtPharoStackIndexStencil contextMethodText: aContext
 ]
 
 { #category : #updating }
@@ -103,48 +101,12 @@ GtPharoStackElement >> buildReceiversIndex [
 
 { #category : #accessing }
 GtPharoStackElement >> buildStackIndex [
-	| indexList labelBlock |
-	indexList := BrColumnedList new
-			addAptitude: BrGlamorousWithHorizontalResizerAptitude new beRight;
-			background: BrGlamorousColors neutralBackgroundColor;
-			rowStencil: BrGlamorousColumnedListSelectableRowElementStencilBuilder new;
-			matchParent.
-	labelBlock := [ BrLabel new
-			margin: (BlInsets right: 10);
-			aptitude: BrGlamorousLabelAptitude;
-			beSmallSize;
-			hMatchParent;
-			vFitContent ].
-	indexList column
-		title: 'Class';
-		matchParent;
-		cellStencil: labelBlock;
-		dataBinder: [ :element :context | element text: (self contextClassText: context) ].
-	indexList column
-		title: 'Method';
-		matchParent;
-		cellStencil: labelBlock;
-		dataBinder: [ :element :context | element text: (self class contextMethodText: context) ].
-	indexList column
-		title: 'Package';
-		cellStencil: labelBlock;
-		width: 100;
-		dataBinder: [ :element :context | 
-			element
-				text: (context method package ifNotNil: [ :pkg | pkg name ] ifNil: [ '' ]) ].
+	| indexList |
+	indexList := GtPharoStackIndexStencil new asElement.
 	indexList
-		addAptitude: (BrColumnedListHeaderAptitude new
-				labelStencil: [ :column | 
-					| label |
-					label := BrLabel new
-							aptitude: BrLabelAptitude;
-							margin: (BlInsets right: 8);
-							text: (column title asRopedText
-									glamorousRegularFont;
-									fontSize: 12;
-									foreground: Color gray).
-					column columnWidth applyOn: label.
-					label ]).
+		addAptitude: BrGlamorousWithHorizontalResizerAptitude new beRight;
+		background: BrGlamorousColors neutralBackgroundColor;
+		matchParent.
 	indexList
 		when: BrSelectionChanged
 		do: [ :anEvent | self onStackIndexSelectionChanged ].
@@ -163,15 +125,6 @@ GtPharoStackElement >> computeStackTree: aContextList [
 					ifFalse: [ each receiver ].
 			(result at: receiver ifAbsentPut: [ OrderedCollection new ]) add: each ].
 	^ result associations
-]
-
-{ #category : #accessing }
-GtPharoStackElement >> contextClassText: aContext [
-	| result |
-	result := aContext receiver class printString.
-	aContext receiver class == aContext methodClass
-		ifFalse: [ result := result , '(' , aContext methodClass printString , ')' ].
-	^ result 
 ]
 
 { #category : #accessing }

@@ -71,20 +71,12 @@ GtCoderEmbeddedDebuggerDetailsElement >> initialize [
 
 { #category : #initialization }
 GtCoderEmbeddedDebuggerDetailsElement >> initializeStackListElement [
-	stackListElement := BrSimpleList new
+	stackListElement := GtPharoStackIndexStencil new asElement.
+	stackListElement
+		background: self theme default contentBackgroundColor;
 		hMatchParent;
 		vMatchParent;
-		padding: (BlInsets left: 5 right: 5);
-		itemType: [ :anItemTypeFactory :anItemObject :anItemIndex | DebugSession ];
-		itemStencil: [ :anEventElementClass :aListWidget | 
-			BrLabel new
-				aptitude: (BrGlamorousLabelAptitude new
-					glamorousRegularFont;
-					glamorousRegularSmallSize);
-				hMatchParent;
-				vFitContent ];
-		itemDataBinder: [ :aLabel :aContext :anItemIndex | 
-				aLabel text: (self textForContext: aContext) ]
+		padding: (BlInsets left: 5 right: 5)
 ]
 
 { #category : #initialization }
@@ -164,11 +156,6 @@ GtCoderEmbeddedDebuggerDetailsElement >> terminate [
 					self unsubscribeFromDebuggerViewModel.
 					aViewModel terminateDebugSession ].
 			self fireEvent: BrDropdownHideWish new ]
-]
-
-{ #category : #initialization }
-GtCoderEmbeddedDebuggerDetailsElement >> textForContext: aContext [
-	^ aContext printString
 ]
 
 { #category : #'private - subscriptions' }
