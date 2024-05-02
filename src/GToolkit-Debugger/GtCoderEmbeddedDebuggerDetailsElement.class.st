@@ -11,6 +11,11 @@ Class {
 	#category : #'GToolkit-Debugger-Elements'
 }
 
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerDetailsElement class >> defaultExactSize [
+	^ 300 @ 200
+]
+
 { #category : #actions }
 GtCoderEmbeddedDebuggerDetailsElement >> debug [
 	BlTaskAction
@@ -60,7 +65,7 @@ GtCoderEmbeddedDebuggerDetailsElement >> initialize [
 	self addChild: toolbarElement as: #toolbar.
 
 	self padding: (BlInsets all: 5).
-	self exact: 300 @ 300.
+	self exact: self class defaultExactSize.
 	self background: self theme default contentBackgroundColor
 ]
 
