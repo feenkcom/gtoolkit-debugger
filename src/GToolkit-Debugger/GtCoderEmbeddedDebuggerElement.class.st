@@ -181,6 +181,12 @@ GtCoderEmbeddedDebuggerElement >> onDebuggerViewModelChanged [
 	self updateButtonElement
 ]
 
+{ #category : #'hooks - children' }
+GtCoderEmbeddedDebuggerElement >> onRemovedFromParent: aParentElement [
+	super onRemovedFromParent: aParentElement.
+	BlTaskAction enqueueElement: aParentElement action: [ buttonDropdownAptitude hide ]
+]
+
 { #category : #accessing }
 GtCoderEmbeddedDebuggerElement >> subscribeToDebuggerViewModel [
 	self debuggerViewModel weak
