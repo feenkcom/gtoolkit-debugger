@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'debugSession',
 		'signaledException',
-		'debuggerElement'
+		'debuggerViewModel'
 	],
-	#category : 'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger'
 }
 
 { #category : #accessing }
@@ -21,14 +21,13 @@ GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
 
 { #category : #initialization }
 GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-	debuggerElement ifNotNil: [ 
-		debuggerElement disableTermination ].
+	debuggerViewModel ifNil: [ 
+		debuggerViewModel := GtCoderEmbeddedDebuggerViewModel new
+			signaledException: self signaledException;
+			debugSession: self debugSession ].
 
-	debuggerElement := GtCoderEmbeddedDebuggerElement new
-		signaledException: self signaledException;
-		session: self debugSession.
-
-	^ debuggerElement
+	^ GtCoderEmbeddedDebuggerElement new
+		debuggerViewModel: debuggerViewModel
 ]
 
 { #category : #initialization }
