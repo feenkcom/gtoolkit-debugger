@@ -4,10 +4,8 @@ Class {
 	#traits : 'TBrLayoutResizable',
 	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
-		'debuggingSession',
-		'signaledException',
-		'isTerminationDisabled',
-		'buttonElement'
+		'buttonElement',
+		'debuggerViewModel'
 	],
 	#classVars : [
 		'IsEmbeddedDebuggerEnabled'
@@ -45,6 +43,13 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException 
 		ifFalse: [ ^ Smalltalk tools debugger openOn: debugSession withFullView: true ]
 ]
 
+{ #category : #'private - updating' }
+GtCoderEmbeddedDebuggerElement >> buttonText [
+	self
+		debuggerViewModelDo: [ :aViewModel | ^ aViewModel signaledException printString asRopedText ].
+	^ 'detached debugger' asRopedText
+]
+
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> debug [
 	BlTaskAction
@@ -54,33 +59,35 @@ GtCoderEmbeddedDebuggerElement >> debug [
 			self visibility: BlVisibility hidden ]
 ]
 
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerElement >> debuggerViewModel [
+	^ debuggerViewModel
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerElement >> debuggerViewModel: aViewModel [
+	debuggerViewModel = aViewModel ifTrue: [ ^ self ].
+	debuggerViewModel ifNotNil: [ self unsubscribeFromDebuggerViewModel ].
+	debuggerViewModel := aViewModel.
+	self subscribeToDebuggerViewModel.
+	self onDebuggerViewModelChanged.
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerElement >> debuggerViewModelDo: aBlock [
+	^ self debuggerViewModel ifNotNil: aBlock
+]
+
 { #category : #initialize }
 GtCoderEmbeddedDebuggerElement >> defaultLayout [
 	^ BlLinearLayout horizontal
 ]
 
-{ #category : #actions }
-GtCoderEmbeddedDebuggerElement >> detachSession [
-	self unsubscribeFromSession.
-	debuggingSession := nil
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> disableTermination [
-	isTerminationDisabled := true
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> enableTermination [
-	isTerminationDisabled := false
-]
-
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initialize [
 	super initialize.
-	self enableTermination.
-
 	self initializeButtonElement.
+	self initializeButtonElementDropdown.
 	self addChild: buttonElement as: #button.
 	self
 		padding: (BlInsets
@@ -94,21 +101,57 @@ GtCoderEmbeddedDebuggerElement >> initialize [
 
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
-	buttonElement := BrButton new
-			aptitude: BrGlamorousLabelAptitude new;
-			beSmallSize;
-			label: '';
-			background: self theme status errorBackgroundColor;
-			geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-			padding: (BlInsets
-					top: 0
-					right: 3
-					bottom: 0
-					left: 3);
-			margin: (BlInsets all: 0);
-			action: [ :aButtonElement :aButtonModel :anEvent | self onButtonAction: anEvent ];
-			vFitContent;
-			hFitContentLimited
+	buttonElement := self newBasicButtonElement.
+	true ifTrue: [ ^ self ].
+	buttonElement
+		action: [ :aButtonElement :aButtonModel :anEvent | self onButtonAction: anEvent ]
+]
+
+{ #category : #initialization }
+GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
+	| aDropdownAptitude |
+	aDropdownAptitude := BrGlamorousWithDropdownAptitude
+			handle: [ self newButtonDropdownHandleElement ]
+			content: [ self newButtonDropdownContentElement ].
+	aDropdownAptitude
+		preferredExtent: GtCoderEmbeddedDebuggerDetailsElement defaultExactSize.
+	buttonElement addAptitude: aDropdownAptitude
+]
+
+{ #category : #initialization }
+GtCoderEmbeddedDebuggerElement >> newBasicButtonElement [
+	^ BrButton new
+		aptitude: BrGlamorousLabelAptitude new;
+		beSmallSize;
+		label: '';
+		background: self theme status errorBackgroundColor;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+		padding: (BlInsets
+				top: 0
+				right: 3
+				bottom: 0
+				left: 3);
+		margin: (BlInsets all: 0);
+		vFitContent;
+		hFitContentLimited
+]
+
+{ #category : #initialization }
+GtCoderEmbeddedDebuggerElement >> newButtonDropdownContentElement [
+	| anElement |
+	anElement := GtCoderEmbeddedDebuggerDetailsElement new.
+	self debuggerViewModelDo: [ :aViewModel | 
+		anElement debuggerViewModel: aViewModel
+	].
+	^ anElement
+]
+
+{ #category : #initialization }
+GtCoderEmbeddedDebuggerElement >> newButtonDropdownHandleElement [
+	| aButton |
+	aButton := self newBasicButtonElement.
+	aButton label: self buttonText.
+	^ aButton
 ]
 
 { #category : #'private - event handling' }
@@ -131,36 +174,13 @@ GtCoderEmbeddedDebuggerElement >> onDebugSessionTerminatedAnnouncement: anAnnoun
 ]
 
 { #category : #'private - hooks' }
-GtCoderEmbeddedDebuggerElement >> onSessionChanged [
+GtCoderEmbeddedDebuggerElement >> onDebuggerViewModelChanged [
 	self updateButtonElement
 ]
 
 { #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> session [
-	<return: #GtSharedDebugSession>
-	^ debuggingSession
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> session: aDebugSession [
-	debuggingSession := aDebugSession.
-	self subscribeToSession.
-	self onSessionChanged
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> signaledException [
-	^ signaledException
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> signaledException: anException [
-	signaledException := anException
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> subscribeToSession [
-	self session weak
+GtCoderEmbeddedDebuggerElement >> subscribeToDebuggerViewModel [
+	self debuggerViewModel weak
 			when: GtSharedDebugSessionDebuggedAnnouncement
 			send: #onDebugSessionDebuggedAnnouncement:
 			to: self; 
@@ -172,35 +192,20 @@ GtCoderEmbeddedDebuggerElement >> subscribeToSession [
 { #category : #actions }
 GtCoderEmbeddedDebuggerElement >> switchToSystemDebugger [
 	"Directly open the registered debugger on the given session."
-	| currentSession |
-	
-	currentSession := self session.
-	self detachSession.
-	^ currentSession debug
-]
 
-{ #category : #actions }
-GtCoderEmbeddedDebuggerElement >> terminate [
-	self terminateSession.
-	BlTaskAction enqueueElement: self action: [ self removeFromParent ]
-]
-
-{ #category : #callbacks }
-GtCoderEmbeddedDebuggerElement >> terminateSession [ 
-	isTerminationDisabled ifFalse: [ 
-		self session ifNotNil: [ :aSession | 
-			self detachSession.
-			aSession terminate ]]
+	self debuggerViewModelDo: [ :aViewModel | 
+		self unsubscribeFromDebuggerViewModel.
+		aViewModel switchToSystemDebugger ]
 ]
 
 { #category : #accessing }
-GtCoderEmbeddedDebuggerElement >> unsubscribeFromSession [
-	self session unsubscribe: self
+GtCoderEmbeddedDebuggerElement >> unsubscribeFromDebuggerViewModel [
+	self debuggerViewModel unsubscribe: self
 ]
 
 { #category : #'private - updating' }
 GtCoderEmbeddedDebuggerElement >> updateButtonElement [
 	| aText |
-	aText := self signaledException printString asRopedText.
+	aText := self buttonText.
 	buttonElement label: aText
 ]
