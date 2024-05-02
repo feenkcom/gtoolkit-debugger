@@ -46,7 +46,7 @@ ConnectionTimedOut >> gtZincActionContinueWaitingFor: anAction inContext: aPhlow
 		ifFound: [ :aContext | targetContext := aContext  ] 
 		ifNone: [ ^ anAction noAction ] .
 		
-	actionLabel := 'Continue waiting for the response'.
+	actionLabel := 'Continue waiting for the HTTP response'.
 	
 	^ anAction dropdown
 		label: 'Continue';
@@ -80,7 +80,7 @@ ConnectionTimedOut >> gtZincActionRetryWithIncreasingTimeoutFor: anAction inCont
 		ifFound: [ :aContext | targetContext := aContext  ] 
 		ifNone: [ ^ anAction noAction ] .
 		
-	actionLabel := 'Increase the timeout in the Zinc client and retry the request'.
+	actionLabel := 'Increase the timeout in the HTTP client and retry the request'.
 	
 	^ anAction dropdown
 		label: 'Retry';
