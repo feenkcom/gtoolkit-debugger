@@ -96,6 +96,11 @@ GtMoldableExceptionSpecificDebuggerSpecification >> defaultPriority [
 	^ 100
 ]
 
+{ #category : #'accessing - defaults' }
+GtMoldableExceptionSpecificDebuggerSpecification >> defaultTargetObjectDebuggingActionPragmas [
+	^ #(gtExceptionAction)
+]
+
 { #category : #accessing }
 GtMoldableExceptionSpecificDebuggerSpecification >> defaultTitle [
 	^ 'Exception'

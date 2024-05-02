@@ -90,7 +90,8 @@ GtPhlowViewsCollectorSameViewError >> createMessageText [
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext: aPhlowActionContext [
-	<gtPhlowSameViewReturnDebugAction>
+	<gtExceptionAction>
+	<gtStackAction>
 	
 	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
@@ -112,7 +113,9 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionFixItFor: anAction inContext:
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionPatchFor: anAction inContext: aPhlowActionContext [
-	<gtPhlowSameViewReturnDebugAction>
+	<gtExceptionAction>
+	<gtStackAction>
+	
 	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
 	
@@ -138,7 +141,9 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionPatchFor: anAction inContext:
 
 { #category : #'gt - extensions' }
 GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext: aPhlowActionContext [
-	<gtPhlowSameViewReturnDebugAction>
+	<gtExceptionAction>
+	<gtStackAction>
+	
 	aPhlowActionContext currentDebuggingSession isInterruptedContextPostMortem
 		ifTrue: [ ^ anAction noAction ].
 	
@@ -152,18 +157,6 @@ GtPhlowViewsCollectorSameViewError >> gtDebugActionRetryFor: anAction inContext:
 			"All we need here is to restart the interrupted context and resume execution"
 			aPhlowActionContext currentDebuggingSession restartInterruptedContext.
 			aPhlowActionContext currentDebugger resumeAndCloseDebugger ]
-]
-
-{ #category : #'gt - extensions' }
-GtPhlowViewsCollectorSameViewError >> gtDefaultDebuggerSpecification [
-	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
-]
-
-{ #category : #'gt - extensions' }
-GtPhlowViewsCollectorSameViewError >> gtExceptionDebuggerSpecification [
-	^ super gtExceptionDebuggerSpecification
-		debuggingActionPragmas: #(gtPhlowSameViewReturnDebugAction)
 ]
 
 { #category : #'gt - extensions' }

@@ -16,15 +16,15 @@ GtZnClientTooManyRedirectsRetryElement >> editLabelText [
 ]
 
 { #category : #accessing }
-GtZnClientTooManyRedirectsRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger [ 
-	super initializeForZnClient: aZnClient andDebugger: aDebugger.
+GtZnClientTooManyRedirectsRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [
+	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement.
 	
 	self currentMaxNumberOfRedirects: aZnClient maxNumberOfRedirects
 ]
 
 { #category : #accessing }
 GtZnClientTooManyRedirectsRetryElement >> messageTextForRedirectCount: anInteger [ 
-	^ 'Reached the maximum number of {1} {2}. Retry by increasing the value in the ZnClient.' format: {
+	^ 'Reached the maximum number of {1} {2}. Increase the maximum number of redirects in the ZnClient and retry the request.' format: {
 		anInteger. 
 		'redirect' asPluralBasedOn: anInteger}
 ]

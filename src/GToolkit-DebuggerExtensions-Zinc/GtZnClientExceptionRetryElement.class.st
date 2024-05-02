@@ -6,21 +6,33 @@ Class {
 		'playButton',
 		'messageEditorElement',
 		'countEditorElement',
-		'currentDebugger'
+		'currentDebugger',
+		'sourceElement'
 	],
 	#category : #'GToolkit-DebuggerExtensions-Zinc'
 }
 
 { #category : #'instance creation' }
-GtZnClientExceptionRetryElement class >> forZnClient: aZnClient andDebugger: aDebugger [ 
+GtZnClientExceptionRetryElement class >> forZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [
 	^ self new 
 		initializeForZnClient: aZnClient 
 		andDebugger: aDebugger 
+		fromSourceElement: aSourceElement
 ]
 
 { #category : #accessing }
 GtZnClientExceptionRetryElement >> actionLabel: aString [ 
 	playButton label: aString
+]
+
+{ #category : #'building widgets' }
+GtZnClientExceptionRetryElement >> createHelpButton [
+	^ BrButton new
+		aptitude: BrGlamorousButtonWithIconAptitude;
+		icon: BrGlamorousIcons help;
+		label: ('Open the page "{1}"' format: {self helpPageName});
+		action:  [ :aButton  |
+			self spawnHelpPageFrom: (sourceElement ifNil: [aButton]) ]
 ]
 
 { #category : #'building widgets' }
@@ -31,7 +43,7 @@ GtZnClientExceptionRetryElement >> createMessageElement [
 		aptitude: BrGlamorousRegularEditorAptitude new .
 	
 	newEditorElement 
-		hExact: 275;
+		hExact: 325;
 		vFitContent.
 	
 	^ newEditorElement
@@ -94,8 +106,14 @@ GtZnClientExceptionRetryElement >> editLabelText [
 	^ 'Value:'
 ]
 
+{ #category : #accessing }
+GtZnClientExceptionRetryElement >> helpPageName [
+	^ 'Zinc debugging extensions'
+]
+
 { #category : #initialialize }
 GtZnClientExceptionRetryElement >> initialize [ 
+	| toolbar |
 	super initialize.
 	
 	self hFitContent.
@@ -106,20 +124,28 @@ GtZnClientExceptionRetryElement >> initialize [
 	countEditorElement := self createRedirectsCountEditorElement  . 
 	playButton := self createPlayButton.
 	
+	toolbar := BrToolbar new.
+	toolbar aptitude: BrGlamorousToolbarAptitude new.
+	toolbar
+		addChild: playButton;
+		addChild: self createHelpButton.
+	
 	self 
 		addChild: messageEditorElement;
 		addChild: (BrHorizontalPane new 
 			fitContent;
 			alignCenter;
+			margin: (BlInsets left: 5);
 			addChild: (self createRedirectCountLabel
 				margin: (BlInsets right: 5));
 			addChild: countEditorElement);
-		addChild: playButton
+		addChild: toolbar
 ]
 
 { #category : #initialization }
-GtZnClientExceptionRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger [ 
+GtZnClientExceptionRetryElement >> initializeForDebugger: aDebugger fromSourceElement: aSourceElement [
 	currentDebugger := aDebugger.
+	sourceElement := aSourceElement
 ]
 
 { #category : #'instance creation' }
@@ -132,4 +158,14 @@ GtZnClientExceptionRetryElement >> runRetryAction [
 	retryAction 
 		cull: countEditorElement text asString trimBoth asNumber
 		cull: currentDebugger
+]
+
+{ #category : #actions }
+GtZnClientExceptionRetryElement >> spawnHelpPageFrom: anElement [
+	| helpPage |
+	helpPage := LeDatabasesRegistry default defaultLogicalDatabase  
+		pageNamed: self helpPageName.
+	anElement phlow 
+		spawnTool: helpPage asLepiterPagePhlowTool.
+	anElement dispatchEvent: BrDropdownHideWish new
 ]

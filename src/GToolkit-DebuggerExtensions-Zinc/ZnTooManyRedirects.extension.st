@@ -1,9 +1,9 @@
 Extension { #name : #ZnTooManyRedirects }
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRetryCount: newCount [
+ZnTooManyRedirects >> gtActionPerformRetryUsing: aDebugger withNewRedirectCount: newCount [
 	aDebugger  
-		findLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout
+		findLimitedFullActiveContextForMethod: ZnClient>>#execute
 		ifFound: [ :aContext |
 			aContext receiver 
 				maxNumberOfRedirects: newCount.
@@ -22,10 +22,10 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 	| actionLabel |
 	
 	(aPhlowActionContext currentDebuggingSession 
-		hasLimitedFullActiveContextForMethod: ZnClient>>#executeWithTimeout)
+		hasLimitedFullActiveContextForMethod: ZnClient>>#execute)
 			ifFalse: [ ^ anAction noAction ].
 		
-	actionLabel := 'Increase the number of redirects in the Zinc client and retry'.
+	actionLabel := 'Increase the number of redirects in the Zinc client and retry the request'.
 	^ anAction dropdown
 		label: 'Retry';
 		icon: BrGlamorousVectorIcons refresh ;
@@ -33,33 +33,26 @@ ZnTooManyRedirects >> gtActionRetryWithIncreasingRedirectsFor: anAction inContex
 		id: #'gtTooManyRedirects-retry';
 		tooltip: actionLabel;
 		preferredExtent: 650@350;
-		content: [ 
+		content: [ :aSourceButton |
 			| contentElement |
 			contentElement := GtZnClientTooManyRedirectsRetryElement 
 				forZnClient:  signaler
-				andDebugger: aPhlowActionContext currentDebugger.
+				andDebugger: aPhlowActionContext currentDebugger
+				fromSourceElement: aSourceButton.
 			contentElement  
 				actionLabel: actionLabel;
 				retryAction: [ :newCount :currentDebugger |
 					self 
 						gtActionPerformRetryUsing: currentDebugger
-						withNewRetryCount: newCount].
+						withNewRedirectCount: newCount].
 			contentElement ] 
-]
-
-{ #category : #'*GToolkit-DebuggerExtensions-Zinc' }
-ZnTooManyRedirects >> gtDefaultDebuggerSpecification [
-	^ super gtDefaultDebuggerSpecification
-		debuggingActionPragmas: #(gtStackAction);
-		yourself
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }
 ZnTooManyRedirects >> gtExceptionDebuggerSpecification [
 	^ super gtExceptionDebuggerSpecification
 		priority: 1200;
-		availableAutomatically: false;
-		debuggingActionPragmas: #(gtExceptionAction)
+		availableAutomatically: false
 ]
 
 { #category : #'*GToolkit-DebuggerExtensions-Zinc' }

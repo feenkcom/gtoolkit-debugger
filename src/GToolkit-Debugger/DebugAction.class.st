@@ -142,11 +142,6 @@ DebugAction >> asDebugAction [
 ]
 
 { #category : #'phlow ' }
-DebugAction >> asDebugActionElementWithHostElement: aHostElement [
-	^ self asBrickButton
-]
-
-{ #category : #'phlow ' }
 DebugAction >> asDebugActionElementWithHostElement: aHostElement do: aBlock [
 	^ aBlock value: self asBrickButton
 ]
