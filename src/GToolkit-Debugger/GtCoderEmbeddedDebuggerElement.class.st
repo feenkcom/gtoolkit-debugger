@@ -5,7 +5,8 @@ Class {
 	#classTraits : 'TBrLayoutResizable classTrait',
 	#instVars : [
 		'buttonElement',
-		'debuggerViewModel'
+		'debuggerViewModel',
+		'buttonDropdownAptitude'
 	],
 	#classVars : [
 		'IsEmbeddedDebuggerEnabled'
@@ -109,13 +110,15 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
 
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
-	| aDropdownAptitude |
-	aDropdownAptitude := BrGlamorousWithDropdownAptitude
+	buttonDropdownAptitude := BrGlamorousWithDropdownAptitude
 			handle: [ self newButtonDropdownHandleElement ]
-			content: [ self newButtonDropdownContentElement ].
-	aDropdownAptitude
+			content: [ self newButtonDropdownContentElement ]
+			aptitudeDo: [ :anAnchoredAptitude |
+				anAnchoredAptitude border: (self theme status errorBorderColor).
+				anAnchoredAptitude background: self theme status errorBackgroundColor ].
+	buttonDropdownAptitude
 		preferredExtent: GtCoderEmbeddedDebuggerDetailsElement defaultExactSize.
-	buttonElement addAptitude: aDropdownAptitude
+	buttonElement addAptitude: buttonDropdownAptitude
 ]
 
 { #category : #initialization }
@@ -205,7 +208,6 @@ GtCoderEmbeddedDebuggerElement >> unsubscribeFromDebuggerViewModel [
 
 { #category : #'private - updating' }
 GtCoderEmbeddedDebuggerElement >> updateButtonElement [
-	| aText |
-	aText := self buttonText.
-	buttonElement label: aText
+	buttonElement label: self buttonText.
+	BlTaskAction enqueueElement: self action: [ buttonDropdownAptitude show ]
 ]
