@@ -136,8 +136,8 @@ GtZnClientExceptionRetryElement >> initialize [
 			fitContent;
 			alignCenter;
 			margin: (BlInsets left: 5);
-			addChild: (self createRedirectCountLabel
-				margin: (BlInsets right: 5));
+			addChild: (self createRedirectCountLabel 
+							margin: (BlInsets right: 5));
 			addChild: countEditorElement);
 		addChild: toolbar
 ]
@@ -146,6 +146,11 @@ GtZnClientExceptionRetryElement >> initialize [
 GtZnClientExceptionRetryElement >> initializeForDebugger: aDebugger fromSourceElement: aSourceElement [
 	currentDebugger := aDebugger.
 	sourceElement := aSourceElement
+]
+
+{ #category : #'instance creation' }
+GtZnClientExceptionRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [ 
+	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement
 ]
 
 { #category : #'instance creation' }

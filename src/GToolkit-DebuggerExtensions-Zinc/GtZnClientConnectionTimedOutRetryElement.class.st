@@ -13,27 +13,20 @@ GtZnClientConnectionTimedOutRetryElement class >> forSocketStream: aSocketStream
 ]
 
 { #category : #accessing }
-GtZnClientConnectionTimedOutRetryElement >> configureForRetryWithCurrentTimeout: anInteger [ 
-	countEditorElement text:  (anInteger * 2) asString.
-	messageEditorElement text: (self messageRetryTextForTimeout: anInteger)
+GtZnClientConnectionTimedOutRetryElement >> configureForRetryWithCurrentTimeout: aTimeoutInSeconds [ 
+	countEditorElement text:  (aTimeoutInSeconds * 2) asString.
+	messageEditorElement text: (self messageRetryTextForTimeout: aTimeoutInSeconds)
 ]
 
 { #category : #accessing }
-GtZnClientConnectionTimedOutRetryElement >> configureForWaitWithCurrentTimeout: anInteger [
-	countEditorElement text: anInteger.
-	messageEditorElement text: (self messageWaitTextForTimeout: anInteger)
+GtZnClientConnectionTimedOutRetryElement >> configureForWaitWithCurrentTimeout: aTimeoutInSeconds [
+	countEditorElement text: aTimeoutInSeconds.
+	messageEditorElement text: (self messageWaitTextForTimeout: aTimeoutInSeconds)
 ]
 
 { #category : #accessing }
 GtZnClientConnectionTimedOutRetryElement >> editLabelText [
 	^ 'Timeout (seconds):'
-]
-
-{ #category : #'initialization ' }
-GtZnClientConnectionTimedOutRetryElement >> initializeForSocketStream: aSocketStream andDebugger: aDebugger [ 
-	currentDebugger := aDebugger.
-	
-	self configureForWaitWithCurrentTimeout: aSocketStream timeout.
 ]
 
 { #category : #'initialization ' }
@@ -45,21 +38,21 @@ GtZnClientConnectionTimedOutRetryElement >> initializeForSocketStream: aSocketSt
 
 { #category : #initialization }
 GtZnClientConnectionTimedOutRetryElement >> initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement [
-	self initializeForDebugger: aDebugger fromSourceElement: aSourceElement.
-	
+	super initializeForZnClient: aZnClient andDebugger: aDebugger fromSourceElement: aSourceElement.
+
 	self configureForRetryWithCurrentTimeout: aZnClient timeout
 ]
 
 { #category : #accessing }
 GtZnClientConnectionTimedOutRetryElement >> messageRetryTextForTimeout: aTimeoutInSeconds [ 
-	^ 'Reached the maximum timeout of {1} {2}. Increase the timeout in the ZnClient and retry the request.' format: {
+	^ 'Reached the maximum timeout of {1} {2}. Increase the timeout in the HTTP client and retry the request.' format: {
 		aTimeoutInSeconds. 
 		'second' asPluralBasedOn: aTimeoutInSeconds}
 ]
 
 { #category : #accessing }
 GtZnClientConnectionTimedOutRetryElement >> messageWaitTextForTimeout: aTimeoutInSeconds [ 
-	^ 'Reached the maximum timeout of {1} {2}. Continue waiting for a given number of seconds.' format: {
+	^ 'Reached the maximum timeout of {1} {2}. Continue waiting in the HTTP client for a given number of seconds.' format: {
 		aTimeoutInSeconds. 
 		'second' asPluralBasedOn: aTimeoutInSeconds}
 ]

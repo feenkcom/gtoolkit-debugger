@@ -83,7 +83,7 @@ GtZnClientFailedRequestRetryDebugAction >> gtActionRetryWithIncreasingRetriesFor
 		ifFound: [ :aContext | targetContext := aContext  ] 
 		ifNone: [ ^ anAction noAction ] .
 	
-	actionLabel := 'Increase the number of retries in the Zinc client and retry the request'.
+	actionLabel := 'Increase the number of retries in the HTTP client and retry the request'.
 	^ anAction dropdown
 		label: self defaultLabel;
 		icon: self defaultIcon ;
