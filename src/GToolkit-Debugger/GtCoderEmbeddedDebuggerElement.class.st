@@ -11,7 +11,7 @@ Class {
 	#classVars : [
 		'IsEmbeddedDebuggerEnabled'
 	],
-	#category : #'GToolkit-Debugger-Elements'
+	#category : #'GToolkit-Debugger-Embedded - Elements'
 }
 
 { #category : #configuration }
@@ -47,7 +47,8 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException 
 { #category : #'private - updating' }
 GtCoderEmbeddedDebuggerElement >> buttonText [
 	self
-		debuggerViewModelDo: [ :aViewModel | ^ aViewModel signaledException printString asRopedText ].
+		debuggerViewModelDo: [ :aViewModel | 
+			^ (aViewModel signaledException printStringLimitedTo: 72) asRopedText ].
 	^ 'detached debugger' asRopedText
 ]
 
@@ -103,9 +104,6 @@ GtCoderEmbeddedDebuggerElement >> initialize [
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
 	buttonElement := self newBasicButtonElement.
-	true ifTrue: [ ^ self ].
-	buttonElement
-		action: [ :aButtonElement :aButtonModel :anEvent | self onButtonAction: anEvent ]
 ]
 
 { #category : #initialization }
@@ -136,7 +134,7 @@ GtCoderEmbeddedDebuggerElement >> newBasicButtonElement [
 				left: 3);
 		margin: (BlInsets all: 0);
 		vFitContent;
-		hFitContentLimited
+		hFitContent
 ]
 
 { #category : #initialization }

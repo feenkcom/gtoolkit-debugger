@@ -9,7 +9,7 @@ Class {
 		'weakDebuggerSpace',
 		'coderViewModel'
 	],
-	#category : #'GToolkit-Debugger-Elements'
+	#category : #'GToolkit-Debugger-Embedded - Elements'
 }
 
 { #category : #accessing }

@@ -1,7 +1,7 @@
 Class {
 	#name : #GtEmbeddedDebuggerInSpaceStyler,
 	#superclass : #GtGenericPharoStyler,
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Embedded - Text'
 }
 
 { #category : #'api - styling' }

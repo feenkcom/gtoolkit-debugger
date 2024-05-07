@@ -10,7 +10,7 @@ Class {
 		'mutex',
 		'announcer'
 	],
-	#category : #'GToolkit-Debugger-Elements'
+	#category : #'GToolkit-Debugger-Embedded - Models'
 }
 
 { #category : #announcer }

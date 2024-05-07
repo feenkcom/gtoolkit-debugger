@@ -7,7 +7,7 @@ Class {
 		'currentContext',
 		'topContext'
 	],
-	#category : #'GToolkit-Debugger-GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Models'
 }
 
 { #category : #'instance creation' }
