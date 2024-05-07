@@ -11,7 +11,7 @@ Class {
 	#classVars : [
 		'IsEmbeddedDebuggerEnabled'
 	],
-	#category : #'GToolkit-Debugger-Elements'
+	#category : #'GToolkit-Debugger-Embedded - Elements'
 }
 
 { #category : #configuration }
@@ -136,7 +136,7 @@ GtCoderEmbeddedDebuggerElement >> newBasicButtonElement [
 				left: 3);
 		margin: (BlInsets all: 0);
 		vFitContent;
-		hFitContentLimited
+		hFitContent
 ]
 
 { #category : #initialization }
