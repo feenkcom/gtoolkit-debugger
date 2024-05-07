@@ -103,9 +103,6 @@ GtCoderEmbeddedDebuggerElement >> initialize [
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
 	buttonElement := self newBasicButtonElement.
-	true ifTrue: [ ^ self ].
-	buttonElement
-		action: [ :aButtonElement :aButtonModel :anEvent | self onButtonAction: anEvent ]
 ]
 
 { #category : #initialization }
