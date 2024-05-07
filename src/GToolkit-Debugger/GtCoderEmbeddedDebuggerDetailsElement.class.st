@@ -8,7 +8,7 @@ Class {
 		'stackListElement',
 		'toolbarElement'
 	],
-	#category : #'GToolkit-Debugger-Elements'
+	#category : #'GToolkit-Debugger-Embedded - Elements'
 }
 
 { #category : #accessing }

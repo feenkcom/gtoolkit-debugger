@@ -5,7 +5,7 @@ Class {
 		'evaluationStatus',
 		'coderViewModel'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Embedded - Text'
 }
 
 { #category : #accessing }

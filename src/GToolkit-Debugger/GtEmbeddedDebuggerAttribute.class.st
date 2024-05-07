@@ -6,7 +6,7 @@ Class {
 		'signaledException',
 		'debuggerViewModel'
 	],
-	#category : #'GToolkit-Debugger'
+	#category : #'GToolkit-Debugger-Embedded - Text'
 }
 
 { #category : #accessing }
