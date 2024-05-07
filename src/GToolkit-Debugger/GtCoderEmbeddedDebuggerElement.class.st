@@ -47,7 +47,8 @@ GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException 
 { #category : #'private - updating' }
 GtCoderEmbeddedDebuggerElement >> buttonText [
 	self
-		debuggerViewModelDo: [ :aViewModel | ^ aViewModel signaledException printString asRopedText ].
+		debuggerViewModelDo: [ :aViewModel | 
+			^ (aViewModel signaledException printStringLimitedTo: 72) asRopedText ].
 	^ 'detached debugger' asRopedText
 ]
 
