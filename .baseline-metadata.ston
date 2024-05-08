@@ -1,1 +1,5 @@
-{	"repositories" : {		"github://feenkcom/gtoolkit-inspector/src" : "v0.8.2122"	}}
+{
+	"repositories" : {
+		"github://feenkcom/gtoolkit-inspector/src" : "v0.8.2123"
+	}
+}
