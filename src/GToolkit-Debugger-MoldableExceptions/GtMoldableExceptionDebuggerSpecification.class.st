@@ -59,6 +59,16 @@ GtMoldableExceptionDebuggerSpecification >> globalDebuggingActionPragmas: aColle
 	globalDebuggingActionPragmaNames := aCollection
 ]
 
+{ #category : #'gt - extensions' }
+GtMoldableExceptionDebuggerSpecification >> gtTargetDebuggingActionsFor: aView [
+	<gtView>
+	^ aView columnedList
+		title: 'Target actions';
+		priority: 55;
+		items: [ self collectTargetDebuggingActionsForDebugger: self debuggerClass new ];
+		column: 'Name' text: #yourself
+]
+
 { #category : #initialization }
 GtMoldableExceptionDebuggerSpecification >> initialize [
 	super initialize.

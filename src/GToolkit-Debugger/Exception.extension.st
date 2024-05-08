@@ -29,3 +29,16 @@ Exception >> gtExceptionDebuggerSpecification [
 	
 	^ GtMoldableExceptionSpecificDebuggerSpecification forException: self
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Exception >> gtExceptionEmbeddedDebuggerSpecification [
+	"Return a debugger specification with default values."
+
+	"<gtDebuggerSpecification>"
+	^ self gtExceptionDebuggerSpecification
+		title: 'Embedded debugger';
+		priority: 1500;
+		availableAutomatically: false;
+		debuggingViewPragmas: #(gtEmbeddedDebuggerView);
+		targetObjectDebuggingActionPragmas: #(gtEmbeddedDebuggerAction)
+]

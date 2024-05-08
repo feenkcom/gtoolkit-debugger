@@ -112,6 +112,34 @@ GtMoldableExceptionSpecificDebuggerSpecification >> enableWhen: aBlock [
 	activationPredicate := aBlock
 ]
 
+{ #category : #'gt - extensions' }
+GtMoldableExceptionSpecificDebuggerSpecification >> gtAllTargetDebuggingViewsFor: aView [
+	<gtView>
+	^ aView explicit
+		title: 'All view definitions';
+		tooltip: 'Display all target debugging view definitions';
+		priority: 80;
+		stencil: [ | aFilter |
+			aFilter := self debuggingViewPragmas
+					inject: GtSearchNullFilter new
+					into: [ :eachFilter :eachSymbol | eachFilter | eachSymbol gtPragmas ].
+			aFilter gtItemsFor: GtPhlowView empty ]
+]
+
+{ #category : #'gt - extensions' }
+GtMoldableExceptionSpecificDebuggerSpecification >> gtTargetDebuggingViewsFor: aView [
+	<gtView>
+	^ aView explicit
+		title: 'Target views';
+		priority: 50;
+		stencil: [ | aCompositeView |
+			aCompositeView := GtPhlowView empty composite.
+			self
+				collectTargetDebuggingViewsForDebugger: self debuggerClass new
+				in: aCompositeView.
+			aCompositeView asElementDo: [ :e | e ] ]
+]
+
 { #category : #testing }
 GtMoldableExceptionSpecificDebuggerSpecification >> handlesDebugSession: aDebugSession [
 	^ aDebugSession exception = self targetException and: [

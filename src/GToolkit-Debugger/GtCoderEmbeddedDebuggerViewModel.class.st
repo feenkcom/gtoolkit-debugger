@@ -44,6 +44,12 @@ GtCoderEmbeddedDebuggerViewModel >> enableTermination [
 	isTerminationDisabled := false
 ]
 
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerViewModel >> gtExceptionEmbeddedDebuggerSpecification [
+	<return: #GtDebuggerSpecification>
+	^ self signaledException gtExceptionEmbeddedDebuggerSpecification
+]
+
 { #category : #initialization }
 GtCoderEmbeddedDebuggerViewModel >> initialize [
 	super initialize.
