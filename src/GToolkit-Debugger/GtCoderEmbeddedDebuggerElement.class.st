@@ -115,7 +115,7 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
 				anAnchoredAptitude border: (self theme status errorBorderColor).
 				anAnchoredAptitude background: self theme status errorBackgroundColor ].
 	buttonDropdownAptitude
-		preferredExtent: GtCoderEmbeddedDebuggerDetailsElement defaultExactSize.
+		preferredExtent: GtCoderEmbeddedDebuggerDetails2Element defaultExactSize.
 	buttonElement addAptitude: buttonDropdownAptitude
 ]
 
@@ -140,7 +140,7 @@ GtCoderEmbeddedDebuggerElement >> newBasicButtonElement [
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> newButtonDropdownContentElement [
 	| anElement |
-	anElement := GtCoderEmbeddedDebuggerDetailsElement new.
+	anElement := GtCoderEmbeddedDebuggerDetails2Element new.
 	self debuggerViewModelDo: [ :aViewModel | 
 		anElement debuggerViewModel: aViewModel
 	].

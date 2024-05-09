@@ -109,6 +109,7 @@ GtExampleComparisonExceptionWithDebuggingViews >> gtViewChangeViewFor: aView [
 GtExampleComparisonExceptionWithDebuggingViews >> gtViewDiffFor: aView [ 
 	<gtView>
 	<gtExceptionView>
+	<gtEmbeddedDebuggerView>
 	
 	^ aView forward 
 		title: 'Diff';
