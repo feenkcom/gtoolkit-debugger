@@ -10,8 +10,8 @@ Class {
 { #category : #accessing }
 GtCoderEmbeddedDebuggerDropdownConfiguration class >> contentExtent [
 	^ self userExtent > (600 @ 400)
-		ifFalse: [ self userExtent * 2 ]
-		ifTrue: [ self userExtent * 1.5 ]
+		ifFalse: [ self userExtent * 1.5 ]
+		ifTrue: [ self userExtent * 1.2 ]
 ]
 
 { #category : #accessing }
