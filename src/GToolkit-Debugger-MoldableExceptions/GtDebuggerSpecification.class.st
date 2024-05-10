@@ -9,6 +9,12 @@ Class {
 
 { #category : #'api - testing' }
 GtDebuggerSpecification >> availableAutomatically [
+	"Available automatically indicates if to actually select that debugger automatically
+	when a moldable debugger window opens. True value means that the corresponding debugger
+	should be displayed as a default debugger (other debuggers are available on user
+	explicit selection)."
+
+	<return: #Boolean>
 	self subclassResponsibility
 ]
 
