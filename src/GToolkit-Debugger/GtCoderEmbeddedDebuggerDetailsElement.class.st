@@ -6,15 +6,11 @@ Class {
 	#instVars : [
 		'debuggerViewModel',
 		'stackListElement',
-		'toolbarElement'
+		'toolbarElement',
+		'debuggingConfiguration'
 	],
 	#category : #'GToolkit-Debugger-Embedded - Elements'
 }
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerDetailsElement class >> defaultExactSize [
-	^ 300 @ 200
-]
 
 { #category : #actions }
 GtCoderEmbeddedDebuggerDetailsElement >> debug [
@@ -65,18 +61,20 @@ GtCoderEmbeddedDebuggerDetailsElement >> initialize [
 	self addChild: toolbarElement as: #toolbar.
 
 	self padding: (BlInsets all: 5).
-	self exact: self class defaultExactSize.
+	self exact: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent.
 	self background: self theme default contentBackgroundColor
 ]
 
 { #category : #initialization }
 GtCoderEmbeddedDebuggerDetailsElement >> initializeStackListElement [
-	stackListElement := GtPharoStackIndexStencil new asElement.
+	stackListElement := BrFrame new.
 	stackListElement
 		background: self theme default contentBackgroundColor;
 		hMatchParent;
-		vMatchParent;
-		padding: (BlInsets left: 5 right: 5)
+		vMatchParent.
+	stackListElement
+		when: BlElementExtentChangedEvent
+		do: [ :anEvent | self onContentExtentChanged: anEvent ]
 ]
 
 { #category : #initialization }
@@ -108,6 +106,17 @@ GtCoderEmbeddedDebuggerDetailsElement >> initializeToolbarElement [
 	toolbarElement addItem: aTerminateButton
 ]
 
+{ #category : #initialization }
+GtCoderEmbeddedDebuggerDetailsElement >> onContentExtentChanged: anEvent [
+	| aPreviewElement |
+	aPreviewElement := (stackListElement children at: 1 ifAbsent: [ ^ self ])
+			children at: 1 ifAbsent: [ ^ self ].
+
+	aPreviewElement
+		exact: (GtCoderEmbeddedDebuggerDropdownConfiguration
+				contentExtentForContainerExtent: stackListElement extent)
+]
+
 { #category : #'private - subscriptions' }
 GtCoderEmbeddedDebuggerDetailsElement >> onDebugSessionDebuggedAnnouncement: anAnnouncement [
 	BlTaskAction
@@ -124,6 +133,7 @@ GtCoderEmbeddedDebuggerDetailsElement >> onDebugSessionTerminatedAnnouncement: a
 
 { #category : #'private - hooks' }
 GtCoderEmbeddedDebuggerDetailsElement >> onDebuggerViewModelChanged [
+	debuggingConfiguration := self debuggerViewModel gtExceptionEmbeddedDebuggerSpecification.
 	self updateElement
 ]
 
@@ -170,10 +180,32 @@ GtCoderEmbeddedDebuggerDetailsElement >> updateElement [
 
 { #category : #'private - updating' }
 GtCoderEmbeddedDebuggerDetailsElement >> updateStackListElement [
-	self
-		debugSessionDo: [ :aDebugSession | 
-			aDebugSession interruptedContext
-				ifNotNil: [ :anInterruptedContext | 
-					anInterruptedContext stack
-						ifNotNil: [ :aStack | stackListElement items: (aStack collect: #copy) ] ] ]
+	| aCompositeView |
+	stackListElement removeChildren.
+	aCompositeView := GtPhlowView empty composite.
+	debuggingConfiguration
+		collectTargetDebuggingViewsForDebugger: self
+		in: aCompositeView.
+	aCompositeView views
+		ifEmpty: [ self updateWithEmptyView.
+			^ self ].
+	aCompositeView views first
+		asElementDo: [ :anElement | 
+			stackListElement
+				addChild: ((anElement exact: GtCoderEmbeddedDebuggerDropdownConfiguration contentExtent) asScalableElement) ]
+]
+
+{ #category : #'private - updating' }
+GtCoderEmbeddedDebuggerDetailsElement >> updateWithEmptyView [
+	| anElement |
+	anElement := BrLabel new
+			fitContent;
+			aptitude: BrGlamorousLabelAptitude new;
+			text: 'Exception without stack';
+			constraintsDo: [ :c | 
+				c frame horizontal alignCenter.
+				c frame vertical alignCenter ].
+	stackListElement
+		removeChildren;
+		addChild: anElement
 ]

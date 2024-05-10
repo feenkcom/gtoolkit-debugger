@@ -108,14 +108,18 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
 
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
+	| anElement |
 	buttonDropdownAptitude := BrGlamorousWithDropdownAptitude
 			handle: [ self newButtonDropdownHandleElement ]
-			content: [ self newButtonDropdownContentElement ]
+			content: [ anElement := self newButtonDropdownContentElement ]
 			aptitudeDo: [ :anAnchoredAptitude |
 				anAnchoredAptitude border: (self theme status errorBorderColor).
 				anAnchoredAptitude background: self theme status errorBackgroundColor ].
 	buttonDropdownAptitude
-		preferredExtent: GtCoderEmbeddedDebuggerDetails2Element defaultExactSize.
+		preferredExtent: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent;
+		doKeepRatio;
+		whenResizedDo: [ :anEvent | 
+			GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ].
 	buttonElement addAptitude: buttonDropdownAptitude
 ]
 
@@ -140,7 +144,7 @@ GtCoderEmbeddedDebuggerElement >> newBasicButtonElement [
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> newButtonDropdownContentElement [
 	| anElement |
-	anElement := GtCoderEmbeddedDebuggerDetails2Element new.
+	anElement := GtCoderEmbeddedDebuggerDetailsElement new.
 	self debuggerViewModelDo: [ :aViewModel | 
 		anElement debuggerViewModel: aViewModel
 	].
