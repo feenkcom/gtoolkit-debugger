@@ -30,15 +30,16 @@ GtCoderEmbeddedDebuggerElement class >> isEmbeddedDebuggerEnabled [
 ]
 
 { #category : #opening }
-GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException embeddedIn: aCoderRequesterObject withSourceString: aSourceString withSourceInterval: aSourceInterval [
+GtCoderEmbeddedDebuggerElement class >> openOn: debugSession dueTo: anException embeddedIn: aCoderRequesterObject withSourceString: aSourceString withSourceInterval: aSourceInterval evaluationInfo: anEvaluationInfo [
 	| isHandled |
 	isHandled := false.
-	self isEmbeddedDebuggerEnabled ifTrue: [ 
-		isHandled := aCoderRequesterObject
-			notifyShowDebuggerRequest: debugSession
-			dueTo: anException
-			sourceString: aSourceString
-			sourceInterval: aSourceInterval ].
+	self isEmbeddedDebuggerEnabled
+		ifTrue: [ isHandled := aCoderRequesterObject
+					notifyShowDebuggerRequest: debugSession
+					dueTo: anException
+					sourceString: aSourceString
+					sourceInterval: aSourceInterval
+					evaluationInfo: anEvaluationInfo ].
 
 	isHandled
 		ifFalse: [ ^ Smalltalk tools debugger openOn: debugSession withFullView: true ]

@@ -6,7 +6,7 @@ Class {
 
 { #category : #'api - styling' }
 GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
-	| aStatus anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText anAttribute |
+	| aStatus anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText anAttribute anAttributeIndex |
 	super extraStyle: aText ast: theAst.
 
 	self coderViewModel ifNil: [ ^ self ].
@@ -31,8 +31,13 @@ GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 	anAttribute := GtEmbeddedDebuggerAttribute new
 			signaledException: aStatus exception;
 			debugSession: aStatus sharedDebugSession.
+			
+	anAttributeIndex := aStatus evaluatedCodeInterval 
+		ifNil: [ theSourceEndInText ] 
+		ifNotNil: [ :aContextInterval | (aContextInterval last + theSourceStartInText) min: aText size ].
+			
 	aText
 		attribute: anAttribute
-		from: theSourceEndInText
-		to: theSourceEndInText
+		from: anAttributeIndex
+		to: anAttributeIndex
 ]
