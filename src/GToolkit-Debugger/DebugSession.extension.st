@@ -249,3 +249,9 @@ DebugSession >> maxStackSearchDepth [
 DebugSession >> restartInterruptedContext [
 	self restart: self interruptedContext
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> stepOverUntil: aBlock [
+	[ aBlock cull: interruptedContext ]
+		whileFalse: [ self stepOver: interruptedContext ]
+]
