@@ -13,47 +13,6 @@ GtExceptionsWithExtensionsExamples >> assertDebuggingConfigurationEnabledFor: an
 	self assert: extensionConfiguration canEnableDebugger value.
 ]
 
-{ #category : #'examples - debuggers' }
-GtExceptionsWithExtensionsExamples >> assertIsMainDebuggerElementFor: aScripter [ 
-	self 
-		assert: aScripter element id
-		equals: GtMoldableDebuggerMainElementId new.
-]
-
-{ #category : #asserting }
-GtExceptionsWithExtensionsExamples >> assertOneDebuggerSwitchButtonLabeled: aDebuggerLabel for: aScripter [
-	<gtExample>
-	| buttonsContainer |
-	
-	buttonsContainer := aScripter element query // GtMoldableDebuggerSwitchButtonsContainerElementId.
-	
-	self
-		assert: buttonsContainer all size
-		equals: 1.
-		
-	self
-		assert: buttonsContainer anyOne tabs size
-		equals: 2.
-		
-	self
-		assert: (buttonsContainer anyOne tabs detect: [ :aTab | aTab isSelected ]) tabLabel text asString
-		equals: aDebuggerLabel.
-]
-
-{ #category : #asserting }
-GtExceptionsWithExtensionsExamples >> assertSwitchToDebuggerLabeled: aDebuggerLabel ofType: aDebuggerType for: aScripter [
-	<gtExample>
-	self assertOneDebuggerSwitchButtonLabeled: aDebuggerLabel for: aScripter.
-
-	aScripter
-		clickStep: [ :s | 
-			s
-				// GtMoldableDebuggerSwitchButtonsContainerElementId;
-				// BrButton ].
-
-	self assert: (aScripter element query // aDebuggerType) all size equals: 1
-]
-
 { #category : #accessing }
 GtExceptionsWithExtensionsExamples >> createDebuggingSessionForException: anException [ 
 	^ DebugSession forExceptionFromExampleFor: anException
@@ -165,35 +124,6 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 
 { #category : #'examples - debuggers' }
 GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering [
-	"<gtExample>"
-	| scripter |
-	
-	scripter := BlScripter new.
-	scripter element: self fullDebuggerOn_exampleExceptionWithDebuggingView.
-	
-	self assertIsMainDebuggerElementFor: scripter.
-	
-	self 
-		assertOneDebuggerSwitchButtonLabeled: GtMoldableExceptionDebuggingElement defaultTitle  
-		for: scripter.
-	self 
-		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
-		ofType: GtPharoDebuggerElement 
-		for: scripter.
-		
-	self 
-		assertOneDebuggerSwitchButtonLabeled: GtPharoDebuggerElement defaultTitle 
-		for: scripter.
-	self 
-		assertSwitchToDebuggerLabeled: GtMoldableExceptionDebuggingElement defaultTitle 
-		ofType: GtMoldableExceptionDebuggingElement 
-		for: scripter.
-
-	^ scripter
-]
-
-{ #category : #'examples - debuggers' }
-GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggingView_scripterRendering2 [
 	<gtExample>
 	| scripter |
 	
@@ -202,12 +132,16 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 	
 	scripter debugger
 		assertIsMainDebuggerElement;
-		assertTwoDebuggerSwitchButtonsWithSelectedLabeled: GtMoldableExceptionDebuggingElement defaultTitle;
-		assertSwitchToDebuggerLabeled: GtPharoDebuggerElement defaultTitle 
-			ofType: GtPharoDebuggerElement;
-		assertTwoDebuggerSwitchButtonsWithSelectedLabeled: GtPharoDebuggerElement defaultTitle;
-		assertSwitchToDebuggerLabeled: GtMoldableExceptionDebuggingElement defaultTitle 
-			ofType: GtMoldableExceptionDebuggingElement.
+		assertDebuggerSwitchButtonsWithLabels: { 
+			GtMoldableExceptionDebuggingElement defaultTitle.
+			GtPharoDebuggerElement defaultTitle};
+		assertSelectedDebuggerOfType: GtMoldableExceptionDebuggingElement;
+		
+		switchToDebuggerOfType: GtPharoDebuggerElement;
+		assertDebuggerSwitchButtonsWithLabels: { 
+			GtMoldableExceptionDebuggingElement defaultTitle.
+			GtPharoDebuggerElement defaultTitle};
+		switchToDebuggerOfType: GtMoldableExceptionDebuggingElement.
 
 	^ scripter
 ]
