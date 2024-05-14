@@ -6,7 +6,6 @@ Class {
 
 { #category : #assertions }
 GtDebuggerDevScripterCheckStep >> assertDebuggerSwitchButtonsWithLabels: aCollectionOfLabels [
-	<gtExample>
 	| buttonsContainer obtainedLabels |
 	
 	buttonsContainer := self scripter element query 
@@ -49,7 +48,6 @@ GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderVisible [
 
 { #category : #assertions }
 GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [ 
-	<gtExample>
 	| buttonsContainer |
 	
 	buttonsContainer := self scripter element query // GtMoldableDebuggerSwitchButtonsContainerElementId.
@@ -74,7 +72,7 @@ GtDebuggerDevScripterCheckStep >> doubleClickOnPlaygroudExpander [
 				onPlaygroundResizer ].
 ]
 
-{ #category : #assertions }
+{ #category : #actions }
 GtDebuggerDevScripterCheckStep >> switchToDebuggerLabeled: aDebuggerLabel [
 	<gtExample>
 	
@@ -88,7 +86,7 @@ GtDebuggerDevScripterCheckStep >> switchToDebuggerLabeled: aDebuggerLabel [
 						anElement label asString = aDebuggerLabel ] ] ].
 ]
 
-{ #category : #assertions }
+{ #category : #actions }
 GtDebuggerDevScripterCheckStep >> switchToDebuggerOfType: aDebuggerClass [
 	self switchToDebuggerLabeled: aDebuggerClass defaultTitle.
 	self assertSelectedDebuggerOfType: aDebuggerClass.
