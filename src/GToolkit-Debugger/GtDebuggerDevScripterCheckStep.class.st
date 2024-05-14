@@ -5,6 +5,30 @@ Class {
 }
 
 { #category : #assertions }
+GtDebuggerDevScripterCheckStep >> assertDebuggerSwitchButtonsWithLabels: aCollectionOfLabels [
+	<gtExample>
+	| buttonsContainer obtainedLabels |
+	
+	buttonsContainer := self scripter element query 
+		// GtMoldableDebuggerSwitchButtonsContainerElementId.
+	
+	self
+		assert: buttonsContainer all size
+		equals: 1.
+		
+	self
+		assert: buttonsContainer anyOne tabs size
+		equals: aCollectionOfLabels size.
+		
+	obtainedLabels := buttonsContainer anyOne viewModel tabs 
+		collect: [ :aTab | 
+			aTab tabLabel text asString ].
+	self
+		assert: obtainedLabels asArray
+		equals: aCollectionOfLabels.
+]
+
+{ #category : #assertions }
 GtDebuggerDevScripterCheckStep >> assertIsMainDebuggerElement [
 	self 
 		assert: self scripter element id
@@ -24,40 +48,17 @@ GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderVisible [
 ]
 
 { #category : #assertions }
-GtDebuggerDevScripterCheckStep >> assertSwitchToDebuggerLabeled: aDebuggerLabel ofType: aDebuggerType [
-	<gtExample>
-	
-	self scripter
-		clickStep: [ :aStep | 
-			aStep
-				// GtMoldableDebuggerSwitchButtonsContainerElementId;
-				// #tabbar;
-				onChildFromBlock: [ :aTabGroup |
-					aTabGroup children detect: [ :anElement | 
-						anElement label asString = aDebuggerLabel ] ] ].
-
-	self assert: (self scripter element query // aDebuggerType) all size equals: 1
-]
-
-{ #category : #assertions }
-GtDebuggerDevScripterCheckStep >> assertTwoDebuggerSwitchButtonsWithSelectedLabeled: aDebuggerLabel [
+GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [ 
 	<gtExample>
 	| buttonsContainer |
 	
-	buttonsContainer := self scripter element query 
-		// GtMoldableDebuggerSwitchButtonsContainerElementId.
-	
-	self
-		assert: buttonsContainer all size
-		equals: 1.
+	buttonsContainer := self scripter element query // GtMoldableDebuggerSwitchButtonsContainerElementId.
 		
 	self
-		assert: buttonsContainer anyOne tabs size
-		equals: 2.
+		assert: (buttonsContainer anyOne tabs detect: [ :aTab | aTab isSelected ]) tabLabel text asString
+		equals: aDebuggerClass defaultTitle.
 		
-	self
-		assert: buttonsContainer anyOne viewModel selectedTab tabLabel text asString
-		equals: aDebuggerLabel.
+	self assert: (self scripter element query // aDebuggerClass) all size equals: 1
 ]
 
 { #category : #'accessing - query' }
@@ -71,4 +72,24 @@ GtDebuggerDevScripterCheckStep >> doubleClickOnPlaygroudExpander [
 		doubleClickStep: [ :aStep | 
 			aStep debuggerTarget
 				onPlaygroundResizer ].
+]
+
+{ #category : #assertions }
+GtDebuggerDevScripterCheckStep >> switchToDebuggerLabeled: aDebuggerLabel [
+	<gtExample>
+	
+	self scripter
+		clickStep: [ :aStep | 
+			aStep
+				// GtMoldableDebuggerSwitchButtonsContainerElementId;
+				// #tabbar;
+				onChildFromBlock: [ :aTabGroup |
+					aTabGroup children detect: [ :anElement | 
+						anElement label asString = aDebuggerLabel ] ] ].
+]
+
+{ #category : #assertions }
+GtDebuggerDevScripterCheckStep >> switchToDebuggerOfType: aDebuggerClass [
+	self switchToDebuggerLabeled: aDebuggerClass defaultTitle.
+	self assertSelectedDebuggerOfType: aDebuggerClass.
 ]
