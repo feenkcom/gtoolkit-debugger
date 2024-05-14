@@ -26,15 +26,13 @@ GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1
 			min: aText size.
 
-	aText
-		clearAttributes: [ :each | {GtEmbeddedDebuggerAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
 	anAttribute := GtEmbeddedDebuggerAttribute new
 			signaledException: aStatus exception;
 			debugSession: aStatus sharedDebugSession.
 			
 	anAttributeIndex := aStatus evaluatedCodeInterval 
 		ifNil: [ theSourceEndInText ] 
-		ifNotNil: [ :aContextInterval | (aContextInterval last + theSourceStartInText) min: aText size ].
+		ifNotNil: [ :aContextInterval | (aContextInterval last + theSourceStartInText - 1) min: aText size ].
 			
 	aText
 		attribute: anAttribute
