@@ -21,8 +21,9 @@ BaselineOfGToolkitDebugger >> baseline: spec [
 		spec baseline: 'GToolkitInspector' with: [
 				spec repository: 'github://feenkcom/gtoolkit-inspector:main/src' ].
 		spec 
+			package: 'GToolkit-Debugger-PharoOverrides';
 			package: 'GToolkit-Debugger' with: [
-				spec requires: #('GToolkitInspector' ). ];
+				spec requires: #('GToolkitInspector' 'GToolkit-Debugger-PharoOverrides'). ];
 			package: 'GToolkit-Debugger-MoldableExceptions' with: [
 				spec requires: #('GToolkit-Debugger' ). ];
 				
