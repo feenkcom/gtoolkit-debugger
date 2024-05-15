@@ -87,7 +87,7 @@ GtCoderEmbeddedDebuggerInSpaceElement >> initializeButtonElement [
 			aptitude: BrGlamorousLabelAptitude new;
 			beSmallSize;
 			label: 'unknown debugger';
-			background: self theme status errorBackgroundColor;
+			border: (BlBorder paint: self theme status errorBorderColor width: 1);
 			geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
 			padding: (BlInsets
 					top: 0
