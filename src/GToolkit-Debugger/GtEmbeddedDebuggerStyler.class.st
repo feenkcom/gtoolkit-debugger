@@ -6,7 +6,7 @@ Class {
 
 { #category : #'api - styling' }
 GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
-	| aStatus anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText anAttribute anAttributeIndex |
+	| aStatus anAttribute anAttributeIndex |
 	super extraStyle: aText ast: theAst.
 
 	self coderViewModel ifNil: [ ^ self ].
@@ -14,26 +14,19 @@ GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 	aStatus ifNil: [ ^ self ].
 	aStatus hasSharedDebugSession ifFalse: [ ^ self ].
 
-	anEvaluatedSource := aStatus sourceString.
-	anEvaluatedInterval := aStatus sourceInterval.
-	theSourceStartInText := aText finder
-			caseSensitiveSubstring: anEvaluatedSource;
-			startAtPosition: anEvaluatedInterval first;
-			searchClosest.
-			
-	"what did we evaluate?"
-	theSourceStartInText isZero ifTrue: [ ^ self ].
-	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1
-			min: aText size.
+	anAttributeIndex := GtEmbeddedDebuggerTextAttributePositionCalculator new
+		sourceString: aStatus sourceString;
+		sourceInterval: aStatus sourceInterval;
+		evaluatedCodeInterval: [ aStatus evaluatedCodeInterval ];
+		targetText: aText;
+		compute.
 
+	anAttributeIndex ifNil: [ ^ self ].
+		
 	anAttribute := GtEmbeddedDebuggerAttribute new
 			signaledException: aStatus exception;
 			debugSession: aStatus sharedDebugSession.
-			
-	anAttributeIndex := aStatus evaluatedCodeInterval 
-		ifNil: [ theSourceEndInText ] 
-		ifNotNil: [ :aContextInterval | (aContextInterval last + theSourceStartInText - 1) min: aText size ].
-			
+	
 	aText
 		attribute: anAttribute
 		from: anAttributeIndex

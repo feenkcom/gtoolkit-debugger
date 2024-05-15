@@ -6,7 +6,7 @@ Class {
 
 { #category : #'api - styling' }
 GtEmbeddedDebuggerInSpaceStyler >> extraStyle: aText ast: theAst [
-	| aStatus anEvaluatedSource anEvaluatedInterval theSourceStartInText theSourceEndInText anAttribute |
+	| aStatus anAttribute anAttributeIndex |
 	super extraStyle: aText ast: theAst.
 
 	self coderViewModel ifNil: [ ^ self ].
@@ -14,25 +14,20 @@ GtEmbeddedDebuggerInSpaceStyler >> extraStyle: aText ast: theAst [
 	aStatus ifNil: [ ^ self ].
 	aStatus hasDebugSessionInSpace ifFalse: [ ^ self ].
 
-	anEvaluatedSource := aStatus sourceString.
-	anEvaluatedInterval := aStatus sourceInterval.
-	theSourceStartInText := aText finder
-			caseSensitiveSubstring: anEvaluatedSource;
-			startAtPosition: anEvaluatedInterval first;
-			searchClosest.
-			
-	"what did we evaluate?"
-	theSourceStartInText isZero ifTrue: [ ^ self ].
-	theSourceEndInText := theSourceStartInText + anEvaluatedSource size - 1
-			min: aText size.
+	anAttributeIndex := GtEmbeddedDebuggerTextAttributePositionCalculator new
+		sourceString: aStatus sourceString;
+		sourceInterval: aStatus sourceInterval;
+		evaluatedCodeInterval: [ aStatus evaluatedCodeInterval ];
+		targetText: aText;
+		compute.
 
-	aText
-		clearAttributes: [ :each | {GtEmbeddedDebuggerInSpaceAttribute} anySatisfy: [ :cls | each isKindOf: cls ] ].
+	anAttributeIndex ifNil: [ ^ self ].
+
 	anAttribute := GtEmbeddedDebuggerInSpaceAttribute new
 		evaluationStatus: aStatus;
 		coderViewModel: self coderViewModel.
 	aText
 		attribute: anAttribute
-		from: theSourceEndInText
-		to: theSourceEndInText
+		from: anAttributeIndex
+		to: anAttributeIndex
 ]
