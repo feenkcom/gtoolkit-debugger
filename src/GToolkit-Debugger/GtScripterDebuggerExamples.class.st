@@ -141,6 +141,39 @@ GtScripterDebuggerExamples >> doubleClickExpandDebuggerPlayground [
 ]
 
 { #category : #examples }
+GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
+	<gtExample>
+	| scripter |
+	scripter := self scripterOnDoMethodDebugger.
+
+	scripter debugger
+		assertPlaygroundExpanderCollapsed;
+		doubleClickOnPlaygroudExpander;
+		assertPlaygroundExpanderVisible.
+		
+	scripter type
+		text: 'i ';
+		play.
+		
+	scripter shortcut
+		label: 'Print result';
+		combination: BlKeyCombination primaryP;
+		// GtDebuggerPlaygroundElement;
+		// GtSourceCoderEditorId;
+		play.
+		
+	scripter assert
+		label: 'Assert print-it is 1';
+		value: [ :aLabel | aLabel text asString ] equals: '1';
+		// GtDebuggerPlaygroundElement;
+		// GtSourceCoderEditorId;
+		// GtCoderPrintStringElementId;
+		play.
+		
+	^ scripter
+]
+
+{ #category : #examples }
 GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod [
 	<gtExample>
 	
