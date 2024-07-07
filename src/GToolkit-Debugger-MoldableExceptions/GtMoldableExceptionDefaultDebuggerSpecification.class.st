@@ -9,10 +9,33 @@ Class {
 
 { #category : #accessing }
 GtMoldableExceptionDefaultDebuggerSpecification >> collectContextDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
-	^ (GtMoldableExceptionDebuggingViewsObjectTarget forObject: aReceiver) 
-			collectTargetDebuggingViewsForPragmaNames: self receiverViewPragmaNames
-			in: aComposite
-			forDebugger: aDebugger
+	self 
+		collectSpecificPragmaContextDebuggingViewsForReceiver: aReceiver 
+		forDebugger: aDebugger 
+		in: aComposite.
+	self 
+		collectGenericPragmaContextDebuggingViewsForReceiver: aReceiver 
+		forDebugger: aDebugger 
+		in: aComposite
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDefaultDebuggerSpecification >> collectGenericPragmaContextDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
+	(GtMoldableExceptionDebuggingViewsObjectTarget forObject: aReceiver) 
+		collectTargetDebuggingViewsForPragmaNames: {#gtContextView:}
+		matchingArguments: [ :aPragma |
+			self targetException class
+				includesBehavior: aPragma arguments first asClass  ]
+		in: aComposite
+		forDebugger: aDebugger
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDefaultDebuggerSpecification >> collectSpecificPragmaContextDebuggingViewsForReceiver: aReceiver forDebugger: aDebugger in: aComposite [
+	(GtMoldableExceptionDebuggingViewsObjectTarget forObject: aReceiver) 
+		collectTargetDebuggingViewsForPragmaNames: self receiverViewPragmaNames
+		in: aComposite
+		forDebugger: aDebugger
 ]
 
 { #category : #accessing }
