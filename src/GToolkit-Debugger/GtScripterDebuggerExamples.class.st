@@ -164,8 +164,7 @@ GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
 		
 	scripter assert
 		label: 'Assert print-it is 1';
-		flag: 'FIXIT: aLabel text asString must return 1';
-		value: [ :aLabel | aLabel text asString ] equals: 'nil';
+		value: [ :aLabel | aLabel text asString ] equals: '1';
 		// GtDebuggerPlaygroundElement;
 		// GtSourceCoderEditorId;
 		// GtCoderPrintStringElementId;
