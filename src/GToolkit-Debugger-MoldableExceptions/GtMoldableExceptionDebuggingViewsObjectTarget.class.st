@@ -38,8 +38,19 @@ GtMoldableExceptionDebuggingViewsObjectTarget >> collectTargetDebuggingActionsFo
 { #category : #accessing }
 GtMoldableExceptionDebuggingViewsObjectTarget >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames in: aComposite forDebugger: aDebuggerElement [
 		
+	self 
+		collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames
+		matchingArguments: [ :aPragma | true ]  
+		in: aComposite 
+		forDebugger: aDebuggerElement
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggingViewsObjectTarget >> collectTargetDebuggingViewsForPragmaNames: aCollectionOfPragmaNames matchingArguments: aMatchingBlockClosure in: aComposite forDebugger: aDebuggerElement [
+		
 	aComposite collectorAppend: [ :aCollector |
 		aCollector pragmaNames: aCollectionOfPragmaNames.
+		aCollector matchingArguments: aMatchingBlockClosure.
 		aCollector context: (GtPhlowContext new 
 			currentDebugger: aDebuggerElement).
 		self configureDebuggingViewsCollector: aCollector ] 
