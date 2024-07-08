@@ -155,19 +155,12 @@ GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
 		text: 'i ';
 		play.
 		
-	scripter shortcut
-		label: 'Print result';
-		combination: BlKeyCombination primaryP;
+	scripter methodCoder
+		label: 'Print "i" result';
+		printIt;
+		assertPrintItString: '1';
 		// GtDebuggerPlaygroundElement;
 		// GtSourceCoderEditorId;
-		play.
-		
-	scripter assert
-		label: 'Assert print-it is 1';
-		value: [ :aLabel | aLabel text asString ] equals: '1';
-		// GtDebuggerPlaygroundElement;
-		// GtSourceCoderEditorId;
-		// GtCoderPrintStringElementId;
 		play.
 		
 	^ scripter
