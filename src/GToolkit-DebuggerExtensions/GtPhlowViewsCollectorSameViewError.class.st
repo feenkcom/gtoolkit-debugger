@@ -213,7 +213,7 @@ GtPhlowViewsCollectorSameViewError >> initializeWithViewSelector: aMessageSymbol
 	viewSelector := aMessageSymbol.
 	targetObject := anObject.
 	
-	messageText := self createMessageText
+	"messageText := self createMessageText"
 ]
 
 { #category : #accessing }
