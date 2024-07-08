@@ -172,7 +172,7 @@ DebugSession class >> forExceptionFromExampleFor: anException [
 	process := Process
 		forContext: context
 		priority: Processor userInterruptPriority.
-	session := DebugSession
+	session := self
 		named: anException description
 		on: process
 		startedAt: context.
