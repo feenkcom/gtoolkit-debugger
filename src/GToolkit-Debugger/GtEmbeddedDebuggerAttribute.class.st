@@ -2,29 +2,25 @@ Class {
 	#name : #GtEmbeddedDebuggerAttribute,
 	#superclass : #BrTextAdornmentAttribute,
 	#instVars : [
-		'debugSession',
-		'signaledException',
 		'debuggerViewModel'
 	],
 	#category : #'GToolkit-Debugger-Embedded - Text'
 }
 
 { #category : #accessing }
-GtEmbeddedDebuggerAttribute >> debugSession [
-	^ debugSession
+GtEmbeddedDebuggerAttribute >> debuggerViewModel [
+	<return: #GtCoderEmbeddedDebuggerViewModel>
+	^ debuggerViewModel
 ]
 
 { #category : #accessing }
-GtEmbeddedDebuggerAttribute >> debugSession: aDebugSession [
-	debugSession := aDebugSession
+GtEmbeddedDebuggerAttribute >> debuggerViewModel: aGtCoderEmbeddedDebuggerViewModel [
+	debuggerViewModel := aGtCoderEmbeddedDebuggerViewModel
 ]
 
 { #category : #initialization }
 GtEmbeddedDebuggerAttribute >> doAffect: aTBrTextEditorTextualPiece in: anEditorElement [
-	debuggerViewModel ifNil: [ 
-		debuggerViewModel := GtCoderEmbeddedDebuggerViewModel new
-			signaledException: self signaledException;
-			debugSession: self debugSession ].
+	debuggerViewModel ifNil: [ ^ #() ].
 
 	^ GtCoderEmbeddedDebuggerElement new
 		debuggerViewModel: debuggerViewModel
@@ -35,14 +31,4 @@ GtEmbeddedDebuggerAttribute >> initialize [
 	super initialize.
 	
 	self beAppend
-]
-
-{ #category : #accessing }
-GtEmbeddedDebuggerAttribute >> signaledException [
-	^ signaledException
-]
-
-{ #category : #accessing }
-GtEmbeddedDebuggerAttribute >> signaledException: anException [
-	signaledException := anException
 ]

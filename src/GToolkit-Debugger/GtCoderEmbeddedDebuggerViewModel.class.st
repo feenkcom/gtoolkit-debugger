@@ -8,7 +8,8 @@ Class {
 		'isTerminationDisabled',
 		'debugSession',
 		'mutex',
-		'announcer'
+		'announcer',
+		'isDropdownDisplayed'
 	],
 	#category : #'GToolkit-Debugger-Embedded - Models'
 }
@@ -56,6 +57,20 @@ GtCoderEmbeddedDebuggerViewModel >> initialize [
 	self enableTermination.
 	mutex := Mutex new.
 	announcer := Announcer new
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerViewModel >> isDropdownDisplayed [
+	"True value means, that embedded debugger dropdown is shown, 
+	false value means it is hidden."
+
+	<return: #Boolean>
+	^ isDropdownDisplayed ifNil: [ isDropdownDisplayed := true ]
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerViewModel >> isDropdownDisplayed: aBoolean [
+	isDropdownDisplayed := aBoolean
 ]
 
 { #category : #'private - subscriptions' }
