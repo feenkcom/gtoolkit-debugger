@@ -24,8 +24,7 @@ GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 	anAttributeIndex ifNil: [ ^ self ].
 		
 	anAttribute := GtEmbeddedDebuggerAttribute new
-			signaledException: aStatus exception;
-			debugSession: aStatus sharedDebugSession.
+			debuggerViewModel: aStatus debuggerViewModel.
 	
 	aText
 		attribute: anAttribute

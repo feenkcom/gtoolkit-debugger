@@ -120,7 +120,9 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
 		preferredExtent: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent;
 		doKeepRatio;
 		whenResizedDo: [ :anEvent | 
-			GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ].
+			GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ];
+		when: BrDropdownIsVisible do: [ :anEvent | self onDropdownIsVisible: anEvent ];
+		when: BrDropdownIsHidden do: [ :anEvent | self onDropdownIsHidden: anEvent ].
 	buttonElement addAptitude: buttonDropdownAptitude
 ]
 
@@ -184,10 +186,20 @@ GtCoderEmbeddedDebuggerElement >> onDebuggerViewModelChanged [
 	self updateButtonElement
 ]
 
+{ #category : #'event handling' }
+GtCoderEmbeddedDebuggerElement >> onDropdownIsHidden: anEvent [ 
+	self debuggerViewModelDo: [ :aViewModel | aViewModel isDropdownDisplayed: false ]
+]
+
+{ #category : #'event handling' }
+GtCoderEmbeddedDebuggerElement >> onDropdownIsVisible: anEvent [
+	self debuggerViewModelDo: [ :aViewModel | aViewModel isDropdownDisplayed: true ]
+]
+
 { #category : #'hooks - children' }
 GtCoderEmbeddedDebuggerElement >> onRemovedFromParent: aParentElement [
 	super onRemovedFromParent: aParentElement.
-	BlTaskAction enqueueElement: aParentElement action: [ buttonDropdownAptitude hide ]
+	buttonDropdownAptitude hide
 ]
 
 { #category : #accessing }
@@ -218,5 +230,7 @@ GtCoderEmbeddedDebuggerElement >> unsubscribeFromDebuggerViewModel [
 { #category : #'private - updating' }
 GtCoderEmbeddedDebuggerElement >> updateButtonElement [
 	buttonElement label: self buttonText.
-	BlTaskAction enqueueElement: self action: [ buttonDropdownAptitude show ]
+	BlTaskAction 
+		enqueueElement: self 
+		action: [ buttonDropdownAptitude visible: debuggerViewModel isDropdownDisplayed ]
 ]
