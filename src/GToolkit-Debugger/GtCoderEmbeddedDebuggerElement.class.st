@@ -118,7 +118,6 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
 				anAnchoredAptitude background: self theme status errorBackgroundColor ].
 	buttonDropdownAptitude
 		preferredExtent: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent;
-		doKeepRatio;
 		whenResizedDo: [ :anEvent | 
 			GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ];
 		when: BrDropdownIsVisible do: [ :anEvent | self onDropdownIsVisible: anEvent ];
