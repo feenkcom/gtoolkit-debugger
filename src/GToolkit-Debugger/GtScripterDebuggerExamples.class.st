@@ -430,6 +430,148 @@ GtScripterDebuggerExamples >> savingMethodOutsideDebuggerShowsUninstalledIndicat
 	^ scripter
 ]
 
+{ #category : #'examples - method header' }
+GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
+	"Click on a superclass that implements the #enumerate method."
+
+	<gtExample>
+	| scripter debugger pager selfObject |
+	debugger := self
+			debuggerOn: [ GtPharoDummyTwoObject new enumerate ]
+			stoppingAt: [ :context | context selector = #enumerate ].
+	selfObject := debugger debugSession interruptedContext receiver.
+	pager := GtPager createWrappedOn: debugger.
+	pager maximized.
+	scripter := BlScripter new.
+	scripter element: pager.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1700 @ 600 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertHeaderProviderBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+		clickOnHeaderMethodBehavior;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+		
+	scripter assert
+		label: 'Assert class name';
+		value: [ :anEditor | anEditor text asString ] equals: GtPharoDummyOneObject name;
+		// (GtPagerPageElementId indexed: 2);
+		// GtBehaviorCoderBehaviorNameId;
+		play.
+		
+	scripter assert
+		label: 'Assert enumerate method is expanded';
+		satisfies: [ :aCoderElement | aCoderElement isExpanded ];
+		// (GtPagerPageElementId indexed: 2);
+		// GtPharoStreamingMethodsCoderListId;
+		// GtExpandableMethodCoderElement;
+		@ [ :aCoderElement | aCoderElement textualCoderViewModel compiledMethod == (GtPharoDummyOneObject >> #enumerate) ];
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - method header' }
+GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
+	"Click on a class that implements #enumerate method 
+	which is also the class of the self-object (provider class)."
+	
+	<gtExample>
+	| scripter debugger pager selfObject |
+	debugger := self
+			debuggerOn: [ GtPharoDummyOneObject new enumerate ]
+			stoppingAt: [ :context | context selector = #enumerate ].
+	selfObject := debugger debugSession interruptedContext receiver.
+	pager := GtPager createWrappedOn: debugger.
+	pager maximized.
+	scripter := BlScripter new.
+	scripter element: pager.
+	
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+	
+	scripter methodCoder
+		assertHeaderProviderBehaviorIs: GtPharoDummyOneObject;
+		assertHeaderMethodBehaviorIsNotVisible;
+		clickOnHeaderProviderBehavior;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.	
+	
+	scripter assert
+		label: 'Assert class name';
+		value: [ :anEditor | anEditor text asString ] equals: GtPharoDummyOneObject name;
+		// (GtPagerPageElementId indexed: 2);
+		// GtBehaviorCoderBehaviorNameId;
+		play.
+	
+	scripter assert
+		label: 'Assert enumerate method is expanded';
+		satisfies: [ :aCoderElement | aCoderElement isExpanded ];
+		// (GtPagerPageElementId indexed: 2);
+		// GtPharoStreamingMethodsCoderListId;
+		// GtExpandableMethodCoderElement;
+		@ [ :aCoderElement | aCoderElement textualCoderViewModel compiledMethod == (GtPharoDummyOneObject >> #enumerate) ];
+		play.
+	
+	^ scripter
+]
+
+{ #category : #'examples - method header' }
+GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
+	"Click on a class that of the self-object (provider class)."
+	
+	<gtExample>
+	| scripter debugger pager selfObject |
+	debugger := self
+			debuggerOn: [ GtPharoDummyTwoObject new enumerate ]
+			stoppingAt: [ :context | context selector = #enumerate ].
+	selfObject := debugger debugSession interruptedContext receiver.
+	pager := GtPager createWrappedOn: debugger.
+	pager maximized.
+	scripter := BlScripter new.
+	scripter element: pager.
+	
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+	
+	scripter methodCoder
+		assertHeaderProviderBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+		clickOnHeaderProviderBehavior;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+		
+	scripter assert
+		label: 'Assert class name';
+		value: [ :anEditor | anEditor text asString ] equals: GtPharoDummyTwoObject name;
+		// (GtPagerPageElementId indexed: 2);
+		// GtBehaviorCoderBehaviorNameId;
+		play.
+	
+	scripter assert
+		label: 'Assert enumerate method is expanded';
+		notExists;
+		// (GtPagerPageElementId indexed: 2);
+		// GtPharoStreamingMethodsCoderListId;
+		// GtExpandableMethodCoderElement;
+		@ [ :aCoderElement | aCoderElement textualCoderViewModel compiledMethod == (GtPharoDummyOneObject >> #enumerate) ];
+		play.
+	
+	^ scripter
+]
+
 { #category : #scripter }
 GtScripterDebuggerExamples >> scripterOnDNUDebugger [
 	| scripter debugger |
