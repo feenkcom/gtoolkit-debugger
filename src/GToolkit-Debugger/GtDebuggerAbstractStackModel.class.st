@@ -70,6 +70,11 @@ GtDebuggerAbstractStackModel >> createCoderFor: aContext in: aSession [
 ]
 
 { #category : #accessing }
+GtDebuggerAbstractStackModel >> currentContextMethodIndicator [
+	^ nil
+]
+
+{ #category : #accessing }
 GtDebuggerAbstractStackModel >> filters [
 	<return: #Set>
 

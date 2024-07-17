@@ -138,8 +138,13 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 			do: [ :anIndex :isSynchronous | 
 				| anAction |
 				anAction := [ 
+					| wantsToScroll |
 					self stackFramesList itemsProvider: anItemsProvider.
-					self stackFramesList scrollToIndex: anIndex offset: 0.
+					wantsToScroll := stackModel currentContextMethodIndicator 
+						ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
+						ifNil: [ true ].
+					wantsToScroll ifTrue: [ 
+						self stackFramesList scrollToIndex: anIndex offset: 0 ].
 					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
 
 				isSynchronous

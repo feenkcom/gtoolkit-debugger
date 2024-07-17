@@ -1,6 +1,9 @@
 Class {
 	#name : #GtDebuggerPharoStackModel,
 	#superclass : #GtDebuggerAbstractStackModel,
+	#instVars : [
+		'currentContextMethodIndicator'
+	],
 	#category : #'GToolkit-Debugger-Models'
 }
 
@@ -13,6 +16,12 @@ GtDebuggerPharoStackModel >> createCoderFor: aContext in: aSession [
 	coder announcer weak 
 		when: DebugActionExecuted send: #forceRefreshStack to: self.
 	^ coder
+]
+
+{ #category : #accessing }
+GtDebuggerPharoStackModel >> currentContextMethodIndicator [
+	<return: #GtDebuggerPharoMethodIndicator or: nil>
+	^ currentContextMethodIndicator
 ]
 
 { #category : #'gt-extensions' }
@@ -68,12 +77,21 @@ GtDebuggerPharoStackModel >> setCurrentContext: aContext [
 	cached coders for each stack frame.
 	Return true if the context changed"
 	<return: #Boolean>
+	currentContextMethodIndicator := GtDebuggerPharoMethodIndicator 
+		previousContext: currentContext 
+		newContext: aContext.
+	GtDebuggerPharoMethodIndicatorSignal new
+		indicator: currentContextMethodIndicator;
+		previousContext: currentContext;
+		newContext: aContext;
+		emit.
+	
 	currentContext == aContext
 		ifTrue: [ ^ false ].
 
 	(currentContext notNil and: [ currentContext isDead ])
 		ifTrue: [ self resetCoderViewModelCache ].
-
+	
 	currentContext := aContext.
 	^ true
 ]
