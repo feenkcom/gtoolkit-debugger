@@ -19,6 +19,28 @@ GtScripterDebuggerExamples >> assertContext: scripter at: index satisfies: aBloc
 					equals: true ]
 ]
 
+{ #category : #examples }
+GtScripterDebuggerExamples >> assertInitialPosition: aScripter [
+	<gtExample>
+	| anInitialPosition |
+	anInitialPosition := aScripter userData at: #initialPosition.
+	aScripter assert
+		label: 'Assert the first context coder element initial position';
+		value: [ :anElement | anElement position ] equals: anInitialPosition;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> assertMemoryLoggerRecordingDuringOneDebugStepWithScripter: aStep [
+	^ aStep assert
+		label: 'Assert only three signals';
+		satisfies: [ :anElement | 
+			aStep recordings size = 3
+				and: [ (aStep recordings collect: #class as: Set) size = 3 ] ];
+		play
+]
+
 { #category : #asserting }
 GtScripterDebuggerExamples >> assertModifiedIndicatorInvisible: scripter at: index [
 	scripter
@@ -35,6 +57,18 @@ GtScripterDebuggerExamples >> assertModifiedIndicatorVisible: scripter at: index
 			aStep
 				id: GtTextualCoderModificationIndicatorId index: index;
 				value: [ :element | element visibility ] equals: BlVisibility visible ]
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> assertScrolledPosition: aScripter [
+	<gtExample>
+	| aScrolledPosition |
+	aScrolledPosition := aScripter userData at: #scrolledPosition.
+	aScripter assert
+		label: 'Assert the first context coder element scrolled position';
+		value: [ :anElement | anElement position ] equals: aScrolledPosition;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play
 ]
 
 { #category : #asserting }
@@ -1139,6 +1173,163 @@ GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
 		play.
 
 	^ scripter
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> scripterStepOverInALongMethod [
+	"Issue https://github.com/feenkcom/gtoolkit/issues/3892"
+	
+	<gtExample>
+	| aDebugger aScripter |
+	aDebugger := self
+			debuggerOn: [ GtPharoDummyOneObject new longMethod ]
+			stoppingAt: [ :context | context selector = #longMethod ].
+	5 timesRepeat: [ aDebugger debugSession stepOver ].
+	aScripter := BlScripter new.
+	aScripter element: aDebugger.
+	
+	self setInitialStackListPositionWithScripter: aScripter.
+	self scrollStackListWithScripter: aScripter.
+	self stepOverWithScripter: aScripter.
+	self assertScrolledPosition: aScripter.
+	self stepThroughWithScripter: aScripter.
+	self assertScrolledPosition: aScripter.
+	
+	^ aScripter
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> scripterStepOverInALongMethod_StepInto [
+	"Issue https://github.com/feenkcom/gtoolkit/issues/3892"
+	
+	<gtExample>
+	| aDebugger aScripter anInitialPosition aScrolledPosition |
+	aScripter := self scripterStepOverInALongMethod.
+	aDebugger := aScripter element.
+	aScrolledPosition := aScripter userData at: #scrolledPosition.
+	anInitialPosition := aScripter userData at: #initialPosition.
+	
+	self stepIntoWithScripter: aScripter.
+	self assertInitialPosition: aScripter.
+	aScripter substeps: 'Step over in the same method' do: [ :aStep |
+		3 timesRepeat: [ 
+			self stepOverWithScripter: aStep.
+			self assertInitialPosition: aStep ].
+	].
+	
+	^ aScripter
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> scripterStepOverInALongMethod_StepThroughtABlock [
+	"Issue https://github.com/feenkcom/gtoolkit/issues/3892"
+	
+	<gtExample>
+	| aDebugger aScripter |
+	aScripter := self scripterStepOverInALongMethod_StepInto.
+	aDebugger := aScripter element.
+	
+	self scrollStackListWithScripter: aScripter.
+	
+	aScripter substeps: 'Step throught a block in the same method' do: [ :aStep |
+		8 timesRepeat: [ 
+			self stepThroughWithScripter: aStep.
+			self assertScrolledPosition: aStep ].
+	].
+
+	^ aScripter
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> scrollStackListWithScripter: aScripter [ 
+	<gtExample>
+	| anInitialPosition aScrolledPosition |
+	anInitialPosition := aScripter userData at: #initialPosition.
+	
+	aScripter substeps: 'Scroll and assert the stack list' do: [ :aStep |
+	
+		aStep do
+			label: 'Scroll a bit the stack list';
+			block: [ :aList | aList scrollBy: 0@80 ];
+			// #expandableFrames;
+			play.
+			
+		aStep do
+			label: 'Read the first context coder element scrolled position';
+			block: [ :anElement | 
+				aScrolledPosition := anElement position.
+				self 
+					assert: aScrolledPosition y < anInitialPosition y 
+					description: [ 'Stack list scrolled, but its position same. Item moved from {1} to {2} position.' 
+						format: { anInitialPosition. aScrolledPosition } ].
+				self 
+					assert: aScrolledPosition y < 10 
+					description: [ 'Stack list scrolled, but its position is: {1}' format: { aScrolledPosition } ].
+				aScripter userData at: #scrolledPosition put: aScrolledPosition ];
+			// (GtExpandableContextMethodCoderId indexed: 1);
+			play 
+	].
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> setInitialStackListPositionWithScripter: aScripter [ 
+	<gtExample>
+	aScripter do
+		label: 'Read the first context coder element position';
+		block: [ :anElement | 
+			| anInitialPosition |
+			anInitialPosition := anElement position.
+			self 
+				assert: anInitialPosition y >= 0
+				description: [ 'Stack list vertical position must be zero: {1}' format: { anInitialPosition } ].
+			aScripter userData at: #initialPosition put: anInitialPosition ];
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> stepIntoWithScripter: aScripter [
+	<gtExample>
+	aScripter memoryLogger
+		runFor: GtDebuggerPharoMethodIndicatorSignal , ExceptionSignal
+				, GtDebuggerStackElementOnUpdateSessionSignal
+				, GtDebuggerStackElementFirstNonFilteredContextPreloadSignal
+		during: [ :aStep | 
+			aStep click
+				label: 'Step in';
+				// #stepInto;
+				play.
+			self assertMemoryLoggerRecordingDuringOneDebugStepWithScripter: aStep ]
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> stepOverWithScripter: aScripter [
+	<gtExample>
+	aScripter memoryLogger
+		runFor: GtDebuggerPharoMethodIndicatorSignal , ExceptionSignal
+				, GtDebuggerStackElementOnUpdateSessionSignal
+				, GtDebuggerStackElementFirstNonFilteredContextPreloadSignal
+		during: [ :aStep | 
+			aStep click
+				label: 'Step over';
+				// #stepOver;
+				play.
+			self assertMemoryLoggerRecordingDuringOneDebugStepWithScripter: aStep ]
+]
+
+{ #category : #examples }
+GtScripterDebuggerExamples >> stepThroughWithScripter: aScripter [
+	<gtExample>
+	aScripter memoryLogger
+		runFor: GtDebuggerPharoMethodIndicatorSignal , ExceptionSignal
+				, GtDebuggerStackElementOnUpdateSessionSignal
+				, GtDebuggerStackElementFirstNonFilteredContextPreloadSignal
+		during: [ :aStep | 
+			aStep click
+				label: 'Step through';
+				// #stepThrough;
+				play.
+			self assertMemoryLoggerRecordingDuringOneDebugStepWithScripter: aStep ]
 ]
 
 { #category : #examples }
