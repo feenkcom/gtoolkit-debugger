@@ -11,7 +11,7 @@ Class {
 		'viewsContainer',
 		'mainTab',
 		'compositeView',
-		'debuggingConfiguration'
+		'debuggerSpecification'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
@@ -43,6 +43,13 @@ GtMoldableExceptionDebuggingElement class >> handlesDebugSession: aDebugSession 
 	^ targetException gtExceptionDebuggerSpecification canShowDebugger
 ]
 
+{ #category : #'instance creation' }
+GtMoldableExceptionDebuggingElement class >> onSession: aDebugSession withSpecification: aSpecification [
+	^ self new 	
+		initializeForSession: aDebugSession
+		withSpecification: aSpecification
+]
+
 { #category : #'tool registration' }
 GtMoldableExceptionDebuggingElement class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools]" 
@@ -56,7 +63,9 @@ GtMoldableExceptionDebuggingElement class >> sessionClass [
 
 { #category : #callbacks }
 GtMoldableExceptionDebuggingElement >> actOnDebugSessionChanged [
-	debuggingConfiguration := self targetException gtExceptionDebuggerSpecification.
+	debuggerSpecification ifNil: [
+		"Ensure we have a specification"
+		debuggerSpecification := self targetException gtExceptionDebuggerSpecification ].
 	self updateContent.
 ]
 
@@ -153,7 +162,7 @@ GtMoldableExceptionDebuggingElement >> collectMainToolbarDebuggingActions [
 
 { #category : #'views - collecting' }
 GtMoldableExceptionDebuggingElement >> collectTargetDebuggingActions [
-	^ self debuggingConfiguration 
+	^ self currentDebuggerSpecification 
 		collectTargetDebuggingActionsForDebugger: self
 ]
 
@@ -163,7 +172,7 @@ GtMoldableExceptionDebuggingElement >> collectTargetDebuggingViews [
 	composite := GtPhlowView empty composite 
 		title: 'Views'.
 		
-	self debuggingConfiguration 
+	self currentDebuggerSpecification 
 		collectTargetDebuggingViewsForDebugger: self
 		in: composite.
 	
@@ -171,13 +180,13 @@ GtMoldableExceptionDebuggingElement >> collectTargetDebuggingViews [
 ]
 
 { #category : #accessing }
-GtMoldableExceptionDebuggingElement >> debuggingConfiguration [
-	^ debuggingConfiguration
+GtMoldableExceptionDebuggingElement >> currentDebuggerSpecification [
+	^ debuggerSpecification
 ]
 
 { #category : #accessing }
 GtMoldableExceptionDebuggingElement >> exceptionGlobalDebugActionsPragmas [
-	^ self debuggingConfiguration globalDebuggingActionPragmas
+	^ self currentDebuggerSpecification globalDebuggingActionPragmas
 ]
 
 { #category : #initialization }
@@ -203,6 +212,12 @@ GtMoldableExceptionDebuggingElement >> initializeContent [
 		andToolbar: toolbar.
 	
 	self addChild: (self buildTabGroupWithTab: mainTab)
+]
+
+{ #category : #initialization }
+GtMoldableExceptionDebuggingElement >> initializeForSession: aDebugSession withSpecification: aSpecification [
+	debuggerSpecification := aSpecification.
+	self session:  aDebugSession
 ]
 
 { #category : #initialization }
