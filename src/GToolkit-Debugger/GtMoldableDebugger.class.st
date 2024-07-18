@@ -121,9 +121,11 @@ GtMoldableDebugger >> aboutToOpen [
 ]
 
 { #category : #callbacks }
-GtMoldableDebugger >> actOnButtonSelected: aButtonElement forDebuggerOfType: aDebuggerClass [
+GtMoldableDebugger >> actOnButtonSelectedForDebuggerSpecification: aDebuggerSpecification [
 	| newDebuggerElement |
-	newDebuggerElement := self switchFrom: debuggerElement toDebuggerType: aDebuggerClass.
+	newDebuggerElement := self 
+		switchFrom: debuggerElement 
+		toDebuggerSpecification: aDebuggerSpecification.
 	self updateDebuggerElement: newDebuggerElement.
 ]
 
@@ -173,9 +175,8 @@ GtMoldableDebugger >> createButtonsContainer [
 		when: BrTabSelectedEvent do: [ :anEvent | 
 			(debuggerElement notNil and: [self isSwitchingEnabled]) ifTrue: [
 				self 
-					actOnButtonSelected: nil 
-					forDebuggerOfType: (anEvent tab widget
-						userData at: #debuggerSpecification) debuggerClass ] ] .
+					actOnButtonSelectedForDebuggerSpecification: (anEvent tab widget
+						userData at: #debuggerSpecification) ] ] .
 	^ container
 ]
 
@@ -261,18 +262,20 @@ GtMoldableDebugger >> openInPager [
 
 { #category : #'initialization - debuggers' }
 GtMoldableDebugger >> selectInitialDebuggerFor: aDebugSession [ 
-	| automaticallyAvailableSpecifications debuggerClass |
+	| automaticallyAvailableSpecifications debuggerSpecification |
 	
 	automaticallyAvailableSpecifications := aDebugSession 
 		applicableDebuggerSpecifications 
 			select: [ :aDebuggerSpecification | 
 				aDebuggerSpecification availableAutomatically ].
 		
-	debuggerClass := automaticallyAvailableSpecifications 
-		ifEmpty: [ GtPharoDebuggerElement ]
-		ifNotEmpty: [ :aCollection | aCollection first debuggerClass ].
+	debuggerSpecification := automaticallyAvailableSpecifications 
+		ifEmpty: [ 
+			"In case something went wrong and we cannot find a specification"
+			GtPharoDebuggerElement debuggerSpecification ]
+		ifNotEmpty: [ :aCollection | aCollection first  ].
 		
-	^ debuggerClass on: (debuggerClass spanNewSessionFrom: aDebugSession) .
+	^ debuggerSpecification createDebuggerStartingFrom: aDebugSession.
 ]
 
 { #category : #'initialization - debuggers' }
@@ -296,12 +299,12 @@ GtMoldableDebugger >> subscribeToDebuggingEventsFor: aDebuggerElement [
 ]
 
 { #category : #actions }
-GtMoldableDebugger >> switchFrom: currentDebugger toDebuggerType: aDebuggerClass [
+GtMoldableDebugger >> switchFrom: currentDebugger toDebuggerSpecification: aDebuggerSpecification [
 	| currentSession newDebugger |
 	
 	currentSession := currentDebugger session.
 	currentDebugger detachSession.
-	newDebugger := aDebuggerClass on: (aDebuggerClass spanNewSessionFrom: currentSession).	
+	newDebugger := aDebuggerSpecification createDebuggerStartingFrom:  currentSession.	
 	^ newDebugger
 ]
 

@@ -64,6 +64,13 @@ GtMoldableExceptionSpecificDebuggerSpecification >> collectTargetDebuggingViewsF
 		forDebugger: aDebugger
 ]
 
+{ #category : #'api - debugger creation' }
+GtMoldableExceptionSpecificDebuggerSpecification >> createDebuggerWithSession: aDebuggingSession [
+	^ self debuggerClass 
+		onSession: aDebuggingSession 
+		withSpecification: self
+]
+
 { #category : #'accessing configurarion' }
 GtMoldableExceptionSpecificDebuggerSpecification >> debuggingViewPragmas [
 	^ debuggingViewPragmaNames ifNil: [

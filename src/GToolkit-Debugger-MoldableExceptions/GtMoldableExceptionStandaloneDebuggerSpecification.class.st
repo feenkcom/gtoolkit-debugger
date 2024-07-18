@@ -12,6 +12,11 @@ GtMoldableExceptionStandaloneDebuggerSpecification >> availableAutomatically [
 	^ debuggerClass availableAutomatically
 ]
 
+{ #category : #'api - debugger creation' }
+GtMoldableExceptionStandaloneDebuggerSpecification >> createDebuggerWithSession: aDebuggingSession [
+	^ self debuggerClass on: aDebuggingSession.
+]
+
 { #category : #'api - testing' }
 GtMoldableExceptionStandaloneDebuggerSpecification >> handlesDebugSession: aDebugSession [
 	^ debuggerClass handlesDebugSession: aDebugSession

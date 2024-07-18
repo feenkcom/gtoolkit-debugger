@@ -18,6 +18,17 @@ GtDebuggerSpecification >> availableAutomatically [
 	self subclassResponsibility
 ]
 
+{ #category : #'api - debugger creation' }
+GtDebuggerSpecification >> createDebuggerStartingFrom: aDebuggingSession [
+	^ self createDebuggerWithSession: (self debuggerClass 
+		spanNewSessionFrom: aDebuggingSession)
+]
+
+{ #category : #'api - debugger creation' }
+GtDebuggerSpecification >> createDebuggerWithSession: aDebuggingSession [
+	^ self subclassResponsibility
+]
+
 { #category : #'api - accessing' }
 GtDebuggerSpecification >> debuggerClass [
 	^ debuggerClass
