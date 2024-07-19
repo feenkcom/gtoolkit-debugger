@@ -26,7 +26,7 @@ GtCoderEmbeddedDebuggerElement class >> enableEmbeddedDebugger [
 
 { #category : #testing }
 GtCoderEmbeddedDebuggerElement class >> isEmbeddedDebuggerEnabled [
-	^ IsEmbeddedDebuggerEnabled ifNil: [ IsEmbeddedDebuggerEnabled := false ]
+	^ IsEmbeddedDebuggerEnabled ifNil: [ IsEmbeddedDebuggerEnabled := true ]
 ]
 
 { #category : #opening }
