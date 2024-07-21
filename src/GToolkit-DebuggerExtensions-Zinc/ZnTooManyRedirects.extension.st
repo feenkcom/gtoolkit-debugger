@@ -60,6 +60,7 @@ ZnTooManyRedirects >> gtViewUrlTrailFor: aView [
 	<gtView>
 	<gtContextView>
 	<gtExceptionView>
+	<gtEmbeddedDebuggerView>
 	
 	^ aView list 
 		title: 'Url trail';
