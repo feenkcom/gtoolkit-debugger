@@ -19,9 +19,9 @@ TGtMoldableExceptionSignalWithTransformation >> signal [
 	<debuggerCompleteToSender>
 	| transformation |
 	self canApplyAutomaticTransformation ifFalse: [ 
-			^ super signal ].
+		^ super signal ].
 	
 	transformation := self gtMoldableExceptionTransformation.
-	transformation shouldTransform ifFalse: [ ^ self signal].
+	transformation shouldTransform ifFalse: [ ^ super signal ].
 	transformation performTransformation
 ]
