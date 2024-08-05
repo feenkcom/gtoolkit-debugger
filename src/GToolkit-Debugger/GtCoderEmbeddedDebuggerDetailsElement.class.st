@@ -189,10 +189,17 @@ GtCoderEmbeddedDebuggerDetailsElement >> updateStackListElement [
 	aCompositeView views
 		ifEmpty: [ self updateWithEmptyView.
 			^ self ].
-	aCompositeView views first
-		asElementDo: [ :anElement | 
-			stackListElement
-				addChild: ((anElement exact: GtCoderEmbeddedDebuggerDropdownConfiguration contentExtent) asScalableElement) ]
+	aCompositeView views do: [ :aView |
+		aView ifItHasContent: [ 
+			aView asElementDo: [ :anElement | 
+				(anElement respondsTo: #exact:)
+					ifTrue: [
+						anElement exact: GtCoderEmbeddedDebuggerDropdownConfiguration contentExtent ]
+					ifFalse: [ 
+						anElement size:  GtCoderEmbeddedDebuggerDropdownConfiguration contentExtent ].
+				stackListElement 
+					addChild: anElement asScalableElement.
+				^ self ] ] ]
 ]
 
 { #category : #'private - updating' }
