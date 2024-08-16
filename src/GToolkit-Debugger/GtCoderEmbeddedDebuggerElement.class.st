@@ -86,12 +86,33 @@ GtCoderEmbeddedDebuggerElement >> defaultLayout [
 	^ BlLinearLayout horizontal
 ]
 
+{ #category : #private }
+GtCoderEmbeddedDebuggerElement >> ensureDetailsElement: aChild fitsInAnchoredElement: aParent [
+	"Sometime the BrAnchoredElement (aParent) extent is not large enough
+	and GtCoderEmbeddedDebuggerDetailsElement (aChild) is not fully visible.
+	Particularly, the toolbar may not be accesible. For that reason a new
+	aChild extent is computed.
+	See https://github.com/feenkcom/gtoolkit/issues/3960"
+
+	| aChildRectangle aParentRectangle outsideRectangles extraHeight aContentRectangle aVisibleRectangle |
+	aChildRectangle := aChild bounds inSpace asRectangle.
+	aParentRectangle := aParent bounds inSpace asRectangle.
+	aContentRectangle := (aParent childNamed: #content) bounds inSpace asRectangle.
+	aVisibleRectangle := aParentRectangle intersect: aContentRectangle.
+	
+	(aVisibleRectangle containsRect: aChildRectangle) ifTrue: [ ^ self ].
+	
+	outsideRectangles := aChildRectangle areasOutside: aVisibleRectangle.
+	extraHeight := outsideRectangles inject: 0 into: [ :aHeight :aRectangle | aHeight + aRectangle height ].
+	aChild exact: aChild extent - (0 @ extraHeight)
+]
+
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initialize [
 	super initialize.
 	self initializeButtonElement.
 	self initializeButtonElementDropdown.
-	self addChild: buttonElement as: #button.
+	self addChild: buttonElement as: GtCoderEmbeddedDebuggerButtonId.
 	self
 		padding: (BlInsets
 				top: 0
@@ -117,7 +138,9 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
 				anAnchoredAptitude border: (self theme status errorBorderColor).
 				anAnchoredAptitude background: self theme status errorBackgroundColor ].
 	buttonDropdownAptitude
-		preferredExtent: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent;
+		preferredExtent: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent 
+			"An estimated handle extent. See https://github.com/feenkcom/gtoolkit/issues/3960"
+			+ (0@24);
 		whenResizedDo: [ :anEvent | 
 			GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ];
 		when: BrDropdownIsVisible do: [ :anEvent | self onDropdownIsVisible: anEvent ];
@@ -147,9 +170,14 @@ GtCoderEmbeddedDebuggerElement >> newBasicButtonElement [
 GtCoderEmbeddedDebuggerElement >> newButtonDropdownContentElement [
 	| anElement |
 	anElement := GtCoderEmbeddedDebuggerDetailsElement new.
-	self debuggerViewModelDo: [ :aViewModel | 
-		anElement debuggerViewModel: aViewModel
-	].
+	
+	"See https://github.com/feenkcom/gtoolkit/issues/3960"
+	anElement
+		when: BlElementAddedToSceneGraphEvent
+		doOnce: [ :anEvent | self onAddedToSceneGraphEvent: anEvent ].
+	
+	self
+		debuggerViewModelDo: [ :aViewModel | anElement debuggerViewModel: aViewModel ].
 	^ anElement
 ]
 
@@ -159,6 +187,23 @@ GtCoderEmbeddedDebuggerElement >> newButtonDropdownHandleElement [
 	aButton := self newBasicButtonElement.
 	aButton label: self buttonText.
 	^ aButton
+]
+
+{ #category : #'event handling' }
+GtCoderEmbeddedDebuggerElement >> onAddedToSceneGraphEvent: anEvent [
+	"See https://github.com/feenkcom/gtoolkit/issues/3960"
+
+	anEvent currentTarget
+		allParentsDo: [ :aParent | 
+			(aParent isKindOf: BrAnchoredElement)
+				ifTrue: [ 
+					BlTaskAction
+						enqueueElement: anEvent currentTarget
+						action: [ 
+							self
+								ensureDetailsElement: anEvent currentTarget
+								fitsInAnchoredElement: aParent ].
+					^ self ] ]
 ]
 
 { #category : #'private - event handling' }
