@@ -87,6 +87,7 @@ GtCoderEmbeddedDebuggerDetailsElement >> initializeToolbarElement [
 			vFitContent.
 
 	aDebugButton := BrButton new
+			id: GtCoderEmbeddedDebuggerDebugButtonId;
 			fitContent;
 			aptitude: BrGlamorousButtonWithIconAptitude;
 			beTinySize;
@@ -95,6 +96,7 @@ GtCoderEmbeddedDebuggerDetailsElement >> initializeToolbarElement [
 			action: [ self debug ].
 			
 	aTerminateButton := BrButton new
+			id: GtCoderEmbeddedDebuggerTerminateButtonId;
 			fitContent;
 			aptitude: BrGlamorousButtonWithIconAptitude;
 			beTinySize;
