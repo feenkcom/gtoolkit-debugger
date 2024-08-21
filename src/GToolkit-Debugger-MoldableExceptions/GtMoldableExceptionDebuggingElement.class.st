@@ -258,7 +258,7 @@ GtMoldableExceptionDebuggingElement >> updateToolbarActions [
 
 { #category : #updating }
 GtMoldableExceptionDebuggingElement >> updateToolbarWithActionsFromView: aPhlowView [
-	aPhlowView allActionsPromise wait do: [ :aPhlowAction |
+	aPhlowView allActionsFuture wait do: [ :aPhlowAction |
 		aPhlowAction 
 			asElement: [ :actionElement | 
 				toolbar addItem: actionElement ]				
