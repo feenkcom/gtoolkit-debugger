@@ -29,7 +29,7 @@ GtDoesNotUnderstandDebugAction >> appliesToDebugger: aDebugger [
 	
 	"The create method action should not appear in case the message 
 	is sent to an undeclared  variable."
-	exception := aDebugger session interruptedContext tempAt: 2.
+	exception := aDebugger session context.
 	exception class == VariableNotDeclared ifTrue: [ ^ false ].
 	
 	"Do not show the create method button when an message is sent to an
