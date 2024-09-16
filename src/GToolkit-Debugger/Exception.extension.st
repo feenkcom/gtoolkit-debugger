@@ -42,3 +42,13 @@ Exception >> gtExceptionEmbeddedDebuggerSpecification [
 		debuggingViewPragmas: #(gtEmbeddedDebuggerView);
 		targetObjectDebuggingActionPragmas: #(gtEmbeddedDebuggerAction)
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Exception >> logStackToFile [
+	[ [ Smalltalk 
+		logError: self messageText 
+		inContext: self signalerContext ] onErrorDo: [ :anError |
+			Smalltalk  logErrorMessage: anError messageText ] ]
+	valueWithin: 1000 milliSeconds onTimeout: [  
+		Smalltalk  logErrorMessage: 'Timeout while logging exception to stack' ]
+]
