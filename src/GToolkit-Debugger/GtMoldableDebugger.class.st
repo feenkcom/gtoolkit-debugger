@@ -164,7 +164,7 @@ GtMoldableDebugger >> createButtonsContainer [
 	| container |
 	container := BrTabGroup new
 		fitContent;
-		labeled: 'Composite Tool';
+		id: #'Composite Tool';
 		aptitude: BrGlamorousTabGroupSwitcherAptitude;
 		id: GtMoldableDebuggerSwitchButtonsContainerElementId;
 		constraintsDo: [ :c |
