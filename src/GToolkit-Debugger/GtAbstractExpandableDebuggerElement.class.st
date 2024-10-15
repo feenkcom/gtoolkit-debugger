@@ -453,15 +453,13 @@ GtAbstractExpandableDebuggerElement >> registerDetailsTabSelectionEventsFor: aDe
 ]
 
 { #category : #'building widgets' }
-GtAbstractExpandableDebuggerElement >> selectDetailsTabFor: aDetailsTabGroupElement [ 
-	(aDetailsTabGroupElement viewModel tabs 
+GtAbstractExpandableDebuggerElement >> selectDetailsTabFor: aDetailsTabGroupElement [
+	(aDetailsTabGroupElement viewModel tabs
 		select: [ :aTabModel | aTabModel isAttachedToWidget ])
-			detect: [ :aTabModel | 
-				aTabModel widget label asString = self selectedDetailesTabName ]
-			ifFound: [ :aTabModel | aTabModel select ]
-			ifNone: [ aDetailsTabGroupElement viewModel tabs  
-				ifNotEmpty: [ :aTabsList |
-					aTabsList first select ] ].
+		detect: [ :aTabModel | aTabModel widget label asString sameContentAs: self selectedDetailesTabName ]
+		ifFound: [ :aTabModel | aTabModel select ]
+		ifNone: [ aDetailsTabGroupElement viewModel tabs
+				ifNotEmpty: [ :aTabsList | aTabsList first select ] ]
 ]
 
 { #category : #'accessing context' }
