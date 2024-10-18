@@ -20,15 +20,15 @@ BaselineOfGToolkitDebugger >> baseline: spec [
 	spec for: #'common' do: [
 		spec
 			baseline: 'GToolkitInspector' with: [
-				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.8.2372/src' ].
+				spec repository: 'github://feenkcom/gtoolkit-inspector:v0.8.2373/src' ].
 
 		spec package: 'GToolkit-Debugger' with: [
-			spec requires: #('GToolkitInspector') ].
+			spec requires: #(#GToolkitInspector) ].
 		spec package: 'GToolkit-Debugger-MoldableExceptions' with: [
-			spec requires: #('GToolkit-Debugger') ].
+			spec requires: #(#'GToolkit-Debugger') ].
 		spec package: 'GToolkit-Debugger-Emergency' with: [
-			spec requires: #('GToolkit-Debugger') ].
+			spec requires: #(#'GToolkit-Debugger') ].
 		spec package: 'GToolkit-Debugger-Experiments' with: [
-			spec requires: #('GToolkit-Debugger') ].
+			spec requires: #(#'GToolkit-Debugger') ].
 	]
 ]
