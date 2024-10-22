@@ -78,7 +78,7 @@ GtDebuggerPharoStackModel >> setCurrentContext: aContext [
 	Return true if the context changed"
 	<return: #Boolean>
 	currentContextMethodIndicator := GtDebuggerPharoMethodIndicator 
-		previousContext: currentContext 
+		previousIndicator: currentContextMethodIndicator
 		newContext: aContext.
 	GtDebuggerPharoMethodIndicatorSignal new
 		indicator: currentContextMethodIndicator;

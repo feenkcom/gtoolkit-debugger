@@ -32,9 +32,9 @@ GtDebuggerPharoMethodIndicator class >> methodFromContext: aContext [
 ]
 
 { #category : #'instance creation' }
-GtDebuggerPharoMethodIndicator class >> previousContext: aPreviousContext newContext: aNewContext [
+GtDebuggerPharoMethodIndicator class >> previousIndicator: anIndicator newContext: aNewContext [
 	| aPreviousMethod aNewMethod |
-	aPreviousMethod := self methodFromContext: aPreviousContext.
+	aPreviousMethod := anIndicator ifNotNil: #currentMethod.
 	aNewMethod := self methodFromContext: aNewContext.
 	^ self new
 		previousMethod: aPreviousMethod;
