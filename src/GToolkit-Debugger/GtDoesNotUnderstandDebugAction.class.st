@@ -54,21 +54,17 @@ GtDoesNotUnderstandDebugAction >> executeAction [
 	"Should only be called when the debugger was created in response to a
 	MessageNotUnderstood exception. Create a stub for the method that was
 	missing and proceed into it, or create a class if it was missing instead"
-	
 	| msg msgCategory chosenClass |
-	
 	msg := self interruptedContext tempAt: 1.
-	
 	chosenClass := self interruptedContext receiver class.
 	msgCategory := 'as yet unclassified'.
-	
 	self session
-		implement: msg 
-		classified: msgCategory 
-		inClass: chosenClass 
+		implement: msg
+		classified: msgCategory
+		inClass: chosenClass
 		forContext: self interruptedContext.
-	
 	self session stepInto: self interruptedContext.
+	self debugger stackElement selectCoderForContext: self interruptedContext
 ]
 
 { #category : #accessing }
