@@ -77,6 +77,13 @@ GtDebuggerElement >> aboutToOpen [
 	"Perform any action or update before the debugger is opened in the UI."
 ]
 
+{ #category : #'building actions' }
+GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
+	^ self session class
+		debuggingActionsForPragmas: aSymbolsCollection 
+		for: self
+]
+
 { #category : #callbacks }
 GtDebuggerElement >> actOnBrowserClosing: ann [
 	"Terminate the session when the debugger is closed. This can be called when 
@@ -92,13 +99,6 @@ GtDebuggerElement >> actOnDebugActionExecuted [
 { #category : #callbacks }
 GtDebuggerElement >> actOnDebugSessionChanged [
 	self subclassResponsibility
-]
-
-{ #category : #'building actions' }
-GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
-	^ self session class
-		debuggingActionsForPragmas: aSymbolsCollection 
-		for: self
 ]
 
 { #category : #announce }
