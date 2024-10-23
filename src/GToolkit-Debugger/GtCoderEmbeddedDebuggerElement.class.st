@@ -211,6 +211,11 @@ GtCoderEmbeddedDebuggerElement >> onButtonAction: anEvent [
 	self debug
 ]
 
+{ #category : #'private - hooks' }
+GtCoderEmbeddedDebuggerElement >> onDebuggerViewModelChanged [
+	self updateButtonElement
+]
+
 { #category : #'private - announcement handling' }
 GtCoderEmbeddedDebuggerElement >> onDebugSessionDebuggedAnnouncement: anAnnouncement [
 	BlTaskAction
@@ -223,11 +228,6 @@ GtCoderEmbeddedDebuggerElement >> onDebugSessionTerminatedAnnouncement: anAnnoun
 	BlTaskAction
 		enqueueElement: self
 		action: [ self visibility: BlVisibility hidden ]
-]
-
-{ #category : #'private - hooks' }
-GtCoderEmbeddedDebuggerElement >> onDebuggerViewModelChanged [
-	self updateButtonElement
 ]
 
 { #category : #'event handling' }
