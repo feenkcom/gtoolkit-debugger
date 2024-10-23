@@ -260,7 +260,9 @@ GtAbstractExpandableStackElement >> updateForSession: aDebuggingSession [
 	Possible update reasons are:
 	 - an executed debug action"
 
-	GtDebuggerStackElementOnUpdateSessionSignal emit.
+	GtDebuggerStackElementOnUpdateSessionSignal new 
+		debuggingSession: aDebuggingSession;
+		emit.
 
 	stackModel
 		ifNil: [ self initializeStackModelFor: aDebuggingSession ]
