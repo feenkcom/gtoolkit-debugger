@@ -34,15 +34,15 @@ GtCoderEmbeddedDebuggerInSpaceElement >> createWeakDebuggerSpace [
 ]
 
 { #category : #accessing }
-GtCoderEmbeddedDebuggerInSpaceElement >> debugSession [
-	^ evaluationStatus debugSession
-]
-
-{ #category : #accessing }
 GtCoderEmbeddedDebuggerInSpaceElement >> debuggerSpace [
 	<return: #BlSpace or: nil>
 	weakDebuggerSpace ifNil: [ self createWeakDebuggerSpace ].
 	^ weakDebuggerSpace ifNotNil: [ :aWeak | aWeak at: 1 ]
+]
+
+{ #category : #accessing }
+GtCoderEmbeddedDebuggerInSpaceElement >> debugSession [
+	^ evaluationStatus debugSession
 ]
 
 { #category : #initialization }
