@@ -23,22 +23,5 @@ GtDebuggerCoderAddBreakpointShortcut >> name [
 
 { #category : #evaluation }
 GtDebuggerCoderAddBreakpointShortcut >> performOnEditor: aBrTextEditor element: aBrEditorElement coderViewModel: aSourceCoderViewModel dueTo: aShortcutEvent [
-	| node breakpoint |
-	
-	aSourceCoderViewModel cursors allCursors ifNotEmpty: 
-			[:cursors |
-			| position |
-			position := cursors first position.
-			node := aSourceCoderViewModel compiledMethod ast
-						bestNodeForPosition: position].
-						
-	node hasBreakpoint ifTrue: [^self].
-	node isMessage | node isVariable | node isLiteralNode ifFalse: [^self].
-	
-	breakpoint := Breakpoint new.
-	breakpoint node: node.
-	breakpoint once: true.
-	breakpoint install.
-	
-	aSourceCoderViewModel coderModel requestStyleSourceText
+	aSourceCoderViewModel addBreakpointAtCursorLocation
 ]
