@@ -47,7 +47,7 @@ Context >> gtBytecodeDebuggerRetrieveContextValues [
 	
 	fieldList addAll: (self gtDebuggerDoItBindings collect: [:aBinding |
 		(GtInspectorDynamicNode hostObject: self label: aBinding key value: aBinding value)
-			variableTag: 'temp';
+			variableTag: 'temporary';
 			yourself ]).
 	
 	slotsSize := self receiver class allSlots size.
@@ -87,7 +87,7 @@ Context >> gtDebuggerRetrieveVariableValuePairs [
 	fieldList addAll: self gtInspectorTempNodes.
 	fieldList addAll: (self gtDebuggerDoItBindings collect: [:aBinding |
 		(GtInspectorDynamicNode hostObject: self label: aBinding key value: aBinding value)
-			variableTag: 'temp';
+			variableTag: 'temporary';
 			yourself ]).
 	
 	^ fieldList asOrderedCollection 
