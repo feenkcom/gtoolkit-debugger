@@ -383,6 +383,24 @@ GtAbstractExpandableDebuggerElement >> createToolbar [
 	^ toolbar
 ]
 
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> createVariableRowElement [
+	| valueLabel varLabel |
+	varLabel := GtPhlowLabelWithIcon new id: #varLabelId.
+	valueLabel := BrLabel new
+			aptitude: BrGlamorousLabelAptitude;
+			hMatchParent;
+			id: #valueLabelId.
+	^ BrHorizontalPane new
+		addAptitude: BrGlamorousListItemAptitude;
+		hMatchParent;
+		vFitContent;
+		alignCenter;
+		margin: (BlInsets left: 5);
+		addChildren: {varLabel.
+				valueLabel}
+]
+
 { #category : #'accessing context' }
 GtAbstractExpandableDebuggerElement >> currentContext [
 	^ self selectedContext 
@@ -402,6 +420,14 @@ GtAbstractExpandableDebuggerElement >> detailsPane [
 GtAbstractExpandableDebuggerElement >> filteredStack [
 	^ (self session stackOfSize: 50 ) select: [ :aContext | 
 		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
+]
+
+{ #category : #utils }
+GtAbstractExpandableDebuggerElement >> groupVariableNodes: aListOfVariables [ 
+	| sortOrder|
+	sortOrder := #('implicit' 'parameter' 'temporary' 'slot' 'stack').
+	^ (aListOfVariables groupedBy: #variableTag) associations
+		sorted: [ :each | sortOrder indexOf: each key ifAbsent: [0] ] ascending
 ]
 
 { #category : #initialization }
@@ -544,6 +570,31 @@ GtAbstractExpandableDebuggerElement >> updateDetailsPaneDebuggingViews [
 	compositeView := self collectDetailsPaneDebuggingViews.
 	compositeView ifEmpty: [ ^ self ].
 	"
+]
+
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> updateRowElement: aRowElement withVariableNode: aVariableNode [
+	| aRawValue anErrorText anIconForm |
+	anIconForm := [ | aVariableValue |
+		aVariableValue := aVariableNode rawValue.
+		aVariableValue gtInspectorIcon
+			ifNil: [ aVariableValue class 
+				iconNamed: aVariableValue class systemIconName ] ]
+			on: Error , Halt
+			do: [ :error | self iconNamed: #smallWarningIcon ].
+	
+	(aRowElement childWithId: #varLabelId)
+		initializeWithIcon: anIconForm
+		label: aVariableNode key asString.
+	[ aRawValue := aVariableNode rawValue ]
+		on: Error
+		do: [ :error | 
+			anErrorText := aVariableNode errorMessage asRopedText
+					foreground: Color red ].
+	(aRowElement childWithId: #valueLabelId)
+		text: ([ anErrorText ifNil: [ aRawValue gtDisplayText asRopedText ] ]
+				on: Error , Halt
+				do: [ :error | error messageText asRopedText foreground: Color red ])
 ]
 
 { #category : #updating }
