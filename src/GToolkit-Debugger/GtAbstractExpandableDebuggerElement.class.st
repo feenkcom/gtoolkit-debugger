@@ -73,7 +73,7 @@ GtAbstractExpandableDebuggerElement >> addDefaultTabsToGroup: aTabGroup [
 GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
-	contextVariablesElement stream: self contextVariables.
+	contextVariablesElement groups: self contextVariables.
 	contextVariablesElement containerName: #contextVariablesElement.
 	^ contextVariablesElement
 ]
@@ -217,22 +217,24 @@ GtAbstractExpandableDebuggerElement >> buildVariablesListElement [
 	list := BrGroupedList new.
 	list
 		margin: (BlInsets all: 10);
-		headerElementStencil: 
-				[(BrLabel new)
-					margin: (BlInsets top: 5);
-					aptitude: (BrGlamorousLabelAptitude new foreground: Color gray)
-								+ (BrStyleCommonAptitude new default: 
-											[:aStyle |
-											aStyle
-												geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
-												border: BlBorder empty])];
-		headerDataBinder: 
-				[:aLabel :eachItem |
-				aLabel viewModel model: eachItem domainObject.
-				aLabel text: eachItem domainObject new variableTag].
-	list addEventHandler: (GtPhlowListToSelectHandler new
-				transformation: [:variableNode | variableNode value]).
-	^list
+		headerElementStencil: [ 
+			BrLabel new
+				margin: (BlInsets top: 5);
+				aptitude: (BrGlamorousLabelAptitude new 
+						foreground: Color gray)
+					+ (BrStyleCommonAptitude new
+							default: [ :aStyle | 
+								aStyle
+									geometry: (BlRoundedRectangleGeometry 
+										cornerRadius: 4);
+									border: BlBorder empty ]) ];
+		headerDataBinder: [ :aLabel :eachItem | 
+			aLabel viewModel model: eachItem domainObject.
+			aLabel text: eachItem domainObject ].
+	list
+		addEventHandler: (GtPhlowListToSelectHandler new
+				transformation: [ :variableNode | variableNode value ]).
+	^ list
 ]
 
 { #category : #'building actions' }
@@ -309,11 +311,11 @@ GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> contextVariableGroupsFor: aListOfVariables [
 	| groups |
-	groups := (aListOfVariables groupedBy: #class) associations asAsyncStream
+	groups := (aListOfVariables groupedBy: #variableTag) associations
 				collect: 
 					[:each |
 					(BrGroup new)
-						stream: each value asAsyncStream;
+						items: each value;
 						domainObject: each key;
 						itemStencil: 
 								[| varLabel valueLabel |
@@ -358,10 +360,9 @@ GtAbstractExpandableDebuggerElement >> contextVariables [
 	| activeCoder |
 	activeCoder := self selectedCoder.
 	(activeCoder isNil or: [ activeCoder isDead ])
-		ifTrue: [ ^ #() asAsyncStream ].
+		ifTrue: [ ^ #() ].
 		
 	^self contextVariableGroupsFor: activeCoder debuggerVariableNodes
-	
 ]
 
 { #category : #'accessing - elements' }
@@ -610,7 +611,7 @@ GtAbstractExpandableDebuggerElement >> updateVariablesList [
 		ifNotNil: [ :elem | 
 			| newContextVariables |
 			newContextVariables := self contextVariables.
-			elem stream: self contextVariables
+			elem groups: self contextVariables
 			"(elem items gtHasIdenticalElements: newContextVariables)
 				ifFalse: [ elem items: self contextVariables ]" ]
 ]
