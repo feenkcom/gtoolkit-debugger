@@ -13,17 +13,6 @@ GtDebuggerBreakpointMenu class >> on: aBreakpoint coderModel: aCoderModel [
 	^self new setBreakpoint: aBreakpoint coderModel: aCoderModel
 ]
 
-{ #category : #aptitudes }
-GtDebuggerBreakpointMenu >> actionButtonLook [
-	^BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude
-		+ ((BrStyleCommonAptitude new)
-				default: [:aStyle | aStyle geometry: BlCircleGeometry new];
-				hovered: [:aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker];
-				pressed: 
-						[:aStyle |
-						aStyle background: BrGlamorousColors neutralBackgroundColor darker darker])
-]
-
 { #category : #callbacks }
 GtDebuggerBreakpointMenu >> actOnBreakpointHitFor: anAnnouncement [
 	anAnnouncement breakpoint == breakpoint 
@@ -34,6 +23,17 @@ GtDebuggerBreakpointMenu >> actOnBreakpointHitFor: anAnnouncement [
 GtDebuggerBreakpointMenu >> actOnBreakpointRemovedFor: anAnnouncement [
 	anAnnouncement breakpoint == breakpoint 
 		ifTrue: [ coderModel requestStyleSourceText ]
+]
+
+{ #category : #aptitudes }
+GtDebuggerBreakpointMenu >> actionButtonLook [
+	^BrGlamorousButtonIconAptitude + BrGlamorousButtonLayoutAptitude
+		+ ((BrStyleCommonAptitude new)
+				default: [:aStyle | aStyle geometry: BlCircleGeometry new];
+				hovered: [:aStyle | aStyle background: BrGlamorousColors neutralBackgroundColor darker];
+				pressed: 
+						[:aStyle |
+						aStyle background: BrGlamorousColors neutralBackgroundColor darker darker])
 ]
 
 { #category : #accessing }

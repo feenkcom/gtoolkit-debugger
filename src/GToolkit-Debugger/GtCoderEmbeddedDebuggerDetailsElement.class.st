@@ -22,6 +22,11 @@ GtCoderEmbeddedDebuggerDetailsElement >> debug [
 ]
 
 { #category : #accessing }
+GtCoderEmbeddedDebuggerDetailsElement >> debugSessionDo: aBlock [
+	^ self debuggerViewModelDo: [ :aViewModel | aViewModel debugSessionDo: aBlock ]
+]
+
+{ #category : #accessing }
 GtCoderEmbeddedDebuggerDetailsElement >> debuggerViewModel [
 	<return: #GtCoderEmbeddedDebuggerViewModel>
 	^ debuggerViewModel
@@ -39,11 +44,6 @@ GtCoderEmbeddedDebuggerDetailsElement >> debuggerViewModel: aViewModel [
 { #category : #accessing }
 GtCoderEmbeddedDebuggerDetailsElement >> debuggerViewModelDo: aBlock [
 	^ self debuggerViewModel ifNotNil: aBlock
-]
-
-{ #category : #accessing }
-GtCoderEmbeddedDebuggerDetailsElement >> debugSessionDo: aBlock [
-	^ self debuggerViewModelDo: [ :aViewModel | aViewModel debugSessionDo: aBlock ]
 ]
 
 { #category : #initialization }
@@ -119,12 +119,6 @@ GtCoderEmbeddedDebuggerDetailsElement >> onContentExtentChanged: anEvent [
 				contentExtentForContainerExtent: stackListElement extent)
 ]
 
-{ #category : #'private - hooks' }
-GtCoderEmbeddedDebuggerDetailsElement >> onDebuggerViewModelChanged [
-	debuggingConfiguration := self debuggerViewModel gtExceptionEmbeddedDebuggerSpecification.
-	self updateElement
-]
-
 { #category : #'private - subscriptions' }
 GtCoderEmbeddedDebuggerDetailsElement >> onDebugSessionDebuggedAnnouncement: anAnnouncement [
 	BlTaskAction
@@ -137,6 +131,12 @@ GtCoderEmbeddedDebuggerDetailsElement >> onDebugSessionTerminatedAnnouncement: a
 	BlTaskAction
 		enqueueElement: self
 		action: [ self fireEvent: BrDropdownHideWish new ]
+]
+
+{ #category : #'private - hooks' }
+GtCoderEmbeddedDebuggerDetailsElement >> onDebuggerViewModelChanged [
+	debuggingConfiguration := self debuggerViewModel gtExceptionEmbeddedDebuggerSpecification.
+	self updateElement
 ]
 
 { #category : #'private - subscriptions' }

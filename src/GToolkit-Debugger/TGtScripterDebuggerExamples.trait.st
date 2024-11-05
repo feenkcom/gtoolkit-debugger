@@ -4,15 +4,6 @@ Trait {
 }
 
 { #category : #'private - debugging' }
-TGtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: aTestBlock [
-	<return: #DebugSession>
-	| aDebugSession |
-	aDebugSession := self debugSessionOn: aBlock stoppingAt: aTestBlock.
-		
-	^ (GtMoldableDebugger on: aDebugSession) beDetailedLevel
-]
-
-{ #category : #'private - debugging' }
 TGtScripterDebuggerExamples >> debugSessionOn: aBlock [
 	<return: #DebugSession>
 	| aProcess aDebugSession |
@@ -47,6 +38,15 @@ TGtScripterDebuggerExamples >> debugSessionOn: aBlock withException: anException
 			^ DebugSession forExceptionFromExampleFor: anException ].
 
 	^ nil
+]
+
+{ #category : #'private - debugging' }
+TGtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: aTestBlock [
+	<return: #DebugSession>
+	| aDebugSession |
+	aDebugSession := self debugSessionOn: aBlock stoppingAt: aTestBlock.
+		
+	^ (GtMoldableDebugger on: aDebugSession) beDetailedLevel
 ]
 
 { #category : #'private - debugging' }

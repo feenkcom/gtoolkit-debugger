@@ -168,12 +168,6 @@ DebugAction >> defaultIcon [
 ]
 
 { #category : #accessing }
-DebugAction >> defaultKeymap [
-
-	^ nil
-]
-
-{ #category : #accessing }
 DebugAction >> defaultKeyText [
 	"I return a string based on which a default shortcut is created for this action.
 	
@@ -185,6 +179,12 @@ DebugAction >> defaultKeyText [
 		on: '2016-09-05'
 		in: #Pharo6."
 	
+	^ nil
+]
+
+{ #category : #accessing }
+DebugAction >> defaultKeymap [
+
 	^ nil
 ]
 
@@ -256,6 +256,23 @@ DebugAction >> interruptedContext [
 ]
 
 { #category : #accessing }
+DebugAction >> keyText [
+	"I return the character associated with this shortcut.
+	I return an uppercase character if the keymap has shift as a modifier."
+
+	^  self keymap 
+		ifNil: [ 
+			"Backwards compatibility."
+			self defaultKeyText ]
+		ifNotNil: [ |currentCharacter|
+			"Needed as current menus display 'Shift' only if the charater is in uppercase."
+			currentCharacter := self keymap currentCharacter.
+			(self keymap printString includesSubstring: 'Shift')
+				ifTrue: [  currentCharacter asString asUppercase ]
+				ifFalse: [ currentCharacter asString ] ]
+]
+
+{ #category : #accessing }
 DebugAction >> keymap [
 
 	^ keymap ifNil: [ 
@@ -272,23 +289,6 @@ DebugAction >> keymap [
 DebugAction >> keymap: aKeymap [
 
 	keymap := aKeymap
-]
-
-{ #category : #accessing }
-DebugAction >> keyText [
-	"I return the character associated with this shortcut.
-	I return an uppercase character if the keymap has shift as a modifier."
-
-	^  self keymap 
-		ifNil: [ 
-			"Backwards compatibility."
-			self defaultKeyText ]
-		ifNotNil: [ |currentCharacter|
-			"Needed as current menus display 'Shift' only if the charater is in uppercase."
-			currentCharacter := self keymap currentCharacter.
-			(self keymap printString includesSubstring: 'Shift')
-				ifTrue: [  currentCharacter asString asUppercase ]
-				ifFalse: [ currentCharacter asString ] ]
 ]
 
 { #category : #accessing }

@@ -195,6 +195,11 @@ GtMoldableDebugger >> enableDebuggerSwitching [
 	isSwitchingEnabled := true
 ]
 
+{ #category : #accessing }
+GtMoldableDebugger >> inPager [
+	^ (GtPager createWrappedOn: self) maximized
+]
+
 { #category : #initialization }
 GtMoldableDebugger >> initialize [
 	super initialize.
@@ -227,11 +232,6 @@ GtMoldableDebugger >> initializeForSession: aDebuggingSession [
 	self updateDebuggerElement: newDebuggerElement.
 	
 	self enableDebuggerSwitching.
-]
-
-{ #category : #accessing }
-GtMoldableDebugger >> inPager [
-	^ (GtPager createWrappedOn: self) maximized
 ]
 
 { #category : #testing }
