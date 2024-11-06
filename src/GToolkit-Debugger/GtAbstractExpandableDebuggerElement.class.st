@@ -73,7 +73,7 @@ GtAbstractExpandableDebuggerElement >> addDefaultTabsToGroup: aTabGroup [
 GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
 	contextVariablesElement := self buildVariablesListElement.
-	contextVariablesElement items: self contextVariables.
+	contextVariablesElement groups: self contextVariables.
 	contextVariablesElement containerName: #contextVariablesElement.
 	^ contextVariablesElement
 ]
@@ -214,76 +214,27 @@ GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActio
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildVariablesListElement [
 	| list |
-	list := BrColumnedList new.
-	list margin: (BlInsets top: 10).
+	list := BrGroupedList new.
+	list
+		margin: (BlInsets all: 10);
+		headerElementStencil: [ 
+			BrLabel new
+				margin: (BlInsets top: 5);
+				aptitude: (BrGlamorousLabelAptitude new 
+						foreground: Color gray)
+					+ (BrStyleCommonAptitude new
+							default: [ :aStyle | 
+								aStyle
+									geometry: (BlRoundedRectangleGeometry 
+										cornerRadius: 4);
+									border: BlBorder empty ]) ];
+		headerDataBinder: [ :aLabel :eachItem | 
+			aLabel viewModel model: eachItem domainObject.
+			aLabel text: eachItem domainObject ].
 	list
 		addEventHandler: (GtPhlowListToSelectHandler new
 				transformation: [ :variableNode | variableNode value ]).
-	list rowStencil: BrGlamorousColumnedListSelectableRowElementStencilBuilder new.
-	list column
-		title: 'Icon';
-		width: 26;
-		cellStencil: [ BlElement new
-				size: 26 @ 22;
-				layout: BlLinearLayout horizontal alignCenterLeft;
-				labeled: 'Icon Container';
-				padding: (BlInsets
-						top: 3
-						left: 10
-						bottom: 3
-						right: 0) ];
-		dataBinder: [ :aCellElement :aVariableNode | 
-			| anIconForm aVariableValue |
-			anIconForm := [ aVariableValue := aVariableNode rawValue.
-				aVariableValue gtInspectorIcon
-					ifNil: [ aVariableValue class iconNamed: aVariableValue class systemIconName ] ]
-					on: Error , Halt
-					do: [ :error | self iconNamed: #smallWarningIcon ].
-			aCellElement
-				removeChildren;
-				addChild: anIconForm asElement ].
-	list column
-		title: 'Variable';
-		cellStencil: [ BrLabel new
-				aptitude: (BrGlamorousLabelAptitude new foreground: Color black);
-				hMatchParent;
-				vFitContent;
-				margin: (BlInsets
-						top: 3
-						left: 10
-						bottom: 3
-						right: 0) ];
-		dataBinder: [ :aCellElement :aVariableNode | aCellElement text: aVariableNode key asRopedText ].
-	list column
-		title: 'Value';
-		cellStencil: [ BrLabel new
-				aptitude: BrGlamorousLabelAptitude new;
-				hMatchParent;
-				vFitContent;
-				margin: (BlInsets
-						top: 3
-						left: 10
-						bottom: 3
-						right: 0) ];
-		dataBinder: [ :aCellElement :aVariableNode | 
-			| aRawValue anErrorText |
-			[ aRawValue := aVariableNode rawValue ]
-				on: Error
-				do: [ :error | anErrorText := aVariableNode errorMessage asRopedText foreground: Color red ].
-
-			aCellElement
-				text: ([ anErrorText ifNil: [ aRawValue gtDisplayText asRopedText ] ]
-						on: Error , Halt
-						do: [ :error | error messageText asRopedText foreground: Color red ]) ].
 	^ list
-]
-
-{ #category : #'building widgets' }
-GtAbstractExpandableDebuggerElement >> buildWatchVariablesElement [
-	| watchVariablesElement |
-	watchVariablesElement := self buildVariablesListElement.
-	watchVariablesElement items: {}.	"self watchVariables"
-	^ watchVariablesElement
 ]
 
 { #category : #'building actions' }
@@ -358,13 +309,28 @@ GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
 ]
 
 { #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> contextVariableGroupsFor: aListOfVariables [
+	^ (self groupVariableNodes: aListOfVariables)
+		collect: [ :each | 
+			BrGroup new
+				items: each value;
+				domainObject: each key;
+				itemStencil: [ self createVariableRowElement ];
+				itemDataBinder: [ :aRowElement :aVariableNode | 
+					self 
+						updateRowElement: aRowElement 
+						withVariableNode: aVariableNode ];
+				shouldShowWithoutItems: false ]
+]
+
+{ #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> contextVariables [
 	| activeCoder |
 	activeCoder := self selectedCoder.
 	(activeCoder isNil or: [ activeCoder isDead ])
 		ifTrue: [ ^ #() ].
-	^ activeCoder debuggerVariableNodes
-	
+		
+	^self contextVariableGroupsFor: activeCoder debuggerVariableNodes
 ]
 
 { #category : #'accessing - elements' }
@@ -383,6 +349,24 @@ GtAbstractExpandableDebuggerElement >> createToolbar [
 	toolbar aptitude: BrGlamorousToolbarAptitude new.
 	self updateToolbarActions.
 	^ toolbar
+]
+
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> createVariableRowElement [
+	| valueLabel varLabel |
+	varLabel := GtPhlowLabelWithIcon new id: #varLabelId.
+	valueLabel := BrLabel new
+			aptitude: BrGlamorousLabelAptitude;
+			hMatchParent;
+			id: #valueLabelId.
+	^ BrHorizontalPane new
+		addAptitude: BrGlamorousListItemAptitude;
+		hMatchParent;
+		vFitContent;
+		alignCenter;
+		margin: (BlInsets left: 5);
+		addChildren: {varLabel.
+				valueLabel}
 ]
 
 { #category : #'accessing context' }
@@ -404,6 +388,14 @@ GtAbstractExpandableDebuggerElement >> detailsPane [
 GtAbstractExpandableDebuggerElement >> filteredStack [
 	^ (self session stackOfSize: 50 ) select: [ :aContext | 
 		(aContext method hasPragmaNamed: #debuggerCompleteToSender) not ]
+]
+
+{ #category : #utils }
+GtAbstractExpandableDebuggerElement >> groupVariableNodes: aListOfVariables [ 
+	| sortOrder|
+	sortOrder := #('implicit' 'parameter' 'temporary' 'slot' 'stack').
+	^ (aListOfVariables groupedBy: [ :each | each variableTag ]) associations
+		sorted: [ :each | sortOrder indexOf: each key ifAbsent: [0] ] ascending
 ]
 
 { #category : #initialization }
@@ -548,6 +540,31 @@ GtAbstractExpandableDebuggerElement >> updateDetailsPaneDebuggingViews [
 	"
 ]
 
+{ #category : #'building widgets' }
+GtAbstractExpandableDebuggerElement >> updateRowElement: aRowElement withVariableNode: aVariableNode [
+	| aRawValue anErrorText anIconForm |
+	anIconForm := [ | aVariableValue |
+		aVariableValue := aVariableNode rawValue.
+		aVariableValue gtInspectorIcon
+			ifNil: [ aVariableValue class 
+				iconNamed: aVariableValue class systemIconName ] ]
+			on: Error , Halt
+			do: [ :error | self iconNamed: #smallWarningIcon ].
+	
+	(aRowElement childWithId: #varLabelId)
+		initializeWithIcon: anIconForm
+		label: aVariableNode key asString.
+	[ aRawValue := aVariableNode rawValue ]
+		on: Error
+		do: [ :error | 
+			anErrorText := aVariableNode errorMessage asRopedText
+					foreground: Color red ].
+	(aRowElement childWithId: #valueLabelId)
+		text: ([ anErrorText ifNil: [ aRawValue gtDisplayText asRopedText ] ]
+				on: Error , Halt
+				do: [ :error | error messageText asRopedText foreground: Color red ])
+]
+
 { #category : #updating }
 GtAbstractExpandableDebuggerElement >> updateStackPane [
 	| stackElement |
@@ -613,6 +630,7 @@ GtAbstractExpandableDebuggerElement >> updateVariablesList [
 		ifNotNil: [ :elem | 
 			| newContextVariables |
 			newContextVariables := self contextVariables.
-			(elem items gtHasIdenticalElements: newContextVariables)
-				ifFalse: [ elem items: self contextVariables ] ]
+			elem groups: newContextVariables
+			"(elem items gtHasIdenticalElements: newContextVariables)
+				ifFalse: [ elem items: self contextVariables ]" ]
 ]
