@@ -99,6 +99,11 @@ Context >> gtDebuggerRetrieveVariableValuePairs [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+Context >> hasMethodOrBlockParameterNamed: aParameterName [
+	^self compiledCode hasMethodOrBlockParameterNamed: aParameterName.
+]
+
+{ #category : #'*GToolkit-Debugger' }
 Context >> isContextDoesNotUnderstand [
 	^ self selector == #doesNotUnderstand:
 ]

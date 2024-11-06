@@ -310,49 +310,17 @@ GtAbstractExpandableDebuggerElement >> collectTargetDebuggingActions [
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> contextVariableGroupsFor: aListOfVariables [
-	| groups |
-	groups := (aListOfVariables groupedBy: #variableTag) associations
-				collect: 
-					[:each |
-					(BrGroup new)
-						items: each value;
-						domainObject: each key;
-						itemStencil: 
-								[| varLabel valueLabel |
-								varLabel := GtPhlowLabelWithIcon new id: #varLabelId.
-								valueLabel := (BrLabel new)
-											aptitude: BrGlamorousLabelAptitude;
-											hMatchParent;
-											id: #valueLabelId.
-								(BrHorizontalPane new)
-									addAptitude: BrGlamorousListItemAptitude;
-									hMatchParent;
-									vFitContent;
-									alignCenter;
-									margin: (BlInsets left: 5);
-									addChildren: 
-											{varLabel.
-											valueLabel}];
-						itemDataBinder: 
-								[:aPane :eachItem |
-								| aRawValue anErrorText anIconForm |
-								anIconForm := 
-										[| aVariableValue |
-										aVariableValue := eachItem rawValue.
-										aVariableValue gtInspectorIcon
-											ifNil: [aVariableValue class iconNamed: aVariableValue class systemIconName]]
-												on: Error , Halt
-												do: [:error | self iconNamed: #smallWarningIcon].
-								(aPane childWithId: #varLabelId) initializeWithIcon: anIconForm
-									label: eachItem key asString.
-								[aRawValue := eachItem rawValue] on: Error
-									do: [:error | anErrorText := eachItem errorMessage asRopedText foreground: Color red].
-								(aPane childWithId: #valueLabelId)
-									text: ([anErrorText ifNil: [aRawValue gtDisplayText asRopedText]]
-											on: Error , Halt
-											do: [:error | error messageText asRopedText foreground: Color red])];
-						shouldShowWithoutItems: false].
-	^groups
+	^ (self groupVariableNodes: aListOfVariables)
+		collect: [ :each | 
+			BrGroup new
+				items: each value;
+				domainObject: each key;
+				itemStencil: [ self createVariableRowElement ];
+				itemDataBinder: [ :aRowElement :aVariableNode | 
+					self 
+						updateRowElement: aRowElement 
+						withVariableNode: aVariableNode ];
+				shouldShowWithoutItems: false ]
 ]
 
 { #category : #'building widgets' }
@@ -426,7 +394,7 @@ GtAbstractExpandableDebuggerElement >> filteredStack [
 GtAbstractExpandableDebuggerElement >> groupVariableNodes: aListOfVariables [ 
 	| sortOrder|
 	sortOrder := #('implicit' 'parameter' 'temporary' 'slot' 'stack').
-	^ (aListOfVariables groupedBy: #variableTag) associations
+	^ (aListOfVariables groupedBy: [ :each | each variableTag ]) associations
 		sorted: [ :each | sortOrder indexOf: each key ifAbsent: [0] ] ascending
 ]
 
@@ -662,7 +630,7 @@ GtAbstractExpandableDebuggerElement >> updateVariablesList [
 		ifNotNil: [ :elem | 
 			| newContextVariables |
 			newContextVariables := self contextVariables.
-			elem groups: self contextVariables
+			elem groups: newContextVariables
 			"(elem items gtHasIdenticalElements: newContextVariables)
 				ifFalse: [ elem items: self contextVariables ]" ]
 ]
