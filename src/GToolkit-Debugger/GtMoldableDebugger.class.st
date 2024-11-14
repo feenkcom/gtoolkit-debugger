@@ -222,6 +222,11 @@ GtMoldableDebugger >> initialize [
 	debuggerContainer addChild: buttonsContainer.
 	
 	self addChild: debuggerContainer.
+	
+	self phlow 
+		accessTool: (GtPhlowToolClassType forClass: self class) 
+		viewModel: #debugSession 
+		object: #debugSession.
 ]
 
 { #category : #initialization }
