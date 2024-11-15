@@ -39,7 +39,7 @@ GtExampleExceptionComparisonTriggerExamples >> testComputation [
 	<noTest>
 	| computedData |
 	computedData := self computeData.
-	
+
 	self 
 		assert: computedData 
 		equalsDataIn: #dataExpectedComputedOne.
