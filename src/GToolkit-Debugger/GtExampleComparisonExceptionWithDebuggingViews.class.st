@@ -123,7 +123,11 @@ GtExampleComparisonExceptionWithDebuggingViews >> gtViewDiffFor: aView [
 		actionButtonIcon: BrGlamorousVectorIcons inspect 
 			tooltip: 'Inspect the comparator' 
 			action: [ :aButton |
-				aButton phlow spawnObject: aButton phlow  firstParentWithViewContent content phlow firstChildWithViewContent phlow entity viewObject wait object ]
+				| aFuture |
+				aFuture := aButton phlow viewContent phlow firstChildWithViewContent phlow entity viewObject.
+				aButton phlow 
+					spawnFuture: aFuture 
+					result: #object. ]
 ]
 
 { #category : #accessing }
