@@ -182,6 +182,19 @@ DebugSession class >> forExceptionFromExampleFor: anException [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> gtUpdateContext: aContext withMethod: aMethod [
+	| targetContext |
+	targetContext := aContext isBlockContext
+		ifTrue: [ aContext activeHome ]
+		ifFalse: [ aContext].
+		
+	targetContext ifNil: [ ^ self ].
+	
+	(self isContextPostMortem: self interruptedContext)
+		ifFalse: [ self rewindContextToMethod: aMethod fromContext: targetContext ].
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> gtViewDebuggerSpecificationsFor: aView [
 	<gtView>
 	
