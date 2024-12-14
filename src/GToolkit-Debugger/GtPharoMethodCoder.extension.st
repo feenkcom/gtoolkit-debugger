@@ -14,6 +14,7 @@ GtPharoMethodCoder >> addBreakpointContextMenuAddOnsAst: anAst to: coderAddOns f
 	
 	self
 		addContextMenuItemFrom: GtDebuggerCoderAddBreakpointShortcut new
+		group: BrMenuItemGroupConfiguration evaluation
 		withId: #'context-menu--breakpoint'
 		to: coderAddOns
 ]
