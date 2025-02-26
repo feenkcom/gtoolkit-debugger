@@ -186,6 +186,7 @@ GtMoldableExceptionDebuggingElement >> currentDebuggerSpecification [
 
 { #category : #accessing }
 GtMoldableExceptionDebuggingElement >> exceptionGlobalDebugActionsPragmas [
+	<return: #Collection of: #Symbol>
 	^ self currentDebuggerSpecification globalDebuggingActionPragmas
 ]
 

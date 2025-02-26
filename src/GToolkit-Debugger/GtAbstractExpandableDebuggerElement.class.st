@@ -494,6 +494,7 @@ GtAbstractExpandableDebuggerElement >> setDebuggerToFirstNonFilteredContext [
 
 { #category : #'building actions' }
 GtAbstractExpandableDebuggerElement >> stackDebuggingActionsPragmas [
+	<return: #Collection of: #Symbol>
 	^ debuggingSession exception 
 		ifNil: [ super stackDebuggingActionsPragmas ] 
 		ifNotNil: [ :anException |

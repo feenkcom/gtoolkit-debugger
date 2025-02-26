@@ -49,14 +49,20 @@ GtMoldableExceptionDebuggerSpecification >> defaultTargetObjectDebuggingActionPr
 
 { #category : #'accessing configurarion' }
 GtMoldableExceptionDebuggerSpecification >> globalDebuggingActionPragmas [
+	"Return pragma names used to look for global debugging actions. 
+	These actions are specific to the exception and are subclasses of DebugAction."
+	
+	<return: #Collection of: #Symbol>
 	^ globalDebuggingActionPragmaNames ifNil: [
 		self defaultGlobalDebuggingActionPragmas ]
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebuggerSpecification >> globalDebuggingActionPragmas: aCollection [
-	"Configure the pragmas used to look for global debugging actions. These actions are specific to the exception."
-	globalDebuggingActionPragmaNames := aCollection
+GtMoldableExceptionDebuggerSpecification >> globalDebuggingActionPragmas: aCollectionOfSymbol [
+	"Configure pragma names used to look for global debugging actions.
+	These actions are specific to the exception and are subclasses of DebugAction."
+
+	globalDebuggingActionPragmaNames := aCollectionOfSymbol
 ]
 
 { #category : #'gt - extensions' }
@@ -99,14 +105,18 @@ GtMoldableExceptionDebuggerSpecification >> targetException [
 
 { #category : #'accessing configurarion' }
 GtMoldableExceptionDebuggerSpecification >> targetObjectDebuggingActionPragmas [
-	^ targetObjectDebuggingActionPragmaNames ifNil: [
-		self defaultTargetObjectDebuggingActionPragmas ]
+	"Return pragma names used to look for phlow debugging actions attached to target objects. There actions are specific to this exception."
+	<return: #Collection of: #Symbol>
+	
+	^ targetObjectDebuggingActionPragmaNames
+		ifNil: [ self defaultTargetObjectDebuggingActionPragmas ]
 ]
 
 { #category : #configuration }
-GtMoldableExceptionDebuggerSpecification >> targetObjectDebuggingActionPragmas: aCollection [
-	"Configure the pragmas used to look for phlow debugging actions attached to target objects. These actions are specific to this exception."
-	targetObjectDebuggingActionPragmaNames := aCollection
+GtMoldableExceptionDebuggerSpecification >> targetObjectDebuggingActionPragmas: aCollectionOfSymbols [
+	"Configure the pragma names used to look for phlow debugging actions attached to target objects. These actions are specific to this exception."
+
+	targetObjectDebuggingActionPragmaNames := aCollectionOfSymbols
 ]
 
 { #category : #configuration }
