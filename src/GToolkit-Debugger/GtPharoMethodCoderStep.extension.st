@@ -9,7 +9,7 @@ GtPharoMethodCoderStep >> assertEmbeddedDebuggerDropdownDebugButtonIsDisplayed [
 				label: 'Assert embedded debugger dropdown debug button exists';
 				exists;
 				onSpaceRoot;
-				// BrAnchoredOuterContainer;
+				onDropdown: true;
 				// GtCoderEmbeddedDebuggerDetailsElement;
 				// GtCoderEmbeddedDebuggerDebugButtonId.
 
@@ -25,7 +25,7 @@ GtPharoMethodCoderStep >> assertEmbeddedDebuggerDropdownDebugButtonIsDisplayed [
 						isOK ]
 					description: [ 'Debug button is not visible (clipped by a parent)' ];
 				onSpaceRoot;
-				// BrAnchoredOuterContainer;
+				onDropdown: true;
 				// GtCoderEmbeddedDebuggerDetailsElement;
 				// GtCoderEmbeddedDebuggerDebugButtonId ]
 ]
@@ -40,7 +40,7 @@ GtPharoMethodCoderStep >> assertEmbeddedDebuggerDropdownIsDisplayed [
 					label: 'Assert embedded debugger dropdown is displayed';
 					exists;
 					onSpaceRoot;
-					// BrAnchoredOuterContainer;
+					onDropdown: true;
 					// GtCoderEmbeddedDebuggerDetailsElement.
 
 				aSubStep addDropdownVisualAnalysis
