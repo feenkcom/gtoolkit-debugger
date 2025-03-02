@@ -86,6 +86,7 @@ DebugSession class >> debuggingActionsForPragma: aSymbol for: aDebugger [
 
 { #category : #'*GToolkit-Debugger' }
 DebugSession class >> debuggingActionsForPragmas: aSymbolsCollection for: aDebugger [
+	<return: #Collection of: #DebugAction>
 	self flag: 'split me'.
 	^ (((aSymbolsCollection 
 		inject: OrderedCollection new

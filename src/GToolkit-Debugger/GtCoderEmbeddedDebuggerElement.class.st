@@ -131,18 +131,17 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElement [
 { #category : #initialization }
 GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
 	| anElement |
-	buttonDropdownAptitude := BrGlamorousWithDropdownAptitude
+	buttonDropdownAptitude := BrGlamorousWithExplicitDropdownAptitude
 			handle: [ self newButtonDropdownHandleElement ]
-			content: [ anElement := self newButtonDropdownContentElement ]
-			aptitudeDo: [ :anAnchoredAptitude |
-				anAnchoredAptitude border: (self theme status errorBorderColor).
-				anAnchoredAptitude background: self theme status errorBackgroundColor ].
+			content: [ anElement := self newButtonDropdownContentElement.
+				anElement addAptitude: (BrGlamorousMenuResizableAptitude new
+					whenResizedDo: [ :anEvent | 
+						GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ]).
+				anElement ]
+			containerDo: [ :aContainerElement |
+				aContainerElement border: (self theme status errorBorderColor).
+				aContainerElement background: self theme status errorBackgroundColor ].
 	buttonDropdownAptitude
-		preferredExtent: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent 
-			"An estimated handle extent. See https://github.com/feenkcom/gtoolkit/issues/3960"
-			+ (0@24);
-		whenResizedDo: [ :anEvent | 
-			GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ];
 		when: BrDropdownIsVisible do: [ :anEvent | self onDropdownIsVisible: anEvent ];
 		when: BrDropdownIsHidden do: [ :anEvent | self onDropdownIsHidden: anEvent ].
 	buttonElement addAptitude: buttonDropdownAptitude
@@ -171,7 +170,8 @@ GtCoderEmbeddedDebuggerElement >> newButtonDropdownContentElement [
 	| anElement |
 	anElement := GtCoderEmbeddedDebuggerDetailsElement new.
 	
-	"See https://github.com/feenkcom/gtoolkit/issues/3960"
+	"See https://github.com/feenkcom/gtoolkit/issues/3960
+	I think we can remove this code since we use BrGlamorousWithExplicitDropdownAptitude"
 	anElement
 		when: BlElementAddedToSceneGraphEvent
 		doOnce: [ :anEvent | self onAddedToSceneGraphEvent: anEvent ].

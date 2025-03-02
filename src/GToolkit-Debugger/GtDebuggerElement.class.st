@@ -96,6 +96,7 @@ GtDebuggerElement >> actOnDebugSessionChanged [
 
 { #category : #'building actions' }
 GtDebuggerElement >> actionsForPragmas: aSymbolsCollection [
+	<return: #Collection of: #DebugAction>
 	^ self session class
 		debuggingActionsForPragmas: aSymbolsCollection 
 		for: self

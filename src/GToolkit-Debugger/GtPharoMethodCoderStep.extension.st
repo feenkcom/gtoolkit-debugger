@@ -9,7 +9,7 @@ GtPharoMethodCoderStep >> assertEmbeddedDebuggerDropdownDebugButtonIsDisplayed [
 				label: 'Assert embedded debugger dropdown debug button exists';
 				exists;
 				onSpaceRoot;
-				// BrAnchoredOuterContainer;
+				onDropdown: true;
 				// GtCoderEmbeddedDebuggerDetailsElement;
 				// GtCoderEmbeddedDebuggerDebugButtonId.
 
@@ -25,7 +25,7 @@ GtPharoMethodCoderStep >> assertEmbeddedDebuggerDropdownDebugButtonIsDisplayed [
 						isOK ]
 					description: [ 'Debug button is not visible (clipped by a parent)' ];
 				onSpaceRoot;
-				// BrAnchoredOuterContainer;
+				onDropdown: true;
 				// GtCoderEmbeddedDebuggerDetailsElement;
 				// GtCoderEmbeddedDebuggerDebugButtonId ]
 ]
@@ -40,7 +40,7 @@ GtPharoMethodCoderStep >> assertEmbeddedDebuggerDropdownIsDisplayed [
 					label: 'Assert embedded debugger dropdown is displayed';
 					exists;
 					onSpaceRoot;
-					// BrAnchoredOuterContainer;
+					onDropdown: true;
 					// GtCoderEmbeddedDebuggerDetailsElement.
 
 				aSubStep addDropdownVisualAnalysis
@@ -76,7 +76,12 @@ GtPharoMethodCoderStep >> debugSessionWithException: anExceptionClass do: aStepB
 			do: [ :aSubStep | 
 				aSubStep wait forEmptySpaceTaskQueueTimeout: 15 seconds.
 				aStepBlock value: aSubStep ]
-			ensure: [ :aDebugSession | aDebugSession terminate ].
+			ensure: [ :aDebugSession | 
+				"We do not need to explicitly terminate the session here.
+				If we do it will trigger the ensure blocks of this process
+				to be executed from the processes we created for the session.
+				The session will be garbaged collected ok. A test for that is in:
+				GtDebuggerSessionForTestsExamples>>#testExplicitSessionTerminationNotNeeded" ].
 	aStep referenceSender.
 	^ aStep
 ]
