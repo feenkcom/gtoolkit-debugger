@@ -66,8 +66,9 @@ GtDebuggerBreakpointMenu >> delayedUpdate [
 GtDebuggerBreakpointMenu >> dropdown [
 	^(BrButton new)
 		aptitude: self actionButtonLook
-					+ (BrGlamorousWithDropdownAptitude handle: [self handleButton]
-							content: [self menu]) beNotResizable;
+					+ (BrGlamorousWithExplicitDropdownAptitude 
+						handle: [self handleButton]
+						content: [self menu]);
 		icon: self currentIcon;
 		beSmallSize;
 		exact: 16 @ 16
