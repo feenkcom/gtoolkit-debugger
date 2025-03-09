@@ -46,7 +46,7 @@ Exception >> gtExceptionEmbeddedDebuggerSpecification [
 { #category : #'*GToolkit-Debugger' }
 Exception >> logStackToFile [
 	[ [ Smalltalk 
-		logError: self messageText 
+		logError: 'logStackToFile: ', self messageText asString 
 		inContext: self signalerContext ] onErrorDo: [ :anError |
 			Smalltalk  logErrorMessage: anError messageText ] ]
 	valueWithin: 1000 milliSeconds onTimeout: [  
