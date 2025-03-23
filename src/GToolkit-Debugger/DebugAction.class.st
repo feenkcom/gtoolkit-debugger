@@ -91,9 +91,9 @@ DebugAction >> asBrickButton [
 
 	aptitude := self icon
 			ifNil: [ BrGlamorousButtonWithLabelAptitude new ]
-			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude ].
+			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude2 ].
 	aptitude
-		add: (BrGlamorousWithLabelTooltipAptitude text: self label keymap: self keymap).
+		add: (BrGlamorousWithExplicitTooltipAptitude text: self label shortcut: self keymap).
 	actionButton := BrButton new
 			aptitude: aptitude;
 			label: self label;
