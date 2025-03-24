@@ -6,7 +6,6 @@ Class {
 
 { #category : #comparing }
 GtEmbeddedDebuggerStyler >> = anObject [
-	{ self . anObject } asBeaconSignal emit.
 	self class ~~ anObject class ifTrue: [ ^ false ].
 	self coderViewModel ~= anObject coderViewModel ifTrue: [ ^ false ].
 	self coderViewModel ifNil: [ ^ true ].
