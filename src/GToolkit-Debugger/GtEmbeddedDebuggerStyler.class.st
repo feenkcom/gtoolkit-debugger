@@ -6,7 +6,12 @@ Class {
 
 { #category : #comparing }
 GtEmbeddedDebuggerStyler >> = anObject [
-	^false
+	{ self . anObject } asBeaconSignal emit.
+	self class ~~ anObject class ifTrue: [ ^ false ].
+	self coderViewModel ~= anObject coderViewModel ifTrue: [ ^ false ].
+	self coderViewModel ifNil: [ ^ true ].
+	^ self coderViewModel evaluationStatus
+		= anObject coderViewModel evaluationStatus
 ]
 
 { #category : #'api - styling' }
@@ -35,4 +40,9 @@ GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 		attribute: anAttribute
 		from: anAttributeIndex
 		to: anAttributeIndex
+]
+
+{ #category : #comparing }
+GtEmbeddedDebuggerStyler >> hash [
+	^super hash
 ]
