@@ -7,8 +7,11 @@ Class {
 { #category : #comparing }
 GtEmbeddedDebuggerStyler >> = anObject [
 	self class ~~ anObject class ifTrue: [ ^ false ].
+	(self coderViewModel isNil or: [ anObject coderViewModel isNil ])
+		ifTrue: [ ^ true ].
 	self coderViewModel ~= anObject coderViewModel ifTrue: [ ^ false ].
-	self coderViewModel ifNil: [ ^ true ].
+
+
 	^ self coderViewModel evaluationStatus
 		= anObject coderViewModel evaluationStatus
 ]
