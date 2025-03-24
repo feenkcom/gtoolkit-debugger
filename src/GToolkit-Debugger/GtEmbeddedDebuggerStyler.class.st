@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Debugger-Embedded - Text'
 }
 
+{ #category : #comparing }
+GtEmbeddedDebuggerStyler >> = anObject [
+	^false
+]
+
 { #category : #'api - styling' }
 GtEmbeddedDebuggerStyler >> extraStyle: aText ast: theAst [
 	| aStatus anAttribute anAttributeIndex |
