@@ -143,7 +143,7 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 					wantsToScroll := stackModel currentContextMethodIndicator 
 						ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
 						ifNil: [ true ].
-					wantsToScroll ifTrue: [ 
+					(anIndex > 0 and: [ wantsToScroll ]) ifTrue: [ 
 						self stackFramesList scrollToIndex: anIndex offset: 0 ].
 					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
 
@@ -172,9 +172,11 @@ GtAbstractExpandableStackElement >> selectCoderForContext: aContext [
 	
 	aPreloadPromise := aPreloadPromise
 		then: [ :anIndex |
-			self inUIProcessDo: [
-				self stackFramesList scrollToIndex: anIndex offset: 0.
-				self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ]
+			anIndex > 0
+				ifTrue: [
+				self inUIProcessDo: [
+					self stackFramesList scrollToIndex: anIndex offset: 0.
+					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ] ]
 		otherwise: [ :anError | anError debug ].
 		
 	self enqueueTask: (BlPromiseTask new promise: aPreloadPromise)
