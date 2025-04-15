@@ -135,7 +135,7 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 	anItemsProvider executionConfiguration: GtMoldableDebugger defaultFutureExecutionConfiguration.
 	aPreloadPromise := anItemsProvider
 			itemSuchThat: [ :eachCoder | (self shouldJumpOverCoverViewModel: eachCoder) not ]
-			do: [ :anIndex :isSynchronous | 
+			ifFound: [ :anIndex :isSynchronous | 
 				| anAction |
 				anAction := [ 
 					| wantsToScroll |
@@ -143,7 +143,7 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 					wantsToScroll := stackModel currentContextMethodIndicator 
 						ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
 						ifNil: [ true ].
-					(anIndex > 0 and: [ wantsToScroll ]) ifTrue: [ 
+					wantsToScroll ifTrue: [ 
 						self stackFramesList scrollToIndex: anIndex offset: 0 ].
 					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
 
