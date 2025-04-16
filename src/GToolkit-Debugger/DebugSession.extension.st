@@ -124,6 +124,13 @@ DebugSession class >> debuggingActionsFromClass: aClass forPragma: aSymbol forDe
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> ensureStepOverBreakpointTrigger [
+	self isAtBreakpointTrigger ifTrue: [
+		self stepOver; stepOver.
+		self stepToFirstInterestingBytecodeIn: self interruptedProcess ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> findContextSuchThat: aTestBlock withMaxDepth: aMaxDepth ifFound: aFoundBlock ifNone: aNoneBlock [
 	^ self interruptedContext
 		findContextSuchThat: aTestBlock 
@@ -245,6 +252,29 @@ DebugSession >> hasLimitedFullActiveContextForMethod: aCompiledMethod [
 		findLimitedFullActiveContextForMethod: aCompiledMethod
 		ifFound: [ :aContext | true ] 
 		ifNone: [ false ]) 
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isAtBreakpointTrigger [
+	| sender currentInstructionStream  |
+	
+	"Must be in Breakpoint>>#breakInContext:node: "
+	((self context selector = #breakInContext:node:) and:
+		[self context methodClass = Breakpoint]) ifFalse: [ ^ false ].
+		
+	"Must be returning from Breakpoint>>#breakInContext:node: as the next instruction.
+	(currently waiting for a value to be returned from the call that triggered
+	the exception related to the breakpoint)"
+	currentInstructionStream := self context instructionStream.
+	(currentInstructionStream willJustPop and: [
+		currentInstructionStream followingPc = self context method endPC ]) 
+			ifFalse: [ ^ false ].
+	
+	"Sender must exist, must not be a breakpoint and should wait for the return."
+	sender := self context sender.
+	^ (sender notNil and: [ 
+		(sender methodClass ~= Breakpoint)and: [
+			sender instructionStream willJustPop] ]) 
 ]
 
 { #category : #'*GToolkit-Debugger' }
