@@ -134,7 +134,7 @@ GtCoderEmbeddedDebuggerElement >> initializeButtonElementDropdown [
 	buttonDropdownAptitude := BrGlamorousWithExplicitDropdownAptitude
 			handle: [ self newButtonDropdownHandleElement ]
 			content: [ anElement := self newButtonDropdownContentElement.
-				anElement addAptitude: (BrGlamorousMenuResizableAptitude new
+				anElement addAptitude: (BrGlamorousPopoverResizableAptitude new
 					whenResizedDo: [ :anEvent | 
 						GtCoderEmbeddedDebuggerDropdownConfiguration userExtent:anElement extent. ]).
 				anElement ]
