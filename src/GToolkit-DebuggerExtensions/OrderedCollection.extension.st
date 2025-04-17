@@ -2,5 +2,5 @@ Extension { #name : #OrderedCollection }
 
 { #category : #'*GToolkit-DebuggerExtensions' }
 OrderedCollection >> gtDebuggerPrintForComparisonOn: aStream [
-	GtDebuggerComparatorDictionaryPrinter printWithoutSorting: self on: aStream
+	GtDebuggerComparatorCollectionPrinter printWithoutSorting: self on: aStream
 ]
