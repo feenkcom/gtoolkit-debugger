@@ -101,6 +101,6 @@ GtDebuggerStackElement >> stackFramesWidget [
 
 { #category : #updating }
 GtDebuggerStackElement >> updateForSession: aDebuggingSession [
-	self stackFramesWidget display: (self retrieveStackFrom: aDebuggingSession).
+	self stackFramesWidget items: (self retrieveStackFrom: aDebuggingSession).
 	self stackFramesWidget selectOne: 1.
 ]

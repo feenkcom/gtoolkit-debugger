@@ -258,18 +258,15 @@ GtStackDebuggerElement >> stackPane [
 GtStackDebuggerElement >> updateCodePaneFor: aContext [
 	| editorWidget text selectionInterval |
 	text := aContext sourceCode asRopedText.
-	text
-		attributes: {(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.
+	text attributes: {(BlFontSizeAttribute size: 14) beNotOverwritableByStyler}.
 	selectionInterval := self session
-		selectedCodeRangeForContext: self selectedContext.
+			selectedCodeRangeForContext: self selectedContext.
 	(text from: selectionInterval first to: selectionInterval last)
-		attributes:
-			{(BlTextUnderlineAttribute new
-				paint: self theme status errorBackgroundColor;
-				width: 3;
-				beNotOverwritableByStyler)}.
-	editorWidget := self
-		buildCodeWidgetForMethodInClass: aContext methodClass.
+		attributes: {BlTextUnderlineAttribute new
+					color: self theme status errorBackgroundColor;
+					thickness: 3;
+					beNotOverwritableByStyler}.
+	editorWidget := self buildCodeWidgetForMethodInClass: aContext methodClass.
 	editorWidget editor text: text.
 	self codePane
 		removeChildren;
@@ -281,7 +278,7 @@ GtStackDebuggerElement >> updateDetailsPaneFor: aContext [
 	| contextVariablesList |
 	
 	contextVariablesList := self buildContextVariablesList.
-	contextVariablesList display: (self variablesListForContext: aContext).
+	contextVariablesList items: (self variablesListForContext: aContext).
 	
 	self detailsPane 
 		removeChildren;
