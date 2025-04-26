@@ -20,7 +20,8 @@ GtDebuggerStackElement >> initializeStackFramesList [
 	| stackFrames |
 	stackFrames := BrColumnedList new 
 		constraintsDo: [ :c | 
-			c padding: (BlInsets top: 10) ].
+			c padding: (BlInsets top: 10) ];
+		rowStencil: (BrGlamorousColumnedListSelectableRowElementStencilBuilder new).
 			
 	stackFrames column
 		title: 'Class';
