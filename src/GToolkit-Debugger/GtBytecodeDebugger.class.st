@@ -4,19 +4,19 @@ context := [ '11211212' printString ] asContext.
 process := Process
 	forContext: context
 	priority: Processor userInterruptPriority.	
-debuggingSession := GTBytecodeDebuggerSession 
+debuggingSession := GtBytecodeDebuggerSession 
 	named: 'test debugging' 
 	on: process 
 	startedAt: process suspendedContext.
 21 timesRepeat: [ 
 	debuggingSession stepInto ].
-GtBytecodeDebugger openInspectorOn: debuggingSession.
-
-
+GtBytecodeDebugger openInspectorOn: debuggingSession. 
 "
 Class {
 	#name : #GtBytecodeDebugger,
 	#superclass : #GtStackDebuggerElement,
+	#traits : 'TGtPagerPageInstantiator',
+	#classTraits : 'TGtPagerPageInstantiator classTrait',
 	#instVars : [
 		'bytecodesPane',
 		'bytecodesListElement'
@@ -27,6 +27,14 @@ Class {
 { #category : #initialization }
 GtBytecodeDebugger class >> defaultTitle [
 	^ 'Bytecode'
+]
+
+{ #category : #'as yet unclassified' }
+GtBytecodeDebugger class >> openInspectorOn: aDebuggingSession [
+	| aDebugger |
+
+	aDebugger := self on: aDebuggingSession.
+	^ aDebugger openInPager
 ]
 
 { #category : #'tools registry' }
