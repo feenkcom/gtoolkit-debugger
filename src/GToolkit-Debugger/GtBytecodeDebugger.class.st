@@ -74,6 +74,7 @@ GtBytecodeDebugger >> buildBytecodesListElement [
 		stencil: [ :each :index |
 			BlTextElement new
 				text: (self formatBytecode: each);
+				addAptitude: BrGlamorousListItemAptitude;
 				constraintsDo: [ :c | c horizontal matchParent ];
 				padding: (BlInsets all: 5);
 				when: BlClickEvent do: [ :anEvent  |
