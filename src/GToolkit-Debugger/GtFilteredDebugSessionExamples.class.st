@@ -35,6 +35,7 @@ GtFilteredDebugSessionExamples >> filteredDebugSessionFor: aSymbol [
 { #category : #examples }
 GtFilteredDebugSessionExamples >> filteredStepFromInitialContext [
 	<gtExample>
+	<return: #GtFilteredDebugSession>
 	| filteredSession initialContext |
 	filteredSession := self debugSessionFor: #simpleMethod.
 	filteredSession
@@ -52,6 +53,7 @@ GtFilteredDebugSessionExamples >> filteredStepFromInitialContext [
 { #category : #examples }
 GtFilteredDebugSessionExamples >> filteredStepping [
 	<gtExample>
+	<return: #GtFilteredDebugSession>
 	| session filteredSession |
 	session := self debugSessionFor: #simpleMethod.
 	filteredSession := self filteredDebugSessionFor: #simpleMethod.

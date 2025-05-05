@@ -156,6 +156,7 @@ GtScripterDebuggerExamples >> doMethod [
 { #category : #examples }
 GtScripterDebuggerExamples >> doubleClickExpandDebuggerPlayground [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self scripterOnDoMethodDebugger.
 
@@ -163,20 +164,21 @@ GtScripterDebuggerExamples >> doubleClickExpandDebuggerPlayground [
 		assertPlaygroundExpanderCollapsed;
 		doubleClickOnPlaygroudExpander;
 		assertPlaygroundExpanderVisible.
-	
-	self assert: (scripter element query 
-		lepiterQuery firstSnippetInPage) anyOne hasFocus.
-	
+
+	self
+		assert: scripter element query lepiterQuery firstSnippetInPage anyOne hasFocus.
+
 	scripter debugger
 		doubleClickOnPlaygroudExpander;
 		assertPlaygroundExpanderCollapsed.
-		
+
 	^ scripter
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self scripterOnDoMethodDebugger.
 
@@ -184,11 +186,11 @@ GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
 		assertPlaygroundExpanderCollapsed;
 		doubleClickOnPlaygroudExpander;
 		assertPlaygroundExpanderVisible.
-		
+
 	scripter type
 		text: 'i ';
 		play.
-		
+
 	scripter methodCoder
 		label: 'Print "i" result';
 		printIt;
@@ -196,23 +198,22 @@ GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
 		// GtDebuggerPlaygroundElement;
 		// GtSourceCoderEditorId;
 		play.
-		
+
 	^ scripter
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod [
 	<gtExample>
-	
-	^ BlScripter new
-		element: self methodContextCoderOnInheritedMethod asElement
+	<return: #BlScripter>
+	^ BlScripter new element: self methodContextCoderOnInheritedMethod asElement
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_BreadcrumbContent [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
-	
 	scripter := self methodContextCoderElementOnInheritedMethod.
 	scripter
 		checks: 'Check Breadcrumb'
@@ -230,38 +231,38 @@ GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_Breadcr
 				assertStep: [ :s | 
 					s
 						label: 'Assert Breadcrumb Class Name';
-						value: [ :aButton | aButton label asString ]
-							equals: [ 'ByteString' ];
+						value: [ :aButton | aButton label asString ] equals: [ 'ByteString' ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
 						onChildAt: 3 ].
-						
+
 			aStep
 				assertStep: [ :s | 
 					s
 						label: 'Assert Breadcrumb Class Name';
-						value: [ :aButton | aButton label asString ]
-							equals: [ 'Object' ];
+						value: [ :aButton | aButton label asString ] equals: [ 'Object' ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
 						id: GtPharoHeaderMethodBehaviorId ] ].
-	
+
 	^ scripter
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> methodContextCoderOnInheritedMethod [
 	<gtExample>
+	<return: #GtPharoMethodContextCoder>
 	| debugger |
 	debugger := self
-			debuggerOn: [ '123' printString  ]
+			debuggerOn: [ '123' printString ]
 			stoppingAt: [ :context | context selector = #printString ].
 	^ GtPharoMethodContextCoder
 		forContext: debugger debugSession interruptedContext
-		session: debugger debugSession.
+		session: debugger debugSession
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger |
 	self class compile: 'aMethod ^[1 + 1]'.
 	[ debugger := self
@@ -277,19 +278,13 @@ GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey return ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey return ].
 
 	self assertModifiedIndicatorVisible: scripter at: 1.
 
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtMethodCoderSaveActionId index: 1 ].
+	scripter clickStep: [ :s | s id: GtMethodCoderSaveActionId index: 1 ].
 	scripter pulse.
 
 	self
@@ -301,17 +296,11 @@ GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 
 	self assertModifiedIndicatorInvisible: scripter at: 1.
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey backspace ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey backspace ].
 
 	self assertModifiedIndicatorVisible: scripter at: 1.
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey return ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey return ].
 
 	self assertModifiedIndicatorInvisible: scripter at: 1 ]
 		ensure: [ self class removeSelector: #aMethod ].
@@ -321,22 +310,17 @@ GtScripterDebuggerExamples >> modifyingBlockThatCannotBeRestarted [
 { #category : #examples }
 GtScripterDebuggerExamples >> modifyingMethodShowsIndicator [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self scripterOnOnePlusOneDebugger.
 
 	self assertModifiedIndicatorInvisible: scripter at: 1.
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey return ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey return ].
 
 	self assertModifiedIndicatorVisible: scripter at: 1.
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey backspace ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey backspace ].
 
 	self assertModifiedIndicatorInvisible: scripter at: 1.
 
@@ -356,6 +340,7 @@ GtScripterDebuggerExamples >> returnOnePlusOne [
 { #category : #examples }
 GtScripterDebuggerExamples >> savingBlockRestartsMethod [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self scripterOnDoMethodDebugger.
 
@@ -364,10 +349,7 @@ GtScripterDebuggerExamples >> savingBlockRestartsMethod [
 		at: 1
 		satisfies: [ :context | context isBlockContext ].
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtMethodCoderSaveActionId index: 1 ].
+	scripter clickStep: [ :s | s id: GtMethodCoderSaveActionId index: 1 ].
 
 	self
 		assertContext: scripter
@@ -382,6 +364,7 @@ GtScripterDebuggerExamples >> savingBlockRestartsMethod [
 { #category : #examples }
 GtScripterDebuggerExamples >> savingBlockThatCannotBeRestarted [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self scripterOnReturnedBlockDebugger.
 
@@ -392,10 +375,7 @@ GtScripterDebuggerExamples >> savingBlockThatCannotBeRestarted [
 
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtMethodCoderSaveActionId index: 1 ].
+	scripter clickStep: [ :s | s id: GtMethodCoderSaveActionId index: 1 ].
 
 
 	self
@@ -413,6 +393,7 @@ GtScripterDebuggerExamples >> savingDoesNotMoveCursor [
 	"https://github.com/feenkcom/gtoolkit/issues/3419"
 
 	<gtExample>
+	<return: #BlScripter>
 	| scripter |
 	scripter := self scripterOnOnePlusOneDebugger.
 
@@ -422,10 +403,7 @@ GtScripterDebuggerExamples >> savingDoesNotMoveCursor [
 				id: GtSourceCoderEditorId index: 1;
 				value: [ :editor | editor editor cursors first position ] equals: 0 ].
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey arrowRight ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey arrowRight ].
 
 	scripter
 		assertStep: [ :s | 
@@ -433,10 +411,7 @@ GtScripterDebuggerExamples >> savingDoesNotMoveCursor [
 				id: GtSourceCoderEditorId index: 1;
 				value: [ :editor | editor editor cursors first position ] equals: 1 ].
 
-	scripter
-		clickStep: [ :s | 
-			s
-				id: GtMethodCoderSaveActionId index: 1 ].
+	scripter clickStep: [ :s | s id: GtMethodCoderSaveActionId index: 1 ].
 
 	scripter
 		assertStep: [ :s | 
@@ -450,15 +425,16 @@ GtScripterDebuggerExamples >> savingDoesNotMoveCursor [
 { #category : #examples }
 GtScripterDebuggerExamples >> savingMethodOutsideDebuggerShowsUninstalledIndicator [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter methodSource |
 	scripter := self scripterOnOnePlusOneDebugger.
 	methodSource := (self class >> #returnOnePlusOne) sourceCode.
-	
+
 	self assertUninstalledIndicatorInvisible: scripter at: 1.
 
 	self class compile: methodSource.
 	scripter pulse.
-	
+
 	self assertUninstalledIndicatorVisible: scripter at: 1.
 
 	^ scripter
@@ -469,6 +445,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 	"Click on a superclass that implements the #enumerate method."
 
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger pager selfObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyTwoObject new enumerate ]
@@ -491,21 +468,24 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 		clickOnHeaderMethodBehavior;
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
-		
+
 	scripter assert
 		label: 'Assert class name';
-		value: [ :anEditor | anEditor text asString ] equals: GtPharoDummyOneObject name;
+		value: [ :anEditor | anEditor text asString ]
+			equals: GtPharoDummyOneObject name;
 		// (GtPagerPageElementId indexed: 2);
 		// GtBehaviorCoderBehaviorNameId;
 		play.
-		
+
 	scripter assert
 		label: 'Assert enumerate method is expanded';
 		satisfies: [ :aCoderElement | aCoderElement isExpanded ];
 		// (GtPagerPageElementId indexed: 2);
 		// GtPharoStreamingMethodsCoderListId;
 		// GtExpandableMethodCoderElement;
-		@ [ :aCoderElement | aCoderElement textualCoderViewModel compiledMethod == (GtPharoDummyOneObject >> #enumerate) ];
+		@ [ :aCoderElement | 
+			aCoderElement textualCoderViewModel compiledMethod
+				== (GtPharoDummyOneObject >> #enumerate) ];
 		play.
 
 	^ scripter
@@ -515,8 +495,9 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
 	"Click on a class that implements #enumerate method 
 	which is also the class of the self-object (provider class)."
-	
+
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger pager selfObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new enumerate ]
@@ -526,44 +507,48 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
 	pager maximized.
 	scripter := BlScripter new.
 	scripter element: pager.
-	
+
 	scripter do
 		label: 'Set window size';
 		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
 		onSpace;
 		play.
-	
+
 	scripter methodCoder
 		assertHeaderProviderBehaviorIs: GtPharoDummyOneObject;
 		assertHeaderMethodBehaviorIsNotVisible;
 		clickOnHeaderProviderBehavior;
 		// (GtExpandableContextMethodCoderId indexed: 1);
-		play.	
-	
+		play.
+
 	scripter assert
 		label: 'Assert class name';
-		value: [ :anEditor | anEditor text asString ] equals: GtPharoDummyOneObject name;
+		value: [ :anEditor | anEditor text asString ]
+			equals: GtPharoDummyOneObject name;
 		// (GtPagerPageElementId indexed: 2);
 		// GtBehaviorCoderBehaviorNameId;
 		play.
-	
+
 	scripter assert
 		label: 'Assert enumerate method is expanded';
 		satisfies: [ :aCoderElement | aCoderElement isExpanded ];
 		// (GtPagerPageElementId indexed: 2);
 		// GtPharoStreamingMethodsCoderListId;
 		// GtExpandableMethodCoderElement;
-		@ [ :aCoderElement | aCoderElement textualCoderViewModel compiledMethod == (GtPharoDummyOneObject >> #enumerate) ];
+		@ [ :aCoderElement | 
+			aCoderElement textualCoderViewModel compiledMethod
+				== (GtPharoDummyOneObject >> #enumerate) ];
 		play.
-	
+
 	^ scripter
 ]
 
 { #category : #'examples - method header' }
 GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 	"Click on a class that of the self-object (provider class)."
-	
+
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger pager selfObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyTwoObject new enumerate ]
@@ -573,36 +558,39 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 	pager maximized.
 	scripter := BlScripter new.
 	scripter element: pager.
-	
+
 	scripter do
 		label: 'Set window size';
 		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
 		onSpace;
 		play.
-	
+
 	scripter methodCoder
 		assertHeaderProviderBehaviorIs: GtPharoDummyTwoObject;
 		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
 		clickOnHeaderProviderBehavior;
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
-		
+
 	scripter assert
 		label: 'Assert class name';
-		value: [ :anEditor | anEditor text asString ] equals: GtPharoDummyTwoObject name;
+		value: [ :anEditor | anEditor text asString ]
+			equals: GtPharoDummyTwoObject name;
 		// (GtPagerPageElementId indexed: 2);
 		// GtBehaviorCoderBehaviorNameId;
 		play.
-	
+
 	scripter assert
 		label: 'Assert enumerate method is expanded';
 		notExists;
 		// (GtPagerPageElementId indexed: 2);
 		// GtPharoStreamingMethodsCoderListId;
 		// GtExpandableMethodCoderElement;
-		@ [ :aCoderElement | aCoderElement textualCoderViewModel compiledMethod == (GtPharoDummyOneObject >> #enumerate) ];
+		@ [ :aCoderElement | 
+			aCoderElement textualCoderViewModel compiledMethod
+				== (GtPharoDummyOneObject >> #enumerate) ];
 		play.
-	
+
 	^ scripter
 ]
 
@@ -631,6 +619,7 @@ GtScripterDebuggerExamples >> scripterOnDoMethodDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger selfObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new enumerate ]
@@ -701,6 +690,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodInstAReceiverDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new instAReceiver ]
@@ -735,6 +725,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodInstAReceiverDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger selfObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new sum21 ]
@@ -808,6 +799,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum39Debugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new sum39 ]
@@ -868,6 +860,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum39Debugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodTempReceiverDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new tempReceiver ]
@@ -947,6 +940,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodTempReceiverDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnOneObjectMethodThreeDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger |
 	debugger := self
 			debuggerOn: [ GtPharoDummyOneObject new three ]
@@ -1029,6 +1023,7 @@ GtScripterDebuggerExamples >> scripterOnReturnedBlockDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnThreeObjectMethodDummyThreeDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger aSelfObject varA |
 	debugger := self
 			debuggerOn: [ GtPharoDummyThreeObject new dummyThree ]
@@ -1082,6 +1077,7 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodDummyThreeDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnThreeObjectMethodOneDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger anObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyThreeObject new one ]
@@ -1138,6 +1134,7 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodOneDebugger [
 { #category : #'examples - embedded method' }
 GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
 	<gtExample>
+	<return: #BlScripter>
 	| scripter debugger anObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyTwoObject new ]
@@ -1178,8 +1175,9 @@ GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
 { #category : #examples }
 GtScripterDebuggerExamples >> scripterStepOverInALongMethod [
 	"Issue https://github.com/feenkcom/gtoolkit/issues/3892"
-	
+
 	<gtExample>
+	<return: #BlScripter>
 	| aDebugger aScripter |
 	aDebugger := self
 			debuggerOn: [ GtPharoDummyOneObject new longMethod ]
@@ -1187,55 +1185,59 @@ GtScripterDebuggerExamples >> scripterStepOverInALongMethod [
 	5 timesRepeat: [ aDebugger debugSession stepOver ].
 	aScripter := BlScripter new.
 	aScripter element: aDebugger.
-	
+
 	self setInitialStackListPositionWithScripter: aScripter.
 	self scrollStackListWithScripter: aScripter.
 	self stepOverWithScripter: aScripter.
 	self assertScrolledPosition: aScripter.
 	self stepThroughWithScripter: aScripter.
 	self assertScrolledPosition: aScripter.
-	
+
 	^ aScripter
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> scripterStepOverInALongMethod_StepInto [
 	"Issue https://github.com/feenkcom/gtoolkit/issues/3892"
-	
+
 	<gtExample>
+	<return: #BlScripter>
 	| aDebugger aScripter anInitialPosition aScrolledPosition |
 	aScripter := self scripterStepOverInALongMethod.
 	aDebugger := aScripter element.
 	aScrolledPosition := aScripter userData at: #scrolledPosition.
 	anInitialPosition := aScripter userData at: #initialPosition.
-	
+
 	self stepIntoWithScripter: aScripter.
 	self assertInitialPosition: aScripter.
-	aScripter substeps: 'Step over in the same method' do: [ :aStep |
-		3 timesRepeat: [ 
-			self stepOverWithScripter: aStep.
-			self assertInitialPosition: aStep ].
-	].
-	
+	aScripter
+		substeps: 'Step over in the same method'
+		do: [ :aStep | 
+			3
+				timesRepeat: [ self stepOverWithScripter: aStep.
+					self assertInitialPosition: aStep ] ].
+
 	^ aScripter
 ]
 
 { #category : #examples }
 GtScripterDebuggerExamples >> scripterStepOverInALongMethod_StepThroughtABlock [
 	"Issue https://github.com/feenkcom/gtoolkit/issues/3892"
-	
+
 	<gtExample>
+	<return: #BlScripter>
 	| aDebugger aScripter |
 	aScripter := self scripterStepOverInALongMethod_StepInto.
 	aDebugger := aScripter element.
-	
+
 	self scrollStackListWithScripter: aScripter.
-	
-	aScripter substeps: 'Step throught a block in the same method' do: [ :aStep |
-		8 timesRepeat: [ 
-			self stepThroughWithScripter: aStep.
-			self assertScrolledPosition: aStep ].
-	].
+
+	aScripter
+		substeps: 'Step throught a block in the same method'
+		do: [ :aStep | 
+			8
+				timesRepeat: [ self stepThroughWithScripter: aStep.
+					self assertScrolledPosition: aStep ] ].
 
 	^ aScripter
 ]
@@ -1337,6 +1339,7 @@ GtScripterDebuggerExamples >> switchingCodersDoesNotLoseChanges [
 	"https://github.com/feenkcom/gtoolkit/issues/3418"
 
 	<gtExample>
+	<return: #BlScripter>
 	| scripter methodSource |
 	scripter := self scripterOnOnePlusOneDebugger.
 	methodSource := (self class >> #returnOnePlusOne) sourceCode.
@@ -1347,10 +1350,7 @@ GtScripterDebuggerExamples >> switchingCodersDoesNotLoseChanges [
 				id: GtSourceCoderEditorId index: 1;
 				value: [ :editor | editor text asString ] equals: methodSource ].
 
-	scripter
-		keyPressStep: [ :s | 
-			s
-				key: BlKeyboardKey return ].
+	scripter keyPressStep: [ :s | s key: BlKeyboardKey return ].
 
 	scripter
 		assertStep: [ :s | 

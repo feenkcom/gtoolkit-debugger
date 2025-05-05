@@ -27,6 +27,7 @@ GtPharoStackElementExamples >> createPharoStackElement [
 { #category : #accessing }
 GtPharoStackElementExamples >> createPharoStackElementScripter [
 	<gtExample>
+	<return: #BlScripter>
 	^ BlScripter new element: self createPharoStackElement
 ]
 
