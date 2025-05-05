@@ -7,6 +7,7 @@ Class {
 { #category : #accessing }
 GtPharoStackModelExamples >> createStackModel [
 	<gtExample>
+	<return: #GtDebuggerPharoStackModel>
 	| context debuggingSession process |
 	context := [ self testMethod1 ] asContext.
 	process := Process
@@ -47,13 +48,20 @@ GtPharoStackModelExamples >> testMethod3 [
 { #category : #accessing }
 GtPharoStackModelExamples >> testStackModelCoderViewModelStream [
 	<gtExample>
+	<return: #GtDebuggerPharoStackModel>
 	| model stream |
 	model := self createStackModel.
 	stream := model coderViewModelStream.
-	self assert: stream next wait value compiledMethod equals: self class >> #testMethod3.
-	self assert: stream next wait value compiledMethod equals: self class >> #testMethod2.
-	self assert: stream next wait value compiledMethod equals: self class >> #testMethod1.
-	^model
+	self
+		assert: stream next wait value compiledMethod
+		equals: self class >> #testMethod3.
+	self
+		assert: stream next wait value compiledMethod
+		equals: self class >> #testMethod2.
+	self
+		assert: stream next wait value compiledMethod
+		equals: self class >> #testMethod1.
+	^ model
 ]
 
 { #category : #accessing }
@@ -61,6 +69,7 @@ GtPharoStackModelExamples >> testStackModelCoderViewModelStreamIndependence [
 	"Test that streams are independent"
 
 	<gtExample>
+	<return: #GtPharoStackModelExamples>
 	| model stream |
 	model := self testStackModelCoderViewModelStream.
 	2
@@ -79,13 +88,14 @@ GtPharoStackModelExamples >> testStackModelCoderViewModelStreamIndependence [
 { #category : #accessing }
 GtPharoStackModelExamples >> testStackModelContextStream [
 	<gtExample>
+	<return: #GtDebuggerPharoStackModel>
 	| model stream |
 	model := self createStackModel.
 	stream := model contextStream.
 	self assert: stream next wait value method equals: self class >> #testMethod3.
 	self assert: stream next wait value method equals: self class >> #testMethod2.
 	self assert: stream next wait value method equals: self class >> #testMethod1.
-	^model
+	^ model
 ]
 
 { #category : #accessing }
@@ -93,6 +103,7 @@ GtPharoStackModelExamples >> testStackModelContextStreamIndependence [
 	"Test that streams are independent"
 
 	<gtExample>
+	<return: #GtPharoStackModelExamples>
 	| model stream |
 	model := self testStackModelContextStream.
 	2
@@ -105,6 +116,7 @@ GtPharoStackModelExamples >> testStackModelContextStreamIndependence [
 { #category : #accessing }
 GtPharoStackModelExamples >> testStep [
 	<gtExample>
+	<return: #GtPharoStackModelExamples>
 	| model stream |
 	model := self createStackModel.
 	self stepOutOfTestMethod3InModel: model.
@@ -116,8 +128,9 @@ GtPharoStackModelExamples >> testStep [
 { #category : #accessing }
 GtPharoStackModelExamples >> testStepWithCoderViewModels [
 	"Test to see if CoderViewModels are cached"
-	
+
 	<gtExample>
+	<return: #GtPharoStackModelExamples>
 	| model originalCoderViewModels currentCoderViewModels |
 	model := self createStackModel.
 	originalCoderViewModels := model coderViewModelStream toArray wait.
