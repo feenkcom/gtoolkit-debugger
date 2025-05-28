@@ -301,7 +301,7 @@ GtMoldableExceptionDebuggingElement >> updateViews [
 		ifFalse: [ compositeView asElementDo: [ :e | e ] ].
 	viewsElement
 		addAptitude: BrShadowAptitude new;
-		background: self theme default contentBackgroundColor.
+		background: self theme default contentBackground.
 	
 	viewsContainer
 		removeChildren;

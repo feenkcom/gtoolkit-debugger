@@ -62,14 +62,14 @@ GtCoderEmbeddedDebuggerDetailsElement >> initialize [
 
 	self padding: (BlInsets all: 5).
 	self exact: GtCoderEmbeddedDebuggerDropdownConfiguration userExtent.
-	self background: self theme default contentBackgroundColor
+	self background: self theme default contentBackground
 ]
 
 { #category : #initialization }
 GtCoderEmbeddedDebuggerDetailsElement >> initializeStackListElement [
 	stackListElement := BrFrame new.
 	stackListElement
-		background: self theme default contentBackgroundColor;
+		background: self theme default contentBackground;
 		hMatchParent;
 		vMatchParent.
 	stackListElement

@@ -69,7 +69,7 @@ GtDebuggerPlaygroundElement >> initialize [
 	self addChild: (BrVerticalPane new 
 		matchParent;
 		margin: (BlInsets all: 10);
-		background: self theme default contentBackgroundColor;
+		background: self theme default contentBackground;
 		aptitude: BrShadowAptitude;
 		addChild: self pageElement as: #page).
 ]
