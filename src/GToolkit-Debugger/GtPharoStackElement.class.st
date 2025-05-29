@@ -105,7 +105,7 @@ GtPharoStackElement >> buildStackIndex [
 	indexList := GtPharoStackIndexStencil new asElement.
 	indexList
 		addAptitude: BrGlamorousWithHorizontalResizerAptitude new beRight;
-		background: BrGlamorousColors neutralBackgroundColor;
+		background: self theme default navigationBackground;
 		matchParent.
 	indexList
 		when: BrSelectionChanged
