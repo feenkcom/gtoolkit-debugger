@@ -6,7 +6,9 @@ Class {
 	#instVars : [
 		'selectedCoderUIModel',
 		'annotationsEnabled',
-		'stackModel'
+		'stackModel',
+		'selectCoderPromise',
+		'openCoderPromise'
 	],
 	#category : #'GToolkit-Debugger-Elements'
 }
@@ -94,10 +96,36 @@ GtAbstractExpandableStackElement >> enableVariableAnnotations [
 GtAbstractExpandableStackElement >> initialize [
 	super initialize.
 	self matchParent.
-	
 	self beFocusable.
-	
-	self initializeStackList.
+	self initializeElementPromises.
+	self initializeStackList
+]
+
+{ #category : #initialization }
+GtAbstractExpandableStackElement >> initializeElementPromises [
+	selectCoderPromise := (BrAsyncElementPromise on: self)
+			whenError: [ :anElement :anException | anException debug ];
+			whenSuccess: [ :anElement :anAssoc | 
+				| anItemsProvider anIndex |
+				anItemsProvider := anAssoc key.
+				anIndex := anAssoc value.
+				anIndex > 0
+					ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0.
+						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ].
+	openCoderPromise := (BrAsyncElementPromise on: self)
+			whenError: [ :anElement :anException | anException debug ];
+			whenSuccess: [ :anElement :anAssoc | 
+				| wantsToScroll anItemsProvider anIndex |
+				anItemsProvider := anAssoc key.
+				anIndex := anAssoc value.
+				anIndex > 0
+					ifTrue: [ self stackFramesList itemsProvider: anItemsProvider.
+						wantsToScroll := stackModel currentContextMethodIndicator
+								ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
+								ifNil: [ true ].
+						wantsToScroll
+							ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0 ].
+						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ]
 ]
 
 { #category : #initialization }
@@ -136,25 +164,12 @@ GtAbstractExpandableStackElement >> openFirstNonFilteredContextFrom: aStream [
 	aPreloadPromise := anItemsProvider
 			itemSuchThat: [ :eachCoder | (self shouldJumpOverCoverViewModel: eachCoder) not ]
 			ifFound: [ :anIndex :isSynchronous | 
-				| anAction |
-				anAction := [ 
-					| wantsToScroll |
-					self stackFramesList itemsProvider: anItemsProvider.
-					wantsToScroll := stackModel currentContextMethodIndicator 
-						ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
-						ifNil: [ true ].
-					wantsToScroll ifTrue: [ 
-						self stackFramesList scrollToIndex: anIndex offset: 0 ].
-					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
-
-				isSynchronous
-					ifTrue: anAction
-					ifFalse: [ self enqueueTask: (BlTaskAction new action: anAction) ] ].
+				anItemsProvider -> anIndex ].
 
 	(GtDebuggerStackElementFirstNonFilteredContextPreloadSignal new
 		promise: aPreloadPromise) emit.
 
-	self enqueueTask: (BlPromiseTask new promise: aPreloadPromise)
+	openCoderPromise ifNotNil: [ :aPromise | aPromise promise: aPreloadPromise ].
 ]
 
 { #category : #accessing }
@@ -168,18 +183,9 @@ GtAbstractExpandableStackElement >> selectCoderForContext: aContext [
 	aPreloadPromise := anItemsProvider
 		preloadUntilFoundSuchThat: [ :eachCoder | eachCoder coder context = aContext ].	
 	aPreloadPromise := aPreloadPromise then: [ :anIndex |
-		anItemsProvider bufferLoadingPromise then: [ anIndex ] ].
+		anItemsProvider bufferLoadingPromise then: [ anItemsProvider -> anIndex ] ].
 	
-	aPreloadPromise := aPreloadPromise
-		then: [ :anIndex |
-			anIndex > 0
-				ifTrue: [
-				self inUIProcessDo: [
-					self stackFramesList scrollToIndex: anIndex offset: 0.
-					self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ] ]
-		otherwise: [ :anError | anError debug ].
-		
-	self enqueueTask: (BlPromiseTask new promise: aPreloadPromise)
+	selectCoderPromise ifNotNil: [ :aPromise | aPromise promise: aPreloadPromise ].
 ]
 
 { #category : #actions }
