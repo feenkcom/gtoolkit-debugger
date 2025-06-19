@@ -34,6 +34,7 @@ GtAbstractExpandableStackElement >> buildStackFramesList [
 		itemStencil: [ :anElementClass | 
 			| coderElement |
 			coderElement := anElementClass new.
+			coderElement vFitContentLimited.
 			coderElement
 				when: BlFocusInEvent
 				do: [ :anEvent | 
