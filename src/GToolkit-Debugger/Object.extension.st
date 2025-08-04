@@ -16,6 +16,8 @@ Object >> infect: aString [
 	newClass := self class newAnonymousSubclass.
 	newClass compile: 'infect: aString
 	self class compile: aString'.
+	newClass compile: 'disinfect
+	self class superclass adoptInstance: self'.
 	newClass adoptInstance: self.
 	self infect: aString
 ]
