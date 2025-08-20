@@ -64,7 +64,8 @@ GtSharedDebugSessionExamples >> debugSharedSession [
 			self assert: aSession interruptedContext isNil.
 			self assert: aSession interruptedProcess isNil.
 			self assert: aSession session isNil.
-			aCollection add: anAnnouncement ].
+			aCollection add: anAnnouncement ]
+		for: self.
 
 	aDebugger := aSession debug.
 	self assert: aDebugger space isNotNil.
@@ -116,7 +117,8 @@ GtSharedDebugSessionExamples >> terminateSharedSession [
 			self assert: aSession interruptedContext isNil.
 			self assert: aSession interruptedProcess isNil.
 			self assert: aSession session isNil.
-			aCollection add: anAnnouncement ].
+			aCollection add: anAnnouncement ]
+		for: self.
 
 	aSession terminate.
 
