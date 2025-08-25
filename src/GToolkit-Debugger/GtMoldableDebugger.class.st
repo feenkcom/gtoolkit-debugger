@@ -248,7 +248,6 @@ GtMoldableDebugger >> isSwitchingEnabled [
 GtMoldableDebugger >> open: anElement titled: aTitleString [
 	| aSpace |
 	aSpace := BlSpace new.
-	aSpace withHalos.
 	aSpace withSceneDriller.
 	aSpace withScreenshotHandler.
 	aSpace title: aTitleString.
