@@ -253,7 +253,7 @@ GtMoldableDebugger >> openInPager [
 			title: debuggerElement session name;
 			extent: 1200 @ 600.
 	GtPagerSettings isAllowedForDebugTools
-		ifTrue: [ aSpace inPager: self ]
+		ifTrue: [ aSpace inPager: (GtMoldableDebuggerTool new debuggerElement: self) ]
 		ifFalse: [ aSpace addChild: self inPager ].
 	aSpace show
 ]
