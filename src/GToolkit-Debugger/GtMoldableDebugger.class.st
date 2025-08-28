@@ -245,23 +245,17 @@ GtMoldableDebugger >> isSwitchingEnabled [
 ]
 
 { #category : #opening }
-GtMoldableDebugger >> open: anElement titled: aTitleString [
-	| aSpace |
-	aSpace := BlSpace new.
-	aSpace withSceneDriller.
-	aSpace withScreenshotHandler.
-	aSpace title: aTitleString.
-	aSpace extent: 1200 @ 600.
-	aSpace addChild: anElement.
-	aSpace show
-]
-
-{ #category : #opening }
 GtMoldableDebugger >> openInPager [
-	| aPager |
+	| aSpace |
 	self aboutToOpen.
-	aPager := self inPager.
-	self open: aPager titled: debuggerElement session name.
+	aSpace := BlSpace new
+			withCommonSettings;
+			title: debuggerElement session name;
+			extent: 1200 @ 600.
+	GtPagerSettings isAllowedForDebugTools
+		ifTrue: [ aSpace inPager: (GtMoldableDebuggerTool new debuggerElement: self) ]
+		ifFalse: [ aSpace addChild: self inPager ].
+	aSpace show
 ]
 
 { #category : #'initialization - debuggers' }
