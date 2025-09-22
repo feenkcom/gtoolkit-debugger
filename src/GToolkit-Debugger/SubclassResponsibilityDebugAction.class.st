@@ -66,7 +66,7 @@ SubclassResponsibilityDebugAction >> executeAction [
 	msg := Message 
 		selector: senderContext selector
 		arguments: senderContext arguments.
-	msgCategory := senderContext methodClass organization categoryOfElement: msg selector.
+	msgCategory := senderContext methodClass protocolNameOfSelector: msg selector.
 	
 	chosenClass := self 
 		askForSuperclassOf: senderContext receiver class 
