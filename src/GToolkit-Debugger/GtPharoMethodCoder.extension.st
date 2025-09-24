@@ -12,9 +12,10 @@ GtPharoMethodCoder >> addBreakpointAddOnsAst: anAst to: coderAddOns from: aCoder
 GtPharoMethodCoder >> addBreakpointContextMenuAddOnsAst: anAst to: coderAddOns from: aCoderViewModel [
 	<gtCoderContextMenuAddOns: 19>
 	
-	self
+	(self
 		addContextMenuItemFrom: GtDebuggerCoderAddBreakpointShortcut new
 		group: BrMenuItemGroupConfiguration evaluation
 		withId: #'context-menu--breakpoint'
-		to: coderAddOns
+		to: coderAddOns)
+			ifNotNil: [ :anAction | anAction priority: 19 ]
 ]
