@@ -9,7 +9,7 @@ GtRunToSelectionDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousIcons tohere;
+		icon: BrGlamorousVectorIcons tohere;
 		yourself
 ]
 

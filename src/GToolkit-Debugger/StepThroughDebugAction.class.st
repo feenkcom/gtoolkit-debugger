@@ -19,7 +19,7 @@ StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousIcons through;
+		icon: BrGlamorousVectorIcons through;
 		keymap: ((BlKeyCombination builder
 				key: BlKeyboardKey F12;
 				build) or: BlKeyCombination builder primary alt arrowRight build) gtDisplayString

@@ -19,7 +19,7 @@ CopyToClipboardDebugAction class >> gt2ActionFor: aDebugger [
 	
 	^ (self forDebugger: aDebugger)
 			order: 35;
-			icon: BrGlamorousIcons clipboard;
+			icon: BrGlamorousVectorIcons clipboard;
 			label: 'Copy'
 ]
 

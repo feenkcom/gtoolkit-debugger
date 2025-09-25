@@ -201,7 +201,7 @@ GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActio
 		aptitude: BrGlamorousButtonWithIconAptitude 
 			+ BrGlamorousToggleBackgroundAptitude;
 		label: 'Variable Value Overlays';
-		icon: BrGlamorousIcons edit asElement;
+		icon: BrGlamorousVectorIcons edit asElement;
 		when: BrToggleActivatedEvent do: [ :anEvent | 
 			self stackElement enableVariableAnnotations ];
 		when: BrToggleDeactivatedEvent do: [ :anEvent | 

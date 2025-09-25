@@ -17,7 +17,7 @@ GtSubclassResponsibilityDebugAction class >> gt2StackDebuggingActionFor: aDebugg
 	<gt2StackDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons add;
+			icon: BrGlamorousVectorIcons add;
 			order: 4
 ]
 
