@@ -17,7 +17,7 @@ GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 	<gt2StackDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons add;
+			icon: BrGlamorousVectorIcons add;
 			order: 4
 ]
 

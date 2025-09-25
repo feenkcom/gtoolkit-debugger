@@ -19,7 +19,7 @@ ResumeDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousIcons play;
+		icon: BrGlamorousVectorIcons run;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F5;
 				build) gtDisplayString

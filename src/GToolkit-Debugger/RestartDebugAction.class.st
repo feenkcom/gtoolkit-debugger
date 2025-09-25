@@ -20,7 +20,7 @@ RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 		<gt2StackDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons restart;
+			icon: BrGlamorousVectorIcons restart;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F7;
 				build) gtDisplayString
