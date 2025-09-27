@@ -9,7 +9,7 @@ GtSubclassResponsibilityDebugAction class >> gt2ContextDebuggingActionFor: aDebu
 	<gt2ContextDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons add
+			icon: BrGlamorousVectorIcons add
 ]
 
 { #category : #registration }
