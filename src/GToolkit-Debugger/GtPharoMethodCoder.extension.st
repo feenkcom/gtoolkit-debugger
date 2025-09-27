@@ -10,7 +10,6 @@ GtPharoMethodCoder >> addBreakpointAddOnsAst: anAst to: coderAddOns from: aCoder
 
 { #category : #'*GToolkit-Debugger' }
 GtPharoMethodCoder >> addBreakpointContextMenuAddOnsAst: anAst to: coderAddOns from: aCoderViewModel [
-	<gtCoderContextMenuAddOns: 19>
 	<gtCoderContextMenuAddOns>
 	(self
 		addContextMenuItemFrom: GtDebuggerCoderAddBreakpointShortcut new
