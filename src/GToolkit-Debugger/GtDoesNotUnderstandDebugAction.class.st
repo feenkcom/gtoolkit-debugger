@@ -9,7 +9,7 @@ GtDoesNotUnderstandDebugAction class >> gt2ContextDebuggingActionFor: aDebugger 
 	<gt2ContextDebuggingAction>
 	
 	^ (self forDebugger: aDebugger)
-			icon: BrGlamorousIcons add
+			icon: BrGlamorousVectorIcons add
 ]
 
 { #category : #registration }

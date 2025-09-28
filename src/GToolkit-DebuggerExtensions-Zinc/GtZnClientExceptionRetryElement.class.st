@@ -29,7 +29,7 @@ GtZnClientExceptionRetryElement >> actionLabel: aString [
 GtZnClientExceptionRetryElement >> createHelpButton [
 	^ BrButton new
 		aptitude: BrGlamorousButtonWithIconAptitude;
-		icon: BrGlamorousIcons help;
+		icon: BrGlamorousVectorIcons help;
 		label: ('Open the page "{1}"' format: {self helpPageName});
 		action:  [ :aButton  |
 			self spawnHelpPageFrom: (sourceElement ifNil: [aButton]) ]
