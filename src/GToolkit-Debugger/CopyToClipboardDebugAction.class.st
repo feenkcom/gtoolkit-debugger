@@ -26,7 +26,7 @@ CopyToClipboardDebugAction class >> gt2ActionFor: aDebugger [
 { #category : #accessing }
 CopyToClipboardDebugAction >> defaultLabel [
 
-	^ 'Copy Stack to Clipboard'
+	^ 'Copy the stack to clipboard'
 ]
 
 { #category : #accessing }
