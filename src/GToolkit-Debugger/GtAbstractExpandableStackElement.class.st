@@ -117,16 +117,17 @@ GtAbstractExpandableStackElement >> initializeElementPromises [
 			whenError: [ :anElement :anException | anException debug ];
 			whenSuccess: [ :anElement :anAssoc | 
 				| wantsToScroll anItemsProvider anIndex |
-				anItemsProvider := anAssoc key.
-				anIndex := anAssoc value.
-				anIndex > 0
-					ifTrue: [ self stackFramesList itemsProvider: anItemsProvider.
-						wantsToScroll := stackModel currentContextMethodIndicator
-								ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
-								ifNil: [ true ].
-						wantsToScroll
-							ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0 ].
-						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ]
+				anAssoc ifNotNil: [ 
+					anItemsProvider := anAssoc key.
+					anIndex := anAssoc value.
+					anIndex > 0
+						ifTrue: [ self stackFramesList itemsProvider: anItemsProvider.
+							wantsToScroll := stackModel currentContextMethodIndicator
+									ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
+									ifNil: [ true ].
+							wantsToScroll
+								ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0 ].
+							self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ] ]
 ]
 
 { #category : #initialization }
