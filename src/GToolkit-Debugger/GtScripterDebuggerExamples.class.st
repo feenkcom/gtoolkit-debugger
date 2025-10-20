@@ -440,6 +440,67 @@ GtScripterDebuggerExamples >> savingMethodOutsideDebuggerShowsUninstalledIndicat
 	^ scripter
 ]
 
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterAcceptMethodWithUndeclaredVariable [
+	"See https://github.com/feenkcom/gtoolkit/issues/4768"
+
+	<gtExample>
+	<return: #BlScripter>
+	| environment realClass methodSelector method scripter debugger selfObject |
+	environment := GtPharoDummiesGenerator withPackages: 1 classes: 1.
+	realClass := environment anyDummyClass realClass.
+	methodSelector := GtPharoCodeModifier current
+			compileMethodSource: 'method1
+
+self method2: 42.
+self method2'
+			in: realClass
+			protocol: 'accessing'.
+	method := realClass methodDict at: methodSelector.
+	self assert: method isNotNil.
+
+	debugger := self
+			debuggerOn: [ realClass new method1 ]
+			stoppingAt: [ :context | context selector = #method1 ].
+	selfObject := debugger debugSession interruptedContext receiver.
+	scripter := BlScripter new.
+	scripter element: debugger.
+	scripter model: selfObject.
+	scripter userData at: #environment put: environment.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1000 @ 700 ];
+		onSpace;
+		play.
+
+	scripter methodCoder
+		assertMethodExpandersCountIs: 2;
+		assertSelfObjectIs: selfObject;
+		assertTargetBehaviorIs: selfObject class;
+		assertExplicitProviderClassIs: selfObject class;
+		selectAll;
+		assertCoderIsWithouthModifications;
+		typeText: 'method1
+instVarAAA.
+self method2: 42.
+self method2';
+		assertCoderIsModified;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+		
+	scripter methodCoder
+		clickOnSaveButton;
+		assertCoderIsModified;
+		assertFixItPopoverExists;
+		// (GtExpandableContextMethodCoderId indexed: 1);
+		play.
+
+	self assert: (realClass methodDict at: methodSelector) == method.
+
+	^ scripter
+]
+
 { #category : #'examples - method header' }
 GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 	"Click on a superclass that implements the #enumerate method."
