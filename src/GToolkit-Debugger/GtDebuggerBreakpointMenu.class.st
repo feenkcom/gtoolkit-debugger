@@ -87,7 +87,8 @@ GtDebuggerBreakpointMenu >> frequencyButton [
 				action: [ :aButton | 
 					breakpoint once: false.
 					self updateIcon.
-					aButton fireEvent: BrDropdownHideWish new ] ]
+					aButton fireEvent: BrDropdownHideWish new.
+					self notifyBreakpointChanged ] ]
 		ifFalse: [ BrButton new
 				aptitude: self menuButtonLook;
 				label: 'Once';
@@ -98,7 +99,8 @@ GtDebuggerBreakpointMenu >> frequencyButton [
 				action: [ :aButton | 
 					breakpoint once: true.
 					self updateIcon.
-					aButton fireEvent: BrDropdownHideWish new ] ]
+					aButton fireEvent: BrDropdownHideWish new.
+					self notifyBreakpointChanged ] ]
 ]
 
 { #category : #icons }
@@ -158,6 +160,12 @@ GtDebuggerBreakpointMenu >> menuButtonLook [
 	^(BrGlamorousButtonRectangularAptitude new cornerRadius: 0)
 		+ BrGlamorousButtonIconAptitude + BrGlamorousLabelAptitude
 		+ BrGlamorousListItemAptitude
+]
+
+{ #category : #'private - notifying' }
+GtDebuggerBreakpointMenu >> notifyBreakpointChanged [
+	SystemAnnouncer uniqueInstance
+		announce: (BreakpointAnnouncement on: breakpoint nodes: breakpoint link nodes)
 ]
 
 { #category : #icons }
@@ -228,7 +236,8 @@ GtDebuggerBreakpointMenu >> statusButton [
 						[:aButton |
 						breakpoint disable.
 						self updateIcon.
-						aButton fireEvent: BrDropdownHideWish new]]
+						aButton fireEvent: BrDropdownHideWish new.
+						self notifyBreakpointChanged]]
 		ifFalse: 
 			[(BrButton new)
 				aptitude: self menuButtonLook;
@@ -243,7 +252,8 @@ GtDebuggerBreakpointMenu >> statusButton [
 						[:aButton |
 						breakpoint enable.
 						self updateIcon.
-						aButton fireEvent: BrDropdownHideWish new]]
+						aButton fireEvent: BrDropdownHideWish new.
+						self notifyBreakpointChanged]]
 ]
 
 { #category : #updating }
