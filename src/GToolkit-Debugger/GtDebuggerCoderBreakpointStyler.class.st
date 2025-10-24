@@ -49,7 +49,9 @@ GtDebuggerCoderBreakpointStyler >> visitMessage: aMessage [
 GtDebuggerCoderBreakpointStyler >> visitVariable: aVariable [
 	super visitVariable: aVariable.
 	
-	coderViewModel compiledMethod hasBreakpoint ifFalse: [^self].
+	(Breakpoint gtIsInstalledIn: coderViewModel compiledMethod)
+		ifFalse: [ ^ self ].
+	
 	coderViewModel compiledMethod ast allVariables detect: 
 			[:each |
 			each hasBreakpoint and: 

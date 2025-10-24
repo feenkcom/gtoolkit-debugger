@@ -21,7 +21,7 @@ GtPharoMethodCoder >> addBreakpointContextMenuAddOnsAst: anAst to: coderAddOns f
 		addContextMenuItemFrom: GtDebuggerCoderAddBreakpointShortcut new
 		group: BrMenuItemGroupConfiguration evaluation
 		withId: #'context-menu--breakpoint'
-		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 19 ].
+		to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 900 ].
 
 	aCoderViewModel
 		ifSelfObject: [ :aSelfObject | 
@@ -30,6 +30,6 @@ GtPharoMethodCoder >> addBreakpointContextMenuAddOnsAst: anAst to: coderAddOns f
 						selfObjectHolder: aCoderViewModel selfObjectHolder)
 				group: BrMenuItemGroupConfiguration evaluation
 				withId: #'context-menu--object-breakpoint'
-				to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 19.1 ] ]
+				to: coderAddOns) ifNotNil: [ :anAction | anAction priority: 901 ] ]
 		ifNone: [  ]
 ]
