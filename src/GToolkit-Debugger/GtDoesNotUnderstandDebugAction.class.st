@@ -23,14 +23,16 @@ GtDoesNotUnderstandDebugAction class >> gt2StackDebuggingActionFor: aDebugger [
 
 { #category : #testing }
 GtDoesNotUnderstandDebugAction >> appliesToDebugger: aDebugger [
-	| exception |
-	
 	aDebugger session isInterruptedContextDoesNotUnderstand ifFalse: [ ^ false ].
 	
-	"The create method action should not appear in case the message 
-	is sent to an undeclared  variable."
-	exception := aDebugger session context.
-	exception class == VariableNotDeclared ifTrue: [ ^ false ].
+	self 
+		forPharo12AndNewer: [  ] 
+		forPharo11: [
+			"The create method action should not appear in case the message 
+			is sent to an undeclared  variable."
+			| exception |
+			exception := aDebugger session exception.
+			#VariableNotDeclared = exception class name  ifTrue: [^false]].
 	
 	"Do not show the create method button when an message is sent to an
 	obsolete class."
