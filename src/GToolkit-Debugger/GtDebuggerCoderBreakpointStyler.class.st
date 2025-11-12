@@ -41,7 +41,7 @@ GtDebuggerCoderBreakpointStyler >> visitMessage: aMessage [
 			[:each |
 			each hasBreakpoint and: 
 					[each selectorNode start = aMessage startPosition
-						and: [each stop = aMessage stopPosition]]]
+						and: [each stopWithoutParentheses = aMessage stopPosition]]]
 		ifFound: [:node | self showBreakpointFor: node at: aMessage startPosition - 1]
 ]
 
