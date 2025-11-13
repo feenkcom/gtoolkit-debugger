@@ -512,7 +512,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 			debuggerOn: [ GtPharoDummyTwoObject new enumerate ]
 			stoppingAt: [ :context | context selector = #enumerate ].
 	selfObject := debugger debugSession interruptedContext receiver.
-	pager := GtPager createWrappedOn: debugger.
+	pager := GtPagerSettings usedPager createWrappedOn: debugger.
 	pager maximized.
 	scripter := BlScripter new.
 	scripter element: pager.
@@ -534,14 +534,14 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 		label: 'Assert class name';
 		value: [ :anEditor | anEditor text asString ]
 			equals: GtPharoDummyOneObject name;
-		// (GtPagerPageElementId indexed: 2);
+		onPagerPaneWithIndex: 2;
 		// GtBehaviorCoderBehaviorNameId;
 		play.
 
 	scripter assert
 		label: 'Assert enumerate method is expanded';
 		satisfies: [ :aCoderElement | aCoderElement isExpanded ];
-		// (GtPagerPageElementId indexed: 2);
+		onPagerPaneWithIndex: 2;
 		// GtPharoStreamingMethodsCoderListId;
 		// GtExpandableMethodCoderElement;
 		@ [ :aCoderElement | 
@@ -564,7 +564,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
 			debuggerOn: [ GtPharoDummyOneObject new enumerate ]
 			stoppingAt: [ :context | context selector = #enumerate ].
 	selfObject := debugger debugSession interruptedContext receiver.
-	pager := GtPager createWrappedOn: debugger.
+	pager := GtPagerSettings usedPager createWrappedOn: debugger.
 	pager maximized.
 	scripter := BlScripter new.
 	scripter element: pager.
@@ -586,14 +586,14 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
 		label: 'Assert class name';
 		value: [ :anEditor | anEditor text asString ]
 			equals: GtPharoDummyOneObject name;
-		// (GtPagerPageElementId indexed: 2);
+		onPagerPaneWithIndex: 2;
 		// GtBehaviorCoderBehaviorNameId;
 		play.
 
 	scripter assert
 		label: 'Assert enumerate method is expanded';
 		satisfies: [ :aCoderElement | aCoderElement isExpanded ];
-		// (GtPagerPageElementId indexed: 2);
+		onPagerPaneWithIndex: 2;
 		// GtPharoStreamingMethodsCoderListId;
 		// GtExpandableMethodCoderElement;
 		@ [ :aCoderElement | 
@@ -615,7 +615,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 			debuggerOn: [ GtPharoDummyTwoObject new enumerate ]
 			stoppingAt: [ :context | context selector = #enumerate ].
 	selfObject := debugger debugSession interruptedContext receiver.
-	pager := GtPager createWrappedOn: debugger.
+	pager := GtPagerSettings usedPager createWrappedOn: debugger.
 	pager maximized.
 	scripter := BlScripter new.
 	scripter element: pager.
@@ -637,14 +637,14 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 		label: 'Assert class name';
 		value: [ :anEditor | anEditor text asString ]
 			equals: GtPharoDummyTwoObject name;
-		// (GtPagerPageElementId indexed: 2);
+		onPagerPaneWithIndex: 2;
 		// GtBehaviorCoderBehaviorNameId;
 		play.
 
 	scripter assert
 		label: 'Assert enumerate method is expanded';
 		notExists;
-		// (GtPagerPageElementId indexed: 2);
+		onPagerPaneWithIndex: 2;
 		// GtPharoStreamingMethodsCoderListId;
 		// GtExpandableMethodCoderElement;
 		@ [ :aCoderElement | 

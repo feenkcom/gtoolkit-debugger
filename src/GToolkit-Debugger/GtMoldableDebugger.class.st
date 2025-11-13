@@ -197,7 +197,7 @@ GtMoldableDebugger >> enableDebuggerSwitching [
 
 { #category : #accessing }
 GtMoldableDebugger >> inPager [
-	^ (GtPager createWrappedOn: self) maximized
+	^ (GtPagerSettings usedPager createWrappedOn: self) maximized
 ]
 
 { #category : #initialization }
