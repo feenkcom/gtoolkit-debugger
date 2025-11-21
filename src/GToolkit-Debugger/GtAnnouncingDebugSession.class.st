@@ -6,7 +6,7 @@ Class {
 	#instVars : [
 		'announcer'
 	],
-	#category : 'GToolkit-Debugger-Session'
+	#category : #'GToolkit-Debugger-Session'
 }
 
 { #category : #announcer }
