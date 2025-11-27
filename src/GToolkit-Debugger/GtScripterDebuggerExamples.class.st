@@ -763,7 +763,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodInstAReceiverDebugger [
 
 	scripter do
 		label: 'Set window size';
-		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		block: [ :aSpace | aSpace extent: 1200 @ 900 ];
 		onSpace;
 		play.
 
@@ -772,6 +772,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodInstAReceiverDebugger [
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
+					mouseMoveOver;
 					assertMethodExpandersCountIs: 15;
 					assertPlayAndInspectActionExists;
 					assertSelfObjectIs: 42;
@@ -939,7 +940,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodTempReceiverDebugger [
 
 			aStep do
 				label: 'Set window size';
-				block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+				block: [ :aSpace | aSpace extent: 1200 @ 900 ];
 				onSpace;
 				play.
 
@@ -986,6 +987,13 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodTempReceiverDebugger [
 						// GtSourceCoderEditorId;
 						// GtSourceCoderEditorId ].
 
+			aStep
+				mouseMoveOverStep: [ :s | 
+					s
+						// (GtExpandableContextMethodCoderId indexed: 1);
+						// GtSourceCoderEditorId;
+						// GtSourceCoderExpandedContentElement ].
+						
 			aStep
 				clickStep: [ :s | 
 					s
@@ -1038,6 +1046,11 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodThreeDebugger [
 				// (GtExpandableContextMethodCoderId indexed: 1);
 				// GtSourceCoderEditorId;
 				// (GtPharoMethodExpanderId indexed: 1) ].
+	scripter mouseMoveOverStep: [ :s | 
+			s
+				// (GtExpandableContextMethodCoderId indexed: 1);
+				// GtSourceCoderEditorId;
+				// GtSourceCoderExpandedContentElement ].
 	scripter
 		assertStep: [ :s | 
 			s
