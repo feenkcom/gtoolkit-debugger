@@ -122,6 +122,9 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 	<return: #BlScripter>
 	| scripter |
 	scripter := BlScripter new.
+	scripter space root 
+		padding: (BlInsets top: 15); 
+		layout: BlFrameLayout new.
 	scripter element: self fullDebuggerOn_exampleExceptionWithDebuggingView.
 
 	scripter debugger
