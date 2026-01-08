@@ -480,7 +480,7 @@ self method2'
 		assertTargetBehaviorIs: selfObject class;
 		assertExplicitProviderClassIs: selfObject class;
 		selectAll;
-		assertCoderIsWithouthModifications;
+		assertCoderIsWithoutModifications;
 		typeText: 'method1
 instVarAAA.
 self method2: 42.
