@@ -6,7 +6,7 @@ The following examples creates an example instance of the exception:
 "
 Class {
 	#name : #GtExampleExceptionWithDebuggingView,
-	#superclass : #Exception,
+	#superclass : #Error,
 	#instVars : [
 		'actualString',
 		'expectedString'
