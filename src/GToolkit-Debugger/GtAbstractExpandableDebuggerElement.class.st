@@ -550,7 +550,7 @@ GtAbstractExpandableDebuggerElement >> updateRowElement: aRowElement withVariabl
 			ifNil: [ aVariableValue class 
 				iconNamed: aVariableValue class systemIconName ] ]
 			on: Error , Halt
-			do: [ :error | self iconNamed: #smallWarningIcon ].
+			do: [ :error | self iconNamed: #smallWarning ].
 	
 	(aRowElement childWithId: #varLabelId)
 		initializeWithIcon: anIconForm
