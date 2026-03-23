@@ -1,6 +1,9 @@
 Class {
 	#name : #GtDebugSession,
 	#superclass : #DebugSession,
+	#instVars : [
+		'isUIProcessError'
+	],
 	#category : #'GToolkit-Debugger-Session'
 }
 
@@ -15,31 +18,33 @@ GtDebugSession class >> named: aString on: aProcess startedAt: aContext [
 { #category : #initialization }
 GtDebugSession >> detectUIProcess [
 
-	errorWasInUIProcess := MorphicUIManager uiProcess == interruptedProcess
+	self errorWasInUIProcess: (MorphicUIManager uiProcess == interruptedProcess)
 ]
 
 { #category : #accessing }
 GtDebugSession >> errorWasInUIProcess [
-
-	^ errorWasInUIProcess
+	^ self 
+			forPharo13AndNewer: [ isUIProcessError ] 
+			forOlder: [ super errorWasInUIProcess]
 ]
 
 { #category : #initialization }
 GtDebugSession >> errorWasInUIProcess: aBoolean [
-
-	errorWasInUIProcess := aBoolean
+	self 
+		forPharo13AndNewer: [ isUIProcessError := true ] 
+		forOlder: [super errorWasInUIProcess: aBoolean]
 ]
 
 { #category : #accessing }
 GtDebugSession >> isAboutUIProcess [
 
-	^errorWasInUIProcess
+	^self errorWasInUIProcess
 ]
 
 { #category : #private }
 GtDebugSession >> resumeInterruptedProcess [
 
-	errorWasInUIProcess ifFalse: [ ^ super resumeInterruptedProcess ].
+	self errorWasInUIProcess ifFalse: [ ^ super resumeInterruptedProcess ].
 	MorphicUIManager default resumeUIProcess: interruptedProcess
 ]
 
@@ -54,7 +59,7 @@ GtDebugSession >> spawnNewUIProcess [
 GtDebugSession >> spawnNewUIProcessIfNecessary [
 	"If we're about to debug the UI process, we must create a new UI process to take its place. Because the debugged process will be suspended at some point, and suspending the UI process means freezing the UI of the image"
 
-	errorWasInUIProcess ifTrue: [ self spawnNewUIProcess ]
+	self errorWasInUIProcess ifTrue: [ self spawnNewUIProcess ]
 ]
 
 { #category : #'debugging actions' }
