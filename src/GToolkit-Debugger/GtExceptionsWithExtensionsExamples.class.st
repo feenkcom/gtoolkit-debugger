@@ -15,7 +15,7 @@ GtExceptionsWithExtensionsExamples >> assertDebuggingConfigurationEnabledFor: an
 
 { #category : #accessing }
 GtExceptionsWithExtensionsExamples >> createDebuggingSessionForException: anException [ 
-	^ DebugSession forExceptionFromExampleFor: anException
+	^ GtDebugSession forExceptionFromExampleFor: anException
 ]
 
 { #category : #'examples - debuggers' }
@@ -32,7 +32,7 @@ GtExceptionsWithExtensionsExamples >> debuggerExtensionOn_exampleExceptionWithDe
 { #category : #'examples - debug session' }
 GtExceptionsWithExtensionsExamples >> debugingSession_exampleComparisonExceptionWithDebuggingViews [
 	<gtExample>
-	<return: #DebugSession>
+	<return: #GtDebugSession>
 	[ self exampleComparisonExceptionWithDebuggingViews signal ]
 		on: GtExampleComparisonExceptionWithDebuggingViews
 		do: [ :anException | ^ self createDebuggingSessionForException: anException ].
@@ -43,7 +43,7 @@ GtExceptionsWithExtensionsExamples >> debugingSession_exampleComparisonException
 { #category : #'examples - debug session' }
 GtExceptionsWithExtensionsExamples >> debugingSession_exampleExceptionWithDebuggingView [
 	<gtExample>
-	<return: #DebugSession>
+	<return: #GtDebugSession>
 	[ self exampleExceptionWithDebuggingView signal ]
 		on: GtExampleExceptionWithDebuggingView
 		do: [ :anException | ^ self createDebuggingSessionForException: anException ].

@@ -9,7 +9,7 @@ Class {
 
 { #category : #accessing }
 GtAbstractExpandableDebuggerElement class >> sessionClass [
-	^ DebugSession 
+	^ GtDebugSession 
 ]
 
 { #category : #callbacks }

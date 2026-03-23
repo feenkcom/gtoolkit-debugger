@@ -1,6 +1,6 @@
 Class {
 	#name : #GtFilteredDebugSession,
-	#superclass : #DebugSession,
+	#superclass : #GtDebugSession,
 	#instVars : [
 		'filters',
 		'lastResult',

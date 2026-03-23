@@ -1,6 +1,6 @@
 Class {
 	#name : #GtBytecodeDebuggerSession,
-	#superclass : #DebugSession,
+	#superclass : #GtDebugSession,
 	#category : #'GToolkit-Debugger-Models'
 }
 

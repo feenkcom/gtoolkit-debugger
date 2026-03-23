@@ -136,7 +136,7 @@ GtScripterDebuggerExamples >> createDNUMethod [
 GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
 	| process debugSession |
 	process := aBlock newProcess.
-	debugSession := DebugSession
+	debugSession := GtDebugSession
 			named: 'Scripted debugger'
 			on: process
 			startedAt: process suspendedContext.

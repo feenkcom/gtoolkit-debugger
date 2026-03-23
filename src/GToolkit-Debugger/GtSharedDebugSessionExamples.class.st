@@ -32,7 +32,7 @@ GtSharedDebugSessionExamples >> basicSharedDebugSession [
 GtSharedDebugSessionExamples >> debugSession [
 	<gtExample>
 	<after: #terminateSessions>
-	<return: #DebugSession>
+	<return: #GtDebugSession>
 	| aContext aProcess aSession |
 	aContext := [ 1 + 1 ] asContext.
 	aProcess := Process
