@@ -38,7 +38,7 @@ GtStackDebuggerElement class >> registerToolsOn: registry [
 { #category : #accessing }
 GtStackDebuggerElement class >> sessionClass [
 
-	^ DebugSession 
+	^ GtDebugSession 
 ]
 
 { #category : #updating }

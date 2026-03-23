@@ -13,7 +13,7 @@ GtPharoStackModelExamples >> createStackModel [
 	process := Process
 			forContext: context
 			priority: Processor userInterruptPriority.
-	debuggingSession := DebugSession
+	debuggingSession := GtDebugSession
 			named: 'Debug'
 			on: process
 			startedAt: process suspendedContext.

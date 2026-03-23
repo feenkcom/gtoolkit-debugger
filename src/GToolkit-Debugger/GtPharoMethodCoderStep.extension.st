@@ -88,7 +88,7 @@ GtPharoMethodCoderStep >> debugSessionWithException: anExceptionClass do: aStepB
 
 { #category : #'*GToolkit-Debugger' }
 GtPharoMethodCoderStep >> primitiveDebugSessionWithException: anExceptionClass coderElement: anElement [
-	<return: #DebugSession>
+	<return: #GtDebugSession>
 	| aCoderModel aDebugSession aCoderViewModel anEvaluationContext anEvaluationInfo aSourceString aCompleteSourceString aSourceInterval aNotificationResponse |
 	aCoderViewModel := anElement textualCoderViewModel.
 	aCoderModel := aCoderViewModel coderModel.
@@ -108,7 +108,7 @@ GtPharoMethodCoderStep >> primitiveDebugSessionWithException: anExceptionClass c
 		inContext: anEvaluationContext
 		onFailDo: [ :anError | anError pass ] ]
 		on: anExceptionClass
-		do: [ :anException | aDebugSession := DebugSession forExceptionFromExampleFor: anException ].
+		do: [ :anException | aDebugSession := GtDebugSession forExceptionFromExampleFor: anException ].
 	self
 		assert: aDebugSession isNotNil
 		description: [ 'Could not initialize debug session with exception {2}'

@@ -25,7 +25,7 @@ GtDebuggerSessionForTestsExamples >> testExplicitSessionTerminationNotNeeded [
 
 	[ 1 / 0 ]
 		on: ZeroDivide
-		do: [ :anException | debugSession := DebugSession forExceptionFromExampleFor: anException ].
+		do: [ :anException | debugSession := GtDebugSession forExceptionFromExampleFor: anException ].
 
 	processWeakReferences := debugSession interruptedProcess asWeakReference.
 	contextWeakReferences := debugSession interruptedContext asWeakReference.

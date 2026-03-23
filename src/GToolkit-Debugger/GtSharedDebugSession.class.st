@@ -127,7 +127,7 @@ GtSharedDebugSession >> releasedSessionDo: aBlock [
 
 { #category : #'private - accessing' }
 GtSharedDebugSession >> session [
-	<return: #DebugSession>
+	<return: #GtDebugSession>
 	^ session
 ]
 
