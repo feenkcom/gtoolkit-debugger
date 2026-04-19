@@ -31,7 +31,7 @@ GtDebugSession >> errorWasInUIProcess [
 { #category : #initialization }
 GtDebugSession >> errorWasInUIProcess: aBoolean [
 	self 
-		forPharo13AndNewer: [ isUIProcessError := true ] 
+		forPharo13AndNewer: [ isUIProcessError := aBoolean ] 
 		forOlder: [super errorWasInUIProcess: aBoolean]
 ]
 
