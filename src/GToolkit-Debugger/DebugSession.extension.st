@@ -295,6 +295,21 @@ DebugSession >> restartInterruptedContext [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> stepInto: aContext [
+	"Send the selected message in selectedContext, and take control in
+	the method invoked to allow further step or send."
+
+	(self isContextPostMortem: aContext) ifTrue: [^ self].
+
+	aContext stepIntoQuickMethod: true.
+	interruptedProcess step: aContext.
+	aContext stepIntoQuickMethod: false.
+	
+	self updateContextTo: (self stepToFirstInterestingBytecodeIn: interruptedProcess).
+	self triggerEvent: #stepInto
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> stepOverUntil: aBlock [
 	[ aBlock cull: interruptedContext ]
 		whileFalse: [ self stepOver: interruptedContext ]

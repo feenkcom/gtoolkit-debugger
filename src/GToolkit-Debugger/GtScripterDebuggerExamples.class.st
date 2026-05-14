@@ -133,7 +133,7 @@ GtScripterDebuggerExamples >> createDNUMethod [
 ]
 
 { #category : #private }
-GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
+GtScripterDebuggerExamples >> debuggSessionOn: aBlock stoppingAt: testBlock [
 	| process debugSession |
 	process := aBlock newProcess.
 	debugSession := GtDebugSession
@@ -142,6 +142,13 @@ GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
 			startedAt: process suspendedContext.
 	[ testBlock value: debugSession interruptedContext ]
 		whileFalse: [ debugSession stepInto ].
+	^ debugSession
+]
+
+{ #category : #private }
+GtScripterDebuggerExamples >> debuggerOn: aBlock stoppingAt: testBlock [
+	| debugSession |
+	debugSession := self debuggSessionOn: aBlock stoppingAt: testBlock.
 	^ (GtMoldableDebugger on: debugSession) beDetailedLevel
 ]
 
@@ -335,6 +342,11 @@ GtScripterDebuggerExamples >> returnBlock [
 { #category : #'debugger methods' }
 GtScripterDebuggerExamples >> returnOnePlusOne [
 	^ 1 + 1
+]
+
+{ #category : #'debugger methods' }
+GtScripterDebuggerExamples >> returnSingleValue [
+	^ 1
 ]
 
 { #category : #examples }
@@ -650,6 +662,41 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 		@ [ :aCoderElement | 
 			aCoderElement textualCoderViewModel compiledMethod
 				== (GtPharoDummyOneObject >> #enumerate) ];
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - embedded method' }
+GtScripterDebuggerExamples >> scripterOnCallToMethodWithQuickReturn [
+	<gtExample>
+	<return: #BlScripter>
+	| debugSession scripter debugger anObject  |
+	debugSession :=	self
+			debuggSessionOn: [ self returnSingleValue ]
+			stoppingAt: [ :context | context methodClass name = #GtScripterDebuggerExamples ].
+	debugSession stepInto.
+	debugger :=  (GtMoldableDebugger on: debugSession) beDetailedLevel.
+					
+	anObject := debugger debugSession interruptedContext receiver.
+
+	scripter := BlScripter new.
+	scripter element: debugger.
+
+	scripter do
+		label: 'Set window size';
+		block: [ :aSpace | aSpace extent: 1200 @ 600 ];
+		onSpace;
+		play.
+		
+	scripter methodCoder
+		assertCompiledMethodIs: GtScripterDebuggerExamples >> #returnSingleValue;
+		assertSelfObjectIs: anObject;
+		assertExplicitProviderClassIs: GtScripterDebuggerExamples;
+		assertHeaderProviderBehaviorIs: GtScripterDebuggerExamples;
+		assertHeaderMethodBehaviorIsNotVisible;
+		assertMethodExpandersCountIs: 0;
+		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
 
 	^ scripter
@@ -1212,7 +1259,9 @@ GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
 	| scripter debugger anObject |
 	debugger := self
 			debuggerOn: [ GtPharoDummyTwoObject new ]
-			stoppingAt: [ :context | context selector = #initialize ].
+			stoppingAt: [ :context | 
+				(context selector = #initialize) and: [ 
+					context methodClass name = #GtPharoDummyOneObject ] ].
 	anObject := debugger debugSession interruptedContext receiver.
 	scripter := BlScripter new.
 	scripter element: debugger.
