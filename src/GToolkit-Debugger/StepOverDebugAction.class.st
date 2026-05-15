@@ -26,6 +26,12 @@ StepOverDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 ]
 
 { #category : #accessing }
+StepOverDebugAction >> defaultIcon [
+
+	^ BrGlamorousVectorIcons over
+]
+
+{ #category : #accessing }
 StepOverDebugAction >> defaultKeymap [
 
 	^ PharoShortcuts current stepOverShortcut
