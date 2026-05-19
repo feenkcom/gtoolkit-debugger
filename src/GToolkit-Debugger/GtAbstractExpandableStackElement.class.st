@@ -8,7 +8,8 @@ Class {
 		'annotationsEnabled',
 		'stackModel',
 		'selectCoderPromise',
-		'openCoderPromise'
+		'openCoderPromise',
+		'documentIdTask'
 	],
 	#category : #'GToolkit-Debugger-Elements'
 }
@@ -217,7 +218,18 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	selectedCoderUIModel coder updateSourceFromContext.
 	
 	"Update the selection based on the new PC"
-	selectedCoderUIModel updateProgramCounterRange
+	aContextCoderUIModel documentId 
+		ifNotNil: [ selectedCoderUIModel updateProgramCounterRange ]
+		ifNil: [ 
+			documentIdTask ifNotNil: #stop.
+			self enqueueTask: (documentIdTask := GtTextualCoderViewModelWaitForDocumentIdRepeatedTask new
+			textualCoderViewModel: selectedCoderUIModel;
+			onUpdatedBlock: [ :aTextualCoderViewModel :aDocumentId | 
+				selectedCoderUIModel == aTextualCoderViewModel ifTrue: [
+					aTextualCoderViewModel ifNotNil: #updateProgramCounterRange ] ];
+			onMissedBlock: [ :aTextualCoderViewModel | 
+				selectedCoderUIModel == aTextualCoderViewModel ifTrue: [
+					aTextualCoderViewModel ifNotNil: #updateProgramCounterRange ] ]) ]
 ]
 
 { #category : #actions }

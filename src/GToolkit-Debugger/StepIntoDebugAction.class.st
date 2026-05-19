@@ -19,10 +19,15 @@ StepIntoDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousVectorIcons into;
 		keymap: ((BlKeyCombination builder
 				key: BlKeyboardKey F11;
 				build) or: BlKeyCombination builder primary alt arrowDown build) gtDisplayString
+]
+
+{ #category : #accessing }
+StepIntoDebugAction >> defaultIcon [
+
+	^ BrGlamorousVectorIcons into
 ]
 
 { #category : #accessing }

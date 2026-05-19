@@ -19,7 +19,6 @@ ResumeDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
 	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousVectorIcons run;
 		keymap: (BlKeyCombination builder
 				key: BlKeyboardKey F5;
 				build) gtDisplayString
@@ -30,6 +29,12 @@ ResumeDebugAction class >> gtWarningDebuggingActionFor: aDebugger [
 	<gtExceptionWarningActions>
 
 	^ self gt2ContextDebuggingActionFor: aDebugger
+]
+
+{ #category : #accessing }
+ResumeDebugAction >> defaultIcon [
+
+	^ BrGlamorousVectorIcons run
 ]
 
 { #category : #accessing }
