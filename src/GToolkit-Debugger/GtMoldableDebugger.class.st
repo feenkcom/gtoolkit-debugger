@@ -42,7 +42,7 @@ GtMoldableDebugger class >> defaultFutureExecutionConfiguration [
 
 { #category : #'settings api' }
 GtMoldableDebugger class >> defaultLogFileName [
-	^ 'PharoDebug.log'
+	^  Smalltalk defaultLogFileName
 ]
 
 { #category : #'settings api' }
