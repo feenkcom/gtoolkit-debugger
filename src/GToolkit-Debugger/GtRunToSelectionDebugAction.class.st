@@ -13,11 +13,21 @@ GtRunToSelectionDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 		yourself
 ]
 
+{ #category : #testing }
+GtRunToSelectionDebugAction >> canBeDirectlyRun [
+	^ self debugger debugSession  isInterruptedContextSteppable
+]
+
 { #category : #accessing }
 GtRunToSelectionDebugAction >> executeAction [
 	self session
 		runToSelection: self selectionInterval
 		inContext: self currentContext
+]
+
+{ #category : #testing }
+GtRunToSelectionDebugAction >> isAllowedToEnforceExecution [
+	^ true
 ]
 
 { #category : #accessing }

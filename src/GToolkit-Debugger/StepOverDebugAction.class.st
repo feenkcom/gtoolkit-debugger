@@ -25,6 +25,11 @@ StepOverDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 				build) gtDisplayString
 ]
 
+{ #category : #testing }
+StepOverDebugAction >> canBeDirectlyRun [
+	^ self debugger debugSession  isInterruptedContextSteppable
+]
+
 { #category : #accessing }
 StepOverDebugAction >> defaultIcon [
 
@@ -34,7 +39,7 @@ StepOverDebugAction >> defaultIcon [
 { #category : #accessing }
 StepOverDebugAction >> defaultKeymap [
 
-	^ PharoShortcuts current stepOverShortcut
+	^ BlKeyboardKey F10
 ]
 
 { #category : #accessing }
@@ -64,4 +69,9 @@ StepOverDebugAction >> help [
 StepOverDebugAction >> id [
 
 	^ #stepOver
+]
+
+{ #category : #testing }
+StepOverDebugAction >> isAllowedToEnforceExecution [
+	^ true
 ]

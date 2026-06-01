@@ -278,9 +278,42 @@ DebugSession >> isAtBreakpointTrigger [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextDead [
+	
+	^ self interruptedContext notNil and: [
+		self interruptedContext isDead ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextMissingClassException [
+	exception ifNil: [ ^ false ].
+	^ #(#UndeclaredVariableRead #UndeclaredVariableWrite) includes: exception class name
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextPostMortem [
 	
 	^ self isContextPostMortem: self interruptedContext
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextSteppable [
+
+	(self isInterruptedContextPostMortem  or: [ 
+			self isInterruptedContextDead ]) ifTrue:  [ ^ false ].
+	
+	(self isInterruptedContextDoesNotUnderstand or: [
+		self isInterruptedContextWithMessageNotUnderstood]) ifTrue: [ 
+		"When we encounter a message not understood stepping in the debugger cannot continue normally"
+		^ false
+		
+		"^ (self isInterruptedContextDoesNotUnderstand or: [ 
+			  self isInterruptedContextMissingClassException  ]) not "].
+
+	^ exception 
+		ifNil: [ true ]
+		ifNotNil: [ :anException |
+			anException isResumable ]
 ]
 
 { #category : #'*GToolkit-Debugger' }

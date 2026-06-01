@@ -345,6 +345,7 @@ GtAbstractExpandableDebuggerElement >> contextVariablesElement [
 GtAbstractExpandableDebuggerElement >> createToolbar [
 
 	toolbar := BrToolbar new.
+	toolbar id: GtMoldableDebuggerToolbarElementId.
 	toolbar beInSeparateCompositionLayer.
 	toolbar aptitude: BrGlamorousToolbarAptitude new.
 	self updateToolbarActions.
@@ -589,14 +590,21 @@ GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 	(debuggingActions
 		gtHasEqualElements: toolbar viewModel model
 		by: [ :a :b | a id = b id ])
-			ifTrue: [ ^ self ].
-			
+			ifTrue: [ 
+				toolbar items do: [ :anElement |
+					(anElement userData 
+						includesKey: #debuggingAction )
+						ifTrue: [
+							anElement updateForCurrentDebuggingAction  ] ]. 
+			^ self ].
+
 	toolbar viewModel model: debuggingActions.
 	toolbar removeAllItems.
 	
 	(self buildStackToolbarActionsForDebuggingActions: debuggingActions) 
 		do: [ :anAction | 
 			toolbar addItem: anAction ].
+		
 	self updateToolbarWithExtraActions.
 ]
 

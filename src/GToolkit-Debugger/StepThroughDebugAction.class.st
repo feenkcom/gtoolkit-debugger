@@ -25,6 +25,11 @@ StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 				build) or: BlKeyCombination builder primary alt arrowRight build) gtDisplayString
 ]
 
+{ #category : #testing }
+StepThroughDebugAction >> canBeDirectlyRun [
+	^ self debugger debugSession  isInterruptedContextSteppable
+]
+
 { #category : #accessing }
 StepThroughDebugAction >> defaultIcon [
 
@@ -56,6 +61,17 @@ StepThroughDebugAction >> executeAction [
 ]
 
 { #category : #accessing }
+StepThroughDebugAction >> executeForcedAction [
+	"Do a step over when execution if forced"
+	self session stepOver: self currentContext
+]
+
+{ #category : #accessing }
+StepThroughDebugAction >> forcedActionSelector [
+	^ #executeForcedAction
+]
+
+{ #category : #accessing }
 StepThroughDebugAction >> help [
 	^ 'Step over the highlighted message, i.e. do not follow the sent message, taking debugger control after the method invoked returns or whenever execution should return inside a block used as an argument before that.'
 ]
@@ -64,4 +80,9 @@ StepThroughDebugAction >> help [
 StepThroughDebugAction >> id [
 
 	^ #stepThrough
+]
+
+{ #category : #testing }
+StepThroughDebugAction >> isAllowedToEnforceExecution [
+	^ true
 ]
