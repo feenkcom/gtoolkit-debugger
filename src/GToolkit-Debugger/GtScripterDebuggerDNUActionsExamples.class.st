@@ -59,6 +59,7 @@ GtScripterDebuggerDNUActionsExamples >> enforceStepOverActionAfterDnuInMethod: a
 GtScripterDebuggerDNUActionsExamples >> forceResumeActionAfterDNU [
 	<gtExample>
 	<return: #BlScripter>
+	<noTest>
 	| targetMethod scripter |
 	targetMethod := self class lookupSelector: #targetMethod_callToNotImplementedMethod.
 	scripter := self debuggerOnDoesNotUnderstandMessage.
