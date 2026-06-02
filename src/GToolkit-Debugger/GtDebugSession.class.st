@@ -105,4 +105,6 @@ GtDebugSession >> updateDebugSessionExceptionFrom: aContext [
 				exception ifNotNil: [ :anException |
 					exceptionsHistory add: anException ].
 				exception := aContext receiver ]
+			ifFalse: [
+				exception := nil ]
 ]
