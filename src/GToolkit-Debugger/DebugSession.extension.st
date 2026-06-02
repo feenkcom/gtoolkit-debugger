@@ -278,9 +278,58 @@ DebugSession >> isAtBreakpointTrigger [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextDead [
+	
+	^ self interruptedContext notNil and: [
+		self interruptedContext isDead ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextMissingClassException [
+	exception ifNil: [ ^ false ].
+	^ #(#UndeclaredVariableRead #UndeclaredVariableWrite) includes: exception class name
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextPostMortem [
 	
 	^ self isContextPostMortem: self interruptedContext
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextSteppable [
+	
+	self class shouldForceStep ifFalse: [ ^ true ].
+
+	(self isInterruptedContextPostMortem  or: [ 
+			self isInterruptedContextDead ]) ifTrue:  [ ^ false ].
+	
+	(self isInterruptedContextDoesNotUnderstand or: [
+		self isInterruptedContextWithMessageNotUnderstood]) ifTrue: [ 
+		"When we encounter a message not understood stepping in the debugger cannot continue normally"
+		^ false
+		
+		"^ (self isInterruptedContextDoesNotUnderstand or: [ 
+			  self isInterruptedContextMissingClassException  ]) not "].
+
+	^ exception 
+		ifNil: [ true ]
+		ifNotNil: [ :anException |
+			anException isResumable ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextWithMessageNotUnderstood [
+	^ self interruptedContext notNil and: [ 
+			self interruptedContext receiver class = MessageNotUnderstood and: [ 
+				| currentException |
+				currentException := self interruptedContext receiver.
+			 (currentException receiver respondsTo: currentException message selector) not and: [ 
+				  ([currentException signalerContext method methodClass == Object] 
+				  	on: Error 
+				  	do: [ 
+				  		"Catch possible errors that happen in case signalerContext is not present"
+				  		false ]) ] ] ]
 ]
 
 { #category : #'*GToolkit-Debugger' }
@@ -292,6 +341,11 @@ DebugSession >> maxStackSearchDepth [
 { #category : #'*GToolkit-Debugger' }
 DebugSession >> restartInterruptedContext [
 	self restart: self interruptedContext
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession class >> shouldForceStep [
+	^ false
 ]
 
 { #category : #'*GToolkit-Debugger' }

@@ -85,26 +85,10 @@ DebugAction >> appliesToDebugger: aDebugger [
 
 { #category : #'phlow ' }
 DebugAction >> asBrickButton [
-	| currentIcon currentLabel aptitude actionButton |
-	currentIcon := self icon.
-	currentLabel := self label.
+	| actionButton |
 
-	aptitude := self icon
-			ifNil: [ BrGlamorousButtonWithLabelAptitude new ]
-			ifNotNil: [ BrGlamorousButtonWithIconAptitude - BrGlamorousButtonWithLabelTooltipAptitude2 ].
-	aptitude
-		add: (BrGlamorousWithExplicitTooltipAptitude text: self label shortcut: self keymap).
-	actionButton := BrButton new
-			aptitude: aptitude;
-			label: self label;
-			when: BlMouseDownEvent
-				do: [ :e | 
-					e consumed: true.
-					self execute ].
-	self icon ifNotNil: [ :anIcon | actionButton icon: self icon asElement ].
-
-	self id ifNotNil: [ :anId | actionButton id: anId ].
-
+	actionButton := GtDebuggerExecuteActionButton new.
+	actionButton initializeForDebuggingAction: self.
 	^ actionButton
 ]
 
@@ -116,7 +100,12 @@ DebugAction >> asDebugAction [
 
 { #category : #'phlow ' }
 DebugAction >> asDebugActionElementWithHostElement: aHostElement do: aBlock [
-	^ aBlock value: self asBrickButton
+	^ aBlock value: self asBrickButton 
+]
+
+{ #category : #testing }
+DebugAction >> canBeDirectlyRun [
+	^ true
 ]
 
 { #category : #accessing }
@@ -220,10 +209,26 @@ DebugAction >> executeAction [
 	"By default do nothing."
 ]
 
+{ #category : #actions }
+DebugAction >> executeForced [
+	"By default execute the same action. Give subclasses a chance to execute a different logic."
+	
+	self precondition ifTrue: [ 
+		self preAction.
+		self perform: self forcedActionSelector.
+		self postAction ]
+]
+
 { #category : #initialization }
 DebugAction >> forDebugger: aDebugger [
 
 	self debugger: aDebugger
+]
+
+{ #category : #actions }
+DebugAction >> forcedActionSelector [
+
+	^ self actionSelector 
 ]
 
 { #category : #accessing }
@@ -253,6 +258,16 @@ DebugAction >> id [
 DebugAction >> interruptedContext [
 	
 	^ self debugger interruptedContext
+]
+
+{ #category : #testing }
+DebugAction >> isAllowedToEnforceExecution [
+	^ false
+]
+
+{ #category : #testing }
+DebugAction >> isRunnableDirectlyOrForced [
+	^ self canBeDirectlyRun or: [ self isAllowedToEnforceExecution ]
 ]
 
 { #category : #accessing }

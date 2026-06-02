@@ -135,7 +135,8 @@ GtExceptionsWithExtensionsExamples >> fullDebuggerOn_exampleExceptionWithDebuggi
 		switchToDebuggerOfType: GtPharoDebuggerElement;
 		assertDebuggerSwitchButtonsWithLabels: {GtMoldableExceptionDebuggingElement defaultTitle.
 				GtPharoDebuggerElement defaultTitle};
-		switchToDebuggerOfType: GtMoldableExceptionDebuggingElement.
+		switchToDebuggerOfType: GtMoldableExceptionDebuggingElement;
+		play.
 
 	^ scripter
 ]

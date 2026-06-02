@@ -170,14 +170,16 @@ GtScripterDebuggerExamples >> doubleClickExpandDebuggerPlayground [
 	scripter debugger
 		assertPlaygroundExpanderCollapsed;
 		doubleClickOnPlaygroudExpander;
-		assertPlaygroundExpanderVisible.
+		assertPlaygroundExpanderVisible;
+		play.
 
 	self
 		assert: scripter element query lepiterQuery firstSnippetInPage anyOne hasFocus.
 
 	scripter debugger
 		doubleClickOnPlaygroudExpander;
-		assertPlaygroundExpanderCollapsed.
+		assertPlaygroundExpanderCollapsed;
+		play.
 
 	^ scripter
 ]
@@ -192,7 +194,8 @@ GtScripterDebuggerExamples >> evaluateCodeWithBindingsInDebuggerPlayground [
 	scripter debugger
 		assertPlaygroundExpanderCollapsed;
 		doubleClickOnPlaygroudExpander;
-		assertPlaygroundExpanderVisible.
+		assertPlaygroundExpanderVisible;
+		play.
 
 	scripter type
 		text: 'i ';

@@ -31,6 +31,11 @@ ResumeDebugAction class >> gtWarningDebuggingActionFor: aDebugger [
 	^ self gt2ContextDebuggingActionFor: aDebugger
 ]
 
+{ #category : #testing }
+ResumeDebugAction >> canBeDirectlyRun [
+	^ self debugger debugSession  isInterruptedContextSteppable
+]
+
 { #category : #accessing }
 ResumeDebugAction >> defaultIcon [
 
@@ -93,4 +98,9 @@ ResumeDebugAction >> initialize [
 ResumeDebugAction >> interruptedContextIsPostMortem [
 
 	^ (self session isContextPostMortem: self interruptedContext)
+]
+
+{ #category : #testing }
+ResumeDebugAction >> isAllowedToEnforceExecution [
+	^ true
 ]

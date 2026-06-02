@@ -24,6 +24,11 @@ StepIntoDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 				build) or: BlKeyCombination builder primary alt arrowDown build) gtDisplayString
 ]
 
+{ #category : #testing }
+StepIntoDebugAction >> canBeDirectlyRun [
+	^ self debugger debugSession  isInterruptedContextSteppable
+]
+
 { #category : #accessing }
 StepIntoDebugAction >> defaultIcon [
 
@@ -63,4 +68,9 @@ StepIntoDebugAction >> help [
 StepIntoDebugAction >> id [
 
 	^ #stepInto
+]
+
+{ #category : #testing }
+StepIntoDebugAction >> isAllowedToEnforceExecution [
+	^ true
 ]
