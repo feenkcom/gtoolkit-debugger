@@ -322,7 +322,11 @@ DebugSession >> isInterruptedContextWithMessageNotUnderstood [
 			| currentException |
 			currentException := self interruptedContext receiver.
 			 (currentException receiver respondsTo: currentException message selector) not and: [ 
-				  currentException signalerContext method methodClass == Object ] ] 
+				  ([currentException signalerContext method methodClass == Object] 
+				  	on: Error 
+				  	do: [ 
+				  		"Catch possible errors that happen in case signalerContext is not present"
+				  		false ]) ] ] 
 ]
 
 { #category : #'*GToolkit-Debugger' }
