@@ -8,12 +8,27 @@ Class {
 	#category : #'GToolkit-Debugger-Session'
 }
 
+{ #category : #accessing }
+GtDebugSession class >> disableForceStepping [
+	ShouldForceStep := false
+]
+
+{ #category : #accessing }
+GtDebugSession class >> enableForceStepping [
+	ShouldForceStep := true
+]
+
 { #category : #'instance creation' }
 GtDebugSession class >> named: aString on: aProcess startedAt: aContext [
 	^ self new
 		name: aString;
 		process: aProcess context: aContext;
 		detectUIProcess
+]
+
+{ #category : #accessing }
+GtDebugSession class >> shouldForceStep [
+	^ ShouldForceStep ifNil: [ false ]
 ]
 
 { #category : #initialization }

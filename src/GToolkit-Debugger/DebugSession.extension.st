@@ -299,7 +299,7 @@ DebugSession >> isInterruptedContextPostMortem [
 { #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextSteppable [
 	
-	true ifTrue: [ ^ true ].
+	self class shouldForceStep ifFalse: [ ^ true ].
 
 	(self isInterruptedContextPostMortem  or: [ 
 			self isInterruptedContextDead ]) ifTrue:  [ ^ false ].
@@ -340,6 +340,11 @@ DebugSession >> maxStackSearchDepth [
 { #category : #'*GToolkit-Debugger' }
 DebugSession >> restartInterruptedContext [
 	self restart: self interruptedContext
+]
+
+{ #category : #'*GToolkit-Debugger' }
+DebugSession class >> shouldForceStep [
+	^ false
 ]
 
 { #category : #'*GToolkit-Debugger' }
