@@ -320,15 +320,16 @@ DebugSession >> isInterruptedContextSteppable [
 
 { #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextWithMessageNotUnderstood [
-	^ self interruptedContext receiver class = MessageNotUnderstood and: [ 
-			| currentException |
-			currentException := self interruptedContext receiver.
+	^ self interruptedContext notNil and: [ 
+			self interruptedContext receiver class = MessageNotUnderstood and: [ 
+				| currentException |
+				currentException := self interruptedContext receiver.
 			 (currentException receiver respondsTo: currentException message selector) not and: [ 
 				  ([currentException signalerContext method methodClass == Object] 
 				  	on: Error 
 				  	do: [ 
 				  		"Catch possible errors that happen in case signalerContext is not present"
-				  		false ]) ] ] 
+				  		false ]) ] ] ]
 ]
 
 { #category : #'*GToolkit-Debugger' }

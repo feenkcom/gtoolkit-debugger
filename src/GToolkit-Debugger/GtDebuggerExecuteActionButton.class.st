@@ -9,7 +9,7 @@ Class {
 
 { #category : #utils }
 GtDebuggerExecuteActionButton >> computeBackgroundColor [
-^ 	self debuggingAction canBeDirectlyRun
+	^ self debuggingAction canBeDirectlyRun
 		ifTrue: [ 
 				Color white]
 		ifFalse: [

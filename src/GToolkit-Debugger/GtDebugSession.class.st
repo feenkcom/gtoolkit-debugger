@@ -5,6 +5,9 @@ Class {
 		'isUIProcessError',
 		'exceptionsHistory'
 	],
+	#classVars : [
+		'ShouldForceStep'
+	],
 	#category : #'GToolkit-Debugger-Session'
 }
 
