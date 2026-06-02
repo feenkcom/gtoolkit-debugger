@@ -319,11 +319,10 @@ DebugSession >> isInterruptedContextSteppable [
 { #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextWithMessageNotUnderstood [
 	^ self interruptedContext receiver class = MessageNotUnderstood and: [ 
-		  | message |
-		  message := exception message.
-		  
-			  (exception receiver respondsTo: message selector) not and: [ 
-				  exception signalerContext method methodClass == Object ] ]
+			| currentException |
+			currentException := self interruptedContext receiver.
+			 (currentException receiver respondsTo: currentException message selector) not and: [ 
+				  currentException signalerContext method methodClass == Object ] ] 
 ]
 
 { #category : #'*GToolkit-Debugger' }
