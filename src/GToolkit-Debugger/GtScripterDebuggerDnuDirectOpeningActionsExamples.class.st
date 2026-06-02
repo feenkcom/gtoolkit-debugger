@@ -4,6 +4,11 @@ Class {
 	#category : #'GToolkit-Debugger-Examples'
 }
 
+{ #category : #testing }
+GtScripterDebuggerDnuDirectOpeningActionsExamples class >> isAbstract [
+	^ self name  = #GtScripterDebuggerDnuDirectOpeningActionsExamples
+]
+
 { #category : #'examples - setup' }
 GtScripterDebuggerDnuDirectOpeningActionsExamples >> debuggerOnDoesNotUnderstandMessage [
 	<gtExample>
