@@ -317,6 +317,16 @@ DebugSession >> isInterruptedContextSteppable [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+DebugSession >> isInterruptedContextWithMessageNotUnderstood [
+	^ self interruptedContext receiver class = MessageNotUnderstood and: [ 
+		  | message |
+		  message := exception message.
+		  
+			  (exception receiver respondsTo: message selector) not and: [ 
+				  exception signalerContext method methodClass == Object ] ]
+]
+
+{ #category : #'*GToolkit-Debugger' }
 DebugSession >> maxStackSearchDepth [
 	"A limit for how long to search the stack for most debugging operations"
 	^ 100
