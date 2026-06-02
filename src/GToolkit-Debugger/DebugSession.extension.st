@@ -298,6 +298,8 @@ DebugSession >> isInterruptedContextPostMortem [
 
 { #category : #'*GToolkit-Debugger' }
 DebugSession >> isInterruptedContextSteppable [
+	
+	true ifTrue: [ ^ true ].
 
 	(self isInterruptedContextPostMortem  or: [ 
 			self isInterruptedContextDead ]) ifTrue:  [ ^ false ].
