@@ -2,7 +2,8 @@ Class {
 	#name : #GtDebuggerExecuteActionButton,
 	#superclass : #BrButton,
 	#instVars : [
-		'tooltipAptitude'
+		'tooltipAptitude',
+		'styleLook'
 	],
 	#category : #'GToolkit-Debugger-Elements'
 }
@@ -131,8 +132,7 @@ GtDebuggerExecuteActionButton >> initializeForDebuggingAction: aDebuggingAction 
 		add: (tooltipAptitude := BrGlamorousWithExplicitTooltipAptitude 
 			text: currentLabel 
 			shortcut: aDebuggingAction keymap);
-		add: (BrStyleCommonAptitude new
-			default: [ :aWidget | aWidget background: self computeBackgroundColor ]).
+		add: (styleLook := BrStyleCommonAptitude new).
 	
 	self
 			addAptitude: aptitude;
@@ -156,6 +156,12 @@ GtDebuggerExecuteActionButton >> showConfirmationAction [
 ]
 
 { #category : #updating }
+GtDebuggerExecuteActionButton >> updateActionStyle [
+	styleLook	default: [ :aWidget | aWidget background: self computeBackgroundColor ].
+	styleLook	propagateStylesToWidget
+]
+
+{ #category : #updating }
 GtDebuggerExecuteActionButton >> updateForCurrentDebuggingAction [ 
 	| debuggingAction currentSession |
 	debuggingAction := self debuggingAction ifNil: [ ^ self ].
@@ -164,5 +170,11 @@ GtDebuggerExecuteActionButton >> updateForCurrentDebuggingAction [
 	currentSession ifNil: [ ^ self ].
 	
 	self enabled: debuggingAction isRunnableDirectlyOrForced.
-	tooltipAptitude text: self computeTooltipText.
+	self updateTooltipText.
+	self updateActionStyle
+]
+
+{ #category : #updating }
+GtDebuggerExecuteActionButton >> updateTooltipText [
+	tooltipAptitude text: self computeTooltipText
 ]
