@@ -37,6 +37,7 @@ GtDebuggerCoderBreakpointStyler >> visitLiteral: aLiteral [
 GtDebuggerCoderBreakpointStyler >> visitMessage: aMessage [
 	super visitMessage: aMessage.
 	
+	coderViewModel compiledMethod ifNil: [ ^ self ].
 	coderViewModel compiledMethod hasBreakpoint ifFalse: [^self].
 	coderViewModel compiledMethod ast sendNodes detect: 
 			[:each |
@@ -50,6 +51,7 @@ GtDebuggerCoderBreakpointStyler >> visitMessage: aMessage [
 GtDebuggerCoderBreakpointStyler >> visitVariable: aVariable [
 	super visitVariable: aVariable.
 	
+	coderViewModel compiledMethod ifNil: [ ^ self ].
 	(Breakpoint gtIsInstalledIn: coderViewModel compiledMethod)
 		ifFalse: [ ^ self ].
 	
