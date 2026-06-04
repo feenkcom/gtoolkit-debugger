@@ -22,6 +22,7 @@ GtDebuggerCoderBreakpointStyler >> showBreakpointFor: aNode at: position [
 GtDebuggerCoderBreakpointStyler >> visitLiteral: aLiteral [
 	super visitLiteral: aLiteral.
 	
+	coderViewModel compiledMethod ifNil: [ ^ self ].
 	coderViewModel compiledMethod hasBreakpoint ifFalse: [^self].
 	(coderViewModel compiledMethod ast allChildren
 		select: [:each | each isLiteralNode]) detect: 
