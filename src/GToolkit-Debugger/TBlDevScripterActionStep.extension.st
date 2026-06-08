@@ -2,6 +2,7 @@ Extension { #name : #TBlDevScripterActionStep }
 
 { #category : #'*GToolkit-Debugger' }
 TBlDevScripterActionStep >> debugger [
+	<scripterActionStep>
 	"Builds a step to assert the state of the graphical scene"
 	^ self
 		addStep: (GtDebuggerDevScripterCheckStep new
