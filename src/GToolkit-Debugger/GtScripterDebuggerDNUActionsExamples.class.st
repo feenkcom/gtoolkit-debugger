@@ -17,8 +17,8 @@ GtScripterDebuggerDNUActionsExamples >> clickOnStepOverThatTriggersConfirmationI
 		label: 'Attempt normal execution of step over action';
 		clickOnStepOverButton;
 		assertEnforceStepConfirmationForDebugActionWithId: #stepOver actionLabel: 'Step over';
+		assertInSessionExceptionOfType: MessageNotUnderstood;
 		play.
-	"TODO: check state is not changed"
 ]
 
 { #category : #'utils - stepping' }
@@ -48,7 +48,7 @@ GtScripterDebuggerDNUActionsExamples >> debuggerOnDoesNotUnderstandMessage [
 GtScripterDebuggerDNUActionsExamples >> enforceStepOverActionAfterDnuInMethod: aTargetMethod for: aScripter [
 	aScripter debugger
 		clickOnForceExecuteDebuggingAction;
-		assertInSessionExceptionOfType: MessageNotUnderstood;
+		assertInSessionNoException;
 		assertInCodersContextMethod: aTargetMethod atTopIndex: 1;
 		assertNextInstructionWillReturn;
 		assertInCodersListVisuallyHighlightedString: '^ self methodThatIsNotImplemented' atTopIndex: 1;
@@ -97,13 +97,13 @@ GtScripterDebuggerDNUActionsExamples >> forceStepIntoActionAfterDNU [
 		label: 'Attempt normal execution of step into action';
 		clickOnStepIntoButton;
 		assertEnforceStepConfirmationForDebugActionWithId: #stepInto actionLabel: 'Step into';
+		assertInSessionExceptionOfType: MessageNotUnderstood;
 		play.
-	"TODO: check state is not changed"
 	
 	scripter debugger
 		label: 'Enforce step into action run';
 		clickOnForceExecuteDebuggingAction;
-		assertInSessionExceptionOfType: MessageNotUnderstood;
+		assertInSessionNoException;
 		assertInCodersContextMethod: targetMethod atTopIndex: 1;
 		assertNextInstructionWillReturn;
 		assertInCodersListVisuallyHighlightedString: '^ self methodThatIsNotImplemented' atTopIndex: 1;
@@ -137,14 +137,14 @@ GtScripterDebuggerDNUActionsExamples >> forceStepThroughActionAfterDNU [
 	scripter debugger
 		label: 'Attempt normal execution of step through action';
 		clickOnStepThroughButton;
+		assertEnforceStepConfirmationForDebugActionWithId: #stepThrough actionLabel: 'Step through';
+		assertInSessionExceptionOfType: MessageNotUnderstood;
 		play.
-	"TODO: check state is not changed"
 	
 	scripter debugger
 		label: 'Enforce step through action run';
-		assertEnforceStepConfirmationForDebugActionWithId: #stepThrough actionLabel: 'Step through';
 		clickOnForceExecuteDebuggingAction;
-		assertInSessionExceptionOfType: MessageNotUnderstood;
+		assertInSessionNoException;
 		assertInCodersContextMethod: targetMethod atTopIndex: 1;
 		assertNextInstructionWillReturn;
 		assertInCodersListVisuallyHighlightedString: '^ self methodThatIsNotImplemented' atTopIndex: 1;
