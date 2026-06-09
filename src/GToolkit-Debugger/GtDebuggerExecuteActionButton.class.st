@@ -55,7 +55,8 @@ GtDebuggerExecuteActionButton >> createConfirmActionElement [
 				label: 'Confirm ',self debuggingAction label asLowercase, ' action';
 				icon: BrGlamorousVectorIcons accept;
 				action: [ 
-					self debuggingAction executeForced ] )
+					self debuggingAction executeForced.
+					self hideConfirmationAction ] )
 ]
 
 { #category : #initialization }
@@ -100,6 +101,11 @@ GtDebuggerExecuteActionButton >> executeActionOrShowConfirmation [
 					self debuggingAction isAllowedToEnforceExecution 
 							ifTrue:  [ self showConfirmationAction ]
 							ifFalse: [ Error signal: 'Not possible to execute this debugging action!'] ]
+]
+
+{ #category : #initialization }
+GtDebuggerExecuteActionButton >> hideConfirmationAction [
+	self dispatchEvent: BrDropdownHideWish new
 ]
 
 { #category : #initialization }
