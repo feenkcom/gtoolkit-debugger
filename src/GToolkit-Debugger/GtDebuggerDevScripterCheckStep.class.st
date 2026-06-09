@@ -22,9 +22,24 @@ GtDebuggerDevScripterCheckStep >> assertCommonDNUExecutionDebuggingActions [
 ]
 
 { #category : #assertions }
-GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActions [
+GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsForForceStepping [
 	self 
-		substeps2: 'Assert common debugging actions '
+		substeps2: 'Assert common debugging actions'
+		do: [ :aSubStep |
+			aSubStep debugger
+				assertNormalExecutionStateForDebugActionWithId: #restart;
+				assertNormalExecutionStateForDebugActionWithId: #copyToClipboard;
+				assertEnforceStepStateForDebugActionWithId: #stepOver;
+				assertEnforceStepStateForDebugActionWithId: #stepInto;
+				assertEnforceStepStateForDebugActionWithId: #stepThrough;
+				assertEnforceStepStateForDebugActionWithId: #runToHere;
+				assertEnforceStepStateForDebugActionWithId: #resume ]
+]
+
+{ #category : #assertions }
+GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsForNormalStepping [
+	self 
+		substeps2: 'Assert common debugging actions'
 		do: [ :aSubStep |
 			aSubStep debugger
 				assertNormalExecutionStateForDebugActionWithId: #restart;
@@ -177,8 +192,7 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListContextMethod: aMethod atTop
 		value: [ :aCoderElement | 
 				aCoderElement textualCoderViewModel coderModel compiledMethod   ] 
 			equals: aMethod;
-		// GtSourceCoderExpandedContentElement;
-		@ anIndex
+		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
 
 { #category : #assertions }
@@ -209,8 +223,7 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedString: a
 						 		asString ] 
 					ifNone: [ Error signal: 'no highlight found' ] ] 
 			equals: aString;
-		// GtSourceCoderExpandedContentElement;
-		@ anIndex
+		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
 
 { #category : #assertions }
