@@ -36,7 +36,7 @@ GtExampleExceptionWithDebuggingView >> expectedString: aString [
 GtExampleExceptionWithDebuggingView >> gtViewDiffFor: aView [ 
 	<gtView>
 	<gtExceptionView>
-	
+	<gtEmbeddedDebuggerView>
 	^ aView forward 
 		title: 'Diff';
 		priority: 1;
