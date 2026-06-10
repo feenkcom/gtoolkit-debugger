@@ -114,14 +114,15 @@ GtDebugSession >> updateContextTo: aContext [
 
 { #category : #initialization }
 GtDebugSession >> updateDebugSessionExceptionFrom: aContext [
+	exception ifNotNil: [ :anException |
+			exceptionsHistory add: anException ].
+					
 	aContext ifNil: [ 
 		exception := nil. ^ self ].
 	
 	((aContext receiver isKindOf: Exception) 
 		and: [ aContext selector = #signal ])
 			ifTrue: [
-				exception ifNotNil: [ :anException |
-					exceptionsHistory add: anException ].
 				exception := aContext receiver ]
 			ifFalse: [
 				exception := nil ]

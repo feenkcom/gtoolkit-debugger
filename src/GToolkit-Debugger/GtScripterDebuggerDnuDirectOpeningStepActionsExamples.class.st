@@ -1,16 +1,16 @@
 Class {
-	#name : #GtScripterDebuggerDnuDirectOpeningActionsExamples,
+	#name : #GtScripterDebuggerDnuDirectOpeningStepActionsExamples,
 	#superclass : #GtScripterDebuggerDNUActionsExamples,
 	#category : #'GToolkit-Debugger-Examples'
 }
 
 { #category : #testing }
-GtScripterDebuggerDnuDirectOpeningActionsExamples class >> isAbstract [
-	^ self name  = #GtScripterDebuggerDnuDirectOpeningActionsExamples
+GtScripterDebuggerDnuDirectOpeningStepActionsExamples class >> isAbstract [
+	^ true
 ]
 
 { #category : #'examples - setup' }
-GtScripterDebuggerDnuDirectOpeningActionsExamples >> debuggerOnDoesNotUnderstandMessage [
+GtScripterDebuggerDnuDirectOpeningStepActionsExamples >> debuggerOnDoesNotUnderstandMessage [
 	<gtExample>
 	<return: #BlScripter>
 	| targetMethod debuggerSession debuggerElement aScripter |
@@ -31,8 +31,8 @@ GtScripterDebuggerDnuDirectOpeningActionsExamples >> debuggerOnDoesNotUnderstand
 		assertInSessionContextMethod: Object>>#doesNotUnderstand:  atTopIndex: 1;
 		assertInSessionContextMethod: targetMethod  atTopIndex: 2;
 		"Visually the DNU context is not visible initially in the list"
-		assertInCodersListContextMethod: targetMethod atTopIndex: 1;
-		assertInCodersListVisuallyHighlightedString: 'methodThatIsNotImplemented' atTopIndex: 1;
+		assertInCodersListContextMethod: targetMethod atTopIndex: 2;
+		assertInCodersListVisuallyHighlightedString: 'methodThatIsNotImplemented' atTopIndex: 2;
 		play.
 		
 	aScripter assert

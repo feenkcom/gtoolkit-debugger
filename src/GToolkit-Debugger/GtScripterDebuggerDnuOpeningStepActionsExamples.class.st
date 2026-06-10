@@ -1,16 +1,16 @@
 Class {
-	#name : #GtScripterDebuggerDnuStepOverOpeningActionsExamples,
+	#name : #GtScripterDebuggerDnuOpeningStepActionsExamples,
 	#superclass : #GtScripterDebuggerDNUActionsExamples,
 	#category : #'GToolkit-Debugger-Examples'
 }
 
 { #category : #testing }
-GtScripterDebuggerDnuStepOverOpeningActionsExamples class >> isAbstract [
-	^ self name  = #GtScripterDebuggerDnuStepOverOpeningActionsExamples
+GtScripterDebuggerDnuOpeningStepActionsExamples class >> isAbstract [
+	^ true
 ]
 
 { #category : #'examples - setup' }
-GtScripterDebuggerDnuStepOverOpeningActionsExamples >> debuggerOnDoesNotUnderstandMessage [
+GtScripterDebuggerDnuOpeningStepActionsExamples >> debuggerOnDoesNotUnderstandMessage [
 	<gtExample>
 	<return: #BlScripter>
 	| targetMethod debuggerElement scripter |
@@ -26,7 +26,7 @@ GtScripterDebuggerDnuStepOverOpeningActionsExamples >> debuggerOnDoesNotUndersta
 		assertIsMainDebuggerElement;
 		assertInSessionStackSize: 3;
 		assertInSessionNoException;
-		assertCommonNormalExecutionDebuggingActions;
+		assertCommonNormalExecutionDebuggingActionsForNormalStepping;
 		assertInCodersContextMethod: targetMethod atTopIndex: 1;
 		assertNextInstructionMessageSendSelector: #methodThatIsNotImplemented;
 		assertInCodersListVisuallyHighlightedString: 'methodThatIsNotImplemented' atTopIndex: 1;

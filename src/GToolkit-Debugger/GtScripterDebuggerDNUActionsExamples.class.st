@@ -31,8 +31,8 @@ GtScripterDebuggerDNUActionsExamples >> clickOnStepOverThatTriggersDnuInMethod: 
 		assertInSessionContextMethod: Object>>#doesNotUnderstand:  atTopIndex: 2;
 		assertInSessionContextMethod: aTargetMethod  atTopIndex: 3;
 		"Visually the DNU context is not visible initially in the list"
-		assertInCodersListContextMethod: aTargetMethod atTopIndex: 1;
-		assertInCodersListVisuallyHighlightedString: 'methodThatIsNotImplemented' atTopIndex: 1;
+		assertInCodersListContextMethod: aTargetMethod atTopIndex: 3;
+		assertInCodersListVisuallyHighlightedString: 'methodThatIsNotImplemented' atTopIndex: 3;
 		play.
 ]
 
@@ -68,12 +68,13 @@ GtScripterDebuggerDNUActionsExamples >> forceResumeActionAfterDNU [
 		label: 'Attempt normal execution of resume action';
 		clickOnResumeButton;
 		assertEnforceStepConfirmationForDebugActionWithId: #resume actionLabel: 'Proceed';
+		assertInSessionExceptionOfType: MessageNotUnderstood;
 		play.
-	"TODO: check state is not changed"
 	
 	scripter debugger
 		label: 'Enforce resume action run';
 		clickOnForceExecuteDebuggingAction;
+		assertInSessionNoException;
 		play.
 		
 	scripter assert
@@ -164,6 +165,7 @@ GtScripterDebuggerDNUActionsExamples >> restartActionAfterDNU [
 	scripter debugger
 		label: 'Restart action after DNU';
 		clickOnRestartButton;
+		assertInSessionNoException;
 		assertInCodersContextMethod: targetMethod atTopIndex: 1;
 		assertNextInstructionMessageSendSelector: #methodThatIsNotImplemented;
 		assertInCodersListVisuallyHighlightedString: 'methodThatIsNotImplemented' atTopIndex: 1;
