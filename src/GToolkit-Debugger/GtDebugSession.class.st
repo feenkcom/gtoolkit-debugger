@@ -31,7 +31,7 @@ GtDebugSession class >> named: aString on: aProcess startedAt: aContext [
 
 { #category : #accessing }
 GtDebugSession class >> shouldForceStep [
-	^ ShouldForceStep ifNil: [ false ]
+	^ ShouldForceStep ifNil: [ true ]
 ]
 
 { #category : #initialization }
