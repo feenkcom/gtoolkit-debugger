@@ -4,11 +4,6 @@ Class {
 	#category : #'GToolkit-Debugger-Examples'
 }
 
-{ #category : #testing }
-GtScripterDebuggerExceptionDirectOpeningActionsExamples class >> isAbstract [
-	^ true
-]
-
 { #category : #examples }
 GtScripterDebuggerExceptionDirectOpeningActionsExamples >> debuggerOnException [
 	<gtExample>
