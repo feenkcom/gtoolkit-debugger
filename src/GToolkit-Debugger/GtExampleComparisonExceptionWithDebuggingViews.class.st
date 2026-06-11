@@ -36,6 +36,14 @@ GtExampleComparisonExceptionWithDebuggingViews >> compileObtainedAsExpected [
 		classified: 'data'
 ]
 
+{ #category : #'gt - extensions' }
+GtExampleComparisonExceptionWithDebuggingViews >> computeDiff [
+	^ GtDiffBuilder
+		computeDifferencesFrom: expectedString
+		to: actualString
+		using: GtCharacterGroupDiffSplitter words ignoreWhitespace
+]
+
 { #category : #accessing }
 GtExampleComparisonExceptionWithDebuggingViews >> computedShortStringForTest [
 	^ 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
@@ -106,28 +114,30 @@ GtExampleComparisonExceptionWithDebuggingViews >> gtViewChangeViewFor: aView [
 ]
 
 { #category : #'gt - extensions' }
-GtExampleComparisonExceptionWithDebuggingViews >> gtViewDiffFor: aView [ 
+GtExampleComparisonExceptionWithDebuggingViews >> gtViewDiffFor: aView [
 	<gtView>
 	<gtExceptionView>
 	<gtEmbeddedDebuggerView>
-	
-	^ aView forward 
+	^ aView forward
 		title: 'Diff';
 		priority: 1;
-		object: [
-			GtDiffBuilder
-				computeDifferencesFrom: expectedString 
-				to: actualString
-				using: GtCharacterGroupDiffSplitter words  ignoreWhitespace ];
+		object: [ self computeDiff ];
 		view: #gtTextView:;
-		actionButtonIcon: BrGlamorousVectorIcons inspect 
-			tooltip: 'Inspect the comparator' 
-			action: [ :aButton |
+		actionButtonIcon: BrGlamorousVectorIcons inspect
+			tooltip: 'Inspect the comparator'
+			action: [ :aButton | 
 				| aFuture |
-				aFuture := aButton phlow viewContent phlow firstChildWithViewContent phlow entity viewObject.
-				aButton phlow 
-					spawnFuture: aFuture 
-					result: #object. ]
+				aFuture := aButton phlow viewContent phlow firstChildWithViewContent phlow
+						entity viewObject.
+				aButton phlow spawnFuture: aFuture result: #object ]
+]
+
+{ #category : #'as yet unclassified' }
+GtExampleComparisonExceptionWithDebuggingViews >> llmDiffJsonViewFor: aDataView [
+	<gtLlmDataView>
+	^ aDataView jsonData
+		dataKey: 'stringDiffFromExpectedToActual';
+		data: [ self computeDiff asJsonData ]
 ]
 
 { #category : #accessing }
