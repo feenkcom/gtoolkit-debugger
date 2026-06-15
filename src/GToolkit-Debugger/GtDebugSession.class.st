@@ -55,6 +55,15 @@ GtDebugSession >> errorWasInUIProcess: aBoolean [
 ]
 
 { #category : #accessing }
+GtDebugSession >> exception [
+	^ self 
+		forPharo13AndNewer: [
+			"In Pharo 13 we do not use super as it does not return the expected exception"
+			exception ] 
+		forOlder: [super exception]
+]
+
+{ #category : #accessing }
 GtDebugSession >> exception: anException [
 	super exception: anException.
 	
