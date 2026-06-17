@@ -195,6 +195,16 @@ GtMoldableDebugger >> enableDebuggerSwitching [
 	isSwitchingEnabled := true
 ]
 
+{ #category : #private }
+GtMoldableDebugger >> errorNilInterruptedContext: aDebuggingSession [
+
+	self error: (String streamContents: [ :stream |
+		stream
+			<< 'Unable to initialise the debugger, the interruptedContext is missing.'; cr;
+			<< 'Original exception: ';
+				print: aDebuggingSession exception ]).
+]
+
 { #category : #accessing }
 GtMoldableDebugger >> inPager [
 	^ (GtPagerSettings usedPager createWrappedOn: self) maximized
@@ -232,6 +242,11 @@ GtMoldableDebugger >> initialize [
 { #category : #initialization }
 GtMoldableDebugger >> initializeForSession: aDebuggingSession [
 	| newDebuggerElement |
+
+	"The session's interruptedContext can't be nil"
+	aDebuggingSession interruptedContext ifNil:
+		[ self errorNilInterruptedContext: aDebuggingSession ].
+
 	newDebuggerElement := self selectInitialDebuggerFor: aDebuggingSession.
 	self updateSwitchButtonsForCurrentDebuggerElement: newDebuggerElement.
 	self updateDebuggerElement: newDebuggerElement.
