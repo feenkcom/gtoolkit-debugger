@@ -44,6 +44,29 @@ Exception >> gtExceptionEmbeddedDebuggerSpecification [
 ]
 
 { #category : #'*GToolkit-Debugger' }
+Exception >> gtPrintToTranscript [
+	[
+		NonInteractiveTranscript stdout
+			print: self;
+			cr 
+	] on: Error do: [ :printingError |
+			NonInteractiveTranscript stdout
+				print: 'Error while printing exception to transcript';
+				cr ].
+]
+
+{ #category : #'*GToolkit-Debugger' }
+Exception >> gtPrintToTranscriptWithMessage: aMessage [
+	NonInteractiveTranscript stdout
+			nextPut: $[;
+			nextPutAll: aMessage;
+			nextPut: $];
+			space.
+				
+	self gtPrintToTranscript.
+]
+
+{ #category : #'*GToolkit-Debugger' }
 Exception >> logStackToFile [
 	[ [ Smalltalk 
 		logError: 'logStackToFile: ', self messageText asString 
