@@ -4,7 +4,7 @@ Class {
 	#category : #'GToolkit-Debugger-Examples'
 }
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertCommonDNUExecutionDebuggingActions [
 	self 
 		substeps2: 'Assert common debugging actions after a DNU'
@@ -21,7 +21,7 @@ GtDebuggerDevScripterCheckStep >> assertCommonDNUExecutionDebuggingActions [
 				assertEnforceStepStateForDebugActionWithId: #resume ]
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsForForceStepping [
 	self 
 		substeps2: 'Assert common debugging actions'
@@ -36,7 +36,7 @@ GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsFor
 				assertEnforceStepStateForDebugActionWithId: #resume ]
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsForNormalStepping [
 	self 
 		substeps2: 'Assert common debugging actions'
@@ -51,7 +51,7 @@ GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsFor
 				assertNormalExecutionStateForDebugActionWithId: #resume ]
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertDebuggerSwitchButtonsWithLabels: aCollectionOfLabels [
 	self assert
 		label: 'Assert switch debugger buttons container exists';
@@ -76,7 +76,7 @@ GtDebuggerDevScripterCheckStep >> assertDebuggerSwitchButtonsWithLabels: aCollec
 		// GtMoldableDebuggerSwitchButtonsContainerElementId.
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertEnforceStepConfirmationForDebugActionWithId: aButtonId actionLabel: anActionLabel [
 	| step |
 	
@@ -115,7 +115,7 @@ GtDebuggerDevScripterCheckStep >> assertEnforceStepConfirmationForDebugActionWit
 	^ step
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertEnforceStepStateForDebugActionWithId: aButtonId [
 	| step |
 	
@@ -170,7 +170,7 @@ GtDebuggerDevScripterCheckStep >> assertEnforceStepStateForDebugActionWithId: aB
 	^ step
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertExistsDebugActionWithId: aButtonId [
 	self assert
 		label: 'Assert debug acction with id ', aButtonId printString , ' exists.';
@@ -179,13 +179,13 @@ GtDebuggerDevScripterCheckStep >> assertExistsDebugActionWithId: aButtonId [
 		// aButtonId
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInCodersContextMethod: aMethod atTopIndex: anIndex [
 	self assertInSessionContextMethod: aMethod atTopIndex: anIndex.
 	self assertInCodersListContextMethod: aMethod atTopIndex: anIndex
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInCodersListContextMethod: aMethod atTopIndex: anIndex [
 	self assert
 		label: 'Assert context in coders list at index ', anIndex asString ,' has method ', aMethod printString;
@@ -195,7 +195,7 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListContextMethod: aMethod atTop
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedString: aString atTopIndex: anIndex [
 	self assert
 		label: 'Assert context in coders list at index ', anIndex asString;
@@ -226,7 +226,7 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedString: a
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionContextMethod: aMethod atTopIndex: anIndex [
 	self assert
 		label: 'Assert context in session at index ', anIndex asString ,' has method ', aMethod printString;
@@ -235,7 +235,7 @@ GtDebuggerDevScripterCheckStep >> assertInSessionContextMethod: aMethod atTopInd
 			equals: aMethod
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionExceptionOfType: anExceptionClass [
 	self assert
 		label: 'Assert debug session has exception of type ', anExceptionClass name;
@@ -243,7 +243,7 @@ GtDebuggerDevScripterCheckStep >> assertInSessionExceptionOfType: anExceptionCla
 			anDebuggerElement debugSession exception isKindOf: anExceptionClass  ]
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionNoException [
 	self assert
 		label: 'Assert debug session has no exception ';
@@ -251,7 +251,7 @@ GtDebuggerDevScripterCheckStep >> assertInSessionNoException [
 			anDebuggerElement debugSession exception isNil  ]
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionStackSize: anInteger [
 	self assert
 		label: 'Assert stack size in the debug session is ', anInteger asString;
@@ -259,14 +259,14 @@ GtDebuggerDevScripterCheckStep >> assertInSessionStackSize: anInteger [
 			anDebuggerElement debugSession interruptedContext stack size  ] equals: anInteger
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertIsMainDebuggerElement [
 	self assert
 		label: 'Assert main debugger element id';
 		value: [ :anElement | anElement id ] equals: GtMoldableDebuggerMainElementId new
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertNextInstructionMatches: aBlock label: aLabel [
 	self assert
 		label: aLabel;
@@ -277,7 +277,7 @@ GtDebuggerDevScripterCheckStep >> assertNextInstructionMatches: aBlock label: aL
 			
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertNextInstructionMessageSendSelector: aSelector [
 	self 
 		assertNextInstructionMatches: [ :nextInstruction :anInstructionStream |
@@ -286,7 +286,7 @@ GtDebuggerDevScripterCheckStep >> assertNextInstructionMessageSendSelector: aSel
 		label: 'Assert next instruction will send ', aSelector
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertNextInstructionWillReturn [
 	self 
 		assertNextInstructionMatches: [ :nextInstruction :anInstructionStream |
@@ -294,7 +294,7 @@ GtDebuggerDevScripterCheckStep >> assertNextInstructionWillReturn [
 		label: 'Assert next instruction will return'
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertNormalExecutionStateForDebugActionWithId: aButtonId [
 	| step |
 	
@@ -349,7 +349,7 @@ GtDebuggerDevScripterCheckStep >> assertNormalExecutionStateForDebugActionWithId
 	^ step
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderCollapsed [
 	^self assert
 		label: 'assert playground is collapsed';
@@ -357,7 +357,7 @@ GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderCollapsed [
 		// GtDebuggerPlaygroundElement
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderVisible [
 	^self assert
 		label: 'assert playground is visible';
@@ -365,7 +365,7 @@ GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderVisible [
 		// GtDebuggerPlaygroundElement
 ]
 
-{ #category : #assertions }
+{ #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [ 
 
 	self assert
@@ -380,7 +380,7 @@ GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [
 		// aDebuggerClass.
 ]
 
-{ #category : #'debugger step actions' }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnForceExecuteDebuggingAction [
 	^self
 		substeps2: 'Click force execute debugging action button'
@@ -392,7 +392,7 @@ GtDebuggerDevScripterCheckStep >> clickOnForceExecuteDebuggingAction [
 				// GtDebuggerDebuggingActionConfirmationButtonId ]
 ]
 
-{ #category : #'debugger step actions' }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnRestartButton [
 	^self
 		substeps2: 'Click restart button'
@@ -402,7 +402,7 @@ GtDebuggerDevScripterCheckStep >> clickOnRestartButton [
 				// #restart ]
 ]
 
-{ #category : #'debugger step actions' }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnResumeButton [
 	^self
 		substeps2: 'Click resume button'
@@ -412,7 +412,7 @@ GtDebuggerDevScripterCheckStep >> clickOnResumeButton [
 				// #resume ]
 ]
 
-{ #category : #'debugger step actions' }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnStepIntoButton [
 	^self
 		substeps2: 'Click step into button'
@@ -422,7 +422,7 @@ GtDebuggerDevScripterCheckStep >> clickOnStepIntoButton [
 				// #stepInto ]
 ]
 
-{ #category : #'debugger step actions' }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnStepOverButton [
 	^self
 		substeps2: 'Click step over button'
@@ -432,7 +432,7 @@ GtDebuggerDevScripterCheckStep >> clickOnStepOverButton [
 				// #stepOver ]
 ]
 
-{ #category : #'debugger step actions' }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnStepThroughButton [
 	^self
 		substeps2: 'Click step through button'
@@ -447,7 +447,7 @@ GtDebuggerDevScripterCheckStep >> debuggerQuery [
 	^ self scripter element query debuggerQuery
 ]
 
-{ #category : #actions }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> doubleClickOnPlaygroudExpander [
 	self
 		substeps2: 'Click Step Over button'
@@ -456,7 +456,7 @@ GtDebuggerDevScripterCheckStep >> doubleClickOnPlaygroudExpander [
 				debuggerTarget onPlaygroundResizer ]
 ]
 
-{ #category : #actions }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> switchToDebuggerLabeled: aDebuggerLabel [
 	^ self
 		substeps2: 'Click switch debugger button ', aDebuggerLabel
@@ -470,7 +470,7 @@ GtDebuggerDevScripterCheckStep >> switchToDebuggerLabeled: aDebuggerLabel [
 				
 ]
 
-{ #category : #actions }
+{ #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> switchToDebuggerOfType: aDebuggerClass [
 	self switchToDebuggerLabeled: aDebuggerClass defaultTitle.
 	self assertSelectedDebuggerOfType: aDebuggerClass.
