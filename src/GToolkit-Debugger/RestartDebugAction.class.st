@@ -17,12 +17,8 @@ RestartDebugAction class >> actionType [
 { #category : #registration }
 RestartDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
-		<gt2StackDebuggingAction>
-	
-	^ (self forDebugger: aDebugger)
-		keymap: (BlKeyCombination builder
-				key: BlKeyboardKey F7;
-				build) gtDisplayString
+	<gt2StackDebuggingAction>
+	^(self forDebugger: aDebugger)
 ]
 
 { #category : #accessing }
@@ -34,7 +30,8 @@ RestartDebugAction >> defaultIcon [
 { #category : #accessing }
 RestartDebugAction >> defaultKeymap [
 
-	^ PharoShortcuts current restartExecutionShortcut
+	^ (BlShortcutKeymapRegistry default 
+			debugger restartPlatformCombination) gtDisplayString
 ]
 
 { #category : #accessing }

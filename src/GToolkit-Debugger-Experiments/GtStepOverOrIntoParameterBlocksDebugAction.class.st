@@ -19,12 +19,6 @@ GtStepOverOrIntoParameterBlocksDebugAction class >> gt2ContextDebuggingActionFor
 ]
 
 { #category : #accessing }
-GtStepOverOrIntoParameterBlocksDebugAction >> defaultKeymap [
-
-	^ PharoShortcuts current stepThroughShortcut
-]
-
-{ #category : #accessing }
 GtStepOverOrIntoParameterBlocksDebugAction >> defaultLabel [
 
 	^ 'Step'

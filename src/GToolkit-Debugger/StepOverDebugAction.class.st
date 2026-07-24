@@ -18,11 +18,7 @@ StepOverDebugAction class >> actionType [
 StepOverDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
-	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousVectorIcons over;
-		keymap: (BlKeyCombination builder
-				key: BlKeyboardKey F10;
-				build) gtDisplayString
+	^(self forDebugger: aDebugger)
 ]
 
 { #category : #testing }
@@ -39,7 +35,8 @@ StepOverDebugAction >> defaultIcon [
 { #category : #accessing }
 StepOverDebugAction >> defaultKeymap [
 
-	^ BlKeyboardKey F10
+	^ (BlShortcutKeymapRegistry default 
+			debugger stepOverPlatformCombination) gtDisplayString
 ]
 
 { #category : #accessing }
