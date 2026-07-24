@@ -15,7 +15,8 @@ GtDebuggerCoderAddSelfObjectBreakpointShortcut >> description [
 GtDebuggerCoderAddSelfObjectBreakpointShortcut >> initialize [
 	super initialize.
 	
-	combination := BlKeyCombination primaryShiftY
+	combination := BlKeyCombination primaryShiftY.
+	self coderShortcutId: GtCoderShortcutIds default addSelfObjectBreakpointShortcutId
 ]
 
 { #category : #accessing }
