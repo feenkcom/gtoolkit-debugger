@@ -18,11 +18,7 @@ StepThroughDebugAction class >> actionType [
 StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
-	^ (self forDebugger: aDebugger)
-		icon: BrGlamorousVectorIcons through;
-		keymap: ((BlKeyCombination builder
-				key: BlKeyboardKey F12;
-				build) or: BlKeyCombination builder primary alt arrowRight build) gtDisplayString
+	^(self forDebugger: aDebugger)
 ]
 
 { #category : #testing }
@@ -38,8 +34,8 @@ StepThroughDebugAction >> defaultIcon [
 
 { #category : #accessing }
 StepThroughDebugAction >> defaultKeymap [
-
-	^ PharoShortcuts current stepThroughShortcut
+	^ (BlShortcutKeymapRegistry default 
+			debugger stepThroughPlatformCombination) gtDisplayString
 ]
 
 { #category : #accessing }

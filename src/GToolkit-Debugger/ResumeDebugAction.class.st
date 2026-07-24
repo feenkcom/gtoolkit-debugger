@@ -18,10 +18,7 @@ ResumeDebugAction class >> actionType [
 ResumeDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 	<gt2ContextDebuggingAction>
 	<gt2StackDebuggingAction>
-	^ (self forDebugger: aDebugger)
-		keymap: (BlKeyCombination builder
-				key: BlKeyboardKey F5;
-				build) gtDisplayString
+	^(self forDebugger: aDebugger)
 ]
 
 { #category : #registration }
@@ -45,7 +42,8 @@ ResumeDebugAction >> defaultIcon [
 { #category : #accessing }
 ResumeDebugAction >> defaultKeymap [
 
-	^ PharoShortcuts current resumeExecutionShortcut
+	^ (BlShortcutKeymapRegistry default 
+			debugger resumePlatformCombination) gtDisplayString
 ]
 
 { #category : #accessing }

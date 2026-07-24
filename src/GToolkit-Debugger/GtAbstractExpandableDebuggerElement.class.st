@@ -402,38 +402,40 @@ GtAbstractExpandableDebuggerElement >> groupVariableNodes: aListOfVariables [
 { #category : #initialization }
 GtAbstractExpandableDebuggerElement >> initialize [
 	super initialize.
+	
 	self
 		layout: BlLinearLayout horizontal;
 		constraintsDo: [ :c | 
 			c horizontal matchParent.
 			c vertical matchParent ].
 	self userData at: #debuggerContainer put: #debuggerElement.
+	
+	self initializeShortcuts.
+]
+
+{ #category : #initialization }
+GtAbstractExpandableDebuggerElement >> initializeShortcuts [
 	self
 		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination builder
-						key: BlKeyboardKey F10;
-						build);
-				action: [ :anEvent :aShortcut | (StepOverDebugAction forDebugger: self) execute ]);
+				debuggerShortcutId: GtDebuggerShortcutIds default stepOverShortcutId;
+				action: [ :anEvent :aShortcut | 
+					(StepOverDebugAction forDebugger: self) execute ]);
 		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination builder
-						key: BlKeyboardKey F11;
-						build);
-				action: [ :anEvent :aShortcut | (StepIntoDebugAction forDebugger: self) execute ]);
+				debuggerShortcutId: GtDebuggerShortcutIds default stepIntoShortcutId;
+				action: [ :anEvent :aShortcut | 
+					(StepIntoDebugAction forDebugger: self) execute ]);
 		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination builder
-						key: BlKeyboardKey F12;
-						build);
-				action: [ :anEvent :aShortcut | (StepThroughDebugAction forDebugger: self) execute ]);
+				debuggerShortcutId: GtDebuggerShortcutIds default stepThroughShortcutId;
+				action: [ :anEvent :aShortcut | 
+					(StepThroughDebugAction forDebugger: self) execute ]);
 		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination builder
-						key: BlKeyboardKey F5;
-						build);
-				action: [ :anEvent :aShortcut | (ResumeDebugAction forDebugger: self) execute ]);
+				debuggerShortcutId: GtDebuggerShortcutIds default resumeShortcutId;
+				action: [ :anEvent :aShortcut | 
+					(ResumeDebugAction forDebugger: self) execute ]);
 		addShortcut: (BlShortcutWithAction new
-				combination: (BlKeyCombination builder
-						key: BlKeyboardKey F7;
-						build);
-				action: [ :anEvent :aShortcut | (RestartDebugAction forDebugger: self) execute ])
+				debuggerShortcutId: GtDebuggerShortcutIds default restartShortcutId;
+				action: [ :anEvent :aShortcut | 
+					(RestartDebugAction forDebugger: self) execute ])
 ]
 
 { #category : #'building widgets' }
