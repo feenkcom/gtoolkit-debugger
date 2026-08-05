@@ -251,7 +251,7 @@ GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_Breadcr
 						label: 'Assert Breadcrumb Class Name';
 						value: [ :aButton | aButton label asString ] equals: [ 'Object' ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
-						id: GtPharoHeaderMethodBehaviorId ] ].
+						id: GtPharoHeaderMethodDefiningBehaviorId ] ].
 
 	^ scripter
 ]
@@ -493,7 +493,7 @@ self method2'
 		assertMethodExpandersCountIs: 2;
 		assertSelfObjectIs: selfObject;
 		assertTargetBehaviorIs: selfObject class;
-		assertExplicitProviderClassIs: selfObject class;
+		assertExplicitReceiverClassIs: selfObject class;
 		selectAll;
 		assertCoderIsWithoutModifications;
 		typeText: 'method1
@@ -539,9 +539,9 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 		play.
 
 	scripter methodCoder
-		assertHeaderReceiverBehaviorIs: GtPharoDummyTwoObject;
-		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
-		clickOnHeaderMethodBehavior;
+		assertHeaderMethodReceiverBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodDefiningBehaviorIs: GtPharoDummyOneObject;
+		clickOnHeaderMethodDefiningBehavior;
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
 
@@ -591,9 +591,9 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
 		play.
 
 	scripter methodCoder
-		assertHeaderReceiverBehaviorIs: GtPharoDummyOneObject;
-		assertHeaderMethodBehaviorIsNotVisible;
-		clickOnHeaderReceiverBehavior;
+		assertHeaderMethodReceiverBehaviorIs: GtPharoDummyOneObject;
+		assertHeaderMethodDefiningBehaviorIsNotVisible;
+		clickOnHeaderMethodReceiverBehavior;
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
 
@@ -642,9 +642,9 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 		play.
 
 	scripter methodCoder
-		assertHeaderReceiverBehaviorIs: GtPharoDummyTwoObject;
-		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
-		clickOnHeaderReceiverBehavior;
+		assertHeaderMethodReceiverBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodDefiningBehaviorIs: GtPharoDummyOneObject;
+		clickOnHeaderMethodReceiverBehavior;
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
 
@@ -695,9 +695,9 @@ GtScripterDebuggerExamples >> scripterOnCallToMethodWithQuickReturn [
 	scripter methodCoder
 		assertCompiledMethodIs: GtScripterDebuggerExamples >> #returnSingleValue;
 		assertSelfObjectIs: anObject;
-		assertExplicitProviderClassIs: GtScripterDebuggerExamples;
-		assertHeaderReceiverBehaviorIs: GtScripterDebuggerExamples;
-		assertHeaderMethodBehaviorIsNotVisible;
+		assertExplicitReceiverClassIs: GtScripterDebuggerExamples;
+		assertHeaderMethodReceiverBehaviorIs: GtScripterDebuggerExamples;
+		assertHeaderMethodDefiningBehaviorIsNotVisible;
 		assertMethodExpandersCountIs: 0;
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
@@ -748,16 +748,16 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 	scripter methodCoder
 		assertSelfObjectIs: selfObject;
 		assertTargetBehaviorIs: selfObject class;
-		assertExplicitProviderClassIs: selfObject class;
+		assertExplicitReceiverClassIs: selfObject class;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :sumCDStep | 
 				sumCDStep
 					assertSelfObjectIs: #(3 6 9);
 					assertTargetBehaviorIs: Collection;
-					assertExplicitProviderClassIs: #(3 6 9) class;
-					assertHeaderReceiverBehaviorIs: #(3 6 9) class;
-					assertHeaderMethodBehaviorIs: Collection ];
+					assertExplicitReceiverClassIs: #(3 6 9) class;
+					assertHeaderMethodReceiverBehaviorIs: #(3 6 9) class;
+					assertHeaderMethodDefiningBehaviorIs: Collection ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
 
@@ -771,16 +771,16 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 	scripter methodCoder
 		assertSelfObjectIs: selfObject;
 		assertTargetBehaviorIs: selfObject class;
-		assertExplicitProviderClassIs: selfObject class;
+		assertExplicitReceiverClassIs: selfObject class;
 		assertMethodExpandersCountIs: 2;
 		clickOnMethodCoderExpander: 2
 			insideDo: [ :injectStep | 
 				injectStep
 					assertSelfObjectIs: #(3 6 9);
 					assertTargetBehaviorIs: Collection;
-					assertExplicitProviderClassIs: #(3 6 9) class;
-					assertHeaderReceiverBehaviorIs: #(3 6 9) class;
-					assertHeaderMethodBehaviorIs: Collection;
+					assertExplicitReceiverClassIs: #(3 6 9) class;
+					assertHeaderMethodReceiverBehaviorIs: #(3 6 9) class;
+					assertHeaderMethodDefiningBehaviorIs: Collection;
 					assertBinding: #thisValue is: 1 ];
 		clickOnMethodCoderExpander: 2 insideDo: [ :sumCDStep |  ];
 		clickOnMethodCoderExpander: 1
@@ -788,9 +788,9 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodEnumerateDebugger [
 				raisedToStep
 					assertSelfObjectIs: 1;
 					assertTargetBehaviorIs: Number;
-					assertExplicitProviderClassIs: 1 class;
-					assertHeaderReceiverBehaviorIs: 1 class;
-					assertHeaderMethodBehaviorIs: Number;
+					assertExplicitReceiverClassIs: 1 class;
+					assertHeaderMethodReceiverBehaviorIs: 1 class;
+					assertHeaderMethodDefiningBehaviorIs: Number;
 					assertBinding: #aNumber is: 3 ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
 		play.
@@ -859,7 +859,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 		assertMethodExpandersCountIs: 1;
 		assertSelfObjectIs: selfObject;
 		assertTargetBehaviorIs: selfObject class;
-		assertExplicitProviderClassIs: selfObject class;
+		assertExplicitReceiverClassIs: selfObject class;
 		assertBinding: #a is: 2;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :sumCDStep | 
@@ -867,7 +867,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 					assertMethodExpandersCountIs: 1;
 					assertSelfObjectIs: selfObject;
 					assertTargetBehaviorIs: selfObject class;
-					assertExplicitProviderClassIs: selfObject class;
+					assertExplicitReceiverClassIs: selfObject class;
 					assertBinding: #tempA is: 2;
 					assertBinding: #tempB is: 1;
 					assertPlayAndInspectActionExists;
@@ -877,7 +877,7 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 								assertMethodExpandersCountIs: 1;
 								assertSelfObjectIs: selfObject;
 								assertTargetBehaviorIs: selfObject class;
-								assertExplicitProviderClassIs: selfObject class;
+								assertExplicitReceiverClassIs: selfObject class;
 								assertBinding: #valueA is: 2;
 								assertBinding: #valueB is: 1;
 								assertPlayAndInspectActionExists;
@@ -887,9 +887,9 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 											assertMethodExpandersCountIs: 1;
 											assertSelfObjectIs: 2;
 											assertTargetBehaviorIs: SmallInteger;
-											assertExplicitProviderClassIs: SmallInteger;
-											assertHeaderReceiverBehaviorIs: SmallInteger;
-											assertHeaderMethodBehaviorIsNotVisible;
+											assertExplicitReceiverClassIs: SmallInteger;
+											assertHeaderMethodReceiverBehaviorIs: SmallInteger;
+											assertHeaderMethodDefiningBehaviorIsNotVisible;
 											assertBinding: #aNumber is: 1;
 											assertPlayAndInspectActionExists;
 											clickOnMethodCoderExpander: 1
@@ -897,9 +897,9 @@ GtScripterDebuggerExamples >> scripterOnOneObjectMethodSum21Debugger [
 													s4
 														assertSelfObjectIs: 2;
 														assertTargetBehaviorIs: Integer;
-														assertExplicitProviderClassIs: SmallInteger;
-														assertHeaderReceiverBehaviorIs: SmallInteger;
-														assertHeaderMethodBehaviorIs: Integer;
+														assertExplicitReceiverClassIs: SmallInteger;
+														assertHeaderMethodReceiverBehaviorIs: SmallInteger;
+														assertHeaderMethodDefiningBehaviorIs: Integer;
 														assertBinding: #aNumber is: 1;
 														assertPlayAndInspectActionExists ] ] ] ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
@@ -1167,9 +1167,9 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodDummyThreeDebugger [
 
 	scripter methodCoder
 		assertCompiledMethodIs: GtPharoDummyOneObject >> #dummyThree;
-		assertExplicitProviderClassIs: GtPharoDummyThreeObject;
-		assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+		assertExplicitReceiverClassIs: GtPharoDummyThreeObject;
+		assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+		assertHeaderMethodDefiningBehaviorIs: GtPharoDummyOneObject;
 		assertSelfObjectIs: aSelfObject;
 		assertBinding: #a is: varA;
 		assertMethodExpandersCountIs: 2;
@@ -1177,8 +1177,8 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodDummyThreeDebugger [
 			insideDo: [ :printStringStep | 
 				printStringStep
 					assertCompiledMethodIs: GtPharoDummyTwoObject >> #printString;
-					assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-					assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
+					assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+					assertHeaderMethodDefiningBehaviorIs: GtPharoDummyTwoObject;
 					assertSelfObjectIs: varA;
 					assertMethodExpandersCountIs: 1;
 					assertPlayAndInspectActionExists;
@@ -1186,8 +1186,8 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodDummyThreeDebugger [
 						insideDo: [ :objectPrintStringStep | 
 							objectPrintStringStep
 								assertCompiledMethodIs: Object >> #printString;
-								assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-								assertHeaderMethodBehaviorIs: Object;
+								assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+								assertHeaderMethodDefiningBehaviorIs: Object;
 								assertSelfObjectIs: varA;
 								assertMethodExpandersCountIs: 1;
 								assertPlayAndInspectActionExists ] ];
@@ -1218,16 +1218,16 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodOneDebugger [
 
 	scripter methodCoder
 		assertCompiledMethodIs: GtPharoDummyTwoObject >> #one;
-		assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-		assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+		assertHeaderMethodDefiningBehaviorIs: GtPharoDummyTwoObject;
 		assertSelfObjectIs: anObject;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
 					assertCompiledMethodIs: GtPharoDummyOneObject >> #one;
-					assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-					assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+					assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+					assertHeaderMethodDefiningBehaviorIs: GtPharoDummyOneObject;
 					assertSelfObjectIs: anObject;
 					assertMethodExpandersCountIs: 1;
 					assertPlayAndInspectActionExists;
@@ -1235,8 +1235,8 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodOneDebugger [
 						insideDo: [ :printStringStep | 
 							printStringStep
 								assertCompiledMethodIs: GtPharoDummyTwoObject >> #printString;
-								assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-								assertHeaderMethodBehaviorIs: GtPharoDummyTwoObject;
+								assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+								assertHeaderMethodDefiningBehaviorIs: GtPharoDummyTwoObject;
 								assertSelfObjectIs: anObject;
 								assertMethodExpandersCountIs: 1;
 								assertPlayAndInspectActionExists;
@@ -1244,8 +1244,8 @@ GtScripterDebuggerExamples >> scripterOnThreeObjectMethodOneDebugger [
 									insideDo: [ :objectPrintStringStep | 
 										objectPrintStringStep
 											assertCompiledMethodIs: Object >> #printString;
-											assertHeaderReceiverBehaviorIs: GtPharoDummyThreeObject;
-											assertHeaderMethodBehaviorIs: Object;
+											assertHeaderMethodReceiverBehaviorIs: GtPharoDummyThreeObject;
+											assertHeaderMethodDefiningBehaviorIs: Object;
 											assertSelfObjectIs: anObject;
 											assertMethodExpandersCountIs: 1;
 											assertPlayAndInspectActionExists ] ] ];
@@ -1278,18 +1278,18 @@ GtScripterDebuggerExamples >> scripterOnTwoObjectMethodInitializeDebugger [
 	scripter methodCoder
 		assertCompiledMethodIs: GtPharoDummyOneObject >> #initialize;
 		assertSelfObjectIs: anObject;
-		assertExplicitProviderClassIs: GtPharoDummyTwoObject;
-		assertHeaderReceiverBehaviorIs: GtPharoDummyTwoObject;
-		assertHeaderMethodBehaviorIs: GtPharoDummyOneObject;
+		assertExplicitReceiverClassIs: GtPharoDummyTwoObject;
+		assertHeaderMethodReceiverBehaviorIs: GtPharoDummyTwoObject;
+		assertHeaderMethodDefiningBehaviorIs: GtPharoDummyOneObject;
 		assertMethodExpandersCountIs: 1;
 		clickOnMethodCoderExpander: 1
 			insideDo: [ :s | 
 				s
 					assertCompiledMethodIs: ProtoObject >> #initialize;
 					assertSelfObjectIs: anObject;
-					assertExplicitProviderClassIs: GtPharoDummyTwoObject;
-					assertHeaderReceiverBehaviorIs: GtPharoDummyTwoObject;
-					assertHeaderMethodBehaviorIs: ProtoObject;
+					assertExplicitReceiverClassIs: GtPharoDummyTwoObject;
+					assertHeaderMethodReceiverBehaviorIs: GtPharoDummyTwoObject;
+					assertHeaderMethodDefiningBehaviorIs: ProtoObject;
 					assertMethodExpandersCountIs: 0;
 					assertPlayAndInspectActionExists ];
 		// (GtExpandableContextMethodCoderId indexed: 1);
