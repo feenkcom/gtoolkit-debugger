@@ -380,6 +380,22 @@ GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [
 		// aDebuggerClass.
 ]
 
+{ #category : #actions }
+GtDebuggerDevScripterCheckStep >> clickOnCreateSubclassResponsibilityDebugAction [
+	^ self clickOnDebugActionWithId: #subclassResponsibility
+]
+
+{ #category : #actions }
+GtDebuggerDevScripterCheckStep >> clickOnDebugActionWithId: aButtonId [
+	^ self
+		substeps2: 'Click debug action with id ' , aButtonId printString
+		do: [ :aStep |
+			aStep click
+				label: 'Click ' , aButtonId printString , ' button';
+				// GtMoldableDebuggerToolbarElementId;
+				// aButtonId ]
+]
+
 { #category : #'steps - interactions' }
 GtDebuggerDevScripterCheckStep >> clickOnForceExecuteDebuggingAction [
 	^self
