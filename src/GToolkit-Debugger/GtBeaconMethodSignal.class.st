@@ -60,9 +60,7 @@ GtBeaconMethodSignal >> gtViewMethodSourceFor: aView [
 GtBeaconMethodSignal >> initialize [
 	super initialize.
 	currentProcessId := Processor activeProcess identityHash.
-	BlGlutinHost uiProcessDo: [ :process | glutinUIProcessId := process identityHash ].
-	
-	
+	BlWinitHost uiProcessDo: [ :process | glutinUIProcessId := process identityHash ].
 ]
 
 { #category : #accessing }
