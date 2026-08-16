@@ -17,7 +17,8 @@ Class {
 GtScripterDebuggerSubclassResponsibilityActionsExamples >> createMethodActionAfterSubclassResponsibility [
 	"Click the create method button offered by GtSubclassResponsibilityDebugAction.
 	It is expected to implement the missing method in the leaf class and to leave the
-	debugger in a usable state."
+	debugger in a usable state.
+	See https://github.com/feenkcom/gtoolkit/issues/5158"
 
 	<gtExample>
 	<return: #BlScripter>
