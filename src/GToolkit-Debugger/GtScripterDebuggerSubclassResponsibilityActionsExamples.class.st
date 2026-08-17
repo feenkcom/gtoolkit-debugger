@@ -16,8 +16,9 @@ Class {
 { #category : #examples }
 GtScripterDebuggerSubclassResponsibilityActionsExamples >> createMethodActionAfterSubclassResponsibility [
 	"Click the create method button offered by GtSubclassResponsibilityDebugAction.
-	It is expected to implement the missing method in the leaf class and to leave the
-	debugger in a usable state.
+	It is expected to implement the missing method in the leaf class, to leave the
+	debugger in a usable state, and to highlight the created method as the next
+	instruction to execute.
 	See https://github.com/feenkcom/gtoolkit/issues/5158"
 
 	<gtExample>
@@ -37,6 +38,12 @@ GtScripterDebuggerSubclassResponsibilityActionsExamples >> createMethodActionAft
 		label: 'The missing method is implemented in the leaf class';
 		satisfies: [ :aDebuggerElement |
 			leafClass includesSelector: #targetMethodArgOne:argTwo: ];
+		play.
+
+	scripter debugger
+		label: 'The created method is highlighted as the next instruction to execute';
+		assertInCodersListVisuallyHighlightedString: 'targetMethodArgOne: anUndefinedObject argTwo: anUndefinedObject2 
+	self shouldBeImplemented.' atTopIndex: 1;
 		play.
 
 	^ scripter

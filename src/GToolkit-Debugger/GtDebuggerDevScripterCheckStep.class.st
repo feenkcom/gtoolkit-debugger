@@ -215,13 +215,13 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedString: a
 				attributes keys 
 					detect: [ :eachAttribute |
 					(eachAttribute isKindOf: BlTextHighlightAttribute) and: [ 
-						eachAttribute paint = BrGlamorousColors debuggerTextHighlightColor ] ]
+						eachAttribute id = GtSourceCoderViewModel debuggerTextHighlightId ] ]
 					ifFound: [:anAttribute | 
 						 (aCoderElement textualCoderViewModel styledText 
 						 	copyFrom: (attributes at: anAttribute) first first 
 						 	to: (attributes at: anAttribute) first last )
 						 		asString ] 
-					ifNone: [ Error signal: 'no highlight found' ] ] 
+					ifNone: [ AssertionFailure signal: 'no highlight found' ] ] 
 			equals: aString;
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]

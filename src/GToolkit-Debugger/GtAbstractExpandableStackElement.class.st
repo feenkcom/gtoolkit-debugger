@@ -191,7 +191,7 @@ GtAbstractExpandableStackElement >> selectCoderForContext: aContext [
 	selectCoderPromise ifNotNil: [ :aPromise | aPromise promise: aPreloadPromise ].
 ]
 
-{ #category : #actions }
+{ #category : #'private - selection' }
 GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	"Must be called from a UI process"
 	selectedCoderUIModel
@@ -217,19 +217,11 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	can change the compiled method stored in the context."
 	selectedCoderUIModel coder updateSourceFromContext.
 	
-	"Update the selection based on the new PC"
-	aContextCoderUIModel documentId 
-		ifNotNil: [ selectedCoderUIModel updateProgramCounterRange ]
-		ifNil: [ 
-			documentIdTask ifNotNil: #stop.
-			self enqueueTask: (documentIdTask := GtTextualCoderViewModelWaitForDocumentIdRepeatedTask new
-			textualCoderViewModel: selectedCoderUIModel;
-			onUpdatedBlock: [ :aTextualCoderViewModel :aDocumentId | 
-				selectedCoderUIModel == aTextualCoderViewModel ifTrue: [
-					aTextualCoderViewModel ifNotNil: #updateProgramCounterRange ] ];
-			onMissedBlock: [ :aTextualCoderViewModel | 
-				selectedCoderUIModel == aTextualCoderViewModel ifTrue: [
-					aTextualCoderViewModel ifNotNil: #updateProgramCounterRange ] ]) ]
+	"Update the selection based on the new PC.
+	The program counter highlight is recorded on the coder view model, so we do not have to wait
+	for the editor to catch up: the coder element re-applies it once its editor adopts the
+	document the highlight names."
+	selectedCoderUIModel updateProgramCounterRange
 ]
 
 { #category : #actions }
