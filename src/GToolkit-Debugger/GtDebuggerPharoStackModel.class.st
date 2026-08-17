@@ -105,6 +105,12 @@ GtDebuggerPharoStackModel >> showVariableValueAnnotations [
 			viewModel requestUpdateAddOns ]
 ]
 
+{ #category : #'as yet unclassified' }
+GtDebuggerPharoStackModel >> stackSize [
+
+	^ currentContext stackSize
+]
+
 { #category : #updating }
 GtDebuggerPharoStackModel >> updateBasedOnCurentContext: aContext [
 	"Changes the Context to a given one trying to preserve

@@ -115,3 +115,14 @@ Context >> shortDebugStackOn: aStream [
 
 	^ self debugStack: 100 on: aStream
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Context >> stackBottomContext [
+	"Answer the final context entry in the receiver's stack."
+	| prevContext context |
+	
+	context := prevContext := self.
+	[(context := context sender) ~~ nil ] whileTrue:
+		[ prevContext := context ].
+	^ prevContext
+]

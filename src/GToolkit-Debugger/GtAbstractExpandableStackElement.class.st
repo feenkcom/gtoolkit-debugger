@@ -106,14 +106,20 @@ GtAbstractExpandableStackElement >> initialize [
 { #category : #initialization }
 GtAbstractExpandableStackElement >> initializeElementPromises [
 	selectCoderPromise := (BrAsyncElementPromise on: self)
-			whenError: [ :anElement :anException | anException debug ];
+			whenPending: [ :anElement |
+				"disable the button" ];
+			whenError: [ :anElement :anException | 
+				"enable the button"
+				anException debug ];
 			whenSuccess: [ :anElement :anAssoc | 
 				| anItemsProvider anIndex |
+				"enable the button"
 				anItemsProvider := anAssoc key.
 				anIndex := anAssoc value.
 				anIndex > 0
 					ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0.
-						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ].
+						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
+				 ].
 	openCoderPromise := (BrAsyncElementPromise on: self)
 			whenError: [ :anElement :anException | anException debug ];
 			whenSuccess: [ :anElement :anAssoc | 

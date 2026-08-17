@@ -149,6 +149,40 @@ GtPharoStackElement >> initialize [
 	self layout: BlLinearLayout horizontal.
 ]
 
+{ #category : #'as yet unclassified' }
+GtPharoStackElement >> initializeElementPromises [
+	selectCoderPromise := (BrAsyncElementPromise on: self)
+			whenPending: [ :anElement |
+				(self childNamed: #jumpToStackBottomButton) disable ];
+			whenError: [ :anElement :anException | 
+				(self childNamed: #jumpToStackBottomButton) enable.
+				anException debug ];
+			whenSuccess: [ :anElement :anAssoc | 
+				| anItemsProvider anIndex |
+				(self childNamed: #jumpToStackBottomButton) enable.
+				anItemsProvider := anAssoc key.
+				anIndex := anAssoc value.
+				anIndex > 0
+					ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0.
+						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
+				 ].
+	openCoderPromise := (BrAsyncElementPromise on: self)
+			whenError: [ :anElement :anException | anException debug ];
+			whenSuccess: [ :anElement :anAssoc | 
+				| wantsToScroll anItemsProvider anIndex |
+				anAssoc ifNotNil: [ 
+					anItemsProvider := anAssoc key.
+					anIndex := anAssoc value.
+					anIndex > 0
+						ifTrue: [ self stackFramesList itemsProvider: anItemsProvider.
+							wantsToScroll := stackModel currentContextMethodIndicator
+									ifNotNil: [ :anIndicator | anIndicator wantsToScroll ]
+									ifNil: [ true ].
+							wantsToScroll
+								ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0 ].
+							self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ] ]
+]
+
 { #category : #initialization }
 GtPharoStackElement >> initializeStackList [
 	| stackFramesList stackPane filtersElement sidebarElement tabGroup |
@@ -163,7 +197,12 @@ GtPharoStackElement >> initializeStackList [
 	stackTab := BrTab new
 			aptitude: BrGlamorousTabAptitude new;
 			label: 'Stack';
-			stencil: [ stackIndex ].
+			stencil: [ stackIndex ];
+			toolbarStencil: [
+				BrToolbar new
+					aptitude: BrGlamorousToolbarAptitude new;
+					addItem: self newJumpToStackBottomButton;
+					yourself ].
 	receiversTab := BrTab new
 			aptitude: BrGlamorousTabAptitude new;
 			label: 'Receivers';
@@ -185,6 +224,83 @@ GtPharoStackElement >> initializeStackList [
 	stackFramesList := self buildStackFramesList.
 	stackPane addChild: stackFramesList as: #expandableFrames.
 	self addChild: stackPane
+]
+
+{ #category : #'private - building' }
+GtPharoStackElement >> jumpToBottomFrom: aButton [
+	| item |
+	
+	aButton disable.
+	item := stackModel currentContext stackBottomContext.
+	self stackIndexList
+		itemSuchThat: [ :each | 
+			each == item ]
+		ifFound: [ :anIndex |
+			self stackIndexList
+				scrollToIndex: anIndex;
+				selectOne: anIndex.
+			"aButton enable." ]
+		ifNone: [ aButton enable ].
+]
+
+{ #category : #'private - ui' }
+GtPharoStackElement >> newJumpToStackBottomButton [
+	| button |
+	button := BrButton new
+		id: #jumpToStackBottomButton;
+		aptitude: BrGlamorousButtonWithIconAptitude;
+		icon: BrGlamorousVectorIcons downwards;
+		label: 'Jump to the bottom of the stack'.
+	button
+		addAptitude: (BrGlamorousWithExplicitDropdownAptitude new
+			withoutMouseEventHandler;
+			doNotHideWidget;
+			handle: [
+				BrButton new
+					icon: BrGlamorousVectorIcons downwards;
+					aptitude: BrGlamorousButtonRectangularAptitude + BrGlamorousButtonIconAptitude ]
+			content: [ self newJumpToStackBottomWarningContentFor: button ]).
+	button action: [ :aButton |
+		self stackSize > 10000
+			ifTrue: [ aButton dispatchEvent: BrDropdownShowWish new ]
+			ifFalse: [ self jumpToBottomFrom: aButton ] ].
+	^ button
+]
+
+{ #category : #'private - ui' }
+GtPharoStackElement >> newJumpToStackBottomWarningContentFor: aButton [
+	| depth |
+	depth := self stackSize.
+	^ BrVerticalPane new
+		hFitContent;
+		vFitContent;
+		padding: (BlInsets all: 10);
+		cellSpacing: 5;
+		addChild: (BrLabel new
+			aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+			text: ('Stack is ' , depth asStringWithCommas , ' frames deep.'));
+		addChild: (BrLabel new
+			aptitude: BrGlamorousLabelAptitude new glamorousRegularFont;
+			text: ('This operation will be slow. Proceed?' asRopedText foreground: Color gray));
+		addChild: (BrHorizontalPane new
+			hFitContent;
+			vFitContent;
+			cellSpacing: 5;
+			addChild: (BrButton new
+				aptitude: BrGlamorousButtonWithIconAndLabelAptitude;
+				icon: BrGlamorousVectorIcons accept;
+				label: 'Jump';
+				beTinySize;
+				action: [
+					aButton dispatchEvent: BrDropdownHideWish new.
+					self jumpToBottomFrom: aButton ]);
+			addChild: (BrButton new
+				aptitude: BrGlamorousButtonWithIconAndLabelAptitude;
+				icon: BrGlamorousVectorIcons cancel;
+				label: 'Cancel';
+				beTinySize;
+				action: [
+					aButton dispatchEvent: BrDropdownHideWish new ]))
 ]
 
 { #category : #accessing }
@@ -242,6 +358,12 @@ GtPharoStackElement >> shouldJumpOverCoverViewModel: eachCoder [
 { #category : #accessing }
 GtPharoStackElement >> stackIndexList [
 	^ stackIndex
+]
+
+{ #category : #'as yet unclassified' }
+GtPharoStackElement >> stackSize [
+
+	^ stackModel stackSize
 ]
 
 { #category : #updating }
