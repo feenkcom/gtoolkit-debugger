@@ -126,3 +126,13 @@ Context >> stackBottomContext [
 		[ prevContext := context ].
 	^ prevContext
 ]
+
+{ #category : #'*GToolkit-Debugger' }
+Context >> stackLast: limit [
+	"Answer an OrderedCollection of the last 'limit' contexts
+	 on the receiver's sender chain."
+	| stackSize |
+
+	stackSize := self stackSize.
+	 ^ (self stackOfSize: stackSize) last: (stackSize min: limit)
+]
