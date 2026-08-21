@@ -158,7 +158,6 @@ GtEmergencyDebugger >> visitWindowResizedEvent: anEvent [
 
 { #category : #accessing }
 GtEmergencyDebugger >> window [
-	<return: #GlutinWindowedContext>
 	
 	^ window
 ]

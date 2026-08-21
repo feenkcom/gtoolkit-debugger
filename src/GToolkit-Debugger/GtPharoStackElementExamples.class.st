@@ -31,6 +31,18 @@ GtPharoStackElementExamples >> createPharoStackElementScripter [
 	^ BlScripter new element: self createPharoStackElement
 ]
 
+{ #category : #examples }
+GtPharoStackElementExamples >> jumpToStackBottomButton [
+	<gtExample>
+	<return: #BrButton>
+	| stackElement button |
+	stackElement := GtPharoStackElement new.
+	button := stackElement newJumpToStackBottomButton.
+	self assert: button id asSymbol equals: #jumpToStackBottomButton.
+	self assert: button label asString equals: 'Jump to the bottom of the stack'.
+	^ button
+]
+
 { #category : #accessing }
 GtPharoStackElementExamples >> testMethod1 [
 	self testMethod2

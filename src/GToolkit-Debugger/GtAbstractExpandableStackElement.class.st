@@ -106,14 +106,20 @@ GtAbstractExpandableStackElement >> initialize [
 { #category : #initialization }
 GtAbstractExpandableStackElement >> initializeElementPromises [
 	selectCoderPromise := (BrAsyncElementPromise on: self)
-			whenError: [ :anElement :anException | anException debug ];
+			whenPending: [ :anElement |
+				"disable the button" ];
+			whenError: [ :anElement :anException | 
+				"enable the button"
+				anException debug ];
 			whenSuccess: [ :anElement :anAssoc | 
 				| anItemsProvider anIndex |
+				"enable the button"
 				anItemsProvider := anAssoc key.
 				anIndex := anAssoc value.
 				anIndex > 0
 					ifTrue: [ self stackFramesList scrollToIndex: anIndex offset: 0.
-						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ] ].
+						self selectCoderUIModel: (anItemsProvider itemAt: anIndex) ].
+				 ].
 	openCoderPromise := (BrAsyncElementPromise on: self)
 			whenError: [ :anElement :anException | anException debug ];
 			whenSuccess: [ :anElement :anAssoc | 
@@ -191,7 +197,7 @@ GtAbstractExpandableStackElement >> selectCoderForContext: aContext [
 	selectCoderPromise ifNotNil: [ :aPromise | aPromise promise: aPreloadPromise ].
 ]
 
-{ #category : #actions }
+{ #category : #'private - selection' }
 GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	"Must be called from a UI process"
 	selectedCoderUIModel
@@ -217,19 +223,11 @@ GtAbstractExpandableStackElement >> selectCoderUIModel: aContextCoderUIModel [
 	can change the compiled method stored in the context."
 	selectedCoderUIModel coder updateSourceFromContext.
 	
-	"Update the selection based on the new PC"
-	aContextCoderUIModel documentId 
-		ifNotNil: [ selectedCoderUIModel updateProgramCounterRange ]
-		ifNil: [ 
-			documentIdTask ifNotNil: #stop.
-			self enqueueTask: (documentIdTask := GtTextualCoderViewModelWaitForDocumentIdRepeatedTask new
-			textualCoderViewModel: selectedCoderUIModel;
-			onUpdatedBlock: [ :aTextualCoderViewModel :aDocumentId | 
-				selectedCoderUIModel == aTextualCoderViewModel ifTrue: [
-					aTextualCoderViewModel ifNotNil: #updateProgramCounterRange ] ];
-			onMissedBlock: [ :aTextualCoderViewModel | 
-				selectedCoderUIModel == aTextualCoderViewModel ifTrue: [
-					aTextualCoderViewModel ifNotNil: #updateProgramCounterRange ] ]) ]
+	"Update the selection based on the new PC.
+	The program counter highlight is recorded on the coder view model, so we do not have to wait
+	for the editor to catch up: the coder element re-applies it once its editor adopts the
+	document the highlight names."
+	selectedCoderUIModel updateProgramCounterRange
 ]
 
 { #category : #actions }

@@ -215,13 +215,13 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedString: a
 				attributes keys 
 					detect: [ :eachAttribute |
 					(eachAttribute isKindOf: BlTextHighlightAttribute) and: [ 
-						eachAttribute paint = BrGlamorousColors debuggerTextHighlightColor ] ]
+						eachAttribute id = GtSourceCoderViewModel debuggerTextHighlightId ] ]
 					ifFound: [:anAttribute | 
 						 (aCoderElement textualCoderViewModel styledText 
 						 	copyFrom: (attributes at: anAttribute) first first 
 						 	to: (attributes at: anAttribute) first last )
 						 		asString ] 
-					ifNone: [ Error signal: 'no highlight found' ] ] 
+					ifNone: [ AssertionFailure signal: 'no highlight found' ] ] 
 			equals: aString;
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
@@ -378,6 +378,22 @@ GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [
 		label: 'Assert debugger of type ', aDebuggerClass name;
 		exists;
 		// aDebuggerClass.
+]
+
+{ #category : #actions }
+GtDebuggerDevScripterCheckStep >> clickOnCreateSubclassResponsibilityDebugAction [
+	^ self clickOnDebugActionWithId: #subclassResponsibility
+]
+
+{ #category : #actions }
+GtDebuggerDevScripterCheckStep >> clickOnDebugActionWithId: aButtonId [
+	^ self
+		substeps2: 'Click debug action with id ' , aButtonId printString
+		do: [ :aStep |
+			aStep click
+				label: 'Click ' , aButtonId printString , ' button';
+				// GtMoldableDebuggerToolbarElementId;
+				// aButtonId ]
 ]
 
 { #category : #'steps - interactions' }
