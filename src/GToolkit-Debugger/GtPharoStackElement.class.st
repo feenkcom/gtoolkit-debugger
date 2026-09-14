@@ -149,17 +149,17 @@ GtPharoStackElement >> initialize [
 	self layout: BlLinearLayout horizontal.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 GtPharoStackElement >> initializeElementPromises [
 	selectCoderPromise := (BrAsyncElementPromise on: self)
 			whenPending: [ :anElement |
-				(self childNamed: #jumpToStackBottomButton) disable ];
+				self childNamed: #jumpToStackBottomButton ifFound: #disable ifNone: [ "ignore" ] ];
 			whenError: [ :anElement :anException | 
-				(self childNamed: #jumpToStackBottomButton) enable.
+				self childNamed: #jumpToStackBottomButton ifFound: #enable ifNone: [ "ignore" ].
 				anException debug ];
 			whenSuccess: [ :anElement :anAssoc | 
 				| anItemsProvider anIndex |
-				(self childNamed: #jumpToStackBottomButton) enable.
+				self childNamed: #jumpToStackBottomButton ifFound: #enable ifNone: [ "ignore" ].
 				anItemsProvider := anAssoc key.
 				anIndex := anAssoc value.
 				anIndex > 0
@@ -360,7 +360,7 @@ GtPharoStackElement >> stackIndexList [
 	^ stackIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GtPharoStackElement >> stackSize [
 
 	^ stackModel stackSize
