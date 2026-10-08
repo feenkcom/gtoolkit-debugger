@@ -19,7 +19,7 @@ GtScripterDebuggerDnuDirectOpeningStepActionsExamples >> debuggerOnDoesNotUnders
 	aScripter element: debuggerElement.
 	
 	aScripter debugger
-		label: 'Assert initial debugger state';
+		label: 'Assert initial debugger state with exception';
 		assertIsMainDebuggerElement;
 		assertCommonDNUExecutionDebuggingActions;
 		assertInSessionExceptionOfType: MessageNotUnderstood;

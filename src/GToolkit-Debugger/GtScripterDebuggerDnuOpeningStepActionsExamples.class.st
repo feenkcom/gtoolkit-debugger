@@ -14,10 +14,12 @@ GtScripterDebuggerDnuOpeningStepActionsExamples >> debuggerOnDoesNotUnderstandMe
 			debuggerOn: [ self class new targetMethod_callToNotImplementedMethod ]
 			stoppingAt: [ :context | context selector = targetMethod selector ].
 	
+	
 	scripter := BlScripter new.
 	scripter element: debuggerElement.
 	
 	scripter debugger
+		label: 'Assert initial debugger state before exception triggered';
 		assertIsMainDebuggerElement;
 		assertInSessionStackSize: 3;
 		assertInSessionNoException;
