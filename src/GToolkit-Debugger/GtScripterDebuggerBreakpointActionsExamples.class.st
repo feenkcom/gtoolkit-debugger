@@ -9,6 +9,11 @@ Class {
 	#category : #'GToolkit-Debugger-Examples'
 }
 
+{ #category : #testing }
+GtScripterDebuggerBreakpointActionsExamples class >> isAbstract [
+	^ self name = #GtScripterDebuggerBreakpointActionsExamples
+]
+
 { #category : #'examples - debugger' }
 GtScripterDebuggerBreakpointActionsExamples >> debuggerOnBreakpoint [
 	<gtExample>
