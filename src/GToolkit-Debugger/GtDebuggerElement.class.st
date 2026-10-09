@@ -166,9 +166,9 @@ GtDebuggerElement >> onAddedToSceneGraph [
 	self space addEventHandler: browserClosingHandler
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 GtDebuggerElement >> prepareDebugSession: aDebuggingSession [ 
-	"aDebuggingSession ensureStepOverBreakpointTrigger"
+	aDebuggingSession ensureStepOverBreakpointTrigger
 ]
 
 { #category : #actions }
