@@ -29,5 +29,17 @@ Breakpoint >> breakInContext: aContext node: aNode [
 		inContext: aContext
 		node: aNode.
 		
-	shouldBreak ifTrue: [ Break break ]
+	shouldBreak ifFalse: [ ^ self ].
+	
+	Break break
+]
+
+{ #category : #'*GToolkit-DebuggerExtensions' }
+Breakpoint >> initialize [
+
+	self class initializeSlots: self.
+	hitMutex := Mutex new.
+	options := #(+ optionCompileOnLinkInstallation).
+	BreakpointGroup newBreakpoint: self.
+	group := BreakpointGroup ungroupedBreakpointsGroup
 ]
