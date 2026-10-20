@@ -100,6 +100,16 @@ GtBasicDebuggerDevScripterCheckStep >> clickOnResumeButton [
 				// #resume ]
 ]
 
+{ #category : #'steps - toolbar' }
+GtBasicDebuggerDevScripterCheckStep >> clickOnRunToCursorButton [
+	^ self
+		substeps2: 'Click run to cursor button'
+		do: [ :aStep |
+			aStep click
+				label: 'Run to Cursor';
+				// #runToCursor ]
+]
+
 { #category : #'steps - interactions' }
 GtBasicDebuggerDevScripterCheckStep >> clickOnStepIntoButton [
 	^self
