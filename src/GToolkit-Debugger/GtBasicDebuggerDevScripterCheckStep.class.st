@@ -65,7 +65,7 @@ GtBasicDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedStri
 						 	to: (attributes at: anAttribute) first last )
 						 		asString trimBoth ] 
 					ifNone: [ AssertionFailure signal: 'no highlight found' ] ] 
-			equals: aString;
+			equals: aString trimBoth;
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
 
