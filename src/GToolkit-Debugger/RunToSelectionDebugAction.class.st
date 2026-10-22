@@ -16,7 +16,7 @@ RunToSelectionDebugAction class >> actionType [
 { #category : #accessing }
 RunToSelectionDebugAction >> defaultLabel [
 
-	^ 'Run to here'
+	^ 'Run to cursor'
 ]
 
 { #category : #accessing }
