@@ -63,9 +63,9 @@ GtBasicDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedStri
 						 (aCoderElement textualCoderViewModel styledText 
 						 	copyFrom: (attributes at: anAttribute) first first 
 						 	to: (attributes at: anAttribute) first last )
-						 		asString ] 
+						 		asString trimBoth ] 
 					ifNone: [ AssertionFailure signal: 'no highlight found' ] ] 
-			equals: aString;
+			equals: aString trimBoth;
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
 
@@ -98,6 +98,16 @@ GtBasicDebuggerDevScripterCheckStep >> clickOnResumeButton [
 			aStep click
 				label: 'Resume';
 				// #resume ]
+]
+
+{ #category : #'steps - toolbar' }
+GtBasicDebuggerDevScripterCheckStep >> clickOnRunToCursorButton [
+	^ self
+		substeps2: 'Click run to cursor button'
+		do: [ :aStep |
+			aStep click
+				label: 'Run to Cursor';
+				// #runToCursor ]
 ]
 
 { #category : #'steps - interactions' }
