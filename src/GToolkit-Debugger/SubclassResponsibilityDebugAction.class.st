@@ -75,7 +75,7 @@ SubclassResponsibilityDebugAction >> executeAction [
 		ifCancel: [ ^ self ].
 
 	self session 
-		implement: msg 
+		gtImplement: msg 
 		classified: msgCategory 
 		inClass: chosenClass 
 		forContext: senderContext.

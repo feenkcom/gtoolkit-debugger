@@ -15,8 +15,9 @@ GtMoldableExceptionBasicTransformation class >> forException: anException [
 
 { #category : #action }
 GtMoldableExceptionBasicTransformation >> performTransformation [
-	^ self transformationNamespace changes 
-		executeNotifying: []
+	"Apply the changes through a recorded change, so that they can be undone and keep the undo history"
+
+	^ GtRefactoryChangeManager instance performChange: self transformationNamespace changes
 ]
 
 { #category : #testing }

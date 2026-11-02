@@ -50,6 +50,44 @@ GtScripterDebuggerSubclassResponsibilityActionsExamples >> createMethodActionAft
 ]
 
 { #category : #examples }
+GtScripterDebuggerSubclassResponsibilityActionsExamples >> createMethodActionAfterSubclassResponsibilityCanBeUndone [
+	"The method created by the create method button is recorded:
+	one undo removes it and keeps the changes recorded before it"
+
+	<gtExample>
+	<return: #BlScripter>
+	^ GtRefactoryChangeManager
+		isolatedInstanceDuring: [ :aChangeManager |
+			| scripter environment leafClass |
+			scripter := self debuggerOnSubclassResponsibility.
+			environment := scripter userData at: #environment.
+			[ leafClass := environment anyDummyLeafClass realClass.
+			(RBAddMethodChange
+				compile: 'recordedBeforeImplementing ^ 1'
+				in: leafClass
+				classified: 'examples') gtExecuteWithUndo.
+
+			scripter debugger
+				label: 'Click the create method button';
+				clickOnCreateSubclassResponsibilityDebugAction;
+				play.
+			scripter assert
+				label: 'The missing method is implemented in the leaf class';
+				satisfies: [ :aDebuggerElement | leafClass includesSelector: #targetMethodArgOne:argTwo: ];
+				play.
+
+			aChangeManager undoChange.
+			scripter assert
+				label: 'One undo removes the created method and keeps the change before it';
+				satisfies: [ :aDebuggerElement |
+					(leafClass includesSelector: #targetMethodArgOne:argTwo:) not
+						and: [ (leafClass includesSelector: #recordedBeforeImplementing)
+								and: [ aChangeManager hasUndoableOperations ] ] ];
+				play.
+			scripter ] ensure: [ environment removeFromSystem ] ]
+]
+
+{ #category : #examples }
 GtScripterDebuggerSubclassResponsibilityActionsExamples >> debuggerOnSubclassResponsibility [
 	"Open a debugger on a message send that is a subclass responsibility, stepping into
 	the execution until Object>>#subclassResponsibility is reached. That is the state in

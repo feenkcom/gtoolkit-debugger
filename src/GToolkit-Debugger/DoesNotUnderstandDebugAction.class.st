@@ -88,7 +88,7 @@ DoesNotUnderstandDebugAction >> executeAction [
 	"we do not ask for the category here as it breaks flow"
 	msgCategory := 'as yet unclassified'.
 	self  session
-		implement: msg 
+		gtImplement: msg 
 		classified: msgCategory 
 		inClass: chosenClass 
 		forContext: self interruptedContext.

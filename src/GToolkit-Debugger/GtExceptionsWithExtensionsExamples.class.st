@@ -4,6 +4,38 @@ Class {
 	#category : #'GToolkit-Debugger-Examples'
 }
 
+{ #category : #'examples - exceptions' }
+GtExceptionsWithExtensionsExamples >> acceptingObtainedValueCanBeUndone [
+	"Accepting the obtained value of a failed comparison compiles it as the expected value through
+	a recorded change: one undo restores the previous expected value and keeps the changes recorded before it"
+
+	<gtExample>
+	<return: #GtExampleComparisonExceptionWithDebuggingViews>
+	^ GtRefactoryChangeManager
+		isolatedInstanceDuring: [ :aChangeManager |
+			| environment realClass exception |
+			environment := GtPharoDummiesGenerator withPackages: 1 classes: 1.
+			[ realClass := environment anyDummyClass realClass.
+			(RBAddMethodChange
+				compile: 'expectedValue
+	^ ''old'''
+				in: realClass
+				classified: 'data') gtExecuteWithUndo.
+			exception := GtExampleComparisonExceptionWithDebuggingViews new
+					expectedString: 'old';
+					actualString: 'new';
+					targetClass: realClass;
+					targetSelector: #expectedValue.
+
+			exception compileObtainedAsExpected.
+			self assert: realClass new expectedValue equals: 'new'.
+
+			aChangeManager undoChange.
+			self assert: realClass new expectedValue equals: 'old'.
+			self assert: aChangeManager hasUndoableOperations.
+			exception ] ensure: [ environment removeFromSystem ] ]
+]
+
 { #category : #asserting }
 GtExceptionsWithExtensionsExamples >> assertDebuggingConfigurationEnabledFor: anException [ 
 	| extensionConfiguration |

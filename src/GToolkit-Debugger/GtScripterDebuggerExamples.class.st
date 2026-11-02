@@ -132,6 +132,48 @@ GtScripterDebuggerExamples >> createDNUMethod [
 	^ scripter
 ]
 
+{ #category : #examples }
+GtScripterDebuggerExamples >> createMethodForDoesNotUnderstandCanBeUndone [
+	"The method created by the create button of a doesNotUnderstand: debugger is recorded:
+	one undo removes it and keeps the changes recorded before it"
+
+	<gtExample>
+	<return: #BlScripter>
+	^ GtRefactoryChangeManager
+		isolatedInstanceDuring: [ :aChangeManager |
+			| environment realClass scripter |
+			environment := GtPharoDummiesGenerator withPackages: 1 classes: 1.
+			[ realClass := environment anyDummyClass realClass.
+			(RBAddMethodChange
+				compile: 'recordedBeforeCreating ^ 1'
+				in: realClass
+				classified: 'accessing') gtExecuteWithUndo.
+
+			scripter := BlScripter new.
+			scripter
+				element: (self
+						debuggerOn: [ realClass new createdInDebugger ]
+						stoppingAt: [ :context | context selector = #doesNotUnderstand: ]).
+			scripter debugger
+				label: 'Click the create button';
+				clickOnDebugActionWithId: #doesNotUnderstand;
+				play.
+			scripter assert
+				label: 'The missing method is created in the class of the receiver';
+				satisfies: [ :aDebuggerElement | realClass includesSelector: #createdInDebugger ];
+				play.
+
+			aChangeManager undoChange.
+			scripter assert
+				label: 'One undo removes the created method and keeps the change before it';
+				satisfies: [ :aDebuggerElement |
+					(realClass includesSelector: #createdInDebugger) not
+						and: [ (realClass includesSelector: #recordedBeforeCreating)
+								and: [ aChangeManager hasUndoableOperations ] ] ];
+				play.
+			scripter ] ensure: [ environment removeFromSystem ] ]
+]
+
 { #category : #private }
 GtScripterDebuggerExamples >> debuggSessionOn: aBlock stoppingAt: testBlock [
 	| process debugSession |
