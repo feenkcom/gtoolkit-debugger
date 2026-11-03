@@ -56,7 +56,7 @@ GtDoesNotUnderstandDebugAction >> executeAction [
 	msgCategory := 'as yet unclassified'.
 	
 	self session
-		implement: msg 
+		gtImplement: msg 
 		classified: msgCategory 
 		inClass: chosenClass 
 		forContext: self interruptedContext.

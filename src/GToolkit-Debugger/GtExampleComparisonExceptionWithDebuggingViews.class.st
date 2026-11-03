@@ -28,12 +28,16 @@ GtExampleComparisonExceptionWithDebuggingViews >> actualString: aString [
 
 { #category : #accessing }
 GtExampleComparisonExceptionWithDebuggingViews >> compileObtainedAsExpected [
-	self targetClass 
-		compile: ('{1}
-	^ {2}' format: {
-				self targetSelector.
-				self actualString printString })
-		classified: 'data'
+	"Compile the obtained value as the expected one through a recorded change,
+	so that it can be undone and keeps the undo history"
+
+	GtRefactoryChangeManager instance
+		performChange: (RBAddMethodChange
+				compile: ('{1}
+	^ {2}' format: {self targetSelector.
+							self actualString printString})
+				in: self targetClass
+				classified: 'data')
 ]
 
 { #category : #'gt - extensions' }
