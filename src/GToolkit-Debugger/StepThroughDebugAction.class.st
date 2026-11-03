@@ -22,6 +22,12 @@ StepThroughDebugAction class >> gt2ContextDebuggingActionFor: aDebugger [
 ]
 
 { #category : #testing }
+StepThroughDebugAction >> appliesToDebugger: aDebugger [
+
+	^ aDebugger debugSession class fastStepThroughMode not
+]
+
+{ #category : #testing }
 StepThroughDebugAction >> canBeDirectlyRun [
 	^ self debugger debugSession  isInterruptedContextSteppable
 ]

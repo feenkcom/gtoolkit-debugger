@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : #accessing }
+GtFilteredDebugSession >> fastStepThrough: aContext [
+	(self isRootContext: aContext) ifTrue: [ ^ self stepInto: aContext ].
+
+	super fastStepThrough: aContext.
+	self finishStep
+]
+
+{ #category : #accessing }
 GtFilteredDebugSession >> filters [
 	^ filters ifNil: [ #() ]
 ]
@@ -48,12 +56,14 @@ GtFilteredDebugSession >> stepInto: aContext [
 		stepInto: ((self isRootContext: aContext)
 				ifTrue: [ interruptedContext ]
 				ifFalse: [ aContext ]).
+	
 	self finishStep
 ]
 
 { #category : #accessing }
 GtFilteredDebugSession >> stepOver: aContext [
 	(self isRootContext: aContext) ifTrue: [ ^ self stepInto: aContext ].
+	
 	super stepOver: aContext.
 	self finishStep
 ]
@@ -61,6 +71,7 @@ GtFilteredDebugSession >> stepOver: aContext [
 { #category : #accessing }
 GtFilteredDebugSession >> stepThrough: aContext [
 	(self isRootContext: aContext) ifTrue: [ ^ self stepInto: aContext ].
+	
 	super stepThrough: aContext.
 	self finishStep
 ]
