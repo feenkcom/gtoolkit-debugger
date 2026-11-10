@@ -189,9 +189,9 @@ GtDebuggerDevScripterCheckStep >> assertInSessionNoException [
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionStackSize: anInteger [
 	self assert
-		label: 'Assert stack size in the debug session is ', anInteger asString;
-		value: [ :anDebuggerElement | 
-			anDebuggerElement debugSession interruptedContext stack size  ] equals: anInteger
+		label: 'Assert stack size in the debug session is ' , anInteger asString;
+		value: [ :anDebuggerElement | self debuggedStackSizeOf: anDebuggerElement debugSession interruptedContext ]
+			equals: anInteger
 ]
 
 { #category : #'steps - checks' }
@@ -335,6 +335,17 @@ GtDebuggerDevScripterCheckStep >> clickOnForceExecuteDebuggingAction [
 { #category : #accessing }
 GtDebuggerDevScripterCheckStep >> debggerToolbarId [
 	^GtMoldableDebuggerToolbarElementId
+]
+
+{ #category : #'accessing - query' }
+GtDebuggerDevScripterCheckStep >> debuggedStackSizeOf: aContext [
+	"Answer the number of contexts from aContext down to the block in BlockClosure>>#newProcess, the root of a debugged process.
+	Contexts that an execution environment adds below it (e.g. ProcessMonitorTestService uses Process>>#on:do: in running examples) are not counted.
+	Answer 0 if there is no such block"
+
+	<return: #Integer>
+	^ aContext stack
+		findFirst: [ :eachContext | eachContext homeMethod == (BlockClosure >> #newProcess) ]
 ]
 
 { #category : #'accessing - query' }
