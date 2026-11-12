@@ -7,6 +7,7 @@ Class {
 { #category : #examples }
 GtScripterDebuggerBreakpointDirectOpeningActionsExamples >> debuggerOnBreakpoint [
 	<gtExample>
+	<timeLimit: 120000>
 	<after: #removeBreakpoint>
 	<return: #BlScripter>
 	| targetMethod debuggerSession debuggerElement aScripter |
