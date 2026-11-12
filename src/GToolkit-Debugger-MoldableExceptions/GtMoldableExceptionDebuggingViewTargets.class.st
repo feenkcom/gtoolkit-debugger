@@ -59,6 +59,15 @@ GtMoldableExceptionDebuggingViewTargets >> description [
 	^ targetDescriptions asCommaString
 ]
 
+{ #category : #views }
+GtMoldableExceptionDebuggingViewTargets >> gtObjectTargetsFor: aView [
+	<gtView>
+	objectTargets ifNil: [ ^ aView empty ].
+	^ aView list
+		title: 'ObjectTargets';
+		items: [ objectTargets ]
+]
+
 { #category : #testing }
 GtMoldableExceptionDebuggingViewTargets >> hasDebuggingViewMethodsWithPragmaNames: aCollectionOfPragmaNames [
 	| hasPragmas |
