@@ -34,6 +34,21 @@ GtDebugSession class >> shouldForceStep [
 	^ ShouldForceStep ifNil: [ true ]
 ]
 
+{ #category : #printing }
+GtDebugSession >> debugLogString [
+	"Return a report like the one written in the Pharo debug log when an exception is logged:
+	the exception description, followed by the report of the interrupted context (see Context>>#errorReportOn:)"
+
+	^ String
+		streamContents: [ :aStream | 
+			aStream
+				nextPutAll: (self exception
+						ifNil: [ self name ]
+						ifNotNil: [ :anException | anException description ]);
+				cr.
+			self interruptedContext errorReportOn: aStream ]
+]
+
 { #category : #'gt - actions' }
 GtDebugSession >> debuggerContextMenuObjects [
 	"Objects whose actions targeting GtDebuggerContextMenuTarget appear in the debugger's menu"
@@ -87,6 +102,36 @@ GtDebugSession >> exceptionsHistory [
 	"Exceptions the session had, oldest first. An exception is added when it is set and again when a debug action clears or replaces it"
 
 	^ exceptionsHistory
+]
+
+{ #category : #'gt - actions' }
+GtDebugSession >> gtActionCopyDebugLogFor: anAction [
+	<gtAction>
+	self interruptedContext ifNil: [ ^ anAction noAction ].
+
+	^ anAction button
+		priority: 31;
+		target: GtDebuggerContextMenuTarget;
+		addTarget: GtMoldableExceptionDebuggerContextMenuTarget;
+		icon: BrGlamorousVectorIcons clipboard;
+		label: 'Copy Debug Log';
+		menuItemGroup: BrMenuItemGroupConfiguration debugger;
+		action: [ :aButton | GtClipboard clipboardText: self debugLogString ]
+]
+
+{ #category : #'gt - actions' }
+GtDebugSession >> gtActionCopyStackMethodsFor: anAction [
+	<gtAction>
+	self interruptedContext ifNil: [ ^ anAction noAction ].
+
+	^ anAction button
+		priority: 30;
+		target: GtDebuggerContextMenuTarget;
+		addTarget: GtMoldableExceptionDebuggerContextMenuTarget;
+		icon: BrGlamorousVectorIcons clipboard;
+		label: 'Copy Stack';
+		menuItemGroup: BrMenuItemGroupConfiguration debugger;
+		action: [ :aButton | GtClipboard clipboardText: self stackMethodsString ]
 ]
 
 { #category : #'gt - actions' }
@@ -182,6 +227,13 @@ GtDebugSession >> spawnNewUIProcessIfNecessary [
 	"If we're about to debug the UI process, we must create a new UI process to take its place. Because the debugged process will be suspended at some point, and suspending the UI process means freezing the UI of the image"
 
 	self errorWasInUIProcess ifTrue: [ self spawnNewUIProcess ]
+]
+
+{ #category : #printing }
+GtDebugSession >> stackMethodsString [
+	"Return the methods on the stack of the interrupted context, one per line"
+
+	^ GtDebuggerStackMethodsPrinter new printStackOf: self interruptedContext
 ]
 
 { #category : #'debugging actions' }

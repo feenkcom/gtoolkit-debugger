@@ -6,14 +6,13 @@ Class {
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertCommonDNUExecutionDebuggingActions [
-	self 
+	self
 		substeps2: 'Assert common debugging actions after a DNU'
-		do: [ :aSubStep |
+		do: [ :aSubStep | 
 			aSubStep debugger
 				assertExistsDebugActionWithId: #doesNotUnderstand;
 				assertNormalExecutionStateForDebugActionWithId: #doesNotUnderstand;
 				assertNormalExecutionStateForDebugActionWithId: #restart;
-				assertNormalExecutionStateForDebugActionWithId: #copyToClipboard;
 				assertEnforceStepStateForDebugActionWithId: #stepOver;
 				assertEnforceStepStateForDebugActionWithId: #stepInto;
 				assertEnforceStepStateForDebugActionWithId: #stepThrough;
@@ -23,12 +22,11 @@ GtDebuggerDevScripterCheckStep >> assertCommonDNUExecutionDebuggingActions [
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsForForceStepping [
-	self 
+	self
 		substeps2: 'Assert common debugging actions'
-		do: [ :aSubStep |
+		do: [ :aSubStep | 
 			aSubStep debugger
 				assertNormalExecutionStateForDebugActionWithId: #restart;
-				assertNormalExecutionStateForDebugActionWithId: #copyToClipboard;
 				assertEnforceStepStateForDebugActionWithId: #stepOver;
 				assertEnforceStepStateForDebugActionWithId: #stepInto;
 				assertEnforceStepStateForDebugActionWithId: #stepThrough;
@@ -38,12 +36,11 @@ GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsFor
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertCommonNormalExecutionDebuggingActionsForNormalStepping [
-	self 
+	self
 		substeps2: 'Assert common debugging actions'
-		do: [ :aSubStep |
+		do: [ :aSubStep | 
 			aSubStep debugger
 				assertNormalExecutionStateForDebugActionWithId: #restart;
-				assertNormalExecutionStateForDebugActionWithId: #copyToClipboard ;
 				assertNormalExecutionStateForDebugActionWithId: #stepOver;
 				assertNormalExecutionStateForDebugActionWithId: #stepInto;
 				assertNormalExecutionStateForDebugActionWithId: #stepThrough;
