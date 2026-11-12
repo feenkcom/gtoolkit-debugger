@@ -209,6 +209,11 @@ GtDebuggerElement >> stackDebuggingActionsPragmas [
 	^ #( gt2StackDebuggingAction )
 ]
 
+{ #category : #testing }
+GtDebuggerElement >> supportsVariableValueOverlays [
+	^ false
+]
+
 { #category : #actions }
 GtDebuggerElement >> terminateSession [
 	self session ifNotNil: [ :aSession | 

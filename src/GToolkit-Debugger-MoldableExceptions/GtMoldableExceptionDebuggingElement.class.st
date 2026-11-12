@@ -268,24 +268,9 @@ GtMoldableExceptionDebuggingElement >> updateToolbarWithActionsFromView: aPhlowV
 
 { #category : #updating }
 GtMoldableExceptionDebuggingElement >> updateToolbarWithExtraActions [
-	| phlowAction |
-	phlowAction := GtPhlowAction new dropdown
-		tooltip: 'Inspect';
-		icon: BrGlamorousVectorIcons hamburger;
-		content: [ :aButton | 
-			BrGlamorousSimpleContextMenuContent new
-				items:{
-					('Inspect Exception' -> [ :anElement | 
-						anElement phlow spawnObject: self targetException.
-						aButton dispatchEvent: BrDropdownHideWish new]).
-					('Inspect Debugging Session' -> [ :anElement | 
-						anElement phlow spawnObject: debuggingSession.
-						aButton dispatchEvent: BrDropdownHideWish new ])};
-				yourself ].
-	phlowAction 
-		asElement: [ :actionElement | 
-			toolbar addItem: actionElement ]				
-		withHostElement: mainTab 
+	(GtDebuggerContextMenuDebugAction forDebugger: self)
+		asDebugActionElementWithHostElement: mainTab
+		do: [ :anElement | toolbar addItem: anElement ]
 ]
 
 { #category : #updating }

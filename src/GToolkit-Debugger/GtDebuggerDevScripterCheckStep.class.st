@@ -154,9 +154,10 @@ GtDebuggerDevScripterCheckStep >> assertInCodersContextMethod: aMethod atTopInde
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInCodersListContextMethod: aMethod atTopIndex: anIndex [
 	self assert
-		label: 'Assert context in coders list at index ', anIndex asString ,' has method ', aMethod printString;
-		value: [ :aCoderElement | 
-				aCoderElement textualCoderViewModel coderModel compiledMethod   ] 
+		onParentStepTarget: self;
+		label: 'Assert context in coders list at index ' , anIndex asString , ' has method '
+				, aMethod printString;
+		value: [ :aCoderElement | aCoderElement textualCoderViewModel coderModel compiledMethod ]
 			equals: aMethod;
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
 ]
@@ -164,31 +165,33 @@ GtDebuggerDevScripterCheckStep >> assertInCodersListContextMethod: aMethod atTop
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionContextMethod: aMethod atTopIndex: anIndex [
 	self assert
-		label: 'Assert context in session at index ', anIndex asString ,' has method ', aMethod printString;
-		value: [ :anDebuggerElement | 
-				(anDebuggerElement debugSession interruptedContext stack at: anIndex) method  ] 
+		onParentStepTarget: self;
+		label: 'Assert context in session at index ' , anIndex asString , ' has method '
+				, aMethod printString;
+		value: [ :anDebuggerElement | (anDebuggerElement debugSession interruptedContext stack at: anIndex) method ]
 			equals: aMethod
 ]
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionExceptionOfType: anExceptionClass [
 	self assert
-		label: 'Assert debug session has exception of type ', anExceptionClass name;
-		satisfies: [ :anDebuggerElement | 
-			anDebuggerElement debugSession exception isKindOf: anExceptionClass  ]
+		onParentStepTarget: self;
+		label: 'Assert debug session has exception of type ' , anExceptionClass name;
+		satisfies: [ :anDebuggerElement | anDebuggerElement debugSession exception isKindOf: anExceptionClass ]
 ]
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionNoException [
 	self assert
+		onParentStepTarget: self;
 		label: 'Assert debug session has no exception ';
-		satisfies: [ :anDebuggerElement | 
-			anDebuggerElement debugSession exception isNil  ]
+		satisfies: [ :anDebuggerElement | anDebuggerElement debugSession exception isNil ]
 ]
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertInSessionStackSize: anInteger [
 	self assert
+		onParentStepTarget: self;
 		label: 'Assert stack size in the debug session is ' , anInteger asString;
 		value: [ :anDebuggerElement | self debuggedStackSizeOf: anDebuggerElement debugSession interruptedContext ]
 			equals: anInteger
@@ -197,19 +200,22 @@ GtDebuggerDevScripterCheckStep >> assertInSessionStackSize: anInteger [
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertIsMainDebuggerElement [
 	self assert
+		onParentStepTarget: self;
 		label: 'Assert main debugger element id';
-		value: [ :anElement | anElement id ] equals: GtMoldableDebuggerMainElementId new
+		value: [ :anElement | anElement id ]
+			equals: GtMoldableDebuggerMainElementId new
 ]
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertNextInstructionMatches: aBlock label: aLabel [
 	self assert
+		onParentStepTarget: self;
 		label: aLabel;
 		satisfies: [ :anDebuggerElement | 
 			| instructionStream |
-			instructionStream := anDebuggerElement debugSession interruptedContext instructionStream.
-			aBlock cull: instructionStream peekInstruction cull: instructionStream ] 
-			
+			instructionStream := anDebuggerElement debugSession interruptedContext
+					instructionStream.
+			aBlock cull: instructionStream peekInstruction cull: instructionStream ]
 ]
 
 { #category : #'steps - checks' }
@@ -286,7 +292,8 @@ GtDebuggerDevScripterCheckStep >> assertNormalExecutionStateForDebugActionWithId
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderCollapsed [
-	^self assert
+	^ self assert
+		onParentStepTarget: self;
 		label: 'assert playground is collapsed';
 		satisfies: [ :anElement | anElement isCollapsed ];
 		// GtDebuggerPlaygroundElement
@@ -294,25 +301,27 @@ GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderCollapsed [
 
 { #category : #'steps - checks' }
 GtDebuggerDevScripterCheckStep >> assertPlaygroundExpanderVisible [
-	^self assert
+	^ self assert
+		onParentStepTarget: self;
 		label: 'assert playground is visible';
 		satisfies: [ :anElement | anElement isCollapsed not ];
 		// GtDebuggerPlaygroundElement
 ]
 
 { #category : #'steps - checks' }
-GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [ 
+GtDebuggerDevScripterCheckStep >> assertSelectedDebuggerOfType: aDebuggerClass [
+	self assert
+		onParentStepTarget: self;
+		label: 'Assert switch debugger buttons container exists';
+		value: [ :aTabsGroup | (aTabsGroup tabs detect: [ :aTab | aTab isSelected ]) tabLabel text asString ]
+			equals: aDebuggerClass defaultTitle;
+		// GtMoldableDebuggerSwitchButtonsContainerElementId.
 
 	self assert
-		label: 'Assert switch debugger buttons container exists';
-		value: [ :aTabsGroup |
-			(aTabsGroup tabs detect: [ :aTab | aTab isSelected ]) tabLabel text asString ] equals: aDebuggerClass defaultTitle;
-		// GtMoldableDebuggerSwitchButtonsContainerElementId.
-		
-	self assert
-		label: 'Assert debugger of type ', aDebuggerClass name;
+		onParentStepTarget: self;
+		label: 'Assert debugger of type ' , aDebuggerClass name;
 		exists;
-		// aDebuggerClass.
+		// aDebuggerClass
 ]
 
 { #category : #actions }

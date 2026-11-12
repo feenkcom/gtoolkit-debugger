@@ -69,6 +69,13 @@ GtAbstractExpandableDebuggerElement >> addDefaultTabsToGroup: aTabGroup [
 		at: 1
 ]
 
+{ #category : #testing }
+GtAbstractExpandableDebuggerElement >> areVariableValueOverlaysEnabled [
+	^ self
+		stackElementDo: [ :aStackElement | aStackElement areAnnotationsEnabled ]
+		ifNone: [ false ]
+]
+
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildContextVariablesElement [
 	| contextVariablesElement |
@@ -187,28 +194,16 @@ GtAbstractExpandableDebuggerElement >> buildStackTabGroupForElement: aStackConta
 
 { #category : #'building widgets' }
 GtAbstractExpandableDebuggerElement >> buildStackToolbarActionsForDebuggingActions: aCollectionOfDebuggingActions [
-	<return: #Collection of: #BrButton>	
-	| debuggingActionButtons toggle |
-	
-	debuggingActionButtons := OrderedCollection new.
-	aCollectionOfDebuggingActions do: [ :aDebuggingAction | 
-		aDebuggingAction 
-			asDebugActionElementWithHostElement: self
-			do: [ :anElement | 
-				debuggingActionButtons add: anElement ] ].
-		
-	toggle := BrToggle new 
-		aptitude: BrGlamorousButtonWithIconAptitude 
-			+ BrGlamorousToggleBackgroundAptitude;
-		label: 'Variable Value Overlays';
-		icon: BrGlamorousVectorIcons edit asElement;
-		when: BrToggleActivatedEvent do: [ :anEvent | 
-			self stackElement enableVariableAnnotations ];
-		when: BrToggleDeactivatedEvent do: [ :anEvent | 
-			self stackElement disableVariableAnnotations ].
-	debuggingActionButtons add: toggle.
-	
-	^ debuggingActionButtons
+	<return: #Collection of: #BlElement>
+	| debuggingActionElements |
+	debuggingActionElements := OrderedCollection new.
+	aCollectionOfDebuggingActions
+		do: [ :aDebuggingAction | 
+			aDebuggingAction
+				asDebugActionElementWithHostElement: self
+				do: [ :anElement | debuggingActionElements add: anElement ] ].
+
+	^ debuggingActionElements
 ]
 
 { #category : #'building widgets' }
@@ -385,6 +380,20 @@ GtAbstractExpandableDebuggerElement >> detailsPane [
 	^ self childWithId: #detailsPane
 ]
 
+{ #category : #actions }
+GtAbstractExpandableDebuggerElement >> disableVariableValueOverlays [
+	self
+		stackElementDo: [ :aStackElement | aStackElement disableVariableAnnotations ]
+		ifNone: [  ]
+]
+
+{ #category : #actions }
+GtAbstractExpandableDebuggerElement >> enableVariableValueOverlays [
+	self
+		stackElementDo: [ :aStackElement | aStackElement enableVariableAnnotations ]
+		ifNone: [  ]
+]
+
 { #category : #opening }
 GtAbstractExpandableDebuggerElement >> filteredStack [
 	^ (self session stackOfSize: 50 ) select: [ :aContext | 
@@ -511,8 +520,27 @@ GtAbstractExpandableDebuggerElement >> stackElement [
 ]
 
 { #category : #'accessing - elements' }
+GtAbstractExpandableDebuggerElement >> stackElementDo: aBlock ifNone: aNoneBlock [
+	"The stack element may not exist yet, e.g. while the toolbar is created"
+
+	^ self
+		childNamed: #stackPane
+		ifFound: [ :aStackPane | 
+			aStackPane
+				childNamed: #stackElement
+				ifFound: aBlock
+				ifNone: aNoneBlock ]
+		ifNone: aNoneBlock
+]
+
+{ #category : #'accessing - elements' }
 GtAbstractExpandableDebuggerElement >> stackPane [
 	^ self childNamed: #stackPane
+]
+
+{ #category : #testing }
+GtAbstractExpandableDebuggerElement >> supportsVariableValueOverlays [
+	^ true
 ]
 
 { #category : #updating }
@@ -584,55 +612,24 @@ GtAbstractExpandableDebuggerElement >> updateStackWidget [
 	self stackElement updateForSession: debuggingSession.
 ]
 
-{ #category : #callbacks }
+{ #category : #updating }
 GtAbstractExpandableDebuggerElement >> updateToolbarActions [
 	| debuggingActions |
-	
 	debuggingActions := self collectMainToolbarDebuggingActions.
 	(debuggingActions
 		gtHasEqualElements: toolbar viewModel model
 		by: [ :a :b | a id = b id ])
-			ifTrue: [ 
-				toolbar items do: [ :anElement |
-					(anElement userData 
-						includesKey: #debuggingAction )
-						ifTrue: [
-							anElement updateForCurrentDebuggingAction  ] ]. 
+		ifTrue: [ toolbar items
+				do: [ :anElement | 
+					(anElement userData includesKey: #debuggingAction)
+						ifTrue: [ anElement updateForCurrentDebuggingAction ] ].
 			^ self ].
 
 	toolbar viewModel model: debuggingActions.
 	toolbar removeAllItems.
-	
-	(self buildStackToolbarActionsForDebuggingActions: debuggingActions) 
-		do: [ :anAction | 
-			toolbar addItem: anAction ].
-		
-	self updateToolbarWithExtraActions.
-]
 
-{ #category : #callbacks }
-GtAbstractExpandableDebuggerElement >> updateToolbarWithExtraActions [
-	| phlowAction |
-	phlowAction := GtPhlowAction new dropdown
-		tooltip: 'Inspect';
-		icon: BrGlamorousVectorIcons hamburger;
-		content: [ :aButton | 
-			| actions |
-			actions := OrderedCollection new.
-			debuggingSession exception ifNotNil: [
-				actions add: ('Inspect Exception' -> [ :anElement | 
-					anElement phlow spawnObject: debuggingSession exception.
-					aButton dispatchEvent: BrDropdownHideWish new])].
-			actions add: ('Inspect Debugging Session' -> [ :anElement | 
-				anElement phlow spawnObject: debuggingSession.
-				aButton dispatchEvent: BrDropdownHideWish new ]).
-			BrGlamorousSimpleContextMenuContent new
-				items:actions;
-				yourself ].
-	phlowAction 
-		asElement: [ :actionElement | 
-			toolbar addItem: actionElement ]				
-		withHostElement: toolbar 
+	(self buildStackToolbarActionsForDebuggingActions: debuggingActions)
+		do: [ :anAction | toolbar addItem: anAction ]
 ]
 
 { #category : #updating }

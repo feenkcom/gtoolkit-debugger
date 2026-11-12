@@ -34,6 +34,17 @@ GtDebugSession class >> shouldForceStep [
 	^ ShouldForceStep ifNil: [ true ]
 ]
 
+{ #category : #'gt - actions' }
+GtDebugSession >> debuggerContextMenuObjects [
+	"Objects whose actions targeting GtDebuggerContextMenuTarget appear in the debugger's menu"
+
+	^ self exception
+		ifNil: [ {self} ]
+		ifNotNil: [ :anException | 
+			{self.
+				anException} ]
+]
+
 { #category : #initialization }
 GtDebugSession >> detectUIProcess [
 
@@ -71,6 +82,60 @@ GtDebugSession >> exception: anException [
 		exceptionsHistory add: anException ]
 ]
 
+{ #category : #accessing }
+GtDebugSession >> exceptionsHistory [
+	"Exceptions the session had, oldest first. An exception is added when it is set and again when a debug action clears or replaces it"
+
+	^ exceptionsHistory
+]
+
+{ #category : #'gt - actions' }
+GtDebugSession >> gtActionInspectDebugSessionFor: anAction [
+	<gtAction>
+	^ anAction button
+		priority: 20;
+		target: GtDebuggerContextMenuTarget;
+		icon: BrGlamorousVectorIcons inspect;
+		label: 'Inspect Debugging Session';
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | aButton phlow spawnObject: self ]
+]
+
+{ #category : #'gt - actions' }
+GtDebugSession >> gtActionInspectExceptionFor: anAction [
+	<gtAction>
+	self exception ifNil: [ ^ anAction noAction ].
+
+	^ anAction button
+		priority: 10;
+		target: GtDebuggerContextMenuTarget;
+		addTarget: GtPhlowObjectContextMenuTarget;
+		icon: BrGlamorousVectorIcons inspect;
+		label: 'Inspect Exception';
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | 
+			"Get the exception when the action is executed, as it can change while debugging"
+			self exception
+				ifNotNil: [ :anException | aButton phlow spawnObject: anException ] ]
+]
+
+{ #category : #'gt - actions' }
+GtDebugSession >> gtActionInspectRecentExceptionFor: anAction [
+	<gtAction>
+	self recentException ifNil: [ ^ anAction noAction ].
+
+	^ anAction button
+		priority: 15;
+		target: GtDebuggerContextMenuTarget;
+		addTarget: GtPhlowObjectContextMenuTarget;
+		icon: BrGlamorousVectorIcons inspect;
+		label: 'Inspect Recent Exception';
+		menuItemGroup: BrMenuItemGroupConfiguration navigation;
+		action: [ :aButton | 
+			self recentException
+				ifNotNil: [ :anException | aButton phlow spawnObject: anException ] ]
+]
+
 { #category : #initialization }
 GtDebugSession >> initialize [
 	super initialize.
@@ -82,6 +147,17 @@ GtDebugSession >> initialize [
 GtDebugSession >> isAboutUIProcess [
 
 	^self errorWasInUIProcess
+]
+
+{ #category : #accessing }
+GtDebugSession >> recentException [
+	"Answer the most recent exception from the history that is not the current exception, or nil"
+
+	| currentException |
+	currentException := self exception.
+	exceptionsHistory
+		reverseDo: [ :each | each == currentException ifFalse: [ ^ each ] ].
+	^ nil
 ]
 
 { #category : #private }

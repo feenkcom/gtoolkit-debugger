@@ -5,34 +5,71 @@ Class {
 }
 
 { #category : #'steps - checks' }
+GtBasicDebuggerDevScripterCheckStep >> assertContextMenuHasItemWithLabel: aLabel [
+	"Assert that the opened debugger context menu has an item, see #openContextMenu"
+
+	^ self menuStep
+		label: 'Assert debugger context menu has item ' , aLabel printString;
+		assertMenuItemWithLabelExists: aLabel;
+		onMenuContainer;
+		yourself
+]
+
+{ #category : #'steps - checks' }
+GtBasicDebuggerDevScripterCheckStep >> assertContextMenuHasNoItemWithLabel: aLabel [
+	"Assert that the opened debugger context menu has no such item, see #openContextMenu"
+
+	| aMenuStep |
+	aMenuStep := self menuStep
+			label: 'Assert debugger context menu has no item ' , aLabel printString;
+			onMenuContainer;
+			yourself.
+	aMenuStep assert
+		label: ('Assert menu item with label {1} does not exist' format: {aLabel});
+		notExists;
+		onParentStepTarget: aMenuStep;
+		// #'menu--list';
+		// #'menu--label';
+		@ [ :each | each text asString = aLabel ].
+	^ aMenuStep
+]
+
+{ #category : #'steps - checks' }
 GtBasicDebuggerDevScripterCheckStep >> assertDebuggerSwitchButtonsWithLabels: aCollectionOfLabels [
 	self assert
+		onParentStepTarget: self;
 		label: 'Assert switch debugger buttons container exists';
 		exists;
 		// GtMoldableDebuggerSwitchButtonsContainerElementId.
-		
+
 	self assert
+		onParentStepTarget: self;
 		label: 'Assert number of switch debugger elements';
 		childrenCount: aCollectionOfLabels size;
 		// GtMoldableDebuggerSwitchButtonsContainerElementId.
-		
+
 	self assert
+		onParentStepTarget: self;
 		label: 'Assert number of switch debugger tabs';
-		value: [ :aTabsGroup | aTabsGroup tabs size ] equals: aCollectionOfLabels size ;
+		value: [ :aTabsGroup | aTabsGroup tabs size ]
+			equals: aCollectionOfLabels size;
 		// GtMoldableDebuggerSwitchButtonsContainerElementId.
-		
+
 	self assert
+		onParentStepTarget: self;
 		label: 'Assertswitch debugger tab labels';
 		value: [ :aTabsGroup | 
-			(aTabsGroup viewModel tabs 
-				collect: [ :aTab | aTab tabLabel text asString ]) asArray ] equals: aCollectionOfLabels;
-		// GtMoldableDebuggerSwitchButtonsContainerElementId.
+				(aTabsGroup viewModel tabs collect: [ :aTab | aTab tabLabel text asString ])
+					asArray ]
+			equals: aCollectionOfLabels;
+		// GtMoldableDebuggerSwitchButtonsContainerElementId
 ]
 
 { #category : #'steps - checks' }
 GtBasicDebuggerDevScripterCheckStep >> assertExistsDebugActionWithId: aButtonId [
 	self assert
-		label: 'Assert debug acction with id ', aButtonId printString , ' exists.';
+		onParentStepTarget: self;
+		label: 'Assert debug acction with id ' , aButtonId printString , ' exists.';
 		exists;
 		// self debggerToolbarId;
 		// aButtonId
@@ -41,7 +78,8 @@ GtBasicDebuggerDevScripterCheckStep >> assertExistsDebugActionWithId: aButtonId 
 { #category : #'steps - checks' }
 GtBasicDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedString: aString atTopIndex: anIndex [
 	self assert
-		label: 'Assert context in coders list at index ', anIndex asString;
+		onParentStepTarget: self;
+		label: 'Assert context in coders list at index ' , anIndex asString;
 		value: [ :aCoderElement | 
 				| attributes |
 				attributes := Dictionary new.
@@ -54,19 +92,29 @@ GtBasicDebuggerDevScripterCheckStep >> assertInCodersListVisuallyHighlightedStri
 								(locations notEmpty and: [ locations last last + 1 = from ])
 									ifTrue: [ locations at: locations size put: (locations last first to: to) ]
 									ifFalse: [ locations add: (from to: to) ] ] ].
-				
-				attributes keys 
-					detect: [ :eachAttribute |
-					(eachAttribute isKindOf: BlTextHighlightAttribute) and: [ 
-						eachAttribute id = GtSourceCoderViewModel debuggerTextHighlightId ] ]
-					ifFound: [:anAttribute | 
-						 (aCoderElement textualCoderViewModel styledText 
-						 	copyFrom: (attributes at: anAttribute) first first 
-						 	to: (attributes at: anAttribute) first last )
-						 		asString trimBoth ] 
-					ifNone: [ AssertionFailure signal: 'no highlight found' ] ] 
+
+				attributes keys
+					detect: [ :eachAttribute | 
+						(eachAttribute isKindOf: BlTextHighlightAttribute)
+							and: [ eachAttribute id = GtSourceCoderViewModel debuggerTextHighlightId ] ]
+					ifFound: [ :anAttribute | 
+						(aCoderElement textualCoderViewModel styledText
+							copyFrom: (attributes at: anAttribute) first first
+							to: (attributes at: anAttribute) first last) asString trimBoth ]
+					ifNone: [ AssertionFailure signal: 'no highlight found' ] ]
 			equals: aString trimBoth;
 		// (GtExpandableContextMethodCoderId indexed: anIndex)
+]
+
+{ #category : #'steps - interactions' }
+GtBasicDebuggerDevScripterCheckStep >> clickContextMenuItemWithLabel: aLabel [
+	"Click an item of the opened debugger context menu, see #openContextMenu"
+
+	^ self menuStep
+		label: 'Click debugger context menu item ' , aLabel printString;
+		clickMenuItemWithLabel: aLabel;
+		onMenuContainer;
+		yourself
 ]
 
 { #category : #actions }
@@ -143,4 +191,13 @@ GtBasicDebuggerDevScripterCheckStep >> clickOnStepThroughButton [
 { #category : #accessing }
 GtBasicDebuggerDevScripterCheckStep >> debggerToolbarId [
 	^ self subclassResponsibility
+]
+
+{ #category : #'steps - interactions' }
+GtBasicDebuggerDevScripterCheckStep >> openContextMenu [
+	"Open the dropdown with the actions targeting GtDebuggerContextMenuTarget"
+
+	^ self menuStep
+		label: 'Open debugger context menu';
+		openDropdownWithId: GtDebuggerContextMenuButtonId
 ]

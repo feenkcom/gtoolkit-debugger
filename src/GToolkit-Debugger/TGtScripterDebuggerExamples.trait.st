@@ -98,6 +98,21 @@ TGtScripterDebuggerExamples >> forkedDebugSessionOn: aBlock withException: anExc
 ]
 
 { #category : #'private - debugging' }
+TGtScripterDebuggerExamples >> scripterInPagerWithDebuggerOn: aDebugSession [
+	"Answer a scripter on a debugger displayed in a pager, so that inspected objects open in a new pane.
+	The scripter model is the session used by the debugger"
+
+	<return: #BlScripter>
+	| aDebugger aScripter |
+	aDebugger := (GtMoldableDebugger on: aDebugSession) beDetailedLevel.
+
+	aScripter := BlScripter new.
+	aScripter element: aDebugger inPager.
+	aScripter model: aDebugger debugSession.
+	^ aScripter
+]
+
+{ #category : #'private - debugging' }
 TGtScripterDebuggerExamples >> scripterWithDebuggerOn: aBlock stoppingAt: aTestBlock [
 	<return: #GtDebugSession>
 	| aDebugger aScripter |
