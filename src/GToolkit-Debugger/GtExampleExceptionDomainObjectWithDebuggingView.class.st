@@ -35,6 +35,21 @@ GtExampleExceptionDomainObjectWithDebuggingView >> dictionary: anObject [
 	dictionary := anObject
 ]
 
+{ #category : #'gt - actions' }
+GtExampleExceptionDomainObjectWithDebuggingView >> gtActionInspectMessageFor: anAction [
+	"Shown in the context menu of the moldable exception debugger,
+	when I am a debugging target of the exception (see GtExampleExceptionWithForwardedDebuggingView>>#gtExceptionDebuggerSpecification)"
+
+	<gtAction>
+	message ifNil: [ ^ anAction noAction ].
+
+	^ anAction button
+		target: GtMoldableExceptionDebuggerContextMenuTarget;
+		icon: BrGlamorousVectorIcons inspect;
+		label: 'Inspect Message';
+		action: [ :aButton | aButton phlow spawnObject: message ]
+]
+
 { #category : #'gt - extensions' }
 GtExampleExceptionDomainObjectWithDebuggingView >> gtViewCollectionFor: aView [
 	<gtView>

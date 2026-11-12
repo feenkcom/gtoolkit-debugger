@@ -95,6 +95,7 @@ GtDebugSession >> gtActionInspectDebugSessionFor: anAction [
 	^ anAction button
 		priority: 20;
 		target: GtDebuggerContextMenuTarget;
+		addTarget: GtMoldableExceptionDebuggerContextMenuTarget;
 		icon: BrGlamorousVectorIcons inspect;
 		label: 'Inspect Debugging Session';
 		menuItemGroup: BrMenuItemGroupConfiguration navigation;
@@ -109,6 +110,7 @@ GtDebugSession >> gtActionInspectExceptionFor: anAction [
 	^ anAction button
 		priority: 10;
 		target: GtDebuggerContextMenuTarget;
+		addTarget: GtMoldableExceptionDebuggerContextMenuTarget;
 		addTarget: GtPhlowObjectContextMenuTarget;
 		icon: BrGlamorousVectorIcons inspect;
 		label: 'Inspect Exception';
@@ -127,6 +129,7 @@ GtDebugSession >> gtActionInspectRecentExceptionFor: anAction [
 	^ anAction button
 		priority: 15;
 		target: GtDebuggerContextMenuTarget;
+		addTarget: GtMoldableExceptionDebuggerContextMenuTarget;
 		addTarget: GtPhlowObjectContextMenuTarget;
 		icon: BrGlamorousVectorIcons inspect;
 		label: 'Inspect Recent Exception';

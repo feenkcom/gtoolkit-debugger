@@ -29,9 +29,9 @@ GtDebuggerContextMenuDebugAction >> createPhlowAction [
 		id: GtDebuggerContextMenuButtonId;
 		tooltip: self defaultLabel;
 		icon: self defaultIcon;
-		phlowActionsForObjects: self debugger debugSession debuggerContextMenuObjects
+		phlowActionsForObjects: self debugger debuggerContextMenuObjects
 			inContext: (GtPhlowContext new currentDebugger: self debugger)
-			fromTarget: GtDebuggerContextMenuTarget
+			fromTargets: self debugger debuggerContextMenuTargets
 ]
 
 { #category : #accessing }

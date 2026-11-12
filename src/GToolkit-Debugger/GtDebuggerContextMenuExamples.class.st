@@ -41,12 +41,57 @@ GtDebuggerContextMenuExamples >> moldableExceptionDebuggerInspectException [
 
 	scripter debugger
 		openContextMenu;
+		assertContextMenuHasNoItemWithLabel: 'Analyse exception (static)';
 		clickContextMenuItemWithLabel: 'Inspect Exception';
 		play.
 
 	scripter inspectorStep
 		onPagerPaneWithIndex: 2;
 		assertInspectedObject: scripter model exception;
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - moldable exception debugger' }
+GtDebuggerContextMenuExamples >> moldableExceptionDebuggerInspectFromDebuggingTarget [
+	"A domain object added with #addDebuggingTargetFor: contributes an action to the context menu"
+
+	<gtExample>
+	<return: #BlScripter>
+	| scripter |
+	scripter := self scripterOnMoldableExceptionDebuggerWithDebuggingTargets.
+
+	scripter debugger
+		openContextMenu;
+		assertContextMenuHasNoItemWithLabel: 'Inspect Expected String';
+		clickContextMenuItemWithLabel: 'Inspect Message';
+		play.
+
+	scripter inspectorStep
+		onPagerPaneWithIndex: 2;
+		assertInspectedObject: scripter model exception objectOne message;
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - moldable exception debugger' }
+GtDebuggerContextMenuExamples >> moldableExceptionDebuggerInspectFromSpecificationTarget [
+	<gtExample>
+	<return: #BlScripter>
+	| scripter |
+	scripter := self scripterOnMoldableExceptionDebuggerWithSpecificationTarget.
+
+	scripter debugger
+		openContextMenu;
+		assertContextMenuHasItemWithLabel: 'Inspect Exception';
+		clickContextMenuItemWithLabel: 'Inspect Expected String';
+		play.
+
+	scripter inspectorStep
+		onPagerPaneWithIndex: 2;
+		assertInspectedObject: scripter model exception expectedString;
 		play.
 
 	^ scripter
@@ -141,6 +186,51 @@ GtDebuggerContextMenuExamples >> scripterOnMoldableExceptionDebugger [
 	scripter debugger
 		onThisOrBreadthFirstChildOfClass: GtMoldableDebugger;
 		assertInSessionExceptionOfType: GtExampleExceptionWithDebuggingView;
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - moldable exception debugger' }
+GtDebuggerContextMenuExamples >> scripterOnMoldableExceptionDebuggerWithDebuggingTargets [
+	"The exception's debugger specification adds domain objects as debugging targets"
+
+	<gtExample>
+	<return: #BlScripter>
+	| scripter |
+	scripter := self
+			scripterInPagerWithDebuggerOn: (self
+					debugSessionOn: [ GtExampleExceptionWithForwardedDebuggingView signalWithDomainData ]
+					withException: GtExampleExceptionWithForwardedDebuggingView).
+
+	scripter assert
+		label: 'Assert the moldable exception debugger is displayed';
+		exists;
+		// GtMoldableExceptionDebuggingElement;
+		play.
+
+	^ scripter
+]
+
+{ #category : #'examples - moldable exception debugger' }
+GtDebuggerContextMenuExamples >> scripterOnMoldableExceptionDebuggerWithSpecificationTarget [
+	"The exception's debugger specification adds an extra target to the context menu"
+
+	<gtExample>
+	<return: #BlScripter>
+	| scripter |
+	scripter := self
+			scripterInPagerWithDebuggerOn: (self
+					debugSessionOn: [ GtExampleExceptionWithDebuggerContextMenuAction new
+							expectedString: 'expected';
+							actualString: 'actual';
+							signal ]
+					withException: GtExampleExceptionWithDebuggerContextMenuAction).
+
+	scripter assert
+		label: 'Assert the moldable exception debugger is displayed';
+		exists;
+		// GtMoldableExceptionDebuggingElement;
 		play.
 
 	^ scripter

@@ -87,6 +87,16 @@ GtMoldableExceptionDebuggingViewTargets >> initialize [
 	objectTargets := OrderedCollection new.
 ]
 
+{ #category : #traversing }
+GtMoldableExceptionDebuggingViewTargets >> targetObjects [
+	"Return the exception (unless excluded) and the objects added with #addDebuggingTargetFor:"
+
+	^ Array
+		streamContents: [ :aStream | 
+			self
+				withIndividualTargetsDo: [ :aTarget | aStream nextPut: aTarget targetObject ] ]
+]
+
 { #category : #configuration }
 GtMoldableExceptionDebuggingViewTargets >> withDebuggingExceptionTargetFor: anException [
 	"Configures the given exception as a target for views and actions"

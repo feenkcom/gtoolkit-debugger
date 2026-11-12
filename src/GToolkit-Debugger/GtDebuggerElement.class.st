@@ -132,6 +132,21 @@ GtDebuggerElement >> debugSession [
 	^ debuggingSession
 ]
 
+{ #category : #'accessing - context menu' }
+GtDebuggerElement >> debuggerContextMenuObjects [
+	"Return the objects whose actions are shown in the debugger's context menu"
+
+	^ self debugSession debuggerContextMenuObjects
+]
+
+{ #category : #'accessing - context menu' }
+GtDebuggerElement >> debuggerContextMenuTargets [
+	"Return the phlow action targets of the actions shown in the debugger's context menu"
+
+	<return: #Collection of: #GtPhlowActionTarget>
+	^ {GtDebuggerContextMenuTarget}
+]
+
 { #category : #actions }
 GtDebuggerElement >> detachSession [
 	debuggingSession := nil
