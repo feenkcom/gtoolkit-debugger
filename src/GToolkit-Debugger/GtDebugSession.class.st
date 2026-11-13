@@ -60,6 +60,21 @@ GtDebugSession >> debuggerContextMenuObjects [
 				anException} ]
 ]
 
+{ #category : #'accessing - reports' }
+GtDebugSession >> debuggerReportDebugLog [
+	"Return the debug log saved in a debug log report of the debugger (see GtDebuggerReport class>>#debugLogReportForDebugger:)"
+
+	^ self debugLogString
+]
+
+{ #category : #'accessing - reports' }
+GtDebugSession >> debuggerReportStacks [
+	"Return the stacks saved in a stack report of the debugger (see GtDebuggerReport class>>#stackReportForSession:).
+	By default only the methods on the stack of the interrupted context are saved; subclasses can save more stacks."
+
+	^ {GtDebuggerReportStack named: 'stack' text: self stackMethodsString}
+]
+
 { #category : #initialization }
 GtDebugSession >> detectUIProcess [
 
