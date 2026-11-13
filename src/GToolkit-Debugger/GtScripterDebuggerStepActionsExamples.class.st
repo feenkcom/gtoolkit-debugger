@@ -26,6 +26,38 @@ GtScripterDebuggerStepActionsExamples >> compiledBlockIn: aSelector withSource: 
 ]
 
 { #category : #'examples - stepping' }
+GtScripterDebuggerStepActionsExamples >> debuggedStackSizeIndependentOfExecutionEnvironment [
+	"The running example's execution environment adds contexts below the debugged process' root (ProcessMonitorTestService uses Process>>#on:do:), the default environment does not.
+	The stack size assertions of the debugger examples count contexts down to the block in BlockClosure>>#newProcess only"
+
+	<gtExample>
+	<return: #SmallInteger>
+	| aCheckStep aSessionInExample aSessionOutside aTargetBlock aStopBlock aStackSize |
+	aCheckStep := GtDebuggerDevScripterCheckStep new.
+	aTargetBlock := [ self class new targetMethod_mainForStepActions ].
+	aStopBlock := [ :aContext | aContext selector = #targetMethod_mainForStepActions ].
+
+	[ aSessionInExample := self debugSessionOn: aTargetBlock stoppingAt: aStopBlock.
+	DefaultExecutionEnvironment
+		beActiveDuring: [ aSessionOutside := self debugSessionOn: aTargetBlock stoppingAt: aStopBlock ].
+
+	self
+		assert: aSessionInExample interruptedContext stack size
+				> aSessionOutside interruptedContext stack size.
+
+	aStackSize := aCheckStep
+			debuggedStackSizeOf: aSessionInExample interruptedContext.
+	self assert: aStackSize equals: 3.
+	self
+		assert: (aCheckStep debuggedStackSizeOf: aSessionOutside interruptedContext)
+		equals: aStackSize ]
+		ensure: [ aSessionInExample ifNotNil: [ :aSession | aSession terminate ].
+			aSessionOutside ifNotNil: [ :aSession | aSession terminate ] ].
+
+	^ aStackSize
+]
+
+{ #category : #'examples - stepping' }
 GtScripterDebuggerStepActionsExamples >> restartActionsBeforeMethodWillRetun [
 	<gtExample>
 	<return: #BlScripter>
