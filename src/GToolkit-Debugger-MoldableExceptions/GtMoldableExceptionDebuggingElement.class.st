@@ -184,6 +184,28 @@ GtMoldableExceptionDebuggingElement >> currentDebuggerSpecification [
 	^ debuggerSpecification
 ]
 
+{ #category : #'accessing - context menu' }
+GtMoldableExceptionDebuggingElement >> debuggerContextMenuObjects [
+	"The debug session and its exception, followed by the objects of the debugger specification, each once"
+
+	| objects |
+	objects := OrderedCollection new.
+	super debuggerContextMenuObjects
+		, self currentDebuggerSpecification contextMenuObjects
+		do: [ :eachObject | 
+			(objects anySatisfy: [ :existingObject | existingObject == eachObject ])
+				ifFalse: [ objects add: eachObject ] ].
+	^ objects asArray
+]
+
+{ #category : #'accessing - context menu' }
+GtMoldableExceptionDebuggingElement >> debuggerContextMenuTargets [
+	"The debugger specification decides which actions are shown in the context menu"
+
+	<return: #Collection of: #GtPhlowActionTarget>
+	^ self currentDebuggerSpecification contextMenuActionTargets
+]
+
 { #category : #accessing }
 GtMoldableExceptionDebuggingElement >> exceptionGlobalDebugActionsPragmas [
 	<return: #Collection of: #Symbol>
@@ -268,24 +290,9 @@ GtMoldableExceptionDebuggingElement >> updateToolbarWithActionsFromView: aPhlowV
 
 { #category : #updating }
 GtMoldableExceptionDebuggingElement >> updateToolbarWithExtraActions [
-	| phlowAction |
-	phlowAction := GtPhlowAction new dropdown
-		tooltip: 'Inspect';
-		icon: BrGlamorousVectorIcons hamburger;
-		content: [ :aButton | 
-			BrGlamorousSimpleContextMenuContent new
-				items:{
-					('Inspect Exception' -> [ :anElement | 
-						anElement phlow spawnObject: self targetException.
-						aButton dispatchEvent: BrDropdownHideWish new]).
-					('Inspect Debugging Session' -> [ :anElement | 
-						anElement phlow spawnObject: debuggingSession.
-						aButton dispatchEvent: BrDropdownHideWish new ])};
-				yourself ].
-	phlowAction 
-		asElement: [ :actionElement | 
-			toolbar addItem: actionElement ]				
-		withHostElement: mainTab 
+	(GtDebuggerContextMenuDebugAction forDebugger: self)
+		asDebugActionElementWithHostElement: mainTab
+		do: [ :anElement | toolbar addItem: anElement ]
 ]
 
 { #category : #updating }

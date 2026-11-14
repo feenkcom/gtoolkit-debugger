@@ -5,7 +5,8 @@ Class {
 		'globalDebuggingActionPragmaNames',
 		'targetObjectDebuggingActionPragmaNames',
 		'debuggingTargets',
-		'targetException'
+		'targetException',
+		'contextMenuActionTargets'
 	],
 	#category : #'GToolkit-Debugger-MoldableExceptions'
 }
@@ -14,6 +15,14 @@ Class {
 GtMoldableExceptionDebuggerSpecification class >> forException: anException [
 	^ self new
 		 initializeForException: anException
+]
+
+{ #category : #configuration }
+GtMoldableExceptionDebuggerSpecification >> addContextMenuActionTarget: aPhlowActionTarget [
+	"Also show in the debugger's context menu the actions that use the given phlow action target.
+	The common actions (see #defaultContextMenuActionTargets) are always shown."
+
+	contextMenuActionTargets add: aPhlowActionTarget
 ]
 
 { #category : #configuration }
@@ -29,12 +38,35 @@ GtMoldableExceptionDebuggerSpecification >> collectTargetDebuggingActionsForDebu
 		forDebugger: aDebuggerElement
 ]
 
+{ #category : #accessing }
+GtMoldableExceptionDebuggerSpecification >> contextMenuActionTargets [
+	"Return the phlow action targets of the actions shown in the debugger's context menu"
+
+	<return: #Collection of: #GtPhlowActionTarget>
+	^ contextMenuActionTargets
+]
+
+{ #category : #accessing }
+GtMoldableExceptionDebuggerSpecification >> contextMenuObjects [
+	"Return the objects, apart from the debug session, whose actions targeting #contextMenuActionTargets
+	are shown in the debugger's context menu: the exception (unless excluded) and the objects added with #addDebuggingTargetFor:"
+
+	^ debuggingTargets targetObjects
+]
+
 { #category : #configuration }
 GtMoldableExceptionDebuggerSpecification >> debuggingActionPragmas: aCollection [
 	"A utility method for configuring the same pragma for global and target-specific debugging actions."
 	
 	self globalDebuggingActionPragmas: aCollection.
 	self targetObjectDebuggingActionPragmas: aCollection.
+]
+
+{ #category : #'accessing - defaults' }
+GtMoldableExceptionDebuggerSpecification >> defaultContextMenuActionTargets [
+	"Targets of the common actions shown in the context menu of moldable exception debuggers"
+
+	^ {GtMoldableExceptionDebuggerContextMenuTarget}
 ]
 
 { #category : #'accessing - defaults' }
@@ -78,8 +110,10 @@ GtMoldableExceptionDebuggerSpecification >> gtTargetDebuggingActionsFor: aView [
 { #category : #initialization }
 GtMoldableExceptionDebuggerSpecification >> initialize [
 	super initialize.
-	
-	debuggingTargets := GtMoldableExceptionDebuggingViewTargets new
+
+	debuggingTargets := GtMoldableExceptionDebuggingViewTargets new.
+	contextMenuActionTargets := OrderedCollection
+			withAll: self defaultContextMenuActionTargets
 ]
 
 { #category : #initialization }
@@ -91,11 +125,16 @@ GtMoldableExceptionDebuggerSpecification >> initializeForException: anException 
 
 { #category : #accessing }
 GtMoldableExceptionDebuggerSpecification >> specificationProperties [
-	^ super specificationProperties, {
-		{'Debugging Targets' . debuggingTargets. debuggingTargets description}.
-		{'Action Pragmas' . self targetObjectDebuggingActionPragmas}.
-		{'Global Action Pragmas' . self globalDebuggingActionPragmas}
-	}
+	^ super specificationProperties
+		, {{'Debugging Targets'.
+					debuggingTargets.
+					debuggingTargets description}.
+				{'Action Pragmas'.
+					self targetObjectDebuggingActionPragmas}.
+				{'Global Action Pragmas'.
+					self globalDebuggingActionPragmas}.
+				{'Context Menu Targets'.
+					self contextMenuActionTargets}}
 ]
 
 { #category : #accessing }

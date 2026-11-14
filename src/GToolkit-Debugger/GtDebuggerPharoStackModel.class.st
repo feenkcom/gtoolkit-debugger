@@ -2,10 +2,17 @@ Class {
 	#name : #GtDebuggerPharoStackModel,
 	#superclass : #GtDebuggerAbstractStackModel,
 	#instVars : [
-		'currentContextMethodIndicator'
+		'currentContextMethodIndicator',
+		'showsVariableValueAnnotations'
 	],
 	#category : #'GToolkit-Debugger-Models'
 }
+
+{ #category : #private }
+GtDebuggerPharoStackModel >> addVariableValueStylerTo: aCoderViewModel [
+	aCoderViewModel
+		addStyler: (GtStackContextVariableValueStyler new coderViewModel: aCoderViewModel)
+]
 
 { #category : #accessing }
 GtDebuggerPharoStackModel >> createCoderFor: aContext in: aSession [
@@ -59,10 +66,21 @@ GtDebuggerPharoStackModel >> gtContextsFor: aView [
 
 { #category : #accessing }
 GtDebuggerPharoStackModel >> hideVariableValueAnnotations [
+	showsVariableValueAnnotations := false.
+
 	self
 		cachedCodersDo: [ :each | 
 			each removeStylersOfClass: GtStackContextVariableValueStyler.
 			each requestUpdateAddOns ]
+]
+
+{ #category : #initialization }
+GtDebuggerPharoStackModel >> initializeCoderViewModel: aCoderViewModel [
+	"Coders created while annotations are shown, e.g. after stepping into a new frame, also get them"
+
+	self showsVariableValueAnnotations
+		ifTrue: [ self addVariableValueStylerTo: aCoderViewModel ].
+	^ aCoderViewModel
 ]
 
 { #category : #accessing }
@@ -98,11 +116,18 @@ GtDebuggerPharoStackModel >> setCurrentContext: aContext [
 
 { #category : #accessing }
 GtDebuggerPharoStackModel >> showVariableValueAnnotations [
+	self showsVariableValueAnnotations ifTrue: [ ^ self ].
+	showsVariableValueAnnotations := true.
+
 	self
 		cachedCodersDo: [ :viewModel | 
-			viewModel
-				addStyler: (GtStackContextVariableValueStyler new coderViewModel: viewModel).
+			self addVariableValueStylerTo: viewModel.
 			viewModel requestUpdateAddOns ]
+]
+
+{ #category : #testing }
+GtDebuggerPharoStackModel >> showsVariableValueAnnotations [
+	^ showsVariableValueAnnotations ifNil: [ false ]
 ]
 
 { #category : #'as yet unclassified' }

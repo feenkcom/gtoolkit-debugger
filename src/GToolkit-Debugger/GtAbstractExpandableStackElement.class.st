@@ -5,7 +5,6 @@ Class {
 	#classTraits : 'TBrLayoutResizable classTrait + TGtPhlowToolDetailAdjustable classTrait',
 	#instVars : [
 		'selectedCoderUIModel',
-		'annotationsEnabled',
 		'stackModel',
 		'selectCoderPromise',
 		'openCoderPromise',
@@ -23,7 +22,7 @@ GtAbstractExpandableStackElement >> actOnCoderInFocusFor: aContextCoderUIModel [
 
 { #category : #testing }
 GtAbstractExpandableStackElement >> areAnnotationsEnabled [
-	^ annotationsEnabled ifNil: [ false ]
+	^ stackModel notNil and: [ stackModel showsVariableValueAnnotations ]
 ]
 
 { #category : #'building elements' }

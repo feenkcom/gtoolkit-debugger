@@ -34,7 +34,8 @@ GtDebuggerAbstractStackModel >> cachedCodersDo: aBlock [
 GtDebuggerAbstractStackModel >> coderViewModelStream [
 	^ self contextStream
 		map: [ :eachContext | 
-			(self createCoderFor: eachContext in: session) asCoderViewModel ]
+			self
+				initializeCoderViewModel: (self createCoderFor: eachContext in: session) asCoderViewModel ]
 		cache: coderViewModelCache
 ]
 
@@ -110,6 +111,13 @@ GtDebuggerAbstractStackModel >> initialize [
 	coderViewModelCache := AsyncSharedDictionary new
 ]
 
+{ #category : #initialization }
+GtDebuggerAbstractStackModel >> initializeCoderViewModel: aCoderViewModel [
+	"Configure a newly created coder view model before it is cached. Subclasses may override"
+
+	^ aCoderViewModel
+]
+
 { #category : #announcer }
 GtDebuggerAbstractStackModel >> notifyDebuggerStackChanged [
 	self announce: GtDebuggerStackChanged new
@@ -124,6 +132,11 @@ GtDebuggerAbstractStackModel >> session [
 GtDebuggerAbstractStackModel >> session: aDebuggingSession [
 	session := aDebuggingSession.
 	self updateBasedOnCurentSession
+]
+
+{ #category : #testing }
+GtDebuggerAbstractStackModel >> showsVariableValueAnnotations [
+	^ false
 ]
 
 { #category : #accessing }
