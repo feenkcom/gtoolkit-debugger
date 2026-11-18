@@ -51,7 +51,7 @@ GtDebuggerPharoMethodIndicatorSignal >> previousContext: anObject [
 
 { #category : #printing }
 GtDebuggerPharoMethodIndicatorSignal >> printOneLineContentsOn: aStream [
-	(self indicator ifNotNil: #wantsToKeepScrollPosition)
+	(self indicator ifNotNil: [ :v | v wantsToKeepScrollPosition ])
 		ifNotNil: [ :aBoolean | 
 			aBoolean
 				ifTrue: [ aStream nextPutAll: 'Keep scroll position' ]

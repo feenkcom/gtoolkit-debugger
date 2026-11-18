@@ -63,7 +63,7 @@ GtCoderEmbeddedDebuggerInSpaceElement >> evaluationStatus: anEvaluationStatus [
 
 { #category : #private }
 GtCoderEmbeddedDebuggerInSpaceElement >> findSpace [
-	^ evaluationStatus ifNotNil: #debuggerSpace
+	^ evaluationStatus ifNotNil: [ :v | v debuggerSpace ]
 ]
 
 { #category : #initialization }
