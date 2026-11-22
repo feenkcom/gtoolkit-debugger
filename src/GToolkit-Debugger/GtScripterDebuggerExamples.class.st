@@ -275,7 +275,7 @@ GtScripterDebuggerExamples >> methodContextCoderElementOnInheritedMethod_Breadcr
 					s
 						label: 'Assert Breadcrumb Package Name';
 						value: [ :aButton | aButton label asString ]
-							equals: [ Object package name ];
+							equals: [ Object package name asString ];
 						onBreadthFirstChildOfClass: GtPharoMethodCoderHeaderElement;
 						onChildAt: 1 ].
 
@@ -656,7 +656,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderMethodClassName [
 	scripter assert
 		label: 'Assert class name';
 		value: [ :anEditor | anEditor text asString ]
-			equals: GtPharoDummyOneObject name;
+			equals: GtPharoDummyOneObject name asString;
 		onPagerPaneWithIndex: 2;
 		// GtBehaviorCoderBehaviorNameId;
 		play.
@@ -708,7 +708,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName [
 	scripter assert
 		label: 'Assert class name';
 		value: [ :anEditor | anEditor text asString ]
-			equals: GtPharoDummyOneObject name;
+			equals: GtPharoDummyOneObject name asString;
 		onPagerPaneWithIndex: 2;
 		// GtBehaviorCoderBehaviorNameId;
 		play.
@@ -759,7 +759,7 @@ GtScripterDebuggerExamples >> scripterClickOnHeaderProviderClassName2 [
 	scripter assert
 		label: 'Assert class name';
 		value: [ :anEditor | anEditor text asString ]
-			equals: GtPharoDummyTwoObject name;
+			equals: GtPharoDummyTwoObject name asString;
 		onPagerPaneWithIndex: 2;
 		// GtBehaviorCoderBehaviorNameId;
 		play.
