@@ -217,7 +217,7 @@ GtStackDebuggerElement >> initialize [
 GtStackDebuggerElement >> initializePanes [
 	stackPane := self buildPaneElement.
 	codePane := self buildPaneElement
-		border: (BlBorder paint: self theme default lightBorderColor).
+		border: (BlBorder paint: self theme default subtleBorderColor).
 	detailsPane := self buildPaneElement.
 	self
 		addChildren:
