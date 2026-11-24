@@ -38,20 +38,12 @@ GtDebuggerBreakpointMenu >> actionButtonLook [
 
 { #category : #accessing }
 GtDebuggerBreakpointMenu >> color [
-	^breakpoint isEnabled
-		ifTrue: [Color lightBrown]
-		ifFalse: [Color veryLightGray]
+	^ self paintForEnabled: breakpoint isEnabled
 ]
 
 { #category : #accessing }
 GtDebuggerBreakpointMenu >> currentIcon [
-	^ breakpoint isEnabled
-		ifTrue: [ breakpoint once 
-			ifTrue: [ self orangeBolt ] 
-			ifFalse: [ self orangeInfinity ] ]
-		ifFalse: [ breakpoint once 
-			ifTrue: [ self grayBolt ] 
-			ifFalse: [ self grayInfinity ] ]
+	^ self iconForEnabled: breakpoint isEnabled once: breakpoint once
 ]
 
 { #category : #updating }
@@ -103,18 +95,6 @@ GtDebuggerBreakpointMenu >> frequencyButton [
 					self notifyBreakpointChanged ] ]
 ]
 
-{ #category : #icons }
-GtDebuggerBreakpointMenu >> grayBolt [
-	^BrGlamorousVectorIcons debug asElement background: Color veryLightGray
-]
-
-{ #category : #icons }
-GtDebuggerBreakpointMenu >> grayInfinity [
-	^(BrGlamorousVectorIcons infinity asElement
-		background: Color veryLightGray) asScalableElement
-		size: 15 @ 15
-]
-
 { #category : #buttons }
 GtDebuggerBreakpointMenu >> handleButton [
 	^(BrButton new)
@@ -124,10 +104,31 @@ GtDebuggerBreakpointMenu >> handleButton [
 		exact: 16 @ 16
 ]
 
+{ #category : #private }
+GtDebuggerBreakpointMenu >> iconForEnabled: isEnabled once: isOnce [
+	| aPaint aGlyph anIconExtent aStrokeWidth |
+	aPaint := self paintForEnabled: isEnabled.
+	isOnce
+		ifTrue: [ aGlyph := BrGlamorousVectorIcons debug asElement.
+			anIconExtent := 16 @ 16.
+			aStrokeWidth := 1.5 ]
+		ifFalse: [ aGlyph := BrGlamorousVectorIcons infinity asElement.
+			anIconExtent := 15 @ 15.
+			aStrokeWidth := 48 ].
+	isEnabled
+		ifTrue: [ aGlyph background: aPaint ]
+		ifFalse: [ aGlyph
+				background: Color transparent;
+				outskirts: BlOutskirts centered;
+				border: (BlBorder paint: aPaint width: aStrokeWidth) ].
+	^ aGlyph asScalableElement size: anIconExtent
+]
+
 { #category : #icons }
 GtDebuggerBreakpointMenu >> infinity [
-	^BrGlamorousVectorIcons infinity asElement asScalableElement
-							size: 15 @ 15
+	^ (BrGlamorousVectorIcons infinity asElement
+		background: self theme button defaultTextForeground) asScalableElement
+		size: 15 @ 15
 ]
 
 { #category : #buttons }
@@ -168,15 +169,11 @@ GtDebuggerBreakpointMenu >> notifyBreakpointChanged [
 		announce: (BreakpointAnnouncement on: breakpoint nodes: breakpoint link nodes)
 ]
 
-{ #category : #icons }
-GtDebuggerBreakpointMenu >> orangeBolt [
-	^BrGlamorousVectorIcons debug asElement background: Color lightBrown
-]
-
-{ #category : #accessing }
-GtDebuggerBreakpointMenu >> orangeInfinity [
-	^(BrGlamorousVectorIcons infinity asElement background: Color lightBrown)
-		asScalableElement size: 15 @ 15
+{ #category : #private }
+GtDebuggerBreakpointMenu >> paintForEnabled: isEnabled [
+	^ isEnabled
+		ifTrue: [ self theme editor enabledBreakpointForeground ]
+		ifFalse: [ self theme button disabledBorderColor ]
 ]
 
 { #category : #subscriptions }
@@ -221,39 +218,31 @@ GtDebuggerBreakpointMenu >> setBreakpoint: aBreakpoint coderModel: aCoderModel [
 
 { #category : #buttons }
 GtDebuggerBreakpointMenu >> statusButton [
-	^breakpoint isEnabled
-		ifTrue: 
-			[(BrButton new)
+	^ breakpoint isEnabled
+		ifTrue: [ BrButton new
 				aptitude: self menuButtonLook;
 				label: 'Disable';
-				icon: (breakpoint once
-					ifTrue: [self grayBolt]
-					ifFalse: [self grayInfinity]);
+				icon: (self iconForEnabled: false once: breakpoint once);
 				beSmallSize;
 				hMatchParent;
 				alignCenterLeft;
-				action: 
-						[:aButton |
-						breakpoint disable.
-						self updateIcon.
-						aButton fireEvent: BrDropdownHideWish new.
-						self notifyBreakpointChanged]]
-		ifFalse: 
-			[(BrButton new)
+				action: [ :aButton | 
+					breakpoint disable.
+					self updateIcon.
+					aButton fireEvent: BrDropdownHideWish new.
+					self notifyBreakpointChanged ] ]
+		ifFalse: [ BrButton new
 				aptitude: self menuButtonLook;
 				label: 'Enable';
-				icon: (breakpoint once
-								ifTrue: [self orangeBolt]
-								ifFalse: [self orangeInfinity]);
+				icon: (self iconForEnabled: true once: breakpoint once);
 				beSmallSize;
 				hMatchParent;
 				alignCenterLeft;
-				action: 
-						[:aButton |
-						breakpoint enable.
-						self updateIcon.
-						aButton fireEvent: BrDropdownHideWish new.
-						self notifyBreakpointChanged]]
+				action: [ :aButton | 
+					breakpoint enable.
+					self updateIcon.
+					aButton fireEvent: BrDropdownHideWish new.
+					self notifyBreakpointChanged ] ]
 ]
 
 { #category : #updating }
