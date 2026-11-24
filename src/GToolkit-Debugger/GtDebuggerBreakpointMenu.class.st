@@ -36,9 +36,16 @@ GtDebuggerBreakpointMenu >> actionButtonLook [
 						aStyle background: BrGlamorousColors neutralBackgroundColor darker darker])
 ]
 
+{ #category : #private }
+GtDebuggerBreakpointMenu >> backgroundForEnabled: isEnabled [
+	^ isEnabled
+		ifTrue: [ self theme editor enabledBreakpointBackground ]
+		ifFalse: [ self theme editor disabledBreakpointBackground ]
+]
+
 { #category : #accessing }
 GtDebuggerBreakpointMenu >> color [
-	^ self paintForEnabled: breakpoint isEnabled
+	^ self backgroundForEnabled: breakpoint isEnabled
 ]
 
 { #category : #accessing }
@@ -106,22 +113,24 @@ GtDebuggerBreakpointMenu >> handleButton [
 
 { #category : #private }
 GtDebuggerBreakpointMenu >> iconForEnabled: isEnabled once: isOnce [
-	| aPaint aGlyph anIconExtent aStrokeWidth |
-	aPaint := self paintForEnabled: isEnabled.
-	isOnce
-		ifTrue: [ aGlyph := BrGlamorousVectorIcons debug asElement.
-			anIconExtent := 16 @ 16.
-			aStrokeWidth := 1.5 ]
-		ifFalse: [ aGlyph := BrGlamorousVectorIcons infinity asElement.
-			anIconExtent := 15 @ 15.
-			aStrokeWidth := 48 ].
-	isEnabled
-		ifTrue: [ aGlyph background: aPaint ]
-		ifFalse: [ aGlyph
-				background: Color transparent;
-				outskirts: BlOutskirts centered;
-				border: (BlBorder paint: aPaint width: aStrokeWidth) ].
-	^ aGlyph asScalableElement size: anIconExtent
+	| aGlyph anIcon |
+	aGlyph := (isOnce
+			ifTrue: [ BrGlamorousVectorIcons debug ]
+			ifFalse: [ BrGlamorousVectorIcons infinity ]) asElement.
+	aGlyph
+		background: (isEnabled
+				ifTrue: [ self theme editor enabledBreakpointForeground ]
+				ifFalse: [ self theme editor disabledBreakpointForeground ]).
+	anIcon := aGlyph asScalableElement
+			size: 12 @ 12;
+			constraintsDo: [ :c | 
+				c frame horizontal alignCenter.
+				c frame vertical alignCenter ].
+	^ BrFrame new
+		size: 16 @ 16;
+		geometry: (BlRoundedRectangleGeometry cornerRadius: 4);
+		background: (self backgroundForEnabled: isEnabled);
+		addChild: anIcon
 ]
 
 { #category : #icons }
@@ -167,13 +176,6 @@ GtDebuggerBreakpointMenu >> menuButtonLook [
 GtDebuggerBreakpointMenu >> notifyBreakpointChanged [
 	SystemAnnouncer uniqueInstance
 		announce: (BreakpointAnnouncement on: breakpoint nodes: breakpoint link nodes)
-]
-
-{ #category : #private }
-GtDebuggerBreakpointMenu >> paintForEnabled: isEnabled [
-	^ isEnabled
-		ifTrue: [ self theme editor enabledBreakpointForeground ]
-		ifFalse: [ self theme button disabledBorderColor ]
 ]
 
 { #category : #subscriptions }
